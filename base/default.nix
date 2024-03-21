@@ -2,6 +2,8 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.allowed-users = [ localconfig.username ];
 
+  security.sudo.enable = true;
+
 	i18n.defaultLocale = "en_US.UTF-8";
 	console = {
 		useXkbConfig = true;
@@ -15,26 +17,35 @@
 
 	services.xserver = {
 		xkb.layout = "us";
-		xkb.options = "eurosign:e,caps:escape";
+		xkb.options = "eurosign:e";
 		libinput.enable = true;
 	};
 
 	sound.enable = true;
 
-	# users.users.${localconfig.username} = {
-	# 	extraGroups = [ "wheel" ];
-	# 	packages = with pkgs; [
-	# 		firefox
-	# 		tree
-	# 		alacritty
-	# 	];
-	# };
+	users.users.${localconfig.username} = {
+		extraGroups = [ "wheel" ];
+    isNormalUser = true;
+	};
 
 	environment.systemPackages = with pkgs; [
 		neovim
 		wget
 		git
+    keyd
 	];
+
+  services.keyd = {
+    enable = true;
+    keyboards.default.ids = [
+      "*"
+    ];
+    keyboards.default.settings = {
+      main = {
+        capslock = "overload(meta, esc)";
+      };
+    };
+  };
 
 	services.openssh.enable = true;
 }
