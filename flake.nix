@@ -7,6 +7,13 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+
+    base16.url = "github:SenchoPens/base16.nix";
+    tt-schemes = {
+      url = "github:tinted-theming/schemes";
+      flake = false;
+    };
+
     # emacs-overlay = {
     #   url = "github:nix-community/emacs-overlay";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -35,14 +42,14 @@
       homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgs;
         modules = [
+          inputs.base16.homeManagerModule
           {
             programs.home-manager.enable = true;
             targets.genericLinux.enable = true;
+            scheme = "${inputs.tt-schemes}/base16/tokyo-night-dark.yaml";
           }
-          (if localconfig.install.hyprland then inputs.hyprland.homeManagerModules.default else {})
-          # localconfig.homeManagerConfig
-          (import ./home { inherit pkgs localconfig inputs; })
           # ./home
+          (import ./home { inherit pkgs localconfig inputs; })
         ];
       };
 
@@ -62,10 +69,15 @@
 			  system = "x86_64-linux";
 			  modules = [
 				  self.nixosModules.default
+          inputs.base16.nixosModule
+          {
+            scheme = "${inputs.tt-schemes}/base16/tokyo-night-dark.yaml";
+          }
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
+            # home-manager.users.${localconfig.username} = import ./home;
             home-manager.users.${localconfig.username} = import ./home { inherit pkgs localconfig inputs; };
           }
 			  ];

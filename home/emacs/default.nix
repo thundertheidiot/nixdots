@@ -49,12 +49,12 @@
 
   # TODO: change this to .config/emacs when done
 
-  home.file.".emacs.d" = {
-    source = ./config;
-    recursive = true;
-  };
-
-  home.file."test.el" = {
-    source = "${inputs.emacs-eglot-booster}/eglot-booster.el";
-  };
+  # home.file.".emacs.d" = {
+  #   source = ./config;
+  #   recursive = true;
+  # };
+  #
+  # home.file."test.el" = {
+  #   source = "${inputs.emacs-eglot-booster}/eglot-booster.el";
+  # };
 }
