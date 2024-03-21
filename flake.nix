@@ -17,15 +17,18 @@
       url = "github:jdtsmith/eglot-booster";
       flake = false;
     };
+
+    hyprland.url = "github:hyprwm/Hyprland";
+    split-monitor-workspaces = {
+      url = "github:Duckonaut/split-monitor-workspaces";
+      inputs.hyprland.follows = "hyprland";
+    };
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
       localconfig = import ./local.nix;
       pkgs = import nixpkgs { system = localconfig.system; };
-      customFiles = {
-        emacs-eglot-booster = inputs.emacs-eglot-booster;
-      };
     in {
       defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
@@ -34,9 +37,11 @@
         modules = [
           {
             programs.home-manager.enable = true;
+            targets.genericLinux.enable = true;
           }
+          (if localconfig.install.hyprland then inputs.hyprland.homeManagerModules.default else {})
           # localconfig.homeManagerConfig
-          (import ./home { inherit pkgs localconfig customFiles; })
+          (import ./home { inherit pkgs localconfig inputs; })
           # ./home
         ];
       };
@@ -61,7 +66,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
-            home-manager.users.${localconfig.username} = import ./home { inherit pkgs localconfig customFiles; };
+            home-manager.users.${localconfig.username} = import ./home { inherit pkgs localconfig inputs; };
           }
 			  ];
 		  };
