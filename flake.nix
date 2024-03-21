@@ -7,9 +7,15 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-    emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+    # emacs-overlay = {
+    #   url = "github:nix-community/emacs-overlay";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+
+    # emacs packages
+    emacs-eglot-booster = {
+      url = "github:jdtsmith/eglot-booster";
+      flake = false;
     };
 	};
 
@@ -17,6 +23,9 @@
     let
       localconfig = import ./local.nix;
       pkgs = import nixpkgs { system = localconfig.system; };
+      customFiles = {
+        emacs-eglot-booster = inputs.emacs-eglot-booster;
+      };
     in {
       defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
@@ -27,7 +36,7 @@
             programs.home-manager.enable = true;
           }
           # localconfig.homeManagerConfig
-          (import ./home { inherit pkgs localconfig; })
+          (import ./home { inherit pkgs localconfig customFiles; })
           # ./home
         ];
       };
@@ -52,7 +61,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
-            home-manager.users.${localconfig.username} = import ./home { inherit pkgs localconfig; };
+            home-manager.users.${localconfig.username} = import ./home { inherit pkgs localconfig customFiles; };
           }
 			  ];
 		  };

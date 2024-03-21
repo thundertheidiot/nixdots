@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, customFiles, ... }: {
   programs.emacs = {
     enable = true;
     # package = pkgs.emacs;
@@ -51,4 +51,8 @@
     source = ./config;
     recursive = true;
   };
+
+  # home.file."test.el" = {
+  #   source = "${customFiles.emacs-eglot-booster}/eglot-booster.el";
+  # };
 }

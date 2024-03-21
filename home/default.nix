@@ -1,4 +1,4 @@
-{ pkgs, localconfig, ... }: {
+{ pkgs, localconfig, customFiles, ... }: {
   home = {
     username = localconfig.username;
     homeDirectory = localconfig.homeDirectory;
@@ -8,13 +8,12 @@
   imports = [
     ./env.nix
     ./basic.nix
-    ./emacs
+    (import ./emacs { inherit pkgs customFiles; })
   ] ++ (if localconfig.install.firefox then [ ./firefox.nix ] else []);
 
   home.packages = with pkgs; [
     fish
     alacritty
-    emacs
     fd
     ripgrep
   ];
