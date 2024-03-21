@@ -47,6 +47,8 @@
     ];
   };
 
+  # TODO: change this to .config/emacs when done
+
   home.file.".emacs.d" = {
     source = ./config;
     recursive = true;
