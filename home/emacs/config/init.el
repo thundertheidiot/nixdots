@@ -1,0 +1,6 @@
+(require 'evil)
+(setq evil-want-integration t)
+(setq evil-want-keybinding nil)
+(setq evil-vsplit-window-right t)
+(setq evil-split-window-below t)
+(evil-mode)
