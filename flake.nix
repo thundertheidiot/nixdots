@@ -7,10 +7,6 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-    # emacs-overlay = {
-    #   url = "github:nix-community/emacs-overlay";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
 
     # emacs packages
     emacs-eglot-booster = {
@@ -19,10 +15,16 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
-    split-monitor-workspaces = {
-      url = "github:Duckonaut/split-monitor-workspaces";
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    # split-monitor-workspaces = {
+    #   url = "github:Duckonaut/split-monitor-workspaces";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
+
+
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -51,8 +53,6 @@
           localconfig.systemConfig
           (import ./base { inherit config pkgs localconfig; })
 			  ];
-
-        users.users.${localconfig.username}.isNormalUser = true;
         
 			  time.timeZone = localconfig.timeZone;
         networking.hostName = localconfig.hostName;
