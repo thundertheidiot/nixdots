@@ -43,11 +43,11 @@
       homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgs;
         modules = [
-          inputs.base16.homeManagerModule
+          # inputs.base16.homeManagerModule
           {
             programs.home-manager.enable = true;
             targets.genericLinux.enable = true;
-            scheme = "${inputs.tt-schemes}/base16/tokyo-night-dark.yaml";
+            # scheme = "${inputs.tt-schemes}/base16/tokyo-night-dark.yaml";
           }
           # ./home
           (import ./home { inherit pkgs localconfig inputs; })
@@ -68,15 +68,12 @@
 			  system = "x86_64-linux";
 			  modules = [
 				  self.nixosModules.default
-          inputs.base16.nixosModule
-          {
-            scheme = "${inputs.tt-schemes}/base16/tokyo-night-dark.yaml";
-          }
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
             # home-manager.users.${localconfig.username} = import ./home;
+            # TODO: fix this shit, scheme needs to be passed in
             home-manager.users.${localconfig.username} = import ./home { inherit pkgs localconfig inputs; };
           }
 			  ];

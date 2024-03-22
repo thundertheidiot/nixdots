@@ -33,6 +33,8 @@
 		wget
 		git
     keyd
+    clang
+    gcc
 	];
 
   services.keyd = {

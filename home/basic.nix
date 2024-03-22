@@ -8,6 +8,7 @@
       enable = true;
       shellAliases = {
         "m" = "mpv --no-video --loop=yes";
+        "e" = "setsid -f emacsclient -c";
       };
     };
 
@@ -43,17 +44,19 @@
           };
         };
 
-        hints.enabled = {
-          command = "xdg-open";
-          hyperlinks = true;
-          post_processing = true;
-          regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-<>\"\\s{-}\\^⟨⟩`]+";
+        hints.enabled = [
+          {
+            command = "xdg-open";
+            hyperlinks = true;
+            post_processing = true;
+            #regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-<>\"\\s{-}\\^⟨⟩`]+";
+          }
+        ];
 
-          mouse = {
-            enabled = true;
-            mods = "None";
-          };
-        };
+        # hints.enabled.mouse = {
+        #   enabled = true;
+        #   mods = "None";
+        # };
 
         keyboard.bindings = [
           {
@@ -83,17 +86,23 @@
           }
         ];
 
-        mouse.hide_while_typing = true;
+        # mouse.hide_while_typing = true;
 
-        colors = with config.scheme.withHashtag;
+        colors = with config.scheme;
           let
             default = {
-              black = base00; white = base07;
-              inherit red green yellow blue cyan magenta;
+              black = "0x${base00}";
+              white = "0x${base07}";
+              red = "0x${red}";
+              green = "0x${green}";
+              yellow = "0x${yellow}";
+              blue = "0x${blue}";
+              cyan = "0x${cyan}";
+              magenta = "0x${magenta}";
             };
           in {
-            primary = { background = base00; foreground = base07; };
-            cursor = { text = base02; cursor = base07; };
+            primary = { background = "0x${base00}"; foreground = "0x${base07}"; };
+            cursor = { text = "0x${base02}"; cursor = "0x${base07}"; };
             normal = default; bright = default; dim = default;
           };
       };

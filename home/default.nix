@@ -5,7 +5,10 @@
     stateVersion = localconfig.homeStateVersion;
   };
 
+  scheme = "${inputs.tt-schemes}/base16/shades-of-purple.yaml";
+
   imports = [
+    inputs.base16.homeManagerModule
     ./env.nix
     ./basic.nix
     (import ./emacs { inherit pkgs inputs; })
