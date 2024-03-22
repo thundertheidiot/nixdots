@@ -24,5 +24,8 @@
     ripgrep
     jetbrains-mono
     meslo-lgs-nf
+    xwallpaper
+    xclip
+    wl-clipboard
   ];
 }

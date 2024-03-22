@@ -13,7 +13,7 @@ require("config.notifications")
 
 local helper = gears.filesystem.get_configuration_dir() .. "/config/swallow/helper"
 	
-awful.spawn.easy_async("cc " .. helper .. ".c" .. " -o " .. helper, function()
+awful.spawn.easy_async("gcc " .. helper .. ".c" .. " -O2 -o " .. helper, function()
 	require("config.swallow")
 end)
 

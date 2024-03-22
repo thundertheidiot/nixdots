@@ -42,6 +42,30 @@
 </fontconfig>
       '';
 
+    xdg.userDirs = {
+      enable = true;
+      createDirectories = true;
+      documents = "${config.home.homeDirectory}/Documents";
+      download = "${config.home.homeDirectory}/Downloads";
+      music = "${config.home.homeDirectory}/Music";
+      pictures = "${config.home.homeDirectory}/Pictures";
+      videos = "${config.home.homeDirectory}/Videos";
+      desktop = "${config.home.homeDirectory}/.local/share/xdg-dirs/desktop";
+      publicShare = "${config.home.homeDirectory}/.local/share/xdg-dirs/publicshare";
+      templates = "${config.home.homeDirectory}/.local/share/xdg-dirs/templates";
+    };
+
+    programs.bash = {
+      enable = true;
+      initExtra = ''
+if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+then
+  shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+  exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+fi
+      '';
+    };
+
     programs.fish = {
       enable = true;
       functions = {

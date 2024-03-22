@@ -19,7 +19,7 @@ local function can_swallow(class)
 end
 
 local function is_terminal(c)
-	if c.class and c.class == termclass then
+	if c.class and c.class == termclass or c.class == "Alacritty" then
 		return true
 	else
 		return false
