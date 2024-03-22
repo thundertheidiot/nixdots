@@ -1,11 +1,56 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, localconfig, inputs, ... }: {
   config = {
     home.file.".config/wget/wgetrc" = {
       text = "hsts-file = \"$XDG_CACHE_HOME\"/wget-hsts";
     };
 
+    services.mpd = {
+      enable = true;
+      musicDirectory = "~/Music/mpd";
+      # playlistDirectory = ~/.config/mpd/playlists;
+      # network.port = 6600;
+    };
+
+    fonts.fontconfig.enable = true;
+
+    home.file.".config/fontconfig/fonts.conf".text =
+      ''
+<?xml version='1.0'?>
+<!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+<fontconfig>
+<alias>
+<family>sans-serif</family>
+<prefer>
+<family>Noto Sans</family>
+</prefer>
+</alias>
+  
+<alias>
+<family>serif</family>
+<prefer>
+<family>Noto Serif</family>
+</prefer>
+</alias>
+
+<alias>
+<family>monospace</family>
+<prefer>
+<family>JetBrainsMono Nerd Font</family>
+<family>JetBrainsMono NFM</family>
+</prefer>
+</alias>
+</fontconfig>
+      '';
+
     programs.fish = {
       enable = true;
+      functions = {
+        fish_prompt =
+          ''
+          echo (set_color purple)$USER(set_color normal)'@'(set_color blue)(uname -n)(set_color normal) (pwd) '> '
+          '';
+          #echo (set_color blue)(uname -n)(set_color normal) (echo $(pwd) | sed 's/$HOME/~/g') '> '
+      };
       shellAliases = {
         "m" = "mpv --no-video --loop=yes";
         "e" = "setsid -f emacsclient -c";

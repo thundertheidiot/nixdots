@@ -25,6 +25,9 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+
+    nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
+
     # split-monitor-workspaces = {
     #   url = "github:Duckonaut/split-monitor-workspaces";
     #   inputs.hyprland.follows = "hyprland";
