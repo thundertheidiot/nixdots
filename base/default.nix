@@ -35,17 +35,19 @@
     keyd
     clang
     gcc
+    dmenu
 	]
   ++ (if localconfig.install.awesomewm then [ inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git ] else [])
   ;
 
-  services.xserver.displayManager.startx.enable;
+  services.xserver.displayManager.startx.enable = true;
   services.xserver.displayManager.session = []
                                             ++ (if localconfig.install.awesomewm then [ {
-                                              manage = "window";
+                                              manage = "desktop";
                                               name = "awesome";
                                               start = ''
-${inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git}/bin/awesome
+${inputs.nixpkgs-f2k.packages.x86_64-linux.awesome-git}/bin/awesome &
+waitPID=$!
                                               '';
                                             } ] else []);
 
