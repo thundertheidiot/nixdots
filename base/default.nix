@@ -1,4 +1,4 @@
-{ config, pkgs, localconfig, ... }: {
+{ config, pkgs, localconfig, inputs, ... }: {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.allowed-users = [ localconfig.username ];
 
@@ -35,7 +35,19 @@
     keyd
     clang
     gcc
-	];
+	]
+  ++ (if localconfig.install.awesomewm then [ inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git ] else [])
+  ;
+
+  services.xserver.displayManager.startx.enable;
+  services.xserver.displayManager.session = []
+                                            ++ (if localconfig.install.awesomewm then [ {
+                                              manage = "window";
+                                              name = "awesome";
+                                              start = ''
+${inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git}/bin/awesome
+                                              '';
+                                            } ] else []);
 
   services.keyd = {
     enable = true;

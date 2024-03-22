@@ -60,7 +60,7 @@
 		  nixosModules.default = { config, pkgs, lib, ... }: {
 			  imports = [
           localconfig.systemConfig
-          (import ./base { inherit config pkgs localconfig; })
+          (import ./base { inherit config pkgs localconfig inputs; })
 			  ];
         
 			  time.timeZone = localconfig.timeZone;
