@@ -1,5 +1,5 @@
-{ ... }: {
-  home.sessionVariables = {
+{ ... }: let
+  variables = {
     XDG_CONFIG_HOME = "$HOME/.config"; 
     XDG_DATA_HOME = "$HOME/.local/share"; 
     XDG_CACHE_HOME = "$HOME/.cache"; 
@@ -50,8 +50,8 @@
 		PYTHONUSERBASE = "$XDG_DATA_HOME/python";
 		GRADLE_USER_HOME = "$XDG_DATA_HOME/gradle";
 		RANDFILE = "$XDG_DATA_HOME/openssl_rnd";
-		TERMINFO = "$XDG_DATA_HOME/terminfo";
-		TERMINFO_DIRS = "$XDG_DATA_HOME/terminfo:/usr/share/terminfo";
+		# TERMINFO = "$XDG_DATA_HOME/terminfo";
+		# TERMINFO_DIRS = "$XDG_DATA_HOME/terminfo:/usr/share/terminfo";
 		ANDROID_HOME = "$XDG_DATA_HOME/android";
 		USERXSESSION = "$XDG_CACHE_HOME/X11/xsession";
 		USERXSESSIONRC = "$XDG_CACHE_HOME/X11/xsessionrc";
@@ -74,4 +74,7 @@
     NVIM_LISTEN_ADDRESS = "/tmp/nvimsocket";
     QT_QPA_PLATFORMTHEME = "qt5ct";
   };
+in {
+  home.sessionVariables = variables;
+  systemd.user.sessionVariables = variables;
 }
