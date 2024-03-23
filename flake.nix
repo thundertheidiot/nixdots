@@ -43,45 +43,42 @@
       defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
       homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgs;
+        inherit pkgs;
         extraSpecialArgs = {
           inherit localconfig inputs;
         };
         modules = [
-          # inputs.base16.homeManagerModule
           {
             programs.home-manager.enable = true;
             targets.genericLinux.enable = true;
-            # scheme = "${inputs.tt-schemes}/base16/tokyo-night-dark.yaml";
           }
           ./home
-          # (import ./home { inherit pkgs localconfig inputs; })
         ];
       };
 
-		  nixosModules.default = { config, pkgs, lib, ... }: {
-			  imports = [
-          localconfig.systemConfig
-          (import ./base { inherit config pkgs localconfig inputs; })
-			  ];
-        
-			  time.timeZone = localconfig.timeZone;
-        networking.hostName = localconfig.hostName;
-		  };
-
 		  nixosConfigurations.default = nixpkgs.lib.nixosSystem {
-			  system = "x86_64-linux";
+			  system = localconfig.system;
+        specialArgs = {
+          inherit localconfig inputs;
+        };
 			  modules = [
-				  self.nixosModules.default
-          inputs.base16.nixosModule
-          { scheme = "${inputs.tt-schemes}/base16/dracula.yaml"; }
+          {
+            time.timeZone = localconfig.timeZone;
+            networking.hostName = localconfig.hostName;
+
+            imports = [
+              localconfig.systemConfig
+              ./nixos
+            ];
+          }
           home-manager.nixosModules.home-manager {
-            nixpkgs.config.allowUnfree = true;
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = {
               inherit localconfig inputs;
             };
+
+            nixpkgs.config.allowUnfree = true;
 
             home-manager.users.${localconfig.username} = ./home;
             # home-manager.users.${localconfig.username} = import ./home {

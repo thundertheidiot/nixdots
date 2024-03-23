@@ -1,6 +1,5 @@
 { pkgs, localconfig, inputs, ... }: let
   lib = pkgs.lib;
-  colortheme = "${inputs.tt-schemes}/base16/dracula.yaml";
 in {
   home = {
     username = localconfig.username;
@@ -8,7 +7,7 @@ in {
     stateVersion = localconfig.homeStateVersion;
   };
 
-  scheme = colortheme;
+  scheme = "${inputs.tt-schemes}/base16/dracula.yaml";
 
   # imports = [
   #   inputs.base16.homeManagerModule
@@ -26,10 +25,6 @@ in {
   ]
   ++ (if localconfig.install.gui then [ ./gui ./emacs ] else [])
   ++ (if localconfig.install.firefox then [ ./firefox ] else [])
-  # ++ (if localconfig.install.awesomewm then [ (import ./awesome { config = pkgs.config; inherit pkgs inputs; }) ] else [])
-  # ++ (if localconfig.install.hyprland then [ (import ./hyprland { config = pkgs.config; inherit pkgs localconfig inputs; })] else []);
   ++ (if localconfig.install.awesomewm then [ ./awesome ] else [])
   ++ (if localconfig.install.hyprland then [ ./hyprland ] else []);
-
-  # specialArgs = [ localconfig inputs ];
 }

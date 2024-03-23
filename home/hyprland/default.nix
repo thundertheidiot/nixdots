@@ -9,6 +9,8 @@
     foreground = base07;
     inherit base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base10 base11 base12 base13 base14 base15;
   };
+
+  terminal = "${pkgs.alacritty}/bin/alacritty";
 in with config; {
   home.packages = with pkgs; [
     hyprpaper
@@ -152,13 +154,64 @@ wallpaper = ,~/.local/share/bg
         mfact = 0.5;
       };
 
+      binde = [
+        "$mod, H, splitratio, -0.1"
+        "$mod, J, layoutmsg, cyclenext"
+        "$mod, K, layoutmsg, cycleprev"
+        "$mod, L, splitratio, +0.1"
+      ];
+
+      bindm = [
+        "$mod, mouse:272, movewindow"
+        "$mod, mouse:273, resizewindow"
+      ];
+
       bind = [
-        "$mod, return, exec alacritty"
+        "$mod, return, exec ${terminal}"
         "$mod, W, exec firefox"
         "$mod, D, exec ${pkgs.firefox}/bin/firefox"
         "$mod, D, exec ${pkgs.bemenu}/bin/bemenu"
         "$mod, E, exec $EDITOR"
-        "$mod, return, exec alacritty"
+        "$mod, M, exec ${terminal} -e ncmpcpp"
+        "$mod, B, exec ${terminal} -e btop"
+        "$shiftmod, B, exec ${terminal} -e nvtop"
+        "$shiftmod, B, exec ${terminal} -e pulsemixer"
+
+        "$shiftmod, return, layoutmsg, swapwithmaster master"
+
+        "$mod, Q, killactive"
+        "$shiftmod, Q, exit"
+
+        "$mod, space, togglefloating"
+        "$mod, F, fullscreen, 1"
+        "$mod, F, fullscreen"
+
+        "$mod, 1, split-workspace, 1"
+        "$mod, 2, split-workspace, 2"
+        "$mod, 3, split-workspace, 3"
+        "$mod, 4, split-workspace, 4"
+        "$mod, 5, split-workspace, 5"
+        "$mod, 6, split-workspace, 6"
+        "$mod, 7, split-workspace, 7"
+        "$mod, 8, split-workspace, 8"
+        "$mod, 9, split-workspace, 9"
+        "$mod, 0, split-workspace, 0"
+
+        "$shiftmod, 1, split-movetoworkspacesilent, 1"
+        "$shiftmod, 2, split-movetoworkspacesilent, 2"
+        "$shiftmod, 3, split-movetoworkspacesilent, 3"
+        "$shiftmod, 4, split-movetoworkspacesilent, 4"
+        "$shiftmod, 5, split-movetoworkspacesilent, 5"
+        "$shiftmod, 6, split-movetoworkspacesilent, 6"
+        "$shiftmod, 7, split-movetoworkspacesilent, 7"
+        "$shiftmod, 8, split-movetoworkspacesilent, 8"
+        "$shiftmod, 9, split-movetoworkspacesilent, 9"
+        "$shiftmod, 0, split-movetoworkspacesilent, 0"
+
+        "$mod, period, focusmonitor, r"
+        "$mod, comma, focusmonitor, l"
+        "$shiftmod, period, movewindow, mon:r"
+        "$shiftmod, comma, movewindow, mon:l"
       ];
     };
   };
