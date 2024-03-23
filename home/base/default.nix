@@ -87,6 +87,9 @@ in with config; {
   home.packages = with pkgs; [
     fd
     ripgrep
+    btop
+    nvtop
+    pulsemixer
   ];
 
   home.file.".config/wget/wgetrc" = {

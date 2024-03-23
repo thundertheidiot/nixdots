@@ -4,44 +4,16 @@
   ];
   
   home.packages = with pkgs; [
-    jetbrains-mono
-    meslo-lgs-nf
     xwallpaper
     xclip
     wl-clipboard
     gajim
   ];
 
-  fonts.fontconfig.enable = true;
-
-  home.file.".config/fontconfig/fonts.conf".text =
-    ''
-<?xml version='1.0'?>
-<!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
-<fontconfig>
-<alias>
-<family>sans-serif</family>
-<prefer>
-<family>Noto Sans</family>
-</prefer>
-</alias>
-  
-<alias>
-<family>serif</family>
-<prefer>
-<family>Noto Serif</family>
-</prefer>
-</alias>
-
-<alias>
-<family>monospace</family>
-<prefer>
-<family>JetBrainsMono Nerd Font</family>
-<family>JetBrainsMono NFM</family>
-</prefer>
-</alias>
-</fontconfig>
-'';
+  services.gnome-keyring = {
+    enable = true;
+    components = [ "pkcs11" "secrets" "ssh" ];
+  };
 
   xdg.userDirs = {
     enable = true;

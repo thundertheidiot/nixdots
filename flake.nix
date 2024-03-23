@@ -20,31 +20,33 @@
       flake = false;
     };
 
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
-
     nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
 
-    # split-monitor-workspaces = {
-    #   url = "github:Duckonaut/split-monitor-workspaces";
+    hyprland.url = "github:hyprwm/Hyprland";
+    # hyprland-plugins = {
+    #   url = "github:hyprwm/hyprland-plugins";
     #   inputs.hyprland.follows = "hyprland";
     # };
 
+    split-monitor-workspaces = {
+      url = "github:Dekomoro/split-monitor-workspaces";
+      inputs.hyprland.follows = "hyprland";
+    };
 
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
       localconfig = import ./local.nix;
-      pkgs = import nixpkgs { system = localconfig.system; };
+      pkgs = import nixpkgs { system = localconfig.system; config.allowUnfree = true; };
     in {
       defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
       homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgs;
+        extraSpecialArgs = {
+          inherit localconfig inputs;
+        };
         modules = [
           # inputs.base16.homeManagerModule
           {
@@ -52,8 +54,8 @@
             targets.genericLinux.enable = true;
             # scheme = "${inputs.tt-schemes}/base16/tokyo-night-dark.yaml";
           }
-          # ./home
-          (import ./home { inherit pkgs localconfig inputs; })
+          ./home
+          # (import ./home { inherit pkgs localconfig inputs; })
         ];
       };
 
@@ -71,13 +73,20 @@
 			  system = "x86_64-linux";
 			  modules = [
 				  self.nixosModules.default
+          inputs.base16.nixosModule
+          { scheme = "${inputs.tt-schemes}/base16/dracula.yaml"; }
           home-manager.nixosModules.home-manager {
+            nixpkgs.config.allowUnfree = true;
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = {
+              inherit localconfig inputs;
+            };
 
-            # home-manager.users.${localconfig.username} = import ./home;
-            # TODO: fix this shit, scheme needs to be passed in
-            home-manager.users.${localconfig.username} = import ./home { inherit pkgs localconfig inputs; };
+            home-manager.users.${localconfig.username} = ./home;
+            # home-manager.users.${localconfig.username} = import ./home {
+            #   inherit pkgs localconfig inputs;
+            # };
           }
 			  ];
 		  };
