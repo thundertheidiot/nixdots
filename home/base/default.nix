@@ -1,9 +1,11 @@
-{ ... }: let
-  variables = {
+{ config, pkgs, localconfig, inputs, ... }: let
+  environment = {
     XDG_CONFIG_HOME = "$HOME/.config"; 
     XDG_DATA_HOME = "$HOME/.local/share"; 
     XDG_CACHE_HOME = "$HOME/.cache"; 
     XDG_STATE_HOME = "$HOME/.local/state";
+
+    # PATH = "$PATH:$HOME/.local/bin/:$XDG_DATA_HOME/cargo/bin";
 
     # Cleanup
 
@@ -74,7 +76,55 @@
     NVIM_LISTEN_ADDRESS = "/tmp/nvimsocket";
     QT_QPA_PLATFORMTHEME = "qt5ct";
   };
-in {
-  home.sessionVariables = variables;
-  systemd.user.sessionVariables = variables;
+in with config; {
+  home.sessionVariables = environment;
+  systemd.user.sessionVariables = environment;
+
+  imports = [
+    ./scripts.nix
+  ];
+
+  home.packages = with pkgs; [
+    fd
+    ripgrep
+  ];
+
+  home.file.".config/wget/wgetrc" = {
+    text = "hsts-file = \"$XDG_CACHE_HOME\"/wget-hsts";
+  };
+
+  services.mpd = {
+    enable = true;
+    musicDirectory = "~/Music/mpd";
+    # playlistDirectory = ~/.config/mpd/playlists;
+    # network.port = 6600;
+  };
+
+
+  programs.bash = {
+    enable = true;
+    profileExtra = ''
+export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/cargo/bin"
+'';
+    initExtra = ''
+if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+then
+  shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+  exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+fi
+'';
+  };
+
+  programs.fish = {
+    enable = true;
+    functions = {
+      fish_prompt = ''
+echo (set_color purple)$USER(set_color normal)'@'(set_color blue)(uname -n)(set_color normal) (pwd) '> '
+'';
+    };
+    shellAliases = {
+      "m" = "mpv --no-video --loop=yes";
+      "e" = "setsid -f emacsclient -c";
+    };
+  };
 }

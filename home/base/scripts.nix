@@ -1,0 +1,36 @@
+{ config, pkgs, ... }: let
+  sb-battery = pkgs.writeShellScriptBin "sb-battery" ''
+#!/bin/sh
+
+# Prints all batteries, their percentage remaining and an emoji corresponding
+
+# Loop through all attached batteries and format the info
+for battery in /sys/class/power_supply/BAT?*; do
+	# If non-first battery, print a space separator.
+	[ -n "''${capacity+x}" ] && printf " "
+	# Sets up the status and capacity
+	case "$(cat "$battery/status" 2>&1)" in
+		"Full") status="Full" ;;
+		"Discharging") status="" ;;
+		"Charging") status="Charging: " ;;
+		"Not charging") status="Unknown" ;;
+		"Unknown") status="Unknown" ;;
+		*) exit 1 ;;
+	esac
+	capacity="$(cat "$battery/capacity" 2>&1)"
+	# Will make a warn variable if discharging and low
+	[ "$capacity" -le 20 ] && warn="!"
+	[ "$capacity" -le 5 ] && notify-send "BATTERY LOW!!!"
+	# Prints the info
+	printf "BAT: %s%s%d%%" "$status" "$warn" "$capacity"; unset warn
+done && printf "\\n"
+      '';
+in
+
+{
+  config = {
+    home.packages = [
+      sb-battery
+    ];
+  };
+}
