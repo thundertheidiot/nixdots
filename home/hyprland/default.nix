@@ -8,7 +8,7 @@
   startup = pkgs.writeShellScriptBin "start" ''
 
   '';
-  localStartup = pkgs.writeShellScriptBin "start" localconfig.hyprlandStartup;
+  localStartup = pkgs.writeShellScriptBin "start" localconfig.hyprland.startup;
 
   colors = with config.scheme.withHashtag; {
     background = base00;
@@ -72,7 +72,7 @@ in
         inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
       ];
 
-      extraConfig = localconfig.hyprlandConfig;
+      extraConfig = localconfig.hyprland.config;
 
       settings = {
         "$mod" = "SUPER";

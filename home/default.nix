@@ -30,8 +30,8 @@ in {
       ./base
     ]
     ++ (
-      if localconfig.install.gui
-      then [./gui ./emacs]
+      if localconfig.install.desktop
+      then [./desktop ./emacs]
       else []
     )
     ++ (

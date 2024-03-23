@@ -88,6 +88,6 @@
       ];
     };
 
-    formatter.${localconfig.system} = pkgs.nixpkgs-fmt;
+    formatter.${localconfig.system} = pkgs.alejandra;
   };
 }

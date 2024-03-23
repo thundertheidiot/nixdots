@@ -14,6 +14,8 @@ with config; {
     xclip
     wl-clipboard
     gajim
+    gnome.seahorse
+    gnome.gnome-keyring
   ];
 
   services.gnome-keyring = {
