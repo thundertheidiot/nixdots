@@ -12,10 +12,16 @@
     hyprland = true;
   };
 
-  homeManagerConfig = { localconfig, ... }: {
+  homeManagerConfig = {localconfig, ...}: {
     home-manager.users.${localconfig.username}.home.stateVersion = "24.05";
   };
 
-  systemConfig = { config, lib, pkgs, modulesPath, ... }: {
+  systemConfig = {
+    config,
+    lib,
+    pkgs,
+    modulesPath,
+    ...
+  }: {
   };
 }

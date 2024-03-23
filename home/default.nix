@@ -1,4 +1,9 @@
-{ pkgs, localconfig, inputs, ... }: let
+{
+  pkgs,
+  localconfig,
+  inputs,
+  ...
+}: let
   lib = pkgs.lib;
 in {
   home = {
@@ -19,12 +24,29 @@ in {
   #   (lib.mkIf (localconfig.install.hyprland) ./hyprland)
   # ];
 
-  imports = [
-    inputs.base16.homeManagerModule
-    ./base
-  ]
-  ++ (if localconfig.install.gui then [ ./gui ./emacs ] else [])
-  ++ (if localconfig.install.firefox then [ ./firefox ] else [])
-  ++ (if localconfig.install.awesomewm then [ ./awesome ] else [])
-  ++ (if localconfig.install.hyprland then [ ./hyprland ] else []);
+  imports =
+    [
+      inputs.base16.homeManagerModule
+      ./base
+    ]
+    ++ (
+      if localconfig.install.gui
+      then [./gui ./emacs]
+      else []
+    )
+    ++ (
+      if localconfig.install.firefox
+      then [./firefox]
+      else []
+    )
+    ++ (
+      if localconfig.install.awesomewm
+      then [./awesome]
+      else []
+    )
+    ++ (
+      if localconfig.install.hyprland
+      then [./hyprland]
+      else []
+    );
 }
