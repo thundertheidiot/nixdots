@@ -94,21 +94,16 @@ in
     home.packages = with pkgs; [
       fd
       ripgrep
+      ncdu
       btop
-      nvtop
+      jq
+      nvtopPackages.full
       pulsemixer
       alejandra
     ];
 
     home.file.".config/wget/wgetrc" = {
       text = "hsts-file = \"$XDG_CACHE_HOME\"/wget-hsts";
-    };
-
-    services.mpd = {
-      enable = true;
-      musicDirectory = "~/Music/mpd";
-      # playlistDirectory = ~/.config/mpd/playlists;
-      # network.port = 6600;
     };
 
     programs.bash = {

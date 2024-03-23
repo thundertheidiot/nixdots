@@ -12,11 +12,17 @@ with config; {
   home.packages = with pkgs; [
     xwallpaper
     xclip
-    wl-clipboard
     gajim
     gnome.seahorse
     gnome.gnome-keyring
+    ncmpcpp
+    gimp
   ];
+
+  services.mpd = {
+    enable = true;
+    musicDirectory = "~/Music/mpd";
+  };
 
   services.gnome-keyring = {
     enable = true;

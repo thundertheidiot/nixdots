@@ -22,7 +22,9 @@
 
     nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
 
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+    };
 
     split-monitor-workspaces = {
       url = "github:Dekomoro/split-monitor-workspaces";
