@@ -34,14 +34,15 @@ with config;
         manage = "desktop";
         name = "awesome";
         start = ''
-${inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git}/bin/awesome &
-waitPID=$!
-'';
+          ${inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git}/bin/awesome &
+          waitPID=$!
+        '';
       })
     ];
 
     services.xserver.displayManager.sessionPackages = [
-      (lib.mkIf (localconfig.install.hyprland)
+      (
+        lib.mkIf (localconfig.install.hyprland)
         inputs.hyprland.packages.${pkgs.system}.hyprland
       )
     ];

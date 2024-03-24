@@ -16,44 +16,44 @@
   terminal = "${pkgs.alacritty}/bin/alacritty";
 
   screenshot = pkgs.writeShellScriptBin "screenshot" ''
-#!/bin/sh
-. "$XDG_CONFIG_HOME/user-dirs.dirs"
+    #!/bin/sh
+    . "$XDG_CONFIG_HOME/user-dirs.dirs"
 
-date="$(date +%Y-%m-%d_%H-%M-%S)"
-dir="${config.xdg.userDirs.pictures}/screenshots"
+    date="$(date +%Y-%m-%d_%H-%M-%S)"
+    dir="${config.xdg.userDirs.pictures}/screenshots"
 
-bemenu="${pkgs.bemenu}/bin/bemenu"
-grim="${pkgs.grim}/bin/grim"
-slurp="${pkgs.slurp}/bin/slurp"
-swappy="${pkgs.swappy}/bin/swappy"
-hyprctl="${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/hyprctl"
-wl-copy="${pkgs.wl-clipboard}/bin/wl-copy"
+    bemenu="${pkgs.bemenu}/bin/bemenu"
+    grim="${pkgs.grim}/bin/grim"
+    slurp="${pkgs.slurp}/bin/slurp"
+    swappy="${pkgs.swappy}/bin/swappy"
+    hyprctl="${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/hyprctl"
+    wl-copy="${pkgs.wl-clipboard}/bin/wl-copy"
 
-[ "$1" = "region" ] && {
-  "$grim" -g "$($slurp)" - | "$wl-copy" -t image/png
-  exit 0
-}
+    [ "$1" = "region" ] && {
+      "$grim" -g "$($slurp)" - | "$wl-copy" -t image/png
+      exit 0
+    }
 
-[ ! -d "$dir" ] && mkdir --parents "$dir"
+    [ ! -d "$dir" ] && mkdir --parents "$dir"
 
-choice=$(printf "region\nregion save\nregion with annotation\noutput\noutput save\noutput with annotation" | "$bemenu")
+    choice=$(printf "region\nregion save\nregion with annotation\noutput\noutput save\noutput with annotation" | "$bemenu")
 
-[ "$choice" = "region" ] && "$grim" -g "$($slurp)" - | "$wl-copy" -t image/png
-[ "$choice" = "region save" ] && "$grim" -g "$($slurp)" -t png "$dir/$date.png"
-[ "$choice" = "region with annotation" ] && "$grim" -g "$($slurp)" - | "$swappy" -f -
+    [ "$choice" = "region" ] && "$grim" -g "$($slurp)" - | "$wl-copy" -t image/png
+    [ "$choice" = "region save" ] && "$grim" -g "$($slurp)" -t png "$dir/$date.png"
+    [ "$choice" = "region with annotation" ] && "$grim" -g "$($slurp)" - | "$swappy" -f -
 
-[ "$choice" = "output" ] && {
-  "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | "$wl-copy" -t image/png
-}
+    [ "$choice" = "output" ] && {
+      "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | "$wl-copy" -t image/png
+    }
 
-[ "$choice" = "output save" ] && {
-  "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" -t png "$dir/$date.png"
-}
+    [ "$choice" = "output save" ] && {
+      "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" -t png "$dir/$date.png"
+    }
 
-[ "$choice" = "output with annotation" ] && {
-  "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | swappy -f -
-}
-'';
+    [ "$choice" = "output with annotation" ] && {
+      "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | swappy -f -
+    }
+  '';
 in
   with config; {
     imports = [
@@ -70,15 +70,15 @@ in
     ];
 
     home.file.".config/hypr/hyprpaper.conf".text = ''
-preload = ~/.local/share/bg
-wallpaper = ,~/.local/share/bg
+      preload = ~/.local/share/bg
+      wallpaper = ,~/.local/share/bg
     '';
 
     home.file.".config/swappy/config".text = ''
-[Default]
-save_dir=${xdg.userDirs.pictures}/screenshots
-save_filename_format=annotated-%Y-%m-%d_%H-%M-%S.png
-'';
+      [Default]
+      save_dir=${xdg.userDirs.pictures}/screenshots
+      save_filename_format=annotated-%Y-%m-%d_%H-%M-%S.png
+    '';
 
     programs.bemenu = {
       enable = true;
@@ -156,6 +156,7 @@ save_filename_format=annotated-%Y-%m-%d_%H-%M-%S.png
           "${localStartup}/bin/start"
           "${pkgs.mako}/bin/mako"
           "${pkgs.hyprpaper}/bin/hyprpaper"
+          "${pkgs.waybar}/bin/waybar"
         ];
 
         input = {

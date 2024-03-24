@@ -37,13 +37,13 @@ with config; {
     musicDirectory = "${xdg.userDirs.music}/mpd";
     network.listenAddress = "any";
     extraConfig = ''
-restore_paused "yes"
+      restore_paused "yes"
 
-audio_output {
-             type "pipewire"
-             name "pipewire"
-}
-'';
+      audio_output {
+                   type "pipewire"
+                   name "pipewire"
+      }
+    '';
   };
 
   programs.ncmpcpp = {
@@ -58,16 +58,40 @@ audio_output {
       mpd_port = "6600";
     };
     bindings = [
-      { key = "h"; command = "previous_column"; }
-      { key = "l"; command = "next_column"; }
-      { key = "j"; command = "scroll_down"; }
-      { key = "k"; command = "scroll_up"; }
+      {
+        key = "h";
+        command = "previous_column";
+      }
+      {
+        key = "l";
+        command = "next_column";
+      }
+      {
+        key = "j";
+        command = "scroll_down";
+      }
+      {
+        key = "k";
+        command = "scroll_up";
+      }
 
-      { key = "="; command = "volume_up"; }
-      { key = "-"; command = "volume_down"; }
+      {
+        key = "=";
+        command = "volume_up";
+      }
+      {
+        key = "-";
+        command = "volume_down";
+      }
 
-      { key = "y"; command = "toggle_single"; }
-      { key = "u"; command = "update_database"; }
+      {
+        key = "y";
+        command = "toggle_single";
+      }
+      {
+        key = "u";
+        command = "update_database";
+      }
     ];
   };
 

@@ -108,10 +108,10 @@ in
     };
 
     home.file.".config/npm/npmrc".text = ''
-prefix=${xdg.dataHome}/npm
-cache=${xdg.cacheHome}/npm
-init-module=${xdg.configHome}/npm/config/npm-init.js
-'';
+      prefix=${xdg.dataHome}/npm
+      cache=${xdg.cacheHome}/npm
+      init-module=${xdg.configHome}/npm/config/npm-init.js
+    '';
 
     programs.bash = {
       enable = true;

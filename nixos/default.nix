@@ -7,42 +7,42 @@
   ...
 }: let
   # lib = pkgs.lib;
-in {
-  imports = [
-  	./desktop
-  	./desktop/hyprland.nix
-  ];
-  
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix.settings.allowed-users = [localconfig.username];
+in
+  with config; {
+    imports = [
+      ./desktop
+      ./desktop/hyprland.nix
+    ];
 
-  programs.nix-ld = {
-    enable = true;
-    libraries = with pkgs; [];
-  };
+    nix.settings.experimental-features = ["nix-command" "flakes"];
+    nix.settings.allowed-users = [localconfig.username];
 
-  security.sudo.enable = true;
+    programs.nix-ld = {
+      enable = true;
+      libraries = with pkgs; [];
+    };
 
-  i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    useXkbConfig = true;
-  };
+    security.sudo.enable = true;
 
-  networking.networkmanager.enable = true;
+    i18n.defaultLocale = "en_US.UTF-8";
+    console = {
+      useXkbConfig = true;
+    };
 
-  services.xserver = {
-    xkb.layout = "us";
-    xkb.options = "eurosign:e";
-    libinput.enable = true;
-  };
+    networking.networkmanager.enable = true;
 
-  users.users.${localconfig.username} = {
-    extraGroups = ["wheel"];
-    isNormalUser = true;
-  };
+    services.xserver = {
+      xkb.layout = "us";
+      xkb.options = "eurosign:e";
+      libinput.enable = true;
+    };
 
-  environment.systemPackages = with pkgs;
-    [
+    users.users.${localconfig.username} = {
+      extraGroups = ["wheel"];
+      isNormalUser = true;
+    };
+
+    environment.systemPackages = with pkgs; [
       neovim
       wget
       git
@@ -51,23 +51,23 @@ in {
       gcc
     ];
 
-  services.keyd = {
-    enable = true;
-    keyboards.default.ids = [
-      "*"
-    ];
-    keyboards.default.settings = {
-      main = {
-        capslock = "overload(meta, esc)";
+    services.keyd = {
+      enable = true;
+      keyboards.default.ids = [
+        "*"
+      ];
+      keyboards.default.settings = {
+        main = {
+          capslock = "overload(meta, esc)";
+        };
       };
     };
-  };
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
+    services.openssh = {
+      enable = true;
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+      };
     };
-  };
-}
+  }

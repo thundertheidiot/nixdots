@@ -3,7 +3,8 @@
   pkgs,
   inputs,
   ...
-}: with config; {
+}:
+with config; {
   programs.emacs = {
     enable = true;
     extraPackages = epkgs: [

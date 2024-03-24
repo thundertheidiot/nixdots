@@ -51,11 +51,11 @@ in
         size = 12;
       };
       theme = {
-        package = (pkgs.catppuccin-gtk.override {
-          accents = [ "mauve" ];
+        package = pkgs.catppuccin-gtk.override {
+          accents = ["mauve"];
           size = "compact";
           variant = "mocha";
-        });
+        };
         name = "Catppuccin-Mocha-Compact-Mauve-Dark";
       };
       cursorTheme = {
