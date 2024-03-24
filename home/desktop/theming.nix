@@ -61,7 +61,7 @@ in
       cursorTheme = {
         package = cursor_package;
         name = cursor_name;
-        size = 16;
+        size = 24;
       };
     };
 
@@ -79,7 +79,7 @@ in
     home.pointerCursor = {
       package = cursor_package;
       name = cursor_name;
-      size = 16;
+      size = 24;
 
       x11.defaultCursor = "left_ptr";
       x11.enable = true;

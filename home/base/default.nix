@@ -95,6 +95,7 @@ in
       ncdu
       btop
       jq
+      killall
       nvtopPackages.full
       pulsemixer
       alejandra

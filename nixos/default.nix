@@ -10,6 +10,7 @@
 in {
   imports = [
   	./desktop
+  	./desktop/hyprland.nix
   ];
   
   nix.settings.experimental-features = ["nix-command" "flakes"];
