@@ -47,7 +47,10 @@
     defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
+      pkgs = import nixpkgs {
+        system = localconfig.system;
+        config.allowUnfree = true;
+      };
       extraSpecialArgs = {
         inherit localconfig inputs;
       };

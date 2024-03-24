@@ -20,7 +20,7 @@
 . "$XDG_CONFIG_HOME/user-dirs.dirs"
 
 date="$(date +%Y-%m-%d_%H-%M-%S)"
-dir="$XDG_PICTURES_DIR/screenshots"
+dir="${config.xdg.userDirs.pictures}/screenshots"
 
 bemenu="${pkgs.bemenu}/bin/bemenu"
 grim="${pkgs.grim}/bin/grim"
@@ -56,6 +56,10 @@ choice=$(printf "region\nregion save\nregion with annotation\noutput\noutput sav
 '';
 in
   with config; {
+    imports = [
+      ./waybar.nix
+    ];
+
     home.packages = with pkgs; [
       hyprpaper
       grim
@@ -66,9 +70,15 @@ in
     ];
 
     home.file.".config/hypr/hyprpaper.conf".text = ''
-      preload = ~/.local/share/bg
-      wallpaper = ,~/.local/share/bg
+preload = ~/.local/share/bg
+wallpaper = ,~/.local/share/bg
     '';
+
+    home.file.".config/swappy/config".text = ''
+[Default]
+save_dir=${xdg.userDirs.pictures}/screenshots
+save_filename_format=annotated-%Y-%m-%d_%H-%M-%S.png
+'';
 
     programs.bemenu = {
       enable = true;
@@ -221,8 +231,8 @@ in
           "$mod, J, layoutmsg, cyclenext"
           "$mod, K, layoutmsg, cycleprev"
           "$mod, L, splitratio, +0.1"
-          ",XF86AudioRaiseVolume, exec, ${pkgs.pipewire}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"
-          ",XF86AudioLowerVolume, exec, ${pkgs.pipewire}/bin/wpctl @DEFAULT_AUDIO_SINK@ 5%-"
+          ",XF86AudioRaiseVolume, exec, ${pkgs.pipewire}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+"
+          ",XF86AudioLowerVolume, exec, ${pkgs.pipewire}/bin/wpctl @DEFAULT_AUDIO_SINK@ 3%-"
         ];
 
         bindm = [

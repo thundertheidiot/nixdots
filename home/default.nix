@@ -12,7 +12,7 @@ in {
     stateVersion = localconfig.homeStateVersion;
   };
 
-  scheme = "${inputs.tt-schemes}/base16/dracula.yaml";
+  scheme = "${inputs.tt-schemes}/base16/catppuccin-mocha.yaml";
 
   # imports = [
   #   inputs.base16.homeManagerModule

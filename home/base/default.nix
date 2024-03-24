@@ -6,10 +6,10 @@
   ...
 }: let
   environment = {
-    XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_DATA_HOME = "$HOME/.local/share";
-    XDG_CACHE_HOME = "$HOME/.cache";
-    XDG_STATE_HOME = "$HOME/.local/state";
+    # XDG_CONFIG_HOME = "$HOME/.config";
+    # XDG_DATA_HOME = "$HOME/.local/share";
+    # XDG_CACHE_HOME = "$HOME/.cache";
+    # XDG_STATE_HOME = "$HOME/.local/state";
 
     # PATH = "$PATH:$HOME/.local/bin/:$XDG_DATA_HOME/cargo/bin";
 
@@ -23,7 +23,6 @@
     ANDROID_SDK_ROOT = "$XDG_DATA_HOME/android";
     CUDA_CACHE_PATH = "$XDG_CACHE_HOME/nv";
     NOTMUCH_CONFIG = "$XDG_CONFIG_HOME/notmuch-config";
-    GTK2_RC_FILES = "$XDG_CONFIG_HOME/gtk-2.0/gtkrc-2.0";
     DOCKER_CONFIG = "$XDG_CONFIG_HOME/docker";
     WGETRC = "$XDG_CONFIG_HOME/wget/wgetrc";
     INPUTRC = "$XDG_CONFIG_HOME/shell/inputrc";
@@ -80,7 +79,6 @@
 
     MOZ_USE_XINPUT2 = "1";
     NVIM_LISTEN_ADDRESS = "/tmp/nvimsocket";
-    QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 in
   with config; {
@@ -102,9 +100,17 @@ in
       alejandra
     ];
 
+    xdg.enable = true;
+
     home.file.".config/wget/wgetrc" = {
       text = "hsts-file = \"$XDG_CACHE_HOME\"/wget-hsts";
     };
+
+    home.file.".config/npm/npmrc".text = ''
+prefix=${xdg.dataHome}/npm
+cache=${xdg.cacheHome}/npm
+init-module=${xdg.configHome}/npm/config/npm-init.js
+'';
 
     programs.bash = {
       enable = true;

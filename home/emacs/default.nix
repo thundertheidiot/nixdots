@@ -1,11 +1,11 @@
 {
+  config,
   pkgs,
   inputs,
   ...
-}: {
+}: with config; {
   programs.emacs = {
     enable = true;
-    # package = pkgs.emacs;
     extraPackages = epkgs: [
       epkgs.diminish
       epkgs.undo-fu
@@ -41,7 +41,6 @@
       epkgs.eshell-vterm
       epkgs.fish-completion
       epkgs.vertico
-      # epkgs.savehist
       epkgs.orderless
       epkgs.consult
       epkgs.marginalia
