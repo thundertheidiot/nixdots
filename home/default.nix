@@ -13,15 +13,14 @@ in {
   };
 
   scheme = "${inputs.tt-schemes}/base16/catppuccin-mocha.yaml";
-
+  
   # imports = [
   #   inputs.base16.homeManagerModule
   #   ./base
-  #   (lib.mkIf (localconfig.install.gui) { imports = ./gui; })
-  #   (lib.mkIf (localconfig.install.gui) { imports = ./emacs; })
-  #   (lib.mkIf (localconfig.install.firefox) { imports = ./firefox; })
-  #   (lib.mkIf (localconfig.install.awesomewm) { imports = ./awesome; })
-  #   (lib.mkIf (localconfig.install.hyprland) ./hyprland)
+  #   (lib.mkIf (localconfig.install.desktop) ./gui ./emacs )
+  #   (lib.mkIf (localconfig.install.firefox) ./firefox )
+  #   (lib.mkIf (localconfig.install.awesomewm) ./awesome )
+  #   (lib.mkIf (localconfig.install.hyprland) ./hyprland )
   # ];
 
   imports =

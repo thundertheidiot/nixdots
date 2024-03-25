@@ -3,8 +3,9 @@
   pkgs,
   inputs,
   ...
-}:
-with config; {
+}: let
+  emacsPath = ".emacs.d";
+in with config; {
   programs.emacs = {
     enable = true;
     extraPackages = epkgs: [
@@ -53,12 +54,11 @@ with config; {
 
   # TODO: change this to .config/emacs when done
 
-  # home.file.".emacs.d" = {
-  #   source = ./config;
-  #   recursive = true;
-  # };
-  #
-  # home.file."test.el" = {
-  #   source = "${inputs.emacs-eglot-booster}/eglot-booster.el";
-  # };
+  home.file.".emacs.d/init.el" = {
+    source = ./init.el;
+  };
+
+  home.file."${emacsPath}/eglot-booster.el" = {
+    source = builtins.path "${inputs.emacs-eglot-booster}/eglot-booster.el";
+  };
 }

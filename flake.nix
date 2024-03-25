@@ -30,6 +30,8 @@
       url = "github:Dekomoro/split-monitor-workspaces";
       inputs.hyprland.follows = "hyprland";
     };
+
+    nixgl.url = "github:nix-community/nixGL";
   };
 
   outputs = {
@@ -46,15 +48,23 @@
   in {
     defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
+    nixglModule = { config, pkgs, ... }: with config; {
+      home.packages = with pkgs; [
+        nixgl.nixGLIntel
+      ];
+    };
+
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {
         system = localconfig.system;
         config.allowUnfree = true;
+        overlays = [ inputs.nixgl.overlay ];
       };
       extraSpecialArgs = {
         inherit localconfig inputs;
       };
       modules = [
+        self.nixglModule
         {
           programs.home-manager.enable = true;
           targets.genericLinux.enable = true;

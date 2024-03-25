@@ -6,15 +6,6 @@
   ...
 }: let
   environment = {
-    # XDG_CONFIG_HOME = "$HOME/.config";
-    # XDG_DATA_HOME = "$HOME/.local/share";
-    # XDG_CACHE_HOME = "$HOME/.cache";
-    # XDG_STATE_HOME = "$HOME/.local/state";
-
-    # PATH = "$PATH:$HOME/.local/bin/:$XDG_DATA_HOME/cargo/bin";
-
-    # Cleanup
-
     XNOTIFY_FIFO = "$XDG_CACHE_HOME/xnotify.fifo";
     GNUPGHOME = "$XDG_DATA_HOME/gnupg";
     DVDCSS_CACHE = "$XDG_DATA_HOME/dvdcss";

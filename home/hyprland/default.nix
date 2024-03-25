@@ -13,6 +13,12 @@
     inherit base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base10 base11 base12 base13 base14 base15;
   };
 
+  colorsNoHash = with config.scheme; {
+    background = base00;
+    foreground = base07;
+    inherit base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base10 base11 base12 base13 base14 base15;
+  };
+
   terminal = "${pkgs.alacritty}/bin/alacritty";
 
   screenshot = pkgs.writeShellScriptBin "screenshot" ''
@@ -199,8 +205,8 @@ in
           gaps_in = 5;
           gaps_out = 20;
           border_size = 2;
-          "col.active_border" = "rgb(${colors.base04})";
-          "col.inactive_border" = "rgb(${colors.foreground})";
+          "col.active_border" = "rgb(${colorsNoHash.base04})";
+          "col.inactive_border" = "rgb(${colorsNoHash.foreground})";
 
           layout = "master";
         };
@@ -217,7 +223,7 @@ in
           drop_shadow = true;
           shadow_range = 4;
           shadow_render_power = 3;
-          # "col.shadow" = "rgba(${colors.background}ee)";
+          "col.shadow" = "rgba(${colorsNoHash.background}ee)";
         };
 
         animations.enabled = false;
