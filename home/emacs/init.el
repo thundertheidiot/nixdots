@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 (setq emacs-data-directory (let (
 				 (local-share 
 				  (or 
@@ -517,6 +518,8 @@
   "opm" '(popper-toggle-type :wk "popper toggle type")
   "opc" '(popper-cycle :wk "popper cycle"))
 
+(setq popper-window-height 20)
+
 (popper-mode 1)
 (popper-echo-mode 1)
 
@@ -534,18 +537,20 @@
   "ml" '(simple-mpc-next :wk "next"))
 
 (require 'diminish)
-(diminish which-key-mode)
-(diminish font-lock-mode)
-(diminish visual-line-mode)
-(diminish evil-collection-unimpaired-mode)
-(diminish smartparens-mode)
-(diminish evil-smartparens-mode)
-(diminish org-bullets-mode)
-(diminish hl-todo-mode)
-(diminish global-hl-todo-mode)
-(diminish company-mode)
-(diminish rainbow-delimiters-mode)
-(diminish projectile-mode)
+(diminish 'which-key-mode)
+(diminish 'font-lock-mode)
+(diminish 'visual-line-mode)
+(diminish 'evil-collection-unimpaired-mode)
+(diminish 'smartparens-mode)
+(diminish 'evil-smartparens-mode)
+(diminish 'org-bullets-mode)
+(diminish 'hl-todo-mode)
+(diminish 'global-hl-todo-mode)
+(diminish 'company-mode)
+(diminish 'rainbow-delimiters-mode)
+(diminish 'projectile-mode)
+(diminish 'auto-revert-mode)
+(diminish 'eldoc-mode)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
