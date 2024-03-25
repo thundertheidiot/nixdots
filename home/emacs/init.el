@@ -181,13 +181,16 @@
 ;; (require 'indent-bars)
 
 ;; Evil
-(require 'undo-fu)
+;; (require 'undo-fu)
+(require 'undo-tree)
+(global-undo-tree-mode)
 (require 'evil)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
 (setq evil-vsplit-window-right t)
 (setq evil-split-window-below t)
-(setq evil-undo-system 'undo-fu)
+(setq evil-undo-system 'undo-tree)
+(evil-set-undo-system evil-undo-system)
 (evil-mode)
 
 ;; Which-key
@@ -542,6 +545,7 @@
 (diminish 'projectile-mode)
 (diminish 'auto-revert-mode)
 (diminish 'eldoc-mode)
+(diminish 'undo-tree-mode)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
@@ -550,7 +554,7 @@
 (require 'catppuccin-theme)
 (setq catppuccin-flavor 'mocha)
 ;; (catppuccin-reload)
-;; (load-theme 'catppuccin :no-confirm)
+(load-theme 'catppuccin :no-confirm)
 
 (require 'solaire-mode)
 (solaire-global-mode 1)

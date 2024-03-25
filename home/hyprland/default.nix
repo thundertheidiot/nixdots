@@ -238,8 +238,8 @@ in
           "$mod, J, layoutmsg, cyclenext"
           "$mod, K, layoutmsg, cycleprev"
           "$mod, L, splitratio, +0.1"
-          ",XF86AudioRaiseVolume, exec, ${pkgs.pipewire}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+"
-          ",XF86AudioLowerVolume, exec, ${pkgs.pipewire}/bin/wpctl @DEFAULT_AUDIO_SINK@ 3%-"
+          ",XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+"
+          ",XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl @DEFAULT_AUDIO_SINK@ 3%-"
         ];
 
         bindm = [
@@ -253,9 +253,9 @@ in
           "$mod, D, exec, ${pkgs.bemenu}/bin/bemenu-run"
           "$mod, E, exec, $EDITOR"
           "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
+          "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
           "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"
           "$shiftmod, B, exec, ${terminal} -e ${pkgs.nvtopPackages.full}/bin/nvtop"
-          "$shiftmod, B, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
 
           ",XF86AudioPlay, exec, ${pkgs.mpd}/bin/mpc toggle"
           ",XF86AudioNext, exec, ${pkgs.mpd}/bin/mpc next"

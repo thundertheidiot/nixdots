@@ -15,16 +15,6 @@
       flake = false;
     };
 
-    # emacs packages
-    emacs-eglot-booster = {
-      url = "github:jdtsmith/eglot-booster";
-      flake = false;
-    };
-    emacs-indent-bars = {
-      url = "github:jdtsmith/indent-bars";
-      flake = false;
-    };
-
     nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
 
     hyprland = {
