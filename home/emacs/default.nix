@@ -4,11 +4,24 @@
   inputs,
   ...
 }: let
-  emacsPath = ".emacs.d";
+  emacsPath = ".local/share/emacs/extrapkgs";
 in with config; {
+  home.file."${emacsPath}/eglot-booster.el" = {
+    source = "${inputs.emacs-eglot-booster}/eglot-booster.el";
+  };
+  home.file."${emacsPath}/indent-bars.el" = {
+    source = "${inputs.emacs-indent-bars}/indent-bars.el";
+  };
+
+  home.packages = with pkgs; [
+    nil
+  ];
+
   programs.emacs = {
     enable = true;
+    extraConfig = builtins.readFile ./init.el;
     extraPackages = epkgs: [
+      pkgs.emacs-lsp-booster
       epkgs.diminish
       epkgs.undo-fu
       epkgs.evil
@@ -21,7 +34,7 @@ in with config; {
 
       epkgs.org-bullets
       epkgs.solaire-mode
-      epkgs.doom-themes
+      epkgs.catppuccin-theme
       epkgs.hl-todo
       epkgs.flymake
       epkgs.eglot
@@ -31,7 +44,6 @@ in with config; {
 
       epkgs.rustic
       epkgs.lua-mode
-      epkgs.csharp-mode
       epkgs.gdscript-mode
       epkgs.nix-mode
       epkgs.rainbow-delimiters
@@ -52,13 +64,10 @@ in with config; {
     ];
   };
 
-  # TODO: change this to .config/emacs when done
-
-  home.file.".emacs.d/init.el" = {
-    source = ./init.el;
-  };
-
-  home.file."${emacsPath}/eglot-booster.el" = {
-    source = builtins.path "${inputs.emacs-eglot-booster}/eglot-booster.el";
+  services.emacs = {
+    enable = true;
+    client.enable = true;
+    defaultEditor = true;
+    startWithUserSession = true;
   };
 }

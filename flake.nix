@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,6 +20,10 @@
       url = "github:jdtsmith/eglot-booster";
       flake = false;
     };
+    emacs-indent-bars = {
+      url = "github:jdtsmith/indent-bars";
+      flake = false;
+    };
 
     nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
 
@@ -30,6 +35,9 @@
       url = "github:Dekomoro/split-monitor-workspaces";
       inputs.hyprland.follows = "hyprland";
     };
+
+    # Deliberately doesn't follow nixpkgs, i want to be able to rollback emacs
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     nixgl.url = "github:nix-community/nixGL";
   };
@@ -44,6 +52,9 @@
     pkgs = import nixpkgs {
       system = localconfig.system;
       config.allowUnfree = true;
+      overlays = [
+        inputs.emacs-overlay
+      ];
     };
   in {
     defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
@@ -58,7 +69,7 @@
       pkgs = import nixpkgs {
         system = localconfig.system;
         config.allowUnfree = true;
-        overlays = [ inputs.nixgl.overlay ];
+        overlays = [ inputs.nixgl.overlay inputs.emacs-overlay ];
       };
       extraSpecialArgs = {
         inherit localconfig inputs;

@@ -205,8 +205,8 @@ in
           gaps_in = 5;
           gaps_out = 20;
           border_size = 2;
-          "col.active_border" = "rgb(${colorsNoHash.base04})";
-          "col.inactive_border" = "rgb(${colorsNoHash.foreground})";
+          "col.active_border" = "rgb(${colorsNoHash.foreground})";
+          "col.inactive_border" = "rgb(${colorsNoHash.background})";
 
           layout = "master";
         };

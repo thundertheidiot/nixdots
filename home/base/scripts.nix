@@ -4,8 +4,6 @@
   ...
 }: let
   sb-battery = pkgs.writeShellScriptBin "sb-battery" ''
-    #!/bin/sh
-
     # Prints all batteries, their percentage remaining and an emoji corresponding
 
     # Loop through all attached batteries and format the info

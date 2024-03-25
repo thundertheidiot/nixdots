@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   localconfig,
   ...
 }: let
@@ -120,7 +119,7 @@ in
 
         #battery.charging, #battery.plugged {
             color: ${colors.background};
-            background-color: ${colors.base11};
+            background-color: ${colors.base15};
         }
 
         @keyframes blink {
@@ -262,13 +261,19 @@ in
           layer = "top";
           position = "top";
           height = 30;
-          modules-left = ["hyprland/workspaces"];
+          modules-left = ["hyprland/workspaces" "hyprland/window"];
           modules-center = ["clock"];
           modules-right = ["hyprland/language" "idle_inhibitor" "disk#root" "network" "pulseaudio" "battery" "tray"];
 
           "hyprland/workspaces" = {
             disable-scroll = true;
             active-only = false;
+          };
+
+          "hyprland/window" = {
+            format = "{title}";
+            max-length = 20;
+            separate-outputs = true;
           };
 
           "clock" = {

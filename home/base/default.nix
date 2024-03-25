@@ -5,66 +5,66 @@
   inputs,
   ...
 }: let
+  xdg = config.xdg;
   environment = {
-    XNOTIFY_FIFO = "$XDG_CACHE_HOME/xnotify.fifo";
-    GNUPGHOME = "$XDG_DATA_HOME/gnupg";
-    DVDCSS_CACHE = "$XDG_DATA_HOME/dvdcss";
+    XNOTIFY_FIFO = "${xdg.cacheHome}/xnotify.fifo";
+    GNUPGHOME = "${xdg.dataHome}/gnupg";
+    DVDCSS_CACHE = "${xdg.dataHome}/dvdcss";
     #HISTFILE = "$HOME/.config/zsh/histfile";
-    XINITRC = "$XDG_CONFIG_HOME/x11/xinitrc";
-    ANDROID_SDK_ROOT = "$XDG_DATA_HOME/android";
-    CUDA_CACHE_PATH = "$XDG_CACHE_HOME/nv";
-    NOTMUCH_CONFIG = "$XDG_CONFIG_HOME/notmuch-config";
-    DOCKER_CONFIG = "$XDG_CONFIG_HOME/docker";
-    WGETRC = "$XDG_CONFIG_HOME/wget/wgetrc";
-    INPUTRC = "$XDG_CONFIG_HOME/shell/inputrc";
-    ZDOTDIR = "$XDG_CONFIG_HOME/zsh";
-    MACHINE_STORAGE_PATH = "$XDG_DATA_HOME/docker-machine";
-    "_JAVA_OPTIONS" = "-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java -Djavafx.cachedir=$XDG_CACHE_HOME/openjfx";
-    LESSKEY = "$XDG_CONFIG_HOME/less/lesskey";
+    XINITRC = "${xdg.configHome}/x11/xinitrc";
+    ANDROID_SDK_ROOT = "${xdg.dataHome}/android";
+    CUDA_CACHE_PATH = "${xdg.cacheHome}/nv";
+    NOTMUCH_CONFIG = "${xdg.configHome}/notmuch-config";
+    DOCKER_CONFIG = "${xdg.configHome}/docker";
+    WGETRC = "${xdg.configHome}/wget/wgetrc";
+    INPUTRC = "${xdg.configHome}/shell/inputrc";
+    ZDOTDIR = "${xdg.configHome}/zsh";
+    MACHINE_STORAGE_PATH = "${xdg.dataHome}/docker-machine";
+    "_JAVA_OPTIONS" = "-Djava.util.prefs.userRoot=${xdg.configHome}/java -Djavafx.cachedir=${xdg.cacheHome}/openjfx";
+    LESSKEY = "${xdg.configHome}/less/lesskey";
     LESSHISTFILE = "-";
-    ICEAUTHORITY = "$XDG_CACHE_HOME/ICEauthority";
-    NPM_CONFIG_USERCONFIG = "$XDG_CONFIG_HOME/npm/npmrc";
-    WINEPREFIX = "$XDG_DATA_HOME/wineprefixes/default";
-    KODI_DATA = "$XDG_DATA_HOME/kodi";
-    PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store";
-    TMUX_TMPDIR = "$XDG_RUNTIME_DIR";
-    ANDROID_SDK_HOME = "$XDG_CONFIG_HOME/android";
-    CARGO_HOME = "$XDG_DATA_HOME/cargo";
-    GOPATH = "$XDG_DATA_HOME/go";
-    ANSIBLE_CONFIG = "$XDG_CONFIG_HOME/ansible/ansible.cfg";
-    UNISON = "$XDG_DATA_HOME/unison";
-    HISTFILE = "$XDG_DATA_HOME/history";
-    WEECHAT_HOME = "$XDG_CONFIG_HOME/weechat";
-    MBSYNCRC = "$HOME/.config/mbsync/config";
-    ELECTRUMDIR = "$XDG_DATA_HOME/electrum";
-    XRESOURCES = "$XDG_CONFIG_HOME/x11/xresources";
+    ICEAUTHORITY = "${xdg.cacheHome}/ICEauthority";
+    NPM_CONFIG_USERCONFIG = "${xdg.configHome}/npm/npmrc";
+    WINEPREFIX = "${xdg.dataHome}/wineprefixes/default";
+    KODI_DATA = "${xdg.dataHome}/kodi";
+    PASSWORD_STORE_DIR = "${xdg.dataHome}/password-store";
+    ANDROID_SDK_HOME = "${xdg.configHome}/android";
+    CARGO_HOME = "${xdg.dataHome}/cargo";
+    GOPATH = "${xdg.dataHome}/go";
+    ANSIBLE_CONFIG = "${xdg.configHome}/ansible/ansible.cfg";
+    UNISON = "${xdg.dataHome}/unison";
+    HISTFILE = "${xdg.dataHome}/history";
+    WEECHAT_HOME = "${xdg.configHome}/weechat";
+    MBSYNCRC = "${xdg.configHome}/mbsync/config";
+    ELECTRUMDIR = "${xdg.dataHome}/electrum";
+    XRESOURCES = "${xdg.configHome}/x11/xresources";
     SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
-    NODE_REPL_HISTORY = "$XDG_DATA_HOME/node_repl_history";
-    RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
-    CGDB_DIR = "$XDG_CONFIG_HOME/cgdb";
-    NUGET_PACKAGES = "$XDG_CACHE_HOME/NuGetPackages";
-    KDEHOME = "$XDG_CONFIG_HOME/kde";
-    PYTHONPYCACHEPREFIX = "$XDG_CACHE_HOME/python";
-    PYTHONUSERBASE = "$XDG_DATA_HOME/python";
-    GRADLE_USER_HOME = "$XDG_DATA_HOME/gradle";
-    RANDFILE = "$XDG_DATA_HOME/openssl_rnd";
-    # TERMINFO = "$XDG_DATA_HOME/terminfo";
-    # TERMINFO_DIRS = "$XDG_DATA_HOME/terminfo:/usr/share/terminfo";
-    ANDROID_HOME = "$XDG_DATA_HOME/android";
-    USERXSESSION = "$XDG_CACHE_HOME/X11/xsession";
-    USERXSESSIONRC = "$XDG_CACHE_HOME/X11/xsessionrc";
-    ALTUSERXSESSION = "$XDG_CACHE_HOME/X11/Xsession";
-    ERRFILE = "$XDG_CACHE_HOME/X11/xsession-errors";
-    MINETEST_USER_PATH = "$XDG_DATA_HOME/minetest";
-    MPLAYER_HOME = "$XDG_CONFIG_HOME/mplayer";
-    PYTHONSTARTUP = "$XDG_CONFIG_HOME/pythonrc";
-    KERAS_HOME = "$XDG_CONFIG_HOME/keras";
-    SQLITE_HISTORY = "$XDG_CACHE_HOME/sqlite_history";
-    CONDARC = "$XDG_CONFIG_HOME/conda/condarc";
-    XMONAD_CACHE_DIR = "$XDG_CONFIG_HOME/xmonad";
-    XMONAD_CONFIG_DIR = "$XDG_CONFIG_HOME/xmonad";
-    XMONAD_DATA_DIR = "$XDG_CONFIG_HOME/xmonad";
-    MANGOHUD_CONFIGFILE = "$XDG_CONFIG_HOME/mangohud.conf";
+    NODE_REPL_HISTORY = "${xdg.dataHome}/node_repl_history";
+    RUSTUP_HOME = "${xdg.dataHome}/rustup";
+    CGDB_DIR = "${xdg.configHome}/cgdb";
+    NUGET_PACKAGES = "${xdg.cacheHome}/NuGetPackages";
+    KDEHOME = "${xdg.configHome}/kde";
+    PYTHONPYCACHEPREFIX = "${xdg.cacheHome}/python";
+    PYTHONUSERBASE = "${xdg.dataHome}/python";
+    GRADLE_USER_HOME = "${xdg.dataHome}/gradle";
+    RANDFILE = "${xdg.dataHome}/openssl_rnd";
+    # TERMINFO = "${xdg.dataHome}/terminfo";
+    # TERMINFO_DIRS = "${xdg.dataHome}/terminfo:/usr/share/terminfo";
+    ANDROID_HOME = "${xdg.dataHome}/android";
+    USERXSESSION = "${xdg.cacheHome}/X11/xsession";
+    USERXSESSIONRC = "${xdg.cacheHome}/X11/xsessionrc";
+    ALTUSERXSESSION = "${xdg.cacheHome}/X11/Xsession";
+    ERRFILE = "${xdg.cacheHome}/X11/xsession-errors";
+    MINETEST_USER_PATH = "${xdg.dataHome}/minetest";
+    MPLAYER_HOME = "${xdg.configHome}/mplayer";
+    PYTHONSTARTUP = "${xdg.configHome}/pythonrc";
+    KERAS_HOME = "${xdg.configHome}/keras";
+    SQLITE_HISTORY = "${xdg.cacheHome}/sqlite_history";
+    CONDARC = "${xdg.configHome}/conda/condarc";
+    XMONAD_CACHE_DIR = "${xdg.configHome}/xmonad";
+    XMONAD_CONFIG_DIR = "${xdg.configHome}/xmonad";
+    XMONAD_DATA_DIR = "${xdg.configHome}/xmonad";
+    MANGOHUD_CONFIGFILE = "${xdg.configHome}/mangohud.conf";
 
     # Settings
 
@@ -86,6 +86,7 @@ in
       ncdu
       btop
       jq
+      rustup
       killall
       nvtopPackages.full
       pulsemixer
