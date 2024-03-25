@@ -63,6 +63,10 @@ in
         name = cursor_name;
         size = 24;
       };
+      iconTheme = {
+        package = pkgs.papirus-icon-theme;
+        name = "Papirus-Dark";
+      };
     };
 
     qt = {

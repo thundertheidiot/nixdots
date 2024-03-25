@@ -19,6 +19,7 @@ in with config; {
 
   programs.emacs = {
     enable = true;
+    package = pkgs.emacs29;
     extraConfig = builtins.readFile ./init.el;
     extraPackages = epkgs: [
       pkgs.emacs-lsp-booster

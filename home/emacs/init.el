@@ -315,15 +315,6 @@
 (require 'org-bullets)
 (add-hook 'org-mode-hook #'org-bullets-mode)
 
-;; Theming
-(require 'catppuccin-theme)
-(setq catppuccin-flavor 'mocha)
-(catppuccin-reload)
-(load-theme 'catppuccin :no-confirm)
-
-(require 'solaire-mode)
-(solaire-global-mode 1)
-
 ;; hl-todo
 (require 'hl-todo)
 (global-hl-todo-mode 1)
@@ -554,3 +545,12 @@
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
+
+;; Theming
+(require 'catppuccin-theme)
+(setq catppuccin-flavor 'mocha)
+;; (catppuccin-reload)
+;; (load-theme 'catppuccin :no-confirm)
+
+(require 'solaire-mode)
+(solaire-global-mode 1)

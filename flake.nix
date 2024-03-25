@@ -113,7 +113,5 @@
         }
       ];
     };
-
-    formatter.${localconfig.system} = pkgs.alejandra;
   };
 }

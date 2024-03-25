@@ -18,6 +18,7 @@ with config; {
     ncmpcpp
     gimp
 	  blueberry
+    cinnamon.nemo
   ];
 
   xdg.userDirs = {
