@@ -53,7 +53,7 @@
       system = localconfig.system;
       config.allowUnfree = true;
       overlays = [
-        inputs.emacs-overlay
+        inputs.emacs-overlay.overlay
       ];
     };
   in {
@@ -69,7 +69,7 @@
       pkgs = import nixpkgs {
         system = localconfig.system;
         config.allowUnfree = true;
-        overlays = [ inputs.nixgl.overlay inputs.emacs-overlay ];
+        overlays = [ inputs.nixgl.overlay inputs.emacs-overlay.overlay ];
       };
       extraSpecialArgs = {
         inherit localconfig inputs;

@@ -376,7 +376,7 @@
 (setq treesit-auto-install 'prompt)
 (treesit-auto-add-to-auto-mode-alist 'all)
 (global-treesit-auto-mode)
-(add-to-list 'treesit-extra-load-path (expand-file-name "tree-sitter" user-emacs-directory))
+(add-to-list 'treesit-extra-load-path (expand-file-name "tree-sitter/" user-emacs-directory))
 
 (require 'rustic)
 (add-hook 'rustic-mode-hook #'lsp-deferred)

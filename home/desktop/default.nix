@@ -17,6 +17,7 @@ with config; {
     gnome.gnome-keyring
     ncmpcpp
     gimp
+	  blueberry
   ];
 
   xdg.userDirs = {
