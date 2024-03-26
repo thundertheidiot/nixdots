@@ -1,6 +1,7 @@
 {
   config,
   localconfig,
+  lib,
   ...
 }: let
   colors = with config.scheme.withHashtag; {
@@ -8,8 +9,8 @@
     foreground = base07;
     inherit base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base10 base11 base12 base13 base14 base15;
   };
-in
-  with config; {
+in {
+  config = lib.mkIf (localconfig.install.hyprland) (with config; {
     programs.waybar = {
       enable = true;
       style = ''
@@ -337,4 +338,5 @@ in
         }
       ];
     };
-  }
+  });
+}
