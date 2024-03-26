@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   localconfig,
   inputs,
   ...
@@ -60,12 +61,12 @@
       "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | swappy -f -
     }
   '';
-in
-  with config; {
-    imports = [
-      ./waybar.nix
-    ];
+in {
+  imports = [
+    ./waybar.nix
+  ];
 
+  config = lib.mkIf (localconfig.install.hyprland) (with config; {
     home.packages = with pkgs; [
       hyprpaper
       grim
@@ -302,4 +303,5 @@ in
         ];
       };
     };
-  }
+  });
+}
