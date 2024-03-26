@@ -30,6 +30,7 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     nixgl.url = "github:nix-community/nixGL";
+    nix-gaming.url = "github:fufexan/nix-gaming";
   };
 
   outputs = {

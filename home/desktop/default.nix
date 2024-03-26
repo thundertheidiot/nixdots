@@ -7,6 +7,7 @@
 with config; {
   imports = [
     ./theming.nix
+    ./gaming
   ];
 
   home.packages = with pkgs; [

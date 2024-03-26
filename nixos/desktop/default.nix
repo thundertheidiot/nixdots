@@ -13,6 +13,10 @@ with config;
       dconf
     ];
 
+    imports = [
+      inputs.nix-gaming.nixosModules.pipewireLowLatency
+    ];
+
     services.xserver.enable = true;
     services.xserver.displayManager.lightdm = {
       enable = true;
@@ -25,6 +29,10 @@ with config;
       alsa.support32Bit = true;
       pulse.enable = true;
       jack.enable = true;
+
+      lowLatency = {
+        enable = true;
+      };
     };
 
     services.xserver.displayManager.startx.enable = true;
