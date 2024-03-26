@@ -183,12 +183,12 @@
 ;; (require 'undo-fu)
 (require 'undo-tree)
 (global-undo-tree-mode)
-(let (undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
-  (unless (file-directory-p undo-tree-dir)
-    (make-directory undo-tree-dir))
-  (defadvice undo-tree-make-history-save-file-name
-      (after undo-tree activate)
-    (setq ad-return-value (concat undo-tree-dir ad-return-value))))
+(setq th/undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
+(unless (file-directory-p th/undo-tree-dir)
+  (make-directory th/undo-tree-dir))
+(defadvice undo-tree-make-history-save-file-name
+  (after undo-tree activate)
+  (setq ad-return-value (concat th/undo-tree-dir ad-return-value)))
 (require 'evil)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
@@ -559,9 +559,14 @@
 
 ;; Theming
 (require 'catppuccin-theme)
-(setq catppuccin-flavor 'mocha)
 ;; (catppuccin-reload)
-;; (load-theme 'catppuccin :no-confirm)
+;; (load-theme 'catppuccin t)
+;; (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+(add-hook 'server-after-make-frame-hook (lambda () (catppuccin-reload) (catppuccin-load-flavor 'mocha)))
+;; (add-hook 'server-after-make-frame-hook (lambda () (catppuccin-load-flavor 'mocha)))
+;; (add-hook 'emacs-startup-hook (lambda () (catppuccin-load-flavor 'mocha)))
+
+;; (add-hook 'after-init-hook (lambda () (catppuccin-reload)))
 
 (require 'solaire-mode)
 (solaire-global-mode 1)
