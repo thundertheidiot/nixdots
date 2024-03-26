@@ -50,17 +50,22 @@
   in {
     defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
-    nixglModule = { config, pkgs, ... }: with config; {
-      home.packages = with pkgs; [
-        nixgl.nixGLIntel
-      ];
-    };
+    nixglModule = {
+      config,
+      pkgs,
+      ...
+    }:
+      with config; {
+        home.packages = with pkgs; [
+          nixgl.nixGLIntel
+        ];
+      };
 
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {
         system = localconfig.system;
         config.allowUnfree = true;
-        overlays = [ inputs.nixgl.overlay inputs.emacs-overlay.overlay ];
+        overlays = [inputs.nixgl.overlay inputs.emacs-overlay.overlay];
       };
       extraSpecialArgs = {
         inherit localconfig inputs;

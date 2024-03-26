@@ -5,9 +5,12 @@
   localconfig,
   inputs,
   ...
-}:
-with config;
-  lib.mkIf (localconfig.install.desktop) {
+}: {
+  imports = [
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
+    ./hyprland.nix
+  ];
+  config = lib.mkIf (localconfig.install.desktop) (with config; {
     environment.systemPackages = with pkgs; [
       dmenu
       dconf
@@ -26,9 +29,9 @@ with config;
       pulse.enable = true;
       jack.enable = true;
 
-      # lowLatency = {
-      #   enable = true;
-      # };
+      lowLatency = {
+        enable = true;
+      };
     };
 
     services.xserver.displayManager.startx.enable = true;
@@ -50,4 +53,5 @@ with config;
         inputs.hyprland.packages.${pkgs.system}.hyprland
       )
     ];
-  }
+  });
+}

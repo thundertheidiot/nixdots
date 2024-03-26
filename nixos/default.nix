@@ -7,13 +7,12 @@
   ...
 }: let
   # lib = pkgs.lib;
-in
-  with config; {
-    imports = [
-      ./desktop
-      ./desktop/hyprland.nix
-    ];
+in {
+  imports = [
+    ./desktop
+  ];
 
+  config = with config; {
     nix.settings.experimental-features = ["nix-command" "flakes"];
     nix.settings.allowed-users = [localconfig.username];
 
@@ -70,4 +69,5 @@ in
         PasswordAuthentication = false;
       };
     };
-  }
+  };
+}
