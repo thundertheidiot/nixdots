@@ -38,38 +38,6 @@
         "type": "github"
       }
     },
-    "emacs-eglot-booster": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1710297328,
-        "narHash": "sha256-KMZi4ARe5t+kxD0Wt74Yi9vkQY7STDyvbqn3WuE2iQE=",
-        "owner": "jdtsmith",
-        "repo": "eglot-booster",
-        "rev": "caee55ee5285659964d0b9fe4101e28de09701ca",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jdtsmith",
-        "repo": "eglot-booster",
-        "type": "github"
-      }
-    },
-    "emacs-indent-bars": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1710117442,
-        "narHash": "sha256-0p3PW2hbzGeUIVkUWow6OWpL3OspbId+yqEPV909g4k=",
-        "owner": "jdtsmith",
-        "repo": "indent-bars",
-        "rev": "4583e3e9f507143cd4241131b77fc5e8b1722bbf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jdtsmith",
-        "repo": "indent-bars",
-        "type": "github"
-      }
-    },
     "emacs-overlay": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -582,8 +550,6 @@
     "root": {
       "inputs": {
         "base16": "base16",
-        "emacs-eglot-booster": "emacs-eglot-booster",
-        "emacs-indent-bars": "emacs-indent-bars",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "hyprland": "hyprland",

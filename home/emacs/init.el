@@ -178,12 +178,17 @@
 ;; (load (expand-file-name "eglot-booster.el" extrapkgs-dir))
 ;; (require 'eglot-booster)
 ;; (load (expand-file-name "indent-bars.el" extrapkgs-dir))
-;; (require 'indent-bars)
 
 ;; Evil
 ;; (require 'undo-fu)
 (require 'undo-tree)
 (global-undo-tree-mode)
+(let (undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
+  (unless (file-directory-p undo-tree-dir)
+    (make-directory undo-tree-dir))
+  (defadvice undo-tree-make-history-save-file-name
+      (after undo-tree activate)
+    (setq ad-return-value (concat undo-tree-dir ad-return-value))))
 (require 'evil)
 (setq evil-want-integration t)
 (setq evil-want-keybinding nil)
@@ -330,8 +335,10 @@
 (fset #'jsonrpc--log-event #'ignore)
 (add-hook 'prog-mode-hook #'eglot-ensure)
 
-;; (eglot-booster-mode)
+(require 'eglot-booster)
+(eglot-booster-mode)
 
+;; (require 'indent-bars)
 ;; (add-hook 'prog-mode-hook #'indent-bars-mode)
 
 
@@ -554,7 +561,7 @@
 (require 'catppuccin-theme)
 (setq catppuccin-flavor 'mocha)
 ;; (catppuccin-reload)
-(load-theme 'catppuccin :no-confirm)
+;; (load-theme 'catppuccin :no-confirm)
 
 (require 'solaire-mode)
 (solaire-global-mode 1)
