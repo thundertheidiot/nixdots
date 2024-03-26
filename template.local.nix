@@ -8,10 +8,11 @@
 
   # By default my basic environment is installed, fish shell, emacs, etc.
   install = {
-    desktop = true; # Configuration for a desktop system, for example theming, a terminal emulator, xdg dirs, stuff you would want on a desktop system
-    firefox = true; # Self explanatory
-    hyprland = true; # Self explanatory
-    awesomewm = true; # Self explanatory
+    desktop = true;
+	gaming = true;
+    firefox = true;
+    hyprland = true;
+    awesomewm = true;
   };
 
   hyprland = {
