@@ -2,11 +2,12 @@
   description = "nixos";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/23.11";
+    unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "unstable";
     };
 
     base16.url = "github:SenchoPens/base16.nix";
@@ -19,6 +20,7 @@
 
     hyprland = {
       url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "unstable";
     };
 
     split-monitor-workspaces = {
@@ -30,12 +32,16 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     nixgl.url = "github:nix-community/nixGL";
-    nix-gaming.url = "github:fufexan/nix-gaming";
+    nix-gaming = {
+      url = "github:fufexan/nix-gaming";
+      inputs.nixpkgs.follows = "unstable";
+    }; 
   };
 
   outputs = {
     self,
     nixpkgs,
+    unstable,
     home-manager,
     ...
   } @ inputs: let
@@ -45,6 +51,14 @@
       config.allowUnfree = true;
       overlays = [
         inputs.emacs-overlay.overlay
+      ];
+    };
+    unstablePkgs = import unstable {
+      system = localconfig.system;
+      config.allowUnfree = true;
+      overlays = [
+        inputs.emacs-overlay.overlay
+        inputs.nixgl.overlay
       ];
     };
   in {
@@ -62,11 +76,12 @@
       };
 
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
-      pkgs = import nixpkgs {
-        system = localconfig.system;
-        config.allowUnfree = true;
-        overlays = [inputs.nixgl.overlay inputs.emacs-overlay.overlay];
-      };
+      # pkgs = import nixpkgs {
+      #   system = localconfig.system;
+      #   config.allowUnfree = true;
+      #   overlays = [inputs.nixgl.overlay inputs.emacs-overlay.overlay];
+      # };
+      pkgs = unstablePkgs;
       extraSpecialArgs = {
         inherit localconfig inputs;
       };
@@ -83,7 +98,7 @@
     nixosConfigurations.default = nixpkgs.lib.nixosSystem {
       system = localconfig.system;
       specialArgs = {
-        inherit localconfig inputs;
+        inherit unstablePkgs localconfig inputs;
       };
       modules = [
         {
@@ -97,13 +112,12 @@
         }
         home-manager.nixosModules.home-manager
         {
+          pkgs = unstablePkgs;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = {
             inherit localconfig inputs;
           };
-
-          nixpkgs.config.allowUnfree = true;
 
           home-manager.users.${localconfig.username} = ./home;
         }
