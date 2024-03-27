@@ -116,5 +116,10 @@
       defaultEditor = true;
       startWithUserSession = true;
     };
+
+    xdg.configFile."emacs/.createdir" = {
+      enable = true;
+      text = "This file is here to make nix create \"${xdg.configHome}/emacs/\", so emacs uses it instead of \"${home.homeDirectory}/.emacs.d/\".";
+    };
   });
 }
