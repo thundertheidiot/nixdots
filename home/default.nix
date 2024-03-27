@@ -22,5 +22,6 @@ in {
     ./firefox
     ./awesome
     ./hyprland
+    ./tv
   ];
 }
