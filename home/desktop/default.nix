@@ -105,6 +105,9 @@
       config = {
         volume = 75;
         ytdl-format = "bestvideo[height<=1080]+bestaudio";
+        hwdec="auto-safe";
+        vo="gpu";
+        profile="gpu-hq";
       };
       scripts = with pkgs.mpvScripts; [
         sponsorblock-minimal
