@@ -31,6 +31,8 @@
 
     nixgl.url = "github:nix-community/nixGL";
     nix-gaming.url = "github:fufexan/nix-gaming";
+
+    nur.url = "github:nix-community/NUR";
   };
 
   outputs = {
@@ -40,13 +42,20 @@
     ...
   } @ inputs: let
     localconfig = import ./local.nix;
-    pkgs = import nixpkgs {
-      system = localconfig.system;
-      config.allowUnfree = true;
-      overlays = [
-        inputs.emacs-overlay.overlay
-      ];
-    };
+    # pkgs = import nixpkgs {
+    #   system = localconfig.system;
+    #   config.allowUnfree = true;
+    #   overlays = [
+    #     inputs.emacs-overlay.overlay
+    #     inputs.nixgl.overlay
+    #     (final: prev: {
+    #       nur = import inputs.nur {
+    #         nurpkgs = prev;
+    #         pkgs = prev;
+    #       };
+    #     })
+    #   ];
+    # };
   in {
     defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
@@ -61,16 +70,29 @@
         ];
       };
 
+    commonModules.nixpkgs = { inputs, ... }: {
+      nixpkgs.system = localconfig.system;
+      nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = [
+        inputs.emacs-overlay.overlay
+        inputs.nixgl.overlay
+        (final: prev: {
+          nur = import inputs.nur {
+            nurpkgs = prev;
+            pkgs = prev;
+          };
+        })
+      ];
+    };
+
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
-      pkgs = import nixpkgs {
-        system = localconfig.system;
-        config.allowUnfree = true;
-        overlays = [inputs.nixgl.overlay inputs.emacs-overlay.overlay];
-      };
+      # inherit pkgs;
+      pkgs = import nixpkgs { system = localconfig.system; };
       extraSpecialArgs = {
         inherit localconfig inputs;
       };
       modules = [
+        self.commonModules.nixpkgs
         self.nixglModule
         {
           programs.home-manager.enable = true;
@@ -86,6 +108,7 @@
         inherit localconfig inputs;
       };
       modules = [
+        self.commonModules.nixpkgs
         {
           time.timeZone = localconfig.timeZone;
           networking.hostName = localconfig.hostName;

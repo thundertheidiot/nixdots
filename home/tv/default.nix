@@ -1,11 +1,13 @@
 { config, lib, pkgs, localconfig, ... }: {
   config = lib.mkIf (localconfig.install.tv) (with config; {
-    home.packages = with pkgs; [
-      kodiPackages.kodi
-      kodiPackages.youtube
-      kodiPackages.netflix
-      kodiPackages.jellyfin
-      kodiPackages.invidious
-    ];
+    programs.kodi = {
+      enable = true;
+      package = pkgs.kodi.withPackages (exts: with exts; [
+        youtube
+        netflix
+        jellyfin
+        invidious
+      ]);
+    };
   });
 }

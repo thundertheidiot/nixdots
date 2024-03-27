@@ -26,7 +26,6 @@
     ICEAUTHORITY = "${xdg.cacheHome}/ICEauthority";
     NPM_CONFIG_USERCONFIG = "${xdg.configHome}/npm/npmrc";
     WINEPREFIX = "${xdg.dataHome}/wineprefixes/default";
-    KODI_DATA = "${xdg.dataHome}/kodi";
     PASSWORD_STORE_DIR = "${xdg.dataHome}/password-store";
     ANDROID_SDK_HOME = "${xdg.configHome}/android";
     CARGO_HOME = "${xdg.dataHome}/cargo";
