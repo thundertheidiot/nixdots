@@ -2,6 +2,7 @@
   config = lib.mkIf (localconfig.install.tv) (with config; {
     programs.kodi = {
       enable = true;
+      datadir = "${xdg.dataHome}/kodi";
       package = pkgs.kodi.withPackages (exts: with exts; [
         youtube
         netflix
