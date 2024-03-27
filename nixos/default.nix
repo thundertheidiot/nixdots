@@ -10,6 +10,7 @@
 in {
   imports = [
     ./desktop
+    ./tv
   ];
 
   config = with config; {
