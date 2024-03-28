@@ -241,7 +241,7 @@ in {
           "$mod, K, layoutmsg, cycleprev"
           "$mod, L, splitratio, +0.1"
           ",XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+"
-          ",XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl @DEFAULT_AUDIO_SINK@ 3%-"
+          ",XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-"
         ];
 
         bindm = [
