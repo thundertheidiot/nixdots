@@ -148,6 +148,7 @@ in {
           "workspace 7 silent,class:(gajim)"
           "workspace 6 silent,class:(easyeffects)"
 
+          "fullscreen,class:(Kodi)"
           "fullscreen,class:(cs2)"
           "stayfocused, title:^()$,class:^(steam)$"
         ];
