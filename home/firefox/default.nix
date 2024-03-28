@@ -17,7 +17,15 @@
           istilldontcareaboutcookies
           bitwarden
           privacy-redirect
+          multi-account-containers
+          user-agent-string-switcher
         ];
+
+        containers = {
+          youtube = {
+            color = "red";
+          };
+        };
 
         search = {
           force = true;
