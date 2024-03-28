@@ -116,7 +116,6 @@
         inputs.agenix.nixosModules.default
         self.common.agenix
         {
-          chaotic.nyx.cache.enable = true;
           time.timeZone = localconfig.timeZone;
           networking.hostName = localconfig.hostName;
 
@@ -134,7 +133,10 @@
             inherit localconfig inputs;
           };
 
-          nixpkgs.config.allowUnfree = true;
+          home-manager.sharedModules = [
+            inputs.agenix.homeManagerModules.default
+            self.common.agenix
+          ];
 
           home-manager.users.${localconfig.username} = ./home;
         }

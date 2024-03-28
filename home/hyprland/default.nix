@@ -164,7 +164,7 @@ in {
           "${pkgs.mako}/bin/mako"
           "${pkgs.hyprpaper}/bin/hyprpaper"
           "${pkgs.waybar}/bin/waybar"
-          (lib.mkIf (localconfig.install.tv) "${pkgs.kodi} -fs")
+          (lib.mkIf (localconfig.install.tv) "${pkgs.kodi}/bin/kodi -fs")
         ];
 
         input = {
