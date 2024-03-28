@@ -27,18 +27,17 @@
     };
 
     installPhase = ''
-    runHook preInstall
+      runHook preInstall
 
-    cd ./$sourceDir
-    d=$out${addonDir}/${yleNamespace}
-    mkdir -p $d
-    sauce="."
-    [ -d ${yleNamespace} ] && sauce=${yleNamespace}
-    cp -R "$sauce/"* $d
+      cd ./$sourceDir
+      d=$out${addonDir}/${yleNamespace}
+      mkdir -p $d
+      sauce="."
+      [ -d ${yleNamespace} ] && sauce=${yleNamespace}
+      cp -R "$sauce/"* $d
 
-    runHook postInstall
+      runHook postInstall
     '';
-    
   };
 in {
   config = lib.mkIf (localconfig.install.tv) (with config; {
@@ -46,14 +45,25 @@ in {
       yleareena
     ];
 
-    wayland.windowManager.hyprland.settings.exec-once = lib.mkIf (localconfig.install.hyprland) ([
+    wayland.windowManager.hyprland.settings.exec-once = lib.mkIf (localconfig.install.hyprland) [
       "${pkgs.kodi} -fs"
-    ]);
+    ];
 
     xdg.dataFile."kodi/addons/${yleNamespace}" = {
       enable = true;
       recursive = true;
       source = "${yleareena}/share/kodi/addons/${yleNamespace}";
+    };
+
+    xdg.dataFile."kodi/userdata/addon_data/plugin.video.invidious/settings.xml" = {
+      enable = true;
+      text = ''
+        <settings version="2">
+            <setting id="auto_instance">false</setting>
+            <setting id="instance_url">http://127.0.0.1:3000</setting>
+            <setting id="disable_dash" default="true">false</setting>
+        </settings>
+      '';
     };
 
     programs.kodi = {
@@ -62,7 +72,7 @@ in {
 
       package = pkgs.kodi.withPackages (pkgs:
         with pkgs; [
-          youtube
+          # youtube
           netflix
           jellyfin
           invidious

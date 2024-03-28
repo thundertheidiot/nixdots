@@ -16,6 +16,20 @@
       user = localconfig.username;
     };
 
-    networking.firewall.enable = false;
+    services.postgresql = {
+      enable = true;
+    };
+
+    services.invidious = {
+      enable = true;
+      address = "127.0.0.1";
+      port = 3000;
+      settings = {
+        db = {
+          user = "invidious";
+          dbname = "invidious";
+        };
+      };
+    };
   });
 }
