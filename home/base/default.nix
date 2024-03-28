@@ -91,7 +91,7 @@ in
       pulsemixer
       alejandra
       rsync
-      sops
+      agenix.default
       age
     ];
 

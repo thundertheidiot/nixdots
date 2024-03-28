@@ -51,20 +51,19 @@ in {
       source = "${yleareena}/share/kodi/addons/${yleNamespace}";
     };
 
-    xdg.dataFile."kodi/userdata/addon_data/plugin.video.invidious/settings.xml" = {
-      enable = true;
-      text = ''
-        <settings version="2">
-            <setting id="auto_instance">false</setting>
-            <setting id="instance_url">http://127.0.0.1:3000</setting>
-            <setting id="disable_dash" default="true">true</setting>
-        </settings>
-      '';
-    };
+    age.secrets.youtube_api_keys.path = "${xdg.dataHome}/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
 
     programs.kodi = {
       enable = true;
       datadir = "${xdg.dataHome}/kodi";
+
+      addonSettings = {
+        "plugin.video.invidious" = {
+          auto_instance = "false";
+          instance_url = "http://127.0.0.1:3000";
+          disable_dash = "true";
+        };
+      };
 
       package = pkgs.kodi.withPackages (pkgs:
         with pkgs; [

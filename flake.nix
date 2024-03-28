@@ -37,17 +37,13 @@
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
-    sops-nix,
     chaotic,
     ...
   } @ inputs: let
@@ -71,21 +67,16 @@
               system = final.system;
               config.allowUnfree = final.config.allowUnfree;
             };
+            agenix = inputs.agenix.packages.${localconfig.system};
           })
         ];
       };
     };
 
-    common.sops = {
-      sops = {
-        # defaultSopsFile = ./secrets/secrets.yaml;
-        # defaultSopsFormat = "yaml";
+    common.agenix = {
+      age.identityPaths = [ "${localconfig.homeDirectory}/.ssh/id_agenix" ];
 
-        age.keyFile = "${localconfig.homeDirectory}/.config/sops/age/keys.txt";
-        # secrets."youtube/api_key"= {};
-        # secrets."youtube/client_id" = {};
-        # secrets."youtube/client_secret" = {};
-      };
+      age.secrets.youtube_api_keys.file = ./secrets/youtube_api_keys.age;
     };
 
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
@@ -95,8 +86,8 @@
       };
       modules = [
         self.common.nixpkgs
-        sops-nix.homeManagerModules.sops
-        self.common.sops
+        inputs.agenix.homeManagerModules.default
+        self.common.agenix
         # chaotic.homeManagerModules.default
         ({
           config,
@@ -122,8 +113,8 @@
       };
       modules = [
         self.common.nixpkgs
-        sops-nix.nixosModules.sops
-        self.common.sops
+        inputs.agenix.nixosModules.default
+        self.common.agenix
         {
           chaotic.nyx.cache.enable = true;
           time.timeZone = localconfig.timeZone;
