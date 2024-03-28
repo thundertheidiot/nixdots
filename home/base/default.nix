@@ -90,6 +90,9 @@ in
       nvtopPackages.full
       pulsemixer
       alejandra
+      rsync
+      sops
+      age
     ];
 
     xdg.enable = true;

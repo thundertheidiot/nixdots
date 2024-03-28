@@ -505,6 +505,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-stable_3": {
+      "locked": {
+        "lastModified": 1711233294,
+        "narHash": "sha256-eEu5y4J145BYDw9o/YEmeJyqh8blgnZwuz9k234zuWc=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ac6bdf6181666ebb4f90dd20f31e2fa66ede6b68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1711001935,
@@ -644,6 +660,7 @@
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-f2k": "nixpkgs-f2k",
         "nur": "nur",
+        "sops-nix": "sops-nix",
         "split-monitor-workspaces": "split-monitor-workspaces",
         "tt-schemes": "tt-schemes"
       }
@@ -662,6 +679,27 @@
         "owner": "rust-analyzer",
         "ref": "nightly",
         "repo": "rust-analyzer",
+        "type": "github"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixpkgs-stable": "nixpkgs-stable_3"
+      },
+      "locked": {
+        "lastModified": 1711249319,
+        "narHash": "sha256-N+Pp3/8H+rd7cO71VNV/ovV/Kwt+XNeUHNhsmyTabdM=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "405987a66cce9a4a82f321f11b205982a7127c88",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
         "type": "github"
       }
     },

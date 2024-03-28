@@ -34,61 +34,79 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     nur.url = "github:nix-community/NUR";
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
+    sops-nix,
     ...
   } @ inputs: let
     localconfig = import ./local.nix;
   in {
     defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
-    nixglModule = {
-      config,
-      pkgs,
-      ...
-    }:
-      with config; {
-        home.packages = with pkgs; [
-          nixgl.nixGLIntel
+    common.nixpkgs = {inputs, ...}: {
+      nixpkgs = {
+        system = localconfig.system;
+        config.allowUnfree = true;
+        overlays = [
+          inputs.emacs-overlay.overlay
+          inputs.nixgl.overlay
+          (final: prev: {
+            nur = import inputs.nur {
+              nurpkgs = prev;
+              pkgs = prev;
+            };
+            "2311" = import inputs.nixpkgs-stable {
+              system = final.system;
+              config.allowUnfree = final.config.allowUnfree;
+            };
+          })
         ];
       };
+    };
 
-    commonModules.nixpkgs = { inputs, ... }: {
-      nixpkgs.system = localconfig.system;
-      nixpkgs.config.allowUnfree = true;
-      nixpkgs.overlays = [
-        inputs.emacs-overlay.overlay
-        inputs.nixgl.overlay
-        (final: prev: {
-          nur = import inputs.nur {
-            nurpkgs = prev;
-            pkgs = prev;
-          };
-          "2311" = import inputs.nixpkgs-stable {
-            system = final.system;
-            config.allowUnfree = final.config.allowUnfree;
-          };
-        })
-      ];
+    common.sops = {
+      sops = {
+        # defaultSopsFile = ./secrets/secrets.yaml;
+        # defaultSopsFormat = "yaml";
+
+        age.keyFile = "${localconfig.homeDirectory}/.config/sops/age/keys.txt";
+        # secrets."youtube/api_key"= {};
+        # secrets."youtube/client_id" = {};
+        # secrets."youtube/client_secret" = {};
+      };
     };
 
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
-      # inherit pkgs;
-      pkgs = import nixpkgs { system = localconfig.system; };
+      pkgs = import nixpkgs {system = localconfig.system;};
       extraSpecialArgs = {
         inherit localconfig inputs;
       };
       modules = [
-        self.commonModules.nixpkgs
-        self.nixglModule
-        {
-          programs.home-manager.enable = true;
-          targets.genericLinux.enable = true;
-        }
+        self.common.nixpkgs
+        sops-nix.homeManagerModules.sops
+        self.common.sops
+        ({
+          config,
+          pkgs,
+          ...
+        }:
+          with config; {
+            home.packages = with pkgs; [
+              nixgl.nixGLIntel # deceptive naming, this is for mesa drivers
+              nixgl.nixVulkanIntel
+            ];
+            programs.home-manager.enable = true;
+            targets.genericLinux.enable = true;
+          })
         ./home
       ];
     };
@@ -99,7 +117,9 @@
         inherit localconfig inputs;
       };
       modules = [
-        self.commonModules.nixpkgs
+        self.common.nixpkgs
+        sops-nix.nixosModules.sops
+        self.common.sops
         {
           time.timeZone = localconfig.timeZone;
           networking.hostName = localconfig.hostName;
