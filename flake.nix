@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/23.11";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -42,20 +43,6 @@
     ...
   } @ inputs: let
     localconfig = import ./local.nix;
-    # pkgs = import nixpkgs {
-    #   system = localconfig.system;
-    #   config.allowUnfree = true;
-    #   overlays = [
-    #     inputs.emacs-overlay.overlay
-    #     inputs.nixgl.overlay
-    #     (final: prev: {
-    #       nur = import inputs.nur {
-    #         nurpkgs = prev;
-    #         pkgs = prev;
-    #       };
-    #     })
-    #   ];
-    # };
   in {
     defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
 
@@ -80,6 +67,10 @@
           nur = import inputs.nur {
             nurpkgs = prev;
             pkgs = prev;
+          };
+          "2311" = import inputs.nixpkgs-stable {
+            system = final.system;
+            config.allowUnfree = final.config.allowUnfree;
           };
         })
       ];

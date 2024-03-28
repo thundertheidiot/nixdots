@@ -56,9 +56,9 @@ in {
       enable = true;
       datadir = "${xdg.dataHome}/kodi";
 
-      package = pkgs.kodi.withPackages (exts:
-        with exts; [
-          youtube
+      package = pkgs.kodi.withPackages (pkgs:
+        with pkgs; [
+          2311.youtube
           netflix
           jellyfin
           invidious
