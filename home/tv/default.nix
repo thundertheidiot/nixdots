@@ -56,7 +56,7 @@ in {
       enable = true;
       datadir = "${xdg.dataHome}/kodi";
 
-      package = pkgs.kodi.withPackages (pkgs:
+      package = pkgs."2311".kodi.withPackages (pkgs:
         with pkgs; [
           2311.youtube
           netflix
