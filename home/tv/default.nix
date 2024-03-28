@@ -45,10 +45,6 @@ in {
       yleareena
     ];
 
-    wayland.windowManager.hyprland.settings.exec-once = lib.mkIf (localconfig.install.hyprland) [
-      "${pkgs.kodi} -fs"
-    ];
-
     xdg.dataFile."kodi/addons/${yleNamespace}" = {
       enable = true;
       recursive = true;
@@ -61,7 +57,7 @@ in {
         <settings version="2">
             <setting id="auto_instance">false</setting>
             <setting id="instance_url">http://127.0.0.1:3000</setting>
-            <setting id="disable_dash" default="true">false</setting>
+            <setting id="disable_dash" default="true">true</setting>
         </settings>
       '';
     };
