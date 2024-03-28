@@ -16,6 +16,9 @@
       dconf
     ];
 
+    # still compiles???
+    # boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
+
     services.xserver.enable = true;
     services.xserver.displayManager.lightdm = {
       enable = true;

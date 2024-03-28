@@ -46,6 +46,10 @@ in {
       yleareena
     ];
 
+    wayland.windowManager.hyprland.settings.exec-once = lib.mkIf (localconfig.install.hyprland) ([
+      "${pkgs.kodi} -fs"
+    ]);
+
     xdg.dataFile."kodi/addons/${yleNamespace}" = {
       enable = true;
       recursive = true;
@@ -56,9 +60,9 @@ in {
       enable = true;
       datadir = "${xdg.dataHome}/kodi";
 
-      package = pkgs."2311".kodi.withPackages (pkgs:
+      package = pkgs.kodi.withPackages (pkgs:
         with pkgs; [
-          2311.youtube
+          youtube
           netflix
           jellyfin
           invidious

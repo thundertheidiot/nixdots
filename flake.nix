@@ -35,6 +35,8 @@
 
     nur.url = "github:nix-community/NUR";
 
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,6 +48,7 @@
     nixpkgs,
     home-manager,
     sops-nix,
+    chaotic,
     ...
   } @ inputs: let
     localconfig = import ./local.nix;
@@ -94,6 +97,7 @@
         self.common.nixpkgs
         sops-nix.homeManagerModules.sops
         self.common.sops
+        chaotic.homeManagerModules.default
         ({
           config,
           pkgs,
@@ -121,6 +125,7 @@
         sops-nix.nixosModules.sops
         self.common.sops
         {
+          chaotic.nyx.cache.enable = true;
           time.timeZone = localconfig.timeZone;
           networking.hostName = localconfig.hostName;
 
@@ -129,6 +134,7 @@
             ./nixos
           ];
         }
+        chaotic.nixosModules.default
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
