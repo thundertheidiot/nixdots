@@ -97,7 +97,7 @@
         self.common.nixpkgs
         sops-nix.homeManagerModules.sops
         self.common.sops
-        chaotic.homeManagerModules.default
+        # chaotic.homeManagerModules.default
         ({
           config,
           pkgs,
