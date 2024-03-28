@@ -21,12 +21,6 @@
           user-agent-string-switcher
         ];
 
-        containers = {
-          youtube = {
-            color = "red";
-          };
-        };
-
         search = {
           force = true;
           default = "DuckDuckGo";

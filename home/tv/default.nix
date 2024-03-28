@@ -67,7 +67,7 @@ in {
 
       package = pkgs.kodi.withPackages (pkgs:
         with pkgs; [
-          # youtube
+          youtube
           netflix
           jellyfin
           invidious
