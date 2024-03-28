@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/23.11";
+    nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -64,7 +64,7 @@
               nurpkgs = prev;
               pkgs = prev;
             };
-            "2311" = import inputs.nixpkgs-stable {
+            "2311" = import inputs.nixpkgs-23-11 {
               system = final.system;
               config.allowUnfree = final.config.allowUnfree;
             };

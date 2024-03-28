@@ -22,6 +22,7 @@
       gimp
       blueberry
       cinnamon.nemo
+      libnotify
     ];
 
     xdg.userDirs = {
