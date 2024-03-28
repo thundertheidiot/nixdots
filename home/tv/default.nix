@@ -51,7 +51,8 @@ in {
       source = "${yleareena}/share/kodi/addons/${yleNamespace}";
     };
 
-    age.secrets.youtube_api_keys.path = "${xdg.dataHome}/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
+    age.secrets.kodi_youtube_api_keys.path = "${xdg.dataHome}/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
+    # age.secrets.kodi_jellyfin_data.path = "${xdg.dataHome}/kodi/userdata/addon_data/plugin.video.jellyfin/data.json";
 
     programs.kodi = {
       enable = true;
@@ -70,7 +71,7 @@ in {
           youtube
           netflix
           jellyfin
-          invidious
+          # invidious # maybe good later, not needed right now
         ]);
     };
   });

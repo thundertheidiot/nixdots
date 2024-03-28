@@ -5,5 +5,6 @@ let
   keys = [agenix];
   tvKeys = [tv agenix];
 in {
-  "secrets/youtube_api_keys.age".publicKeys = tvKeys;
+  "secrets/kodi_youtube_api_keys.age".publicKeys = tvKeys;
+  "secrets/kodi_jellyfin_data.age".publicKeys = tvKeys;
 }

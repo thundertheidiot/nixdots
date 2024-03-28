@@ -76,7 +76,8 @@
     common.agenix = {
       age.identityPaths = [ "${localconfig.homeDirectory}/.ssh/id_agenix" ];
 
-      age.secrets.youtube_api_keys.file = ./secrets/youtube_api_keys.age;
+      age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
+      # age.secrets.kodi_jellyfin_data.file = ./secrets/kodi_jellyfin_data.age;
     };
 
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
