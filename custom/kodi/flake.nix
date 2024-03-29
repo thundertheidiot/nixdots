@@ -4,17 +4,29 @@
     flake-utils.url = "github:numtide/flake-utils";
     systems.url = "github:nix-systems/x86_64-linux";
 
-    kodi.url = "github:xbmc/xbmc/4b95737efaddf7c869736e539318f18433413ff1"; # 20.5
-    libdvdcss.url = "github:xbmc/libdvdcss/1.4.3-Next-Nexus-Alpha2-2";
-    libdvdnav.url = "github:xbmc/libdvdnav/6.1.1-Next-Nexus-Alpha2-2";
-    libdvdread.url = "github:xbmc/libdvdread/6.1.3-Next-Nexus-Alpha2-2";
+    kodi = {
+      url = "github:xbmc/xbmc/4b95737efaddf7c869736e539318f18433413ff1"; # 20.5
+      flake = false;
+    };
+    libdvdcss = {
+      url = "github:xbmc/libdvdcss/1.4.3-Next-Nexus-Alpha2-2";
+      flake = false;
+    };
+    libdvdnav = {
+      url = "github:xbmc/libdvdnav/6.1.1-Next-Nexus-Alpha2-2";
+      flake = false;
+    };
+    libdvdread = {
+      url = "github:xbmc/libdvdread/6.1.3-Next-Nexus-Alpha2-2";
+      flake = false;
+    };
   };
 
   outputs = {
     nixpkgs,
     flake-utils,
     ...
-  }:
+  }@inputs:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
         inherit system;
@@ -98,7 +110,7 @@
             glib
             harfbuzz
             lcms2
-            libpthreadstubs
+            xorg.libpthreadstubs
             ffmpeg
             flatbuffers
             fstrcmp
@@ -114,17 +126,18 @@
             wayland-protocols
             libxkbcommon.dev
             libnfs
-            libX11
-            xorgproto
-            libXt
-            libXmu
-            LibXext.dev
-            libXdmcp
-            libXinerama
-            libXrandr.dev
-            libXtst
-            libXfixes
+            xorg.libX11
+            xorg.xorgproto
+            xorg.libXt
+            xorg.libXmu
+            xorg.libXext.dev
+            xorg.libXdmcp
+            xorg.libXinerama
+            xorg.libXrandr.dev
+            xorg.libXtst
+            xorg.libXfixes
             rtmpdump
+            libinput.dev
           ];
 
           nativeBuildInputs = [

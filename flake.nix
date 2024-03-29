@@ -38,6 +38,8 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     agenix.url = "github:ryantm/agenix";
+
+    custom-kodi.url = "path:./custom/kodi_addons";
   };
 
   outputs = {

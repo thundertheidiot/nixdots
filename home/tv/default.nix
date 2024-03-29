@@ -6,50 +6,18 @@
   inputs,
   ...
 }: let
-  addonDir = "/share/kodi/addons";
-  yleNamespace = "plugin.video.yleareena.jade";
-
-  yleareena = pkgs.stdenv.mkDerivation rec {
-    name = "kodi-yleareena-1.3.1";
-    dontStrip = true;
-
-    extraRuntimeDependencies = [];
-    propagatedBuildInputs = [];
-
-    src = pkgs.fetchgit {
-      url = "https://github.com/aajanki/${yleNamespace}";
-      rev = "9b89fabf6ad1cae08d92b3309029061ca9ab66e5";
-      hash = "sha256-uLWWJTX6aHsjzJneqab2VczJO+33tg8nP7fPQ/GpqZg=";
-    };
-
-    passthru = {
-      pythonPath = "resources/lib";
-    };
-
-    installPhase = ''
-      runHook preInstall
-
-      cd ./$sourceDir
-      d=$out${addonDir}/${yleNamespace}
-      mkdir -p $d
-      sauce="."
-      [ -d ${yleNamespace} ] && sauce=${yleNamespace}
-      cp -R "$sauce/"* $d
-
-      runHook postInstall
-    '';
-  };
+  customKodi = inputs.custom-kodi.defaultPackage.${localconfig.system};
 in {
   config = lib.mkIf (localconfig.install.tv) (with config; {
-    home.packages = [
-      yleareena
-    ];
-
-    xdg.dataFile."kodi/addons/${yleNamespace}" = {
+    xdg.dataFile."kodi/addons" = {
       enable = true;
       recursive = true;
-      source = "${yleareena}/share/kodi/addons/${yleNamespace}";
+      source = "${customKodi}/share/kodi/addons/";
     };
+
+    home.packages = [
+      customKodi
+    ];
 
     age.secrets.kodi_youtube_api_keys.path = "${xdg.dataHome}/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
     # age.secrets.kodi_jellyfin_data.path = "${xdg.dataHome}/kodi/userdata/addon_data/plugin.video.jellyfin/data.json";
@@ -66,13 +34,14 @@ in {
         };
       };
 
-      package = pkgs.kodi.withPackages (pkgs:
-        with pkgs; [
-          youtube
-          netflix
-          jellyfin
-          # invidious # maybe good later, not needed right now
-        ]);
+      # package = pkgs.kodi (pkgs:
+      #   with pkgs; [
+      #     youtube
+      #     netflix
+      #     jellyfin
+      #     # invidious # maybe good later, not needed right now
+      #   ]);
+      package = customKodi;
     };
   });
 }
