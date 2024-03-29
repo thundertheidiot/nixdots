@@ -17,11 +17,11 @@
     };
 
     services.postgresql = {
-      enable = true;
+      enable = false;
     };
 
     services.invidious = {
-      enable = true;
+      enable = false;
       package = pkgs.invidious;
       address = "127.0.0.1";
       port = 3000;
