@@ -25,9 +25,9 @@
       lib = pkgs.lib;
       addonDir = "/share/kodi/addons";
       pythonPath = with pkgs.python311Packages; makePythonPath ([ pillow pycryptodome urllib3 certifi six webencodings chardet charset-normalizer idna six dateutil ]);
-      kodi-with-inputstream = pkgs.kodi.withPackages (pkgs: with pkgs; [
-        inputstream-adaptive
-      ]);
+      # kodi-with-inputstream = pkgs.kodi.withPackages (pkgs: with pkgs; [
+      #   inputstream-adaptive
+      # ]);
     in {
       defaultPackage = pkgs.stdenv.mkDerivation rec {
         name = "kodi";
@@ -53,15 +53,15 @@
           "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
           "${pkgs.kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
           "${pkgs.kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
-          # "${pkgs.kodiPackages.youtube}${addonDir}/plugin.video.youtube"
+          "${pkgs.kodiPackages.youtube}${addonDir}/plugin.video.youtube"
           # "${inputs.youtube}"
           "${pkgs.kodiPackages.netflix}${addonDir}/plugin.video.netflix"
           "${pkgs.kodiPackages.jellyfin}${addonDir}/plugin.video.jellyfin"
-          (pkgs.fetchgit {
-            url = "https://github.com/anxdpanic/plugin.video.youtube";
-            rev = "d9999ec0a3c280c871e3eeb717503afcc3ff9912";
-            hash = "sha256-dL6ZJGNhPafhIUuZbBrnZ3vFooaHftOoC6+tMUlWSEo=";
-          })
+          # (pkgs.fetchgit {
+          #   url = "https://github.com/anxdpanic/plugin.video.youtube";
+          #   rev = "d9999ec0a3c280c871e3eeb717503afcc3ff9912";
+          #   hash = "sha256-dL6ZJGNhPafhIUuZbBrnZ3vFooaHftOoC6+tMUlWSEo=";
+          # })
           # (pkgs.fetchgit {
           #   url = "https://github.com/CastagnaIT/plugin.video.netflix";
           #   rev = "8f82ac543a4357fb6aecbf66d9492592c5662458";
@@ -89,16 +89,16 @@
           for srcFile in $srcs; do
               name=$("${pkgs.xml2}/bin/xml2" < "$srcFile"/addon.xml | grep '/addon/@id=' | sed 's/\/addon\/@id=//g')
               mkdir -p "$dir/$name"
-              cp --recursive "$srcFile"/* "$dir/$name/"
+              cp --dereference --recursive "$srcFile"/* "$dir/$name/"
               [ -d "$dir/$name/lib" ] && addonPythonPath="$addonPythonPath:$dir/$name/lib"
               [ -d "$dir/$name/libs" ] && addonPythonPath="$addonPythonPath:$dir/$name/libs"
               [ -d "$dir/$name/resources/lib" ] && addonPythonPath="$addonPythonPath:$dir/$name/resources/lib"
           done
 
           mkdir -p "$out/bin"
-          makeWrapper "${kodi-with-inputstream}/bin/kodi" "$out/bin/kodi" \
+          makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi" \
            --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
-           --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [ glib nspr nss stdenv.cc.cc.lib ])}"
+           --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [ glib nspr nss stdenv.cc.cc.lib ])}:$dir/inputstream.adaptive/"
         '';
 
         postInstallPhase = ''
