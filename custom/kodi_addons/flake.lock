@@ -37,7 +37,8 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "youtube": "youtube"
       }
     },
     "systems": {
@@ -53,6 +54,18 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "youtube": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-9tptCyDM5AmvdBg4NyOKiI8H+tDgFmiA2NVFBPM4fNU=",
+        "type": "file",
+        "url": "https://github.com/anxdpanic/plugin.video.youtube"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/anxdpanic/plugin.video.youtube"
       }
     }
   },

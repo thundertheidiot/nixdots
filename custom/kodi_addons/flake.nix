@@ -7,8 +7,8 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     flake-utils.url = "github:numtide/flake-utils";
 
-    # yleareena = {
-    #   url = "github:aajanki/plugin.video.yleareena.jade";
+    # youtube = {
+    #   url = "https://github.com/anxdpanic/plugin.video.youtube";
     #   flake = false;
     # };
   };
@@ -53,14 +53,15 @@
           "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
           "${pkgs.kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
           "${pkgs.kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
-          "${pkgs.kodiPackages.youtube}${addonDir}/plugin.video.youtube"
+          # "${pkgs.kodiPackages.youtube}${addonDir}/plugin.video.youtube"
+          # "${inputs.youtube}"
           "${pkgs.kodiPackages.netflix}${addonDir}/plugin.video.netflix"
           "${pkgs.kodiPackages.jellyfin}${addonDir}/plugin.video.jellyfin"
-          # (pkgs.fetchgit {
-          #   url = "https://github.com/anxdpanic/plugin.video.youtube";
-          #   rev = "d9999ec0a3c280c871e3eeb717503afcc3ff9912";
-          #   hash = "sha256-dL6ZJGNhPafhIUuZbBrnZ3vFooaHftOoC6+tMUlWSEo=";
-          # })
+          (pkgs.fetchgit {
+            url = "https://github.com/anxdpanic/plugin.video.youtube";
+            rev = "d9999ec0a3c280c871e3eeb717503afcc3ff9912";
+            hash = "sha256-dL6ZJGNhPafhIUuZbBrnZ3vFooaHftOoC6+tMUlWSEo=";
+          })
           # (pkgs.fetchgit {
           #   url = "https://github.com/CastagnaIT/plugin.video.netflix";
           #   rev = "8f82ac543a4357fb6aecbf66d9492592c5662458";
