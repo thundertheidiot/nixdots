@@ -21,8 +21,9 @@
       ncmpcpp
       gimp
       blueberry
-      cinnamon.nemo
+      cinnamon.nemo-with-extensions
       libnotify
+      which
     ];
 
     xdg.userDirs = {
