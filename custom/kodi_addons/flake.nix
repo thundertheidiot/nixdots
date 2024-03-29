@@ -98,7 +98,7 @@
           mkdir -p "$out/bin"
           makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi" \
            --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
-           --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [ glib nspr nss stdenv.cc.cc.lib ])}:$dir/inputstream.adaptive/"
+           --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [ glib nspr nss stdenv.cc.cc.lib ])}:$dir/inputstream.adaptive"
         '';
 
         postInstallPhase = ''

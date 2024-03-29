@@ -192,7 +192,7 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-k6VbABHPhks28HSEj7SwZqKEnT61tptC2palwZLXmsg=",
+        "narHash": "sha256-QtbuOvf4jp6iP+7Pdeg8ewnC3cxykxZwtZbzQNwxrJk=",
         "path": "./custom/kodi_addons",
         "type": "path"
       },
@@ -1026,11 +1026,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1711460390,
-        "narHash": "sha256-akSgjDZL6pVHEfSE6sz1DNSXuYX6hq+P/1Z5IoYWs7E=",
+        "lastModified": 1711668574,
+        "narHash": "sha256-u1dfs0ASQIEr1icTVrsKwg2xToIpn7ZXxW3RHfHxshg=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "44733514b72e732bd49f5511bd0203dea9b9a434",
+        "rev": "219951b495fc2eac67b1456824cc1ec1fd2ee659",
         "type": "github"
       },
       "original": {
