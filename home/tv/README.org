@@ -1,0 +1,3 @@
+Manual actions for now:
+- Enable all extensions
+- Set quality to 1080p in youtube enhancer settings (forces youtube.com/tv to use good quality)
