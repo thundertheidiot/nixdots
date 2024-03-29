@@ -24,19 +24,22 @@
       };
       lib = pkgs.lib;
       addonDir = "/share/kodi/addons";
-      pythonPath = with pkgs.python311Packages; makePythonPath ([ pillow pycryptodome urllib3 certifi six webencodings ]);
-      kodi-with-inputstream = pkgs.kodi.withPackages (pkgs: with pkgs; [
-        inputstream-adaptive
-      ]);
+      pythonPath = with pkgs.python311Packages; makePythonPath ([ pillow pycryptodome urllib3 certifi six webencodings chardet charset-normalizer idna six dateutil ]);
+      # kodi-with-inputstream = pkgs.kodi.withPackages (pkgs: with pkgs; [
+      #   inputstream-adaptive
+      # ]);
     in {
       defaultPackage = pkgs.stdenv.mkDerivation rec {
         name = "kodi";
-
         srcs = [
           (pkgs.fetchgit {
             url = "https://github.com/aajanki/plugin.video.yleareena.jade";
             rev = "9b89fabf6ad1cae08d92b3309029061ca9ab66e5";
             hash = "sha256-uLWWJTX6aHsjzJneqab2VczJO+33tg8nP7fPQ/GpqZg=";
+          })
+          (pkgs.fetchzip {
+            url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.kodi-six/script.module.kodi-six-0.1.3.1.zip";
+            hash = "sha256-nWz5CPoE0uVsZvWjI4q6y4ZKUnraTjTXLSJ1mK4YopI=";
           })
           (pkgs.fetchzip {
             url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.html5lib/script.module.html5lib-1.1.0+matrix.1.zip";
@@ -46,50 +49,9 @@
             url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.requests/script.module.requests-2.31.0.zip";
             hash = "sha256-05BSD5aoN2CTnjqaSKYMb93j5nIfLvpJHyeQsK++sTw=";
           })
+          "${pkgs.kodiPackages.websocket}${addonDir}/script.module.websocket"
           "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
-          # "${pkgs.kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
-          # "${(let
-          #   bento4 = pkgs.fetchgit {
-          #     url = "https://github.com/xbmc/Bento4";
-          #     rev = "1.6.0-639-7-Omega";
-          #     hash = "sha256-d3znV88dLMbA4oUWsTZ7vS6WHOWzN7lIHgWPkR5Aixo=";
-          #   };
-          # in pkgs.stdenv.mkDerivation rec {
-          #   name = "kodi-inputstream-adaptive";
-          #   namespace = "inputstream.adaptive";
-          #   version = "20.3.13";
-
-          #   dontStrip = true;
-
-          #   src = pkgs.fetchgit {
-          #     url = "https://github.com/xbmc/inputstream.adaptive";
-          #     rev = "${version}-Nexus";
-          #     hash = "sha256-xvU+DcVEaQ/1sm6o21/6N1znCtzrct0qDhMxXGFZjL4=";
-          #   };
-
-          #   cmakeFlags = [
-          #     "-DOVERRIDE_PATHS=1"
-          #     "-DENABLE_INTERNAL_BENTO4=ON"
-          #     "-DBENTO4_URL=${bento4}"
-          #   ];
-
-          #   nativeBuildInputs = with pkgs; [ cmake gtest ];
-          #   buildInputs = with pkgs; [ kodiPackages.kodi kodiPackages.kodi-platform libcec_platform expat ];
-
-          #   extraRuntimeDependencies = with pkgs; [ glib nspr nss stdenv.cc.cc.lib ];
-
-          #   installPhase = let n = namespace; in ''
-          #     runHook preInstall
-          #     make install
-
-          #     [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
-          #     [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
-
-          #     ln -s $out/lib/addons/${n}/libssd_wv.so $out/${addonDir}/${n}/libssd_wv.so
-
-          #     runHook postInstall
-          #   '';
-          # })}${addonDir}/inputstream.adaptive"
+          "${pkgs.kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
           "${pkgs.kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
           "${pkgs.kodiPackages.youtube}${addonDir}/plugin.video.youtube"
           "${pkgs.kodiPackages.netflix}${addonDir}/plugin.video.netflix"
@@ -128,11 +90,12 @@
               mkdir -p "$dir/$name"
               cp --recursive "$srcFile"/* "$dir/$name/"
               [ -d "$dir/$name/lib" ] && addonPythonPath="$addonPythonPath:$dir/$name/lib"
+              [ -d "$dir/$name/libs" ] && addonPythonPath="$addonPythonPath:$dir/$name/libs"
               [ -d "$dir/$name/resources/lib" ] && addonPythonPath="$addonPythonPath:$dir/$name/resources/lib"
           done
 
           mkdir -p "$out/bin"
-          makeWrapper "${kodi-with-inputstream}/bin/kodi" "$out/bin/kodi" \
+          makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi" \
            --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
            --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [ glib nspr nss stdenv.cc.cc.lib ])}"
         '';
