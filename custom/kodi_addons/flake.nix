@@ -25,9 +25,9 @@
       lib = pkgs.lib;
       addonDir = "/share/kodi/addons";
       pythonPath = with pkgs.python311Packages; makePythonPath ([ pillow pycryptodome urllib3 certifi six webencodings chardet charset-normalizer idna six dateutil ]);
-      # kodi-with-inputstream = pkgs.kodi.withPackages (pkgs: with pkgs; [
-      #   inputstream-adaptive
-      # ]);
+      kodi-with-inputstream = pkgs.kodi.withPackages (pkgs: with pkgs; [
+        inputstream-adaptive
+      ]);
     in {
       defaultPackage = pkgs.stdenv.mkDerivation rec {
         name = "kodi";
@@ -95,7 +95,7 @@
           done
 
           mkdir -p "$out/bin"
-          makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi" \
+          makeWrapper "${kodi-with-inputstream}/bin/kodi" "$out/bin/kodi" \
            --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
            --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [ glib nspr nss stdenv.cc.cc.lib ])}"
         '';
