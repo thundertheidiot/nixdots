@@ -74,6 +74,7 @@ in {
       swappy
       bemenu
       wl-clipboard
+      swayosd
     ];
 
     home.file.".config/hypr/hyprpaper.conf".text = ''
@@ -164,6 +165,7 @@ in {
           "${pkgs.mako}/bin/mako"
           "${pkgs.hyprpaper}/bin/hyprpaper"
           "${pkgs.waybar}/bin/waybar"
+          "${pkgs.swayosd}/bin/swayosd-server"
         ];
 
         input = {
@@ -239,8 +241,10 @@ in {
           "$mod, J, layoutmsg, cyclenext"
           "$mod, K, layoutmsg, cycleprev"
           "$mod, L, splitratio, +0.1"
-          ",XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+"
-          ",XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-"
+          ",XF86AudioRaiseVolume, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume 3"
+          ",XF86AudioLowerVolume, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume -3"
+          ",XF86MonBrightnessUp, exec, ${pkgs.swayosd}/bin/swayosd-client --brighness raise"
+          ",XF86MonBrightnessDown, exec, ${pkgs.swayosd}/bin/swayosd-client --brighness lower"
         ];
 
         bindm = [
