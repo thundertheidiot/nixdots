@@ -6,7 +6,8 @@
   inputs,
   ...
 }: let
-  customKodi = inputs.custom-kodi.defaultPackage.${localconfig.system};
+  # customKodi = inputs.custom-kodi.defaultPackage.${localconfig.system};
+  customKodi = import ./kodi.nix { inherit pkgs lib; };
 in {
   config = lib.mkIf (localconfig.install.tv) (with config; {
     xdg.dataFile."kodi/addons" = {
