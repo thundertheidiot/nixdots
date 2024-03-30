@@ -20,15 +20,15 @@
           SponsoredSuggestions  = false;
           ImproveSuggest = false;
         };
-        ExtensionSettings = {
-          "uBlock0@raymondhill.net" = {
-            installation_mode = "force_installed";
-          };
-        };
+        # ExtensionSettings = {
+        #   "uBlock0@raymondhill.net" = {
+        #     installation_mode = "force_installed";
+        #   };
+        # };
       };
 
       profiles."nix-managed" = {
-        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        extensions = with pkgs.firefox-addons; [
           ublock-origin
           purpleadblock
           istilldontcareaboutcookies

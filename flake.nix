@@ -60,11 +60,12 @@
         overlays = [
           inputs.emacs-overlay.overlay
           inputs.nixgl.overlay
-          (final: prev: {
+          (final: prev: rec {
             nur = import inputs.nur {
               nurpkgs = prev;
               pkgs = prev;
             };
+            firefox-addons = nur.repos.rycee.firefox-addons;
             "2311" = import inputs.nixpkgs-23-11 {
               system = final.system;
               config.allowUnfree = final.config.allowUnfree;

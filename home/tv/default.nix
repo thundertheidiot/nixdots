@@ -22,12 +22,12 @@ in {
 
     wayland.windowManager.hyprland.settings = lib.mkIf (localconfig.install.hyprland) {
       windowrulev2 = [ "fullscreen,class:(Kodi)" ];
-      exec-once = [ "${customKodi}/bin/kodi -fs" ];
+      exec-once = [ "${customKodi}/bin/kodi_with_addons -fs" ];
     };
 
     programs.firefox.profiles."tv" = {
       id = 1;
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions = with pkgs.firefox-addons; [
           ublock-origin
           purpleadblock
           istilldontcareaboutcookies
