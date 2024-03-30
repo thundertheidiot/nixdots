@@ -71,7 +71,7 @@ in
       done
 
       mkdir -p "$out/bin"
-      makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi" \
+      makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi_with_addons" \
        --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
        --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [glib nspr nss stdenv.cc.cc.lib])}:$dir/inputstream.adaptive"
     '';
