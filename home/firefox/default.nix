@@ -10,6 +10,23 @@
       enable = true;
       package = pkgs.firefox;
 
+      policies = {
+        DisableFirefoxStudies = true;
+        DisablePocket = true;
+        DisableTelemetry = true;
+        DisableAppUpdate = true;
+        FirefoxSuggest = {
+          WebSuggestions = false;
+          SponsoredSuggestions  = false;
+          ImproveSuggest = false;
+        };
+        ExtensionSettings = {
+          "uBlock0@raymondhill.net" = {
+            installation_mode = "force_installed";
+          };
+        };
+      };
+
       profiles."nix-managed" = {
         extensions = with pkgs.nur.repos.rycee.firefox-addons; [
           ublock-origin
