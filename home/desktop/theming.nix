@@ -12,37 +12,41 @@ in {
     home.packages = with pkgs; [
       jetbrains-mono
       meslo-lgs-nf
+      udev-gothic-nf
+      cantarell-fonts
     ];
 
     fonts.fontconfig.enable = true;
 
-    home.file.".config/fontconfig/fonts.conf".text = ''
-      <?xml version='1.0'?>
-      <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
-      <fontconfig>
-      <alias>
-      <family>sans-serif</family>
-      <prefer>
-      <family>Noto Sans</family>
-      </prefer>
-      </alias>
+    # home.file.".config/fontconfig/fonts.conf".text = ''
+    #   <?xml version='1.0'?>
+    #   <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+    #   <fontconfig>
 
-      <alias>
-      <family>serif</family>
-      <prefer>
-      <family>Noto Serif</family>
-      </prefer>
-      </alias>
+    #   <alias>
+    #   <family>sans-serif</family>
+    #   <prefer>
+    #   <family>Cantarell</family>
+    #   </prefer>
+    #   </alias>
 
-      <alias>
-      <family>monospace</family>
-      <prefer>
-      <family>JetBrainsMono NL</family>
-      <family>JetBrainsMono</family>
-      </prefer>
-      </alias>
-      </fontconfig>
-    '';
+    #   <alias>
+    #   <family>serif</family>
+    #   <prefer>
+    #   <family>Noto Serif</family>
+    #   </prefer>
+    #   </alias>
+
+    #   <alias>
+    #   <family>monospace</family>
+    #   <prefer>
+    #   <family>UDEV Gothic 35NF</family>
+    #   </prefer>
+    #   </alias>
+    #   </fontconfig>
+    # '';
+      #<family>JetBrainsMono</family>
+      #<family>JetBrainsMono NL</family>
 
     gtk = {
       enable = true;

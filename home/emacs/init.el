@@ -36,6 +36,8 @@
       tab-width 4
       gc-cons-threshold (* 8 1024 1024)
 
+      ring-bell-function 'ignore ;; i hate that stupid bell
+
       inhibit-startup-screen t
       inhibit-splash-screen t
 

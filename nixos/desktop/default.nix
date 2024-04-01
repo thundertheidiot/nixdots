@@ -9,6 +9,7 @@
   imports = [
     inputs.nix-gaming.nixosModules.pipewireLowLatency
     ./hyprland.nix
+    ./fonts.nix
   ];
   config = lib.mkIf (config.setup.userMachine.enable) (with config; {
     environment.systemPackages = with pkgs; [
@@ -54,8 +55,11 @@
     services.xserver.enable = true;
     services.xserver.displayManager.sddm = {
       enable = true;
+      package = pkgs.kdePackages.sddm;
       theme = "catppuccin-mocha";
     };
+
+    # services.getty.extraArgs = [ "-n" "-o" "${config.username}" ];
 
     security.rtkit.enable = true;
     services.pipewire = {
