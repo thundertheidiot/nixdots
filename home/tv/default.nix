@@ -9,7 +9,7 @@
   # customKodi = inputs.custom-kodi.defaultPackage.${localconfig.system};
   customKodi = import ./kodi.nix { inherit pkgs lib; };
 in {
-  config = lib.mkIf (localconfig.install.tv) (with config; {
+  config = lib.mkIf (config.setup.tv.enable) (with config; {
     xdg.dataFile."kodi/addons" = {
       enable = true;
       recursive = true;
@@ -20,7 +20,7 @@ in {
       customKodi
     ];
 
-    wayland.windowManager.hyprland.settings = lib.mkIf (localconfig.install.hyprland) {
+    wayland.windowManager.hyprland.settings = lib.mkIf (config.setup.hyprland.enable) {
       windowrulev2 = [ "fullscreen,class:(Kodi)" ];
       exec-once = [ "${customKodi}/bin/kodi_with_addons -fs" ];
     };

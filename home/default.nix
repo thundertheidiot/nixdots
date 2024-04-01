@@ -1,15 +1,14 @@
 {
   pkgs,
-  localconfig,
   inputs,
+  config,
   ...
 }: let
   lib = pkgs.lib;
 in {
   home = {
-    username = localconfig.username;
-    homeDirectory = localconfig.homeDirectory;
-    stateVersion = localconfig.homeStateVersion;
+    username = config.username;
+    homeDirectory = config.homeDirectory;
   };
 
   scheme = "${inputs.tt-schemes}/base16/catppuccin-mocha.yaml";

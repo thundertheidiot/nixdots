@@ -5,7 +5,7 @@
   localconfig,
   ...
 }: {
-  config = lib.mkIf (localconfig.install.tv) (with config; {
+  config = lib.mkIf (config.setup.tv.enable) (with config; {
     services.xserver.displayManager.lightdm = {
       enable = true;
       autoLogin.timeout = 0;

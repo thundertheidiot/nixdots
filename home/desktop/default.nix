@@ -11,7 +11,7 @@
     ./gaming
   ];
 
-  config = lib.mkIf (localconfig.install.desktop) (with config; {
+  config = lib.mkIf (config.setup.userMachine.enable) (with config; {
     home.packages = with pkgs; [
       xwallpaper
       xclip
@@ -24,6 +24,8 @@
       cinnamon.nemo-with-extensions
       libnotify
       which
+      mpc-cli
+      mumble
     ];
 
     xdg.userDirs = {
@@ -125,6 +127,11 @@
     services.gnome-keyring = {
       enable = true;
       components = ["pkcs11" "secrets" "ssh"];
+    };
+
+    services.gpg-agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-gnome3;
     };
 
     programs.qutebrowser = {

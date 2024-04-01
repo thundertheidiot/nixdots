@@ -40,6 +40,8 @@
     agenix.url = "github:ryantm/agenix";
 
     custom-kodi.url = "path:./custom/kodi_addons";
+
+    nix-autobahn.url = "github:Lassulus/nix-autobahn";
   };
 
   outputs = {
@@ -51,11 +53,11 @@
   } @ inputs: let
     localconfig = import ./local.nix;
   in {
-    defaultPackage.${localconfig.system} = home-manager.defaultPackage.${localconfig.system};
+    defaultPackage.${localconfig.systemArch} = home-manager.defaultPackage.${localconfig.systemArch};
 
-    common.nixpkgs = {inputs, ...}: {
+    common.nixpkgs = {inputs, localconfig, ...}: {
       nixpkgs = {
-        system = localconfig.system;
+        system = localconfig.systemArch;
         config.allowUnfree = true;
         overlays = [
           inputs.emacs-overlay.overlay
@@ -70,7 +72,8 @@
               system = final.system;
               config.allowUnfree = final.config.allowUnfree;
             };
-            agenix = inputs.agenix.packages.${localconfig.system};
+            agenix = inputs.agenix.packages.${final.system};
+            nix-autobahn = inputs.nix-autobahn.packages.${final.system}.nix-autobahn;
           })
         ];
       };
@@ -84,7 +87,7 @@
     };
 
     homeConfigurations.${localconfig.username} = home-manager.lib.homeManagerConfiguration {
-      pkgs = import nixpkgs {system = localconfig.system;};
+      pkgs = import nixpkgs {system = localconfig.systemArch;};
       extraSpecialArgs = {
         inherit localconfig inputs;
       };
@@ -111,26 +114,28 @@
     };
 
     nixosConfigurations.default = nixpkgs.lib.nixosSystem {
-      system = localconfig.system;
+      system = localconfig.systemArch;
       specialArgs = {
         inherit localconfig inputs;
       };
       modules = [
+        ./options.nix
         self.common.nixpkgs
+        localconfig.options
         inputs.agenix.nixosModules.default
         self.common.agenix
-        {
-          time.timeZone = localconfig.timeZone;
-          networking.hostName = localconfig.hostName;
+        ({config, ...}: {
+          time.timeZone = config.timeZone;
+          networking.hostName = config.hostName;
 
           imports = [
-            localconfig.systemConfig
+            localconfig.system
             ./nixos
           ];
-        }
+        })
         chaotic.nixosModules.default
         home-manager.nixosModules.home-manager
-        {
+        ({ config, ... }: {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = {
@@ -140,10 +145,13 @@
           home-manager.sharedModules = [
             inputs.agenix.homeManagerModules.default
             self.common.agenix
+            ./options.nix
+            localconfig.options
+            localconfig.home
           ];
 
-          home-manager.users.${localconfig.username} = ./home;
-        }
+          home-manager.users.${config.username} = ./home;
+        })
       ];
     };
   };

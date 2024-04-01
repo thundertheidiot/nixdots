@@ -10,14 +10,22 @@
     inputs.nix-gaming.nixosModules.pipewireLowLatency
     ./hyprland.nix
   ];
-  config = lib.mkIf (localconfig.install.desktop) (with config; {
+  config = lib.mkIf (config.setup.userMachine.enable) (with config; {
     environment.systemPackages = with pkgs; [
       dmenu
       dconf
+      gnome.gnome-keyring
     ];
 
-    # still compiles???
-    # boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
+    security.pam.services.gnome-keyring = {
+      name = "gnome-keyring";
+      # enableGnomeKeyring = true;
+      text = ''
+        auth optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
+        session optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
+        password optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
+      '';
+    };
 
     services.xserver.enable = true;
     services.xserver.displayManager.lightdm = {
@@ -40,7 +48,7 @@
     services.xserver.displayManager.startx.enable = true;
 
     services.xserver.displayManager.session = [
-      (lib.mkIf (localconfig.install.awesomewm) {
+      (lib.mkIf (config.setup.awesomeWM.enable) {
         manage = "desktop";
         name = "awesome";
         start = ''
@@ -52,7 +60,7 @@
 
     services.xserver.displayManager.sessionPackages = [
       (
-        lib.mkIf (localconfig.install.hyprland)
+        lib.mkIf (config.setup.hyprland.enable)
         inputs.hyprland.packages.${pkgs.system}.hyprland
       )
     ];

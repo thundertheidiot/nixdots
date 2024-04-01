@@ -1,8 +1,6 @@
 {
   config,
   pkgs,
-  localconfig,
-  inputs,
   ...
 }: let
   xdg = config.xdg;
@@ -87,7 +85,7 @@ in
       jq
       rustup
       killall
-      nvtopPackages.full
+      #nvtopPackages.full
       pulsemixer
       alejandra
       rsync

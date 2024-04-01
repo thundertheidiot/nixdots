@@ -8,7 +8,7 @@
   cursor_package = pkgs.catppuccin-cursors.mochaLavender;
   cursor_name = "Catppuccin-Mocha-Lavender-Cursors";
 in {
-  config = lib.mkIf (localconfig.install.desktop) (with config; {
+  config = lib.mkIf (config.setup.userMachine.enable) (with config; {
     home.packages = with pkgs; [
       jetbrains-mono
       meslo-lgs-nf
