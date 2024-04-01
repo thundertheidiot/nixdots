@@ -35,7 +35,7 @@
     MBSYNCRC = "${xdg.configHome}/mbsync/config";
     ELECTRUMDIR = "${xdg.dataHome}/electrum";
     XRESOURCES = "${xdg.configHome}/x11/xresources";
-    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
+    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/keyring/ssh";
     NODE_REPL_HISTORY = "${xdg.dataHome}/node_repl_history";
     RUSTUP_HOME = "${xdg.dataHome}/rustup";
     CGDB_DIR = "${xdg.configHome}/cgdb";

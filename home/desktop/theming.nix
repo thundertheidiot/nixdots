@@ -37,8 +37,8 @@ in {
       <alias>
       <family>monospace</family>
       <prefer>
-      <family>JetBrainsMono Nerd Font</family>
-      <family>JetBrainsMono NFM</family>
+      <family>JetBrainsMono NL</family>
+      <family>JetBrainsMono</family>
       </prefer>
       </alias>
       </fontconfig>

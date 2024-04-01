@@ -15,8 +15,6 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
     [
       lutris
       startsteam
-      nix-index
-      nix-autobahn
       discord
     ]
     ++ (with inputs.nix-gaming.packages.${pkgs.system}; [
