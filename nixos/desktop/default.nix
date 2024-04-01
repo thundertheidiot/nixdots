@@ -16,26 +16,6 @@
       dmenu
       dconf
       gnome.gnome-keyring
-      (pkgs.stdenv.mkDerivation {
-        name = "sddm-catppuccin-mocha";
-
-        src = fetchzip {
-          url = "https://github.com/catppuccin/sddm/releases/download/v1.0.0/catppuccin-mocha.zip";
-          hash = "sha256-+YxKzuu2p46QoCZykXLYFwkXcJ+uJ7scwDU7vJ4b1pA=";
-        };
-
-        dontConfigure = true;
-        dontBuild = true;
-
-        installPhase = ''
-          runHook preInstall
-
-          mkdir -p "$out/share/sddm/themes/"
-          cp -r "$src" "$out/share/sddm/themes/catppuccin-mocha"
-
-          runHook postInstall
-        '';
-      })
     ];
 
     services.gnome.gnome-keyring.enable = true;
@@ -52,14 +32,19 @@
       '';
     };
 
-    services.xserver.enable = true;
-    services.xserver.displayManager.sddm = {
-      enable = true;
-      package = pkgs.kdePackages.sddm;
-      theme = "catppuccin-mocha";
-    };
+    # Catppuccin tty
+    boot.kernelParams = [
+      "vt.default_red=30,243,166,249,137,245,148,186,88,243,166,249,137,245,148,166"
+      "vt.default_grn=30,139,227,226,180,194,226,194,91,139,227,226,180,194,226,173"
+      "vt.default_blu=46,168,161,175,250,231,213,222,112,168,161,175,250,231,213,200"
+    ];
 
-    # services.getty.extraArgs = [ "-n" "-o" "${config.username}" ];
+    services.xserver.enable = true;
+
+    services.getty = {
+      helpLine = "";
+      extraArgs = [ "--noclear" "-n" "-o" "${config.username}" ];
+    };
 
     security.rtkit.enable = true;
     services.pipewire = {

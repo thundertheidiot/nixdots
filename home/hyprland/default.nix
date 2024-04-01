@@ -75,6 +75,8 @@ in {
       screenshot
     ];
 
+    programs.bash.profileExtra = "[ $(tty) = \"/dev/tty1\" ] && Hyprland";
+
     home.file.".config/hypr/hyprpaper.conf".text = ''
       preload = ~/.local/share/bg
       wallpaper = ,~/.local/share/bg
