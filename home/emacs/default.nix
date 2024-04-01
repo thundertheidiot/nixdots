@@ -6,7 +6,7 @@
   localconfig,
   ...
 }: {
-  config = lib.mkIf (localconfig.install.desktop) (with config; {
+  config = lib.mkIf (config.setup.userMachine.enable) (with config; {
     home.packages = with pkgs; [
       nil # nix language server
     ];

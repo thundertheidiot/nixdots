@@ -8,7 +8,7 @@
 }: let
   awesome = inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git;
 in {
-  config = lib.mkIf (localconfig.install.awesomewm) (with config; {
+  config = lib.mkIf (config.setup.awesomeWM.enable) (with config; {
     xsession.windowManager.awesome = {
       enable = true;
       package = awesome;

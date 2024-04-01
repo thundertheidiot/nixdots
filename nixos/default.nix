@@ -2,20 +2,18 @@
   lib,
   config,
   pkgs,
-  localconfig,
   inputs,
   ...
-}: let
-  # lib = pkgs.lib;
-in {
+}: {
   imports = [
     ./desktop
+    ./gaming
     ./tv
   ];
 
   config = with config; {
     nix.settings.experimental-features = ["nix-command" "flakes"];
-    nix.settings.allowed-users = [localconfig.username];
+    nix.settings.allowed-users = [config.username];
 
     programs.nix-ld = {
       enable = true;
@@ -23,6 +21,8 @@ in {
     };
 
     security.sudo.enable = true;
+
+    hardware.enableRedistributableFirmware = true;
 
     i18n.defaultLocale = "en_US.UTF-8";
     console = {
@@ -37,7 +37,7 @@ in {
       libinput.enable = true;
     };
 
-    users.users.${localconfig.username} = {
+    users.users.${config.username} = {
       extraGroups = ["wheel"];
       isNormalUser = true;
     };

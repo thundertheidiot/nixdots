@@ -2,12 +2,9 @@
   config,
   pkgs,
   lib,
-  localconfig,
   inputs,
   ...
 }: let
-  localStartup = pkgs.writeShellScriptBin "start" localconfig.hyprland.startup;
-
   colors = with config.scheme.withHashtag; {
     background = base00;
     foreground = base07;
@@ -34,10 +31,10 @@
     slurp="${pkgs.slurp}/bin/slurp"
     swappy="${pkgs.swappy}/bin/swappy"
     hyprctl="${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/hyprctl"
-    wl-copy="${pkgs.wl-clipboard}/bin/wl-copy"
+    wlcopy="${pkgs.wl-clipboard}/bin/wl-copy"
 
     [ "$1" = "region" ] && {
-      "$grim" -g "$($slurp)" - | "$wl-copy" -t image/png
+      "$grim" -g "$($slurp)" - | "$wlcopy" -t image/png
       exit 0
     }
 
@@ -45,12 +42,12 @@
 
     choice=$(printf "region\nregion save\nregion with annotation\noutput\noutput save\noutput with annotation" | "$bemenu")
 
-    [ "$choice" = "region" ] && "$grim" -g "$($slurp)" - | "$wl-copy" -t image/png
+    [ "$choice" = "region" ] && "$grim" -g "$($slurp)" - | "$wlcopy" -t image/png
     [ "$choice" = "region save" ] && "$grim" -g "$($slurp)" -t png "$dir/$date.png"
     [ "$choice" = "region with annotation" ] && "$grim" -g "$($slurp)" - | "$swappy" -f -
 
     [ "$choice" = "output" ] && {
-      "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | "$wl-copy" -t image/png
+      "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | "$wlcopy" -t image/png
     }
 
     [ "$choice" = "output save" ] && {
@@ -66,7 +63,7 @@ in {
     ./waybar.nix
   ];
 
-  config = lib.mkIf (localconfig.install.hyprland) (with config; {
+  config = lib.mkIf (config.setup.hyprland.enable) (with config; {
     home.packages = with pkgs; [
       hyprpaper
       grim
@@ -75,6 +72,7 @@ in {
       bemenu
       wl-clipboard
       swayosd
+      screenshot
     ];
 
     home.file.".config/hypr/hyprpaper.conf".text = ''
@@ -134,7 +132,7 @@ in {
         inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
       ];
 
-      extraConfig = localconfig.hyprland.config;
+      extraConfig = config.setup.hyprland.extraConfig;
 
       settings = {
         "$mod" = "SUPER";
@@ -146,7 +144,7 @@ in {
         };
 
         windowrulev2 = [
-          "workspace 9 silent,class:(steam)"
+          # "workspace 9 silent,class:(steam)"
           "workspace 7 silent,class:(gajim)"
           "workspace 6 silent,class:(easyeffects)"
 
@@ -162,12 +160,11 @@ in {
         ];
 
         exec-once = [
-          "${localStartup}/bin/start"
           "${pkgs.mako}/bin/mako"
           "${pkgs.hyprpaper}/bin/hyprpaper"
           "${pkgs.waybar}/bin/waybar"
           "${pkgs.swayosd}/bin/swayosd-server"
-        ];
+        ] ++ config.setup.hyprland.extraAutostart;
 
         input = {
           kb_layout = "us,fi";
@@ -263,14 +260,18 @@ in {
           "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"
           "$shiftmod, B, exec, ${terminal} -e ${pkgs.nvtopPackages.full}/bin/nvtop"
 
-          ",XF86AudioPlay, exec, ${pkgs.mpd}/bin/mpc toggle"
-          ",XF86AudioNext, exec, ${pkgs.mpd}/bin/mpc next"
-          ",XF86AudioPrev, exec, ${pkgs.mpd}/bin/mpc prev"
+          ",XF86AudioPlay, exec, ${pkgs.mpc-cli}/bin/mpc toggle"
+          ",XF86AudioNext, exec, ${pkgs.mpc-cli}/bin/mpc next"
+          ",XF86AudioPrev, exec, ${pkgs.mpc-cli}/bin/mpc prev"
 
           "$shiftmod, return, layoutmsg, swapwithmaster master"
 
           ",Print, exec, ${screenshot}/bin/screenshot region"
           "SHIFT, Print, exec, ${screenshot}/bin/screenshot"
+
+          ",End, pass, ^(info\.mumble\.Mumble)$"
+          ",End, pass, ^(Mumble)$"
+          ",End, pass, ^(discord)$"
 
           "$mod, Q, killactive"
           "$shiftmod, Q, exit"

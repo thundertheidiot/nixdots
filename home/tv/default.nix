@@ -43,7 +43,7 @@
     '';
   };
 in {
-  config = lib.mkIf (localconfig.install.tv) (with config; {
+  config = lib.mkIf (config.setup.tv.enable) (with config; {
     xdg.dataFile."kodi/addons" = {
       enable = true;
       recursive = true;
@@ -55,15 +55,12 @@ in {
       tvScripts
     ];
 
-    wayland.windowManager.hyprland.settings = lib.mkIf (localconfig.install.hyprland) {
+    wayland.windowManager.hyprland.settings = lib.mkIf (config.setup.hyprland.enable) {
       workspace = [
         "${specialWorkspace},rounding:false,border:false,shadow:false,gapsin:0,gapsout:0"
       ];
-
-      windowrulev2 = ["fullscreen,class:(Kodi)"];
-      exec-once = [
-        "${customKodi}/bin/kodi_with_addons -fs"
-      ];
+      windowrulev2 = [ "fullscreen,class:(Kodi)" ];
+      exec-once = [ "${customKodi}/bin/kodi_with_addons -fs" ];
     };
 
     programs.firefox.profiles."tv" = {

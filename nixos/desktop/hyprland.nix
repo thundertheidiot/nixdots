@@ -2,12 +2,10 @@
   lib,
   config,
   pkgs,
-  localconfig,
   inputs,
   ...
 }:
-lib.mkIf (localconfig.install.hyprland) (with config; {
-  # Hyprland is configured by home-manager
+lib.mkIf (config.setup.hyprland.enable) (with config; {
   programs.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
