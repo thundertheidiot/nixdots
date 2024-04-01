@@ -70,7 +70,10 @@
               system = final.system;
               config.allowUnfree = final.config.allowUnfree;
             };
-            agenix = inputs.agenix.packages.${localconfig.system};
+            agenix = inputs.agenix.packages.${final.system};
+
+            hyprland = inputs.hyprland.packages.${final.system}.hyprland;
+            awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
           })
         ];
       };

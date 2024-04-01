@@ -80,6 +80,7 @@ in {
     home.file.".config/hypr/hyprpaper.conf".text = ''
       preload = ~/.local/share/bg
       wallpaper = ,~/.local/share/bg
+      splash = false
     '';
 
     home.file.".config/swappy/config".text = ''
@@ -127,7 +128,7 @@ in {
       enable = true;
       systemd.enable = true;
       xwayland.enable = true;
-      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+      package = pkgs.hyprland;
 
       plugins = [
         inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
@@ -200,7 +201,6 @@ in {
 
         misc = {
           disable_hyprland_logo = true;
-          disable_splash_rendering = true;
           force_default_wallpaper = 0;
         };
 
@@ -241,6 +241,7 @@ in {
           "$mod, J, layoutmsg, cyclenext"
           "$mod, K, layoutmsg, cycleprev"
           "$mod, L, splitratio, +0.1"
+          ",XF86AudioMute, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume mute-toggle"
           ",XF86AudioRaiseVolume, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume 3"
           ",XF86AudioLowerVolume, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume -3"
           ",XF86MonBrightnessUp, exec, ${pkgs.swayosd}/bin/swayosd-client --brighness raise"
