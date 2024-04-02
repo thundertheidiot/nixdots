@@ -93,10 +93,12 @@
         inherit localconfig inputs;
       };
       modules = [
+        ./options.nix
+        localconfig.options
         self.common.nixpkgs
         inputs.agenix.homeManagerModules.default
         self.common.agenix
-        # chaotic.homeManagerModules.default
+        localconfig.home
         ({
           config,
           pkgs,

@@ -76,7 +76,7 @@ in {
     ];
 
     # Highly sophisticated login manager
-    programs.bash.profileExtra = "[ $(tty) = \"/dev/tty1\" ] && Hyprland; exit";
+    programs.bash.profileExtra = "[ $(tty) = /dev/tty1 ] && { Hyprland; exit; }";
 
     home.file.".config/hypr/hyprpaper.conf".text = ''
       preload = ~/.local/share/bg
