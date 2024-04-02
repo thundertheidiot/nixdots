@@ -185,22 +185,6 @@
         "url": "https://flakehub.com/f/ipetkov/crane/%2A.tar.gz"
       }
     },
-    "custom-kodi": {
-      "inputs": {
-        "flake-utils": "flake-utils_2",
-        "nixpkgs": "nixpkgs_3"
-      },
-      "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-QtbuOvf4jp6iP+7Pdeg8ewnC3cxykxZwtZbzQNwxrJk=",
-        "path": "./custom/kodi_addons",
-        "type": "path"
-      },
-      "original": {
-        "path": "./custom/kodi_addons",
-        "type": "path"
-      }
-    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -1222,7 +1206,6 @@
         "agenix": "agenix",
         "base16": "base16",
         "chaotic": "chaotic",
-        "custom-kodi": "custom-kodi",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager_3",
         "hyprland": "hyprland",

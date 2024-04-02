@@ -39,8 +39,6 @@
 
     agenix.url = "github:ryantm/agenix";
 
-    custom-kodi.url = "path:./custom/kodi_addons";
-
     nix-autobahn.url = "github:Lassulus/nix-autobahn";
   };
 
