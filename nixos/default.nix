@@ -9,6 +9,7 @@
     ./desktop
     ./gaming
     ./tv
+    ./gpu
   ];
 
   config = with config; {

@@ -72,7 +72,7 @@
     );
 
     setup.gpu = lib.mkOption {
-      type = lib.types.oneOf [ "amd" "nvidia" "intel" "none" ];
+      type = lib.types.enum [ "amd" "nvidia" "intel" "none" ];
       default = "none";
       example = "amd";
       description = "Gpu drivers to install.";

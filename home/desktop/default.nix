@@ -32,6 +32,7 @@ in {
       which
       mpc-cli
       xwayland-mumble
+      obs-studio
       (import ./packages/sibs.nix { inherit pkgs lib; })
       (import ./packages/quickmedia.nix { inherit pkgs lib; })
     ];
