@@ -5,7 +5,13 @@
   lib,
   localconfig,
   ...
-}: {
+}: let
+  xwayland-mumble = pkgs.writeShellScriptBin "mumble" ''
+    # This allows global keybindings in mumble, they don't work with the wayland backend for some reason
+    export QT_QPA_PLATFORM=xcb
+    ${pkgs.mumble}/bin/mumble
+  '';
+in {
   imports = [
     ./theming.nix
     ./gaming
@@ -25,7 +31,9 @@
       libnotify
       which
       mpc-cli
-      mumble
+      xwayland-mumble
+      (import ./packages/sibs.nix { inherit pkgs lib; })
+      (import ./packages/quickmedia.nix { inherit pkgs lib; })
     ];
 
     xdg.userDirs = {
