@@ -16,6 +16,13 @@
       dmenu
       dconf
       gnome.gnome-keyring
+      (pkgs.catppuccin-gtk.override {
+        accents = ["mauve"];
+        size = "compact";
+        variant = "mocha";
+      })
+      pkgs.papirus-icon-theme
+      pkgs.catppuccin-cursors.mochaLavender
     ];
 
     services.gnome.gnome-keyring.enable = true;

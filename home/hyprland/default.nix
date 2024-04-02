@@ -75,7 +75,8 @@ in {
       screenshot
     ];
 
-    programs.bash.profileExtra = "[ $(tty) = \"/dev/tty1\" ] && Hyprland";
+    # Highly sophisticated login manager
+    programs.bash.profileExtra = "[ $(tty) = \"/dev/tty1\" ] && Hyprland; exit";
 
     home.file.".config/hypr/hyprpaper.conf".text = ''
       preload = ~/.local/share/bg
