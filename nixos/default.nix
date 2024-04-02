@@ -17,7 +17,7 @@
 
     programs.nix-ld = {
       enable = true;
-      libraries = with pkgs; [];
+      libraries = with pkgs; [ libGL ];
     };
 
     security.sudo.enable = true;
