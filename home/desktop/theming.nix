@@ -18,36 +18,6 @@ in {
 
     fonts.fontconfig.enable = true;
 
-    # home.file.".config/fontconfig/fonts.conf".text = ''
-    #   <?xml version='1.0'?>
-    #   <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
-    #   <fontconfig>
-
-    #   <alias>
-    #   <family>sans-serif</family>
-    #   <prefer>
-    #   <family>Cantarell</family>
-    #   </prefer>
-    #   </alias>
-
-    #   <alias>
-    #   <family>serif</family>
-    #   <prefer>
-    #   <family>Noto Serif</family>
-    #   </prefer>
-    #   </alias>
-
-    #   <alias>
-    #   <family>monospace</family>
-    #   <prefer>
-    #   <family>UDEV Gothic 35NF</family>
-    #   </prefer>
-    #   </alias>
-    #   </fontconfig>
-    # '';
-      #<family>JetBrainsMono</family>
-      #<family>JetBrainsMono NL</family>
-
     gtk = {
       enable = true;
       gtk2.configLocation = "${xdg.configHome}/gtk-2.0/gtkrc";
@@ -77,7 +47,11 @@ in {
 
     qt = {
       enable = true;
-      platformTheme = "gtk3";
+      platformTheme = "gnome";
+      style = {
+        name = "adwaita-dark";
+        # package = pkgs.catppuccin-kde;
+      };
     };
 
     xdg.configFile = {

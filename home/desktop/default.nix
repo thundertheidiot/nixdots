@@ -22,6 +22,7 @@ in {
       xwallpaper
       xclip
       gajim
+      nheko
       gnome.seahorse
       gnome.gnome-keyring
       ncmpcpp
@@ -33,6 +34,9 @@ in {
       mpc-cli
       xwayland-mumble
       obs-studio
+      yle-dl
+      yt-dlp
+      freetube
       (import ./packages/sibs.nix { inherit pkgs lib; })
       (import ./packages/quickmedia.nix { inherit pkgs lib; })
     ];
