@@ -22,13 +22,15 @@ in {
       xwallpaper
       xclip
       gajim
-      nheko
+      cinny-desktop
+      element-desktop
       gnome.seahorse
       gnome.gnome-keyring
       ncmpcpp
       gimp
       blueberry
       cinnamon.nemo-with-extensions
+      nsxiv
       libnotify
       which
       mpc-cli
@@ -37,9 +39,23 @@ in {
       yle-dl
       yt-dlp
       freetube
+      speedcrunch
+      python3
       (import ./packages/sibs.nix { inherit pkgs lib; })
       (import ./packages/quickmedia.nix { inherit pkgs lib; })
     ];
+
+    xdg.mime.enable = true;
+    xdg.desktopEntries.nsxiv = {
+      name = "nsxiv";
+      mimeType = [ "image/*" ];
+    };
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "image/*" = [ "nsxiv.desktop" ];
+      };
+    };
 
     xdg.userDirs = {
       enable = true;

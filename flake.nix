@@ -19,7 +19,7 @@
     nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
 
     hyprland = {
-      url = "github:hyprwm/Hyprland";
+      url = "github:hyprwm/Hyprland?ref=v0.37.1";
     };
 
     split-monitor-workspaces = {

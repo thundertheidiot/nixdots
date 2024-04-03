@@ -572,3 +572,5 @@
 
 (require 'solaire-mode)
 (solaire-global-mode 1)
+
+(require 'ement)

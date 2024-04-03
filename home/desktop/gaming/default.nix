@@ -16,6 +16,7 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
       lutris
       startsteam
       discord
+      webcord
     ]
     ++ (with inputs.nix-gaming.packages.${pkgs.system}; [
       # wine-ge

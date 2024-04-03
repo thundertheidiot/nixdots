@@ -63,6 +63,8 @@
     XMONAD_DATA_DIR = "${xdg.configHome}/xmonad";
     MANGOHUD_CONFIGFILE = "${xdg.configHome}/mangohud.conf";
 
+    PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
+
     # Settings
 
     MOZ_USE_XINPUT2 = "1";
@@ -83,7 +85,7 @@ in
       ncdu
       btop
       jq
-      rustup
+      rustup openssl openssl.dev pkg-config
       killall
       #nvtopPackages.full
       pulsemixer
@@ -91,6 +93,7 @@ in
       rsync
       agenix.default
       age
+      atool zip unzip p7zip rar
     ];
 
     xdg.enable = true;

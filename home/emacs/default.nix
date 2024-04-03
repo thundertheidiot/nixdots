@@ -11,6 +11,21 @@
       nil # nix language server
     ];
 
+    services.pantalaimon = {
+      enable = true;
+      settings = {
+        Default = {
+          LogLevel = "Debug";
+          SSL = true;
+        };
+        Kotiboksi = {
+          Homeserver = "https://matrix.kotiboksi.xyz";
+          ListenAddress = "127.0.0.1";
+          ListenPort = "8008";
+        };
+      };
+    };
+
     programs.emacs.overrides = self: super: {
       eglot-booster = self.trivialBuild {
         pname = "eglot-booster";
@@ -107,6 +122,8 @@
         epkgs.popper
         epkgs.simple-mpc
         epkgs.empv
+
+        epkgs.ement
       ];
     };
 
