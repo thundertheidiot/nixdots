@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    ./desktop
+    ./workstation
     ./gaming
     ./tv
     ./gpu

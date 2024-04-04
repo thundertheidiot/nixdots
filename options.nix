@@ -34,6 +34,15 @@
       description = "Timezone.";
     };
 
+    monitors = lib.mkOption {
+      default = [];
+      type = lib.types.listOf lib.types.set;
+      example = [
+        {name = "DP-3"; width = 2560; height = 1440; refresh = 144; x = 1920;}
+        {name = "DP-1"; width = 1920; height = 1080; refresh = 144;}
+      ];
+    };
+
     setup.userMachine.enable = lib.mkEnableOption (
       lib.mdDoc "Base setup for a non server machine, for example a login manager, gui programs, gtk theme, etc."
     );

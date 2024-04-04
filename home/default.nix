@@ -16,7 +16,7 @@ in {
   imports = [
     inputs.base16.homeManagerModule
     ./base
-    ./desktop
+    ./workstation
     ./emacs
     ./firefox
     ./awesome
