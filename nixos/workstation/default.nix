@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  localconfig,
   inputs,
   ...
 }: {

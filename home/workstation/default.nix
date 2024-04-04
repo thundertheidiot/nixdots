@@ -1,9 +1,7 @@
 {
   config,
   pkgs,
-  inputs,
   lib,
-  localconfig,
   ...
 }: let
   xwayland-mumble = pkgs.writeShellScriptBin "mumble" ''

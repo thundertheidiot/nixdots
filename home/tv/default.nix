@@ -2,11 +2,8 @@
   config,
   lib,
   pkgs,
-  localconfig,
-  inputs,
   ...
 }: let
-  # customKodi = inputs.custom-kodi.defaultPackage.${localconfig.system};
   customKodi = import ./kodi.nix {inherit pkgs lib;};
 
   specialWorkspace = "special:tv";
