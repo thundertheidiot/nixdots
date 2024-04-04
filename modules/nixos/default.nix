@@ -10,6 +10,7 @@
     ./gaming
     ./tv
     ./gpu
+    ./laptop
   ];
 
   config = with config; {

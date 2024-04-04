@@ -23,6 +23,7 @@
       setup.firefox.enable = true;
       setup.gaming.enable = false;
       setup.tv.enable = false;
+      setup.laptop.enable = true;
 
       monitors = [
         { name = "LVDS-1"; width = 1366; height = 768; }

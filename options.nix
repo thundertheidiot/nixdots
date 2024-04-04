@@ -80,6 +80,10 @@
       lib.mdDoc "Kodi and other stuff to make this machine into a smart tv."
     );
 
+    setup.laptop.enable = lib.mkEnableOption (
+      lib.mdDoc "Laptop specific things"
+    );
+
     setup.gpu = lib.mkOption {
       type = lib.types.enum [ "amd" "nvidia" "intel" "none" ];
       default = "none";
