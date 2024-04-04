@@ -63,7 +63,7 @@
             };
 
             imports = [
-              ./nixos
+              ./modules/nixos
             ];
 
             home-manager = {
@@ -76,7 +76,7 @@
                 inputs.agenix.homeManagerModules.default
               ];
 
-              users.${config.username} = ./home;
+              users.${config.username} = ./modules/home;
             };
           })
         ];
