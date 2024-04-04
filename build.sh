@@ -1,7 +1,7 @@
 #!/bin/sh
 
 nixos() {
-    sudo nixos-rebuild switch --flake path:.#default --show-trace
+    sudo nixos-rebuild switch --flake path:.#local --show-trace
     exit 0 # Otherwise home will run on failure
 }
 
