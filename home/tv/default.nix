@@ -65,9 +65,9 @@ in {
 
     programs.firefox.profiles."tv" = {
       id = 1;
-      # extraConfig = ''
-      #   user_pref("browser.fullscreen.autohide", false);
-      # '';
+      extraConfig = ''
+        user_pref("browser.fullscreen.autohide", true);
+      '';
       extensions = with pkgs.firefox-addons; [
         ublock-origin
         purpleadblock
