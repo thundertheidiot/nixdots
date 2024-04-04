@@ -16,14 +16,22 @@
       age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
     };
 
-    mkSystem = cfg:
-      lib.nixosSystem {
+    commonModules = cfg: [
+      ./options.nix
+      cfg.options
+      age
+      ({config, ...}: {
+        age.identityPaths = ["${config.homeDirectory}/.ssh/id_agenix"];
+        age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
+      })
+    ];
+
+    mkSystem = cfg: let
+      common = commonModules cfg;
+      in lib.nixosSystem {
         system = cfg.systemArch;
         specialArgs = { inherit inputs; };
-        modules = [
-          ./options.nix
-          age
-          cfg.options
+        modules = common ++ [
           cfg.system
           home-manager.nixosModules.home-manager
           inputs.agenix.nixosModules.default
@@ -63,11 +71,8 @@
               useUserPackages = true;
               extraSpecialArgs = {inherit inputs;};
 
-              sharedModules = [
-                ./options.nix
-                age
+              sharedModules = common ++ [
                 cfg.home
-                cfg.options
                 inputs.agenix.homeManagerModules.default
               ];
 
