@@ -11,15 +11,9 @@
   in rec {
     nixosConfigurations = gen ["desktop" "x220" "digiboksi"] // {local = mkSystem (import ./local.nix);};
 
-    age = {config, ...}: {
-      age.identityPaths = ["${config.homeDirectory}/.ssh/id_agenix"];
-      age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
-    };
-
     commonModules = cfg: [
       ./options.nix
       cfg.options
-      age
       ({config, ...}: {
         age.identityPaths = ["${config.homeDirectory}/.ssh/id_agenix"];
         age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
