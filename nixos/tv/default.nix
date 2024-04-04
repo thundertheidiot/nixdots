@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  localconfig,
   ...
 }: {
   config = lib.mkIf (config.setup.tv.enable) (with config; {
@@ -13,7 +12,7 @@
 
     services.xserver.displayManager.autoLogin = {
       enable = true;
-      user = localconfig.username;
+      user = config.username;
     };
 
     services.postgresql = {

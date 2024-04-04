@@ -1,9 +1,7 @@
 {
   config,
   pkgs,
-  inputs,
   lib,
-  localconfig,
   ...
 }: {
   config = lib.mkIf (config.setup.userMachine.enable) (with config; {

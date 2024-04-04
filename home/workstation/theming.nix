@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  localconfig,
   ...
 }: let
   cursor_package = pkgs.catppuccin-cursors.mochaLavender;

@@ -11,19 +11,23 @@
   in rec {
     nixosConfigurations = gen ["desktop" "x220"] // {local = mkSystem (import ./local.nix);};
 
+    age = {config, ...}: {
+      age.identityPaths = ["${config.homeDirectory}/.ssh/id_agenix"];
+      age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
+    };
+
     mkSystem = cfg:
       lib.nixosSystem {
         system = cfg.systemArch;
         specialArgs = { inherit inputs; };
         modules = [
           ./options.nix
+          age
           cfg.options
           cfg.system
           home-manager.nixosModules.home-manager
           inputs.agenix.nixosModules.default
           ({config, ...}: {
-            age.identityPaths = ["${config.homeDirectory}/.ssh/id_agenix"];
-            age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
 
             time.timeZone = config.timeZone;
             networking.hostName = config.hostName;
@@ -61,6 +65,7 @@
 
               sharedModules = [
                 ./options.nix
+                age
                 cfg.home
                 cfg.options
                 inputs.agenix.homeManagerModules.default
@@ -106,7 +111,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    # Deliberately doesn't follow nixpkgs, i want to be able to rollback emacs
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     nixgl.url = "github:nix-community/nixGL";

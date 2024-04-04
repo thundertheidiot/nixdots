@@ -3,7 +3,6 @@
   pkgs,
   inputs,
   lib,
-  localconfig,
   ...
 }: let
   awesome = inputs.nixpkgs-f2k.packages.${pkgs.system}.awesome-git;

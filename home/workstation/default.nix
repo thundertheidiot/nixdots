@@ -1,9 +1,7 @@
 {
   config,
   pkgs,
-  inputs,
   lib,
-  localconfig,
   ...
 }: let
   xwayland-mumble = pkgs.writeShellScriptBin "mumble" ''
@@ -21,28 +19,35 @@ in {
     home.packages = with pkgs; [
       xwallpaper
       xclip
+      ncmpcpp
+      mpc-cli
+      libnotify
+
       gajim
       cinny-desktop
       element-desktop
+
       gnome.seahorse
       gnome.gnome-keyring
-      ncmpcpp
       gimp
       blueberry
-      cinnamon.nemo-with-extensions
-      nsxiv
-      libnotify
-      which
-      mpc-cli
-      xwayland-mumble
+      (pkgs.cinnamon.nemo-with-extensions.overrideAttrs (final: prev: {
+        extensions = with pkgs.cinnamon; [ nemo-fileroller ];
+      }))
+      gnome.file-roller
+      nsxiv # image viewer
+      speedcrunch # calculator
+
+      xwayland-mumble # above
       obs-studio
+
       yle-dl
       yt-dlp
       freetube
-      speedcrunch
       python3
-      (import ./packages/sibs.nix { inherit pkgs lib; })
-      (import ./packages/quickmedia.nix { inherit pkgs lib; })
+      # These don't work yet
+      # (import ./packages/sibs.nix { inherit pkgs lib; })
+      # (import ./packages/quickmedia.nix { inherit pkgs lib; })
     ];
 
     xdg.mime.enable = true;
