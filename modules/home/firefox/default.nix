@@ -19,22 +19,22 @@
           SponsoredSuggestions  = false;
           ImproveSuggest = false;
         };
-        # ExtensionSettings = {
-        #   "uBlock0@raymondhill.net" = {
-        #     installation_mode = "force_installed";
-        #   };
-        # };
+        ExtensionSettings = {
+          "uBlock0@raymondhill.net" = {
+            installation_mode = "force_installed";
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-11423598-latest.xpi";
+          };
+          "istilldontcareaboutcookies" = {
+            installation_mode = "force_installed";
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/addon-17568914-latest.xpi";
+          };
+        };
       };
 
       profiles."nix-managed" = {
         extensions = with pkgs.firefox-addons; [
-          ublock-origin
-          purpleadblock
-          istilldontcareaboutcookies
           bitwarden
           privacy-redirect
-          multi-account-containers
-          user-agent-string-switcher
         ];
 
         search = {

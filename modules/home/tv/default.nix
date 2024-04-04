@@ -103,13 +103,6 @@ in {
         };
       };
 
-      # package = pkgs.kodi (pkgs:
-      #   with pkgs; [
-      #     youtube
-      #     netflix
-      #     jellyfin
-      #     # invidious # maybe good later, not needed right now
-      #   ]);
       package = customKodi;
     };
   });
