@@ -9,7 +9,7 @@
   } @ inputs: let
     lib = nixpkgs.lib;
   in rec {
-    nixosConfigurations = gen ["desktop"] // {local = mkSystem (import ./local.nix);};
+    nixosConfigurations = gen ["desktop" "x220"] // {local = mkSystem (import ./local.nix);};
 
     age = {config, ...}: {
       age.identityPaths = ["${config.homeDirectory}/.ssh/id_agenix"];
