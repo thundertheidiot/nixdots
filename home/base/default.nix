@@ -83,17 +83,19 @@ in
       fd
       ripgrep
       ncdu
-      btop
       jq
-      rustup openssl openssl.dev pkg-config
       killall
-      #nvtopPackages.full
-      pulsemixer
-      alejandra
+      which
       rsync
+      atool zip unzip p7zip rar
+      pulsemixer
+      btop
+      #nvtopPackages.full
+
+      rustup openssl openssl.dev pkg-config
+      alejandra
       agenix.default
       age
-      atool zip unzip p7zip rar
     ];
 
     xdg.enable = true;
