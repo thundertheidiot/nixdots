@@ -66,9 +66,6 @@ in {
         user_pref("browser.fullscreen.autohide", true);
       '';
       extensions = with pkgs.firefox-addons; [
-        ublock-origin
-        purpleadblock
-        istilldontcareaboutcookies
         enhancer-for-youtube
         (pkgs.stdenv.mkDerivation rec {
           name = "youtube_for_tv-0.0.3";
