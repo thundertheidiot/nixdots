@@ -111,7 +111,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    # Deliberately doesn't follow nixpkgs, i want to be able to rollback emacs
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     nixgl.url = "github:nix-community/nixGL";
