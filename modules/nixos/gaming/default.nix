@@ -6,7 +6,7 @@
       dedicatedServer.openFirewall = true;
     };
 
-    environment.systemPackages = with pkgs."2311"; [
+    environment.systemPackages = with pkgs; [
       gamescope
     ];
 

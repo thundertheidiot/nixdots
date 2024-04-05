@@ -75,6 +75,7 @@ in {
       swayosd
       screenshot
       polkit_gnome
+      tofi
     ];
 
     # Highly sophisticated login manager
@@ -91,6 +92,32 @@ in {
       save_dir=${xdg.userDirs.pictures}/screenshots
       save_filename_format=annotated-%Y-%m-%d_%H-%M-%S.png
     '';
+
+    xdg.configFile."tofi/config" = {
+      enable = true;
+      text = ''
+        font = "Monospace"
+        font-size = 12
+        border-width = 2
+        outline-width = 0
+        corner-radius = 6
+
+        text-color = ${colors.foreground}
+        text-background = ${colors.background}
+
+        background-color = ${colors.background}
+        border-color = ${colors.base04}
+
+        selection-color = ${colors.base04}
+        selection-background = ${colors.background}
+
+        text-cursor-style = bar
+        text-cursor-color = ${colors.foreground}
+        text-cursor-background = ${colors.background}
+
+        prompt-text = "run: "
+      '';
+    };
 
     programs.bemenu = {
       enable = true;
@@ -263,7 +290,7 @@ in {
         bind = [
           "$mod, return, exec, ${terminal}"
           "$mod, W, exec, ${pkgs.firefox}/bin/firefox"
-          "$mod, D, exec, ${pkgs.bemenu}/bin/bemenu-run"
+          "$mod, D, exec, ${pkgs.tofi}/bin/tofi-run"
           "$mod, E, exec, $EDITOR"
           "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
           "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"

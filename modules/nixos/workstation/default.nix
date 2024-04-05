@@ -17,8 +17,11 @@
       gnome.gnome-keyring
       xorg.xhost
       gparted
+      wireguard-tools
     ];
 
+    networking.firewall.checkReversePath = false;
+    
     services.gnome.gnome-keyring.enable = true;
 
     programs.seahorse.enable = true;

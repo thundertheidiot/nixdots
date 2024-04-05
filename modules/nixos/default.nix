@@ -21,6 +21,10 @@
       extra-sandbox-paths = [config.programs.ccache.cacheDir];
     };
 
+    systemd.extraConfig = ''
+      DefaultTimeoutStopSec=3s
+    '';
+
     programs.nix-ld = {
       enable = true;
       libraries = with pkgs; [ libGL ];
