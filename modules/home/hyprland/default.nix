@@ -71,6 +71,7 @@ in {
       swappy
       bemenu
       wl-clipboard
+      wlr-randr
       swayosd
       screenshot
     ];
