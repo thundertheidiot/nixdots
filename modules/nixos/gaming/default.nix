@@ -18,5 +18,7 @@
     services.flatpak.enable = true;
 
     programs.gamemode.enable = true;
+
+    services.joycond.enable = true;
   });
 }

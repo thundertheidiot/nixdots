@@ -17,6 +17,8 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
       startsteam
       discord
       webcord
+
+      retroarchFull
     ]
     ++ (with pkgs.ataraxiasjel; [
       proton-ge

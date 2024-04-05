@@ -6,6 +6,12 @@
 }: let
   cursor_package = pkgs.catppuccin-cursors.mochaLavender;
   cursor_name = "Catppuccin-Mocha-Lavender-Cursors";
+
+  colors = with config.scheme.withHashtag; {
+    background = base00;
+    foreground = base07;
+    inherit base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base10 base11 base12 base13 base14 base15;
+  };
 in {
   config = lib.mkIf (config.setup.userMachine.enable) (with config; {
     home.packages = with pkgs; [
@@ -16,6 +22,18 @@ in {
     ];
 
     fonts.fontconfig.enable = true;
+
+    xresources = {
+      path = "${xdg.configHome}/xresources";
+      properties = {
+        "Nsxiv.window.background" = "${colors.background}";
+        "Nsxiv.window.foreground" = "${colors.foreground}";
+        "Nsxiv.mark.foreground" = "${colors.base04}";
+
+        "Nsxiv.bar.background" = "${colors.foreground}";
+        "Nsxiv.bar.foreground" = "${colors.background}";
+      };
+    };
 
     gtk = {
       enable = true;
@@ -67,6 +85,10 @@ in {
       x11.defaultCursor = "left_ptr";
       x11.enable = true;
       gtk.enable = true;
+    };
+
+    programs.fish.shellAliases = {
+      "sxiv" = "nsxiv";
     };
   });
 }
