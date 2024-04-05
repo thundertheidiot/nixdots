@@ -12,7 +12,6 @@
 in {
   imports = [
     ./theming.nix
-    ./gaming
   ];
 
   config = lib.mkIf (config.setup.userMachine.enable) (with config; {

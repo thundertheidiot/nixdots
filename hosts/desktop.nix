@@ -27,6 +27,8 @@
       setup.gaming.enable = true;
       setup.tv.enable = false;
 
+      setup.desktop.enable = true;
+
       setup.gpu = "amd";
 
       monitors = [

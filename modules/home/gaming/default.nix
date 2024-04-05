@@ -18,7 +18,8 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
       discord
       webcord
     ]
-    ++ (with inputs.nix-gaming.packages.${pkgs.system}; [
-      # wine-ge
+    ++ (with pkgs.ataraxiasjel; [
+      proton-ge
+      wine-ge
     ]);
 })

@@ -17,6 +17,7 @@ in {
     inputs.base16.homeManagerModule
     ./base
     ./workstation
+    ./gaming
     ./emacs
     ./firefox
     ./awesome

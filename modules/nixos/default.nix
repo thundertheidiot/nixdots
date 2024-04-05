@@ -11,11 +11,15 @@
     ./tv
     ./gpu
     ./laptop
+    ./desktop.nix
   ];
 
   config = with config; {
-    nix.settings.experimental-features = ["nix-command" "flakes"];
-    nix.settings.allowed-users = [config.username];
+    nix.settings = {
+      experimental-features = ["nix-command" "flakes"];
+      allowed-users = [config.username];
+      extra-sandbox-paths = [config.programs.ccache.cacheDir];
+    };
 
     programs.nix-ld = {
       enable = true;

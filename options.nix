@@ -84,6 +84,10 @@
       lib.mdDoc "Laptop specific things"
     );
 
+    setup.desktop.enable = lib.mkEnableOption (
+      lib.mdDoc "Desktop specific things"
+    );
+
     setup.gpu = lib.mkOption {
       type = lib.types.enum [ "amd" "nvidia" "intel" "none" ];
       default = "none";
