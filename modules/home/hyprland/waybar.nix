@@ -266,6 +266,7 @@ in {
           modules-right = ["hyprland/language" "idle_inhibitor" "disk#root" "network" "pulseaudio" "battery" "tray"];
 
           "hyprland/workspaces" = {
+            format = "{name}";
             disable-scroll = true;
             active-only = false;
           };

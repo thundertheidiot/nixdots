@@ -7,7 +7,7 @@
   config = lib.mkIf (config.setup.gpu == "amd") {
     hardware.opengl.enable = true;
     hardware.opengl.driSupport = true;
-    hardware.opengl.driSupport32Bit = config.setup.gaming.enable;
+    hardware.opengl.driSupport32Bit = true;
 
     hardware.opengl.extraPackages = with pkgs; [
       rocmPackages.clr.icd
@@ -19,7 +19,9 @@
       "L+ /opt/rocm/hip - - - - ${pkgs.rocmPackages.clr}"
     ];
 
+    services.xserver.enable = true;
+    services.xserver.videoDrivers = ["modesetting" "amdgpu"];
+    # services.xserver.videoDrivers = ["amdgpu"];
     boot.initrd.kernelModules = ["amdgpu"];
-    services.xserver.videoDrivers = ["amdgpu"];
   };
 }

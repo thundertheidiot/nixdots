@@ -16,6 +16,11 @@
       # ];
     };
 
+    # defaultPackage = builtins.listToAttrs (builtins.map (arch: {
+    #   name = arch;
+    #   value = home-manager.defaultPackage.arch;
+    # }) ["linux-x86_64" "aarch64-linux" "i686-linux"]);
+
     commonModules = cfg: [
       ./options.nix
       cfg.options
@@ -138,7 +143,8 @@
     nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
 
     hyprland = {
-      url = "github:hyprwm/Hyprland?ref=v0.37.1";
+      # Gpu works, split monitor workspaces works, idk
+      url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
     };
 
     split-monitor-workspaces = {

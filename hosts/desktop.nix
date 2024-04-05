@@ -54,18 +54,18 @@
     system.stateVersion = "24.05";
 
     boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
-    boot.initrd.kernelModules = ["amdgpu"];
+    # boot.initrd.kernelModules = ["amdgpu"];
     boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
 
-    services.xserver.enable = true;
-    services.xserver.videoDrivers = ["amdgpu"];
+    # services.xserver.enable = true;
+    # services.xserver.videoDrivers = ["amdgpu"];
 
-    hardware.opengl.enable = true;
-    hardware.opengl.driSupport = true;
-    hardware.opengl.driSupport32Bit = true;
+    # hardware.opengl.enable = true;
+    # hardware.opengl.driSupport = true;
+    # hardware.opengl.driSupport32Bit = true;
 
-    hardware.enableRedistributableFirmware = true;
+    # hardware.enableRedistributableFirmware = true;
 
     hardware.ckb-next.enable = true;
 
