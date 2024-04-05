@@ -20,5 +20,15 @@
     programs.gamemode.enable = true;
 
     services.joycond.enable = true;
+
+    systemd.services."steamvr-setcap" = {
+      enable = true;
+      description = "Run setcap to fix steamvr.";
+      unitConfig.Type = "simple";
+      serviceConfig = {
+        ExecStart = "${pkgs.libcap}/bin/setcap CAP_SYS_NICE+ep ${config.homeDirectory}/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
   });
 }

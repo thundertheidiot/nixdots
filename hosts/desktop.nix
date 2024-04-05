@@ -40,6 +40,10 @@
 
   home = {...}: {
     home.stateVersion = "24.05";
+
+    gtk.gtk3.bookmarks = [
+      "file:///mnt/4tb"
+    ];
   };
 
   system = {

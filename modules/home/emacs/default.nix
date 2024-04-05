@@ -132,6 +132,15 @@
       startWithUserSession = true;
     };
 
+    xdg.mimeApps.defaultApplications = builtins.listToAttrs (builtins.map (mime: {
+      name = mime;
+      value = [ "emacsclient.desktop" ];
+    }) [
+      "text/plain"
+      "application/plain"
+    ]);
+
+
     xdg.configFile."emacs/.createdir" = {
       enable = true;
       text = "This file is here to make nix create \"${xdg.configHome}/emacs/\", so emacs uses it instead of \"${home.homeDirectory}/.emacs.d/\".";

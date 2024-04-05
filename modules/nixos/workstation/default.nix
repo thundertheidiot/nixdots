@@ -46,6 +46,8 @@
       extraArgs = ["--noclear" "-n" "-o" "${config.username}"];
     };
 
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;
