@@ -9,7 +9,12 @@
   } @ inputs: let
     lib = nixpkgs.lib;
   in rec {
-    nixosConfigurations = gen ["desktop" "x220" "digiboksi"] // {local = mkSystem (import ./local.nix);};
+    nixosConfigurations = gen ["desktop" "x220" "digiboksi"] // {
+      local = mkSystem (import ./local.nix) [];
+      # iso = mkSystem (import ./hosts/iso.nix) [
+      #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
+      # ];
+    };
 
     commonModules = cfg: [
       ./options.nix
@@ -20,7 +25,7 @@
       })
     ];
 
-    mkSystem = cfg: let
+    mkSystem = cfg: extramodules: let
       common = commonModules cfg;
     in
       lib.nixosSystem {
@@ -28,6 +33,7 @@
         specialArgs = {inherit inputs;};
         modules =
           common
+          ++ extramodules
           ++ [
             cfg.system
             home-manager.nixosModules.home-manager
@@ -109,7 +115,7 @@
     gen = hosts:
       builtins.listToAttrs (builtins.map (s: {
           name = s;
-          value = mkSystem (import ./hosts/${s}.nix);
+          value = mkSystem (import ./hosts/${s}.nix) [];
         })
         hosts);
   };
