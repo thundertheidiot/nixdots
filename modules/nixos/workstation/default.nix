@@ -15,6 +15,8 @@
       dmenu
       dconf
       gnome.gnome-keyring
+      xorg.xhost
+      gparted
     ];
 
     services.gnome.gnome-keyring.enable = true;
@@ -29,6 +31,21 @@
         session optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
         password optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
       '';
+    };
+
+    security.polkit.enable = true;
+    systemd.user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
     };
 
     hardware.bluetooth = {
@@ -46,7 +63,7 @@
       extraArgs = ["--noclear" "-n" "-o" "${config.username}"];
     };
 
-    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    #    boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     security.rtkit.enable = true;
     services.pipewire = {
@@ -63,7 +80,7 @@
 
     # Takes like 5 seconds of extra time on boot
     systemd.services."NetworkManager-wait-online".enable = false;
-    
+
     services.xserver.displayManager.startx.enable = true;
 
     services.xserver.displayManager.session = [

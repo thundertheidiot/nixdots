@@ -9,7 +9,7 @@
   } @ inputs: let
     lib = nixpkgs.lib;
   in rec {
-    nixosConfigurations = gen ["desktop" "x220" "digiboksi"] // {
+    nixosConfigurations = gen ["desktop" "x220" "t440p" "digiboksi"] // {
       local = mkSystem (import ./local.nix) [];
       # iso = mkSystem (import ./hosts/iso.nix) [
       #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"

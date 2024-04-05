@@ -74,6 +74,7 @@ in {
       wlr-randr
       swayosd
       screenshot
+      polkit_gnome
     ];
 
     # Highly sophisticated login manager
@@ -191,12 +192,17 @@ in {
           {
             name = "tpps/2-ibm-trackpoint";
             accel_profile = "adaptive";
-            # sensitivity = 0.0;
+            sensitivity = 0.0;
           }
           {
             name = "synps/2-synaptics-touchpad";
             accel_profile = "adaptive";
             sensitivity = 0.0;
+          }
+          {
+            name = "synaptics-tm3053-004";
+            accel_profile = "adaptive";
+            sensitivity = -0.3;
           }
         ];
 

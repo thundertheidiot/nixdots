@@ -44,7 +44,7 @@
     };
 
     users.users.${config.username} = {
-      extraGroups = ["wheel"];
+      extraGroups = ["wheel" "networkmanager"];
       isNormalUser = true;
     };
 
@@ -55,6 +55,7 @@
       keyd
       clang
       gcc
+      cryptsetup
     ];
 
     services.keyd = {

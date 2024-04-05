@@ -26,6 +26,7 @@ in {
       cinny-desktop
       element-desktop
 
+      gparted
       gnome.seahorse
       gnome.gnome-keyring
       gimp
