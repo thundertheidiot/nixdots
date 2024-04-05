@@ -144,11 +144,14 @@
 
     hyprland = {
       # Gpu works, split monitor workspaces works, idk
-      url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
+      # url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
+      url = "github:hyprwm/Hyprland";
     };
 
     split-monitor-workspaces = {
-      url = "github:Dekomoro/split-monitor-workspaces";
+      # for the ref above
+      # url = "github:thundertheidiot/split-monitor-workspaces?ref=d6efa8bd7254f40a2009d406934059fda539811d";
+      url = "github:thundertheidiot/split-monitor-workspaces";
       inputs.hyprland.follows = "hyprland";
     };
 
