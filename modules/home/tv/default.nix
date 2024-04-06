@@ -8,7 +8,7 @@
 
   guisettings = ''
     <settings version="2">
-      <setting id="lookadfeel.skin">skin.estuary.modv2</setting>
+      <setting id="lookandfeel.skin">skin.estuary.modv2</setting>
       <setting id="locale.timezonecountry">Finland</setting>
       <setting id="locale.timezone">Europe/Helsinki</setting>
 
@@ -22,6 +22,12 @@
 
     [ ! -d "$userdata" ] && mkdir --parents "$userdata"
     [ ! -f "$guisettings" ] && echo "${guisettings}" > "$guisettings"
+
+    addondata="$userdata/addon_data"
+    for i in plugin.video.jellyfin plugin.video.netflix plugin.video.youtube script.module.pvr.artwork script.skinshortcuts service.xbmc.versioncheck; do
+      mkdir --parents "$i"
+      echo "<settings version="2">\n</settings>" >> "$i"/settings.xml
+    done
   '';
 
   specialWorkspace = "special:tv";
@@ -59,9 +65,10 @@ in {
       source = "${customKodi}/share/kodi/addons/";
     };
 
-    xdg.dataFile."kodi/userdata/addon_data/script.skinshortcuts/skin.estuary.modv2.properties" = {
+    xdg.dataFile."kodi/userdata/addon_data/script.skinshortcuts" = {
       enable = true;
-      text = builtins.readFile ./estuarymod-properties;
+      recursive = true;
+      source = ./script.skinshortcuts-settings;
     };
 
     home.packages = [
@@ -75,7 +82,7 @@ in {
       ];
       windowrulev2 = [ "fullscreen,class:(Kodi)" ];
       exec-once = [
-        "${createSettings}/bin/createSettings && bash -c \"while ! [[ $(pgrep kodi) ]]; do ${customKodi}/bin/kodi_with_addons -fs & sleep 1; done\""
+        "${createSettings}/bin/createSettings && ${customKodi}/bin/kodi_with_addons -fs"
       ];
       bind = ["ALT, F4, killactive"];
     };
