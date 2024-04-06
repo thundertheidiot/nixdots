@@ -23,8 +23,11 @@
     [ ! -d "$userdata" ] && mkdir --parents "$userdata"
     [ ! -f "$guisettings" ] && echo "${guisettings}" > "$guisettings"
 
+    [ ! -d  "$userdata/addon_data/script.skinshortcuts" ] && cp -r --dereference "${customKodi}/share/kodi/userdata/addon_data/script.skinshortcuts" "$userdata/addon_data/script.skinshortcuts"
+    chmod -R 777 "$userdata/addon_data/script.skinshortcuts"
+
     addondata="$userdata/addon_data"
-    for i in plugin.video.jellyfin plugin.video.netflix plugin.video.youtube script.module.pvr.artwork script.skinshortcuts service.xbmc.versioncheck; do
+    for i in plugin.video.jellyfin plugin.video.netflix plugin.video.youtube script.module.pvr.artwork service.xbmc.versioncheck; do
       mkdir --parents "$i"
       echo "<settings version="2">\n</settings>" >> "$i"/settings.xml
     done
@@ -65,15 +68,16 @@ in {
       source = "${customKodi}/share/kodi/addons/";
     };
 
-    xdg.dataFile."kodi/userdata/addon_data/script.skinshortcuts" = {
-      enable = true;
-      recursive = true;
-      source = ./script.skinshortcuts-settings;
-    };
+    # xdg.dataFile."kodi/userdata/addon_data/script.skinshortcuts" = {
+    #   enable = true;
+    #   recursive = true;
+    #   source = ./script.skinshortcuts-settings;
+    # };
 
     home.packages = [
       customKodi
       tvScripts
+      createSettings
     ];
 
     wayland.windowManager.hyprland.settings = lib.mkIf (config.setup.hyprland.enable) {

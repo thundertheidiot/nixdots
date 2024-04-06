@@ -69,6 +69,18 @@ in
         hash = "sha256-aE4gMhX8uE3LyH+i4UW9CqsL/quqctXcL45g4uLzLL4=";
       })
       (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.routing/script.module.routing-0.2.3+matrix.1.zip";
+        hash = "sha256-piPmY8Q3NyIeImmkYhDwmQhBiwwcV0X532xV1DogF+I=";
+      })
+      (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.arrow/script.module.arrow-1.2.3.zip";
+        hash = "sha256-Et+9FJT1dRE1dFOrAQ70HJJcfylyLsiyay9wPJcSOXs=";
+      })
+      (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.embuary.info/script.embuary.info-2.0.8.zip";
+        hash = "sha256-HkUAW+kYv9+3GVbeDkqAsbykwh4/b6NenOKefNBAP8U=";
+      })
+      (pkgs.fetchzip {
         url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.embuary.helper/script.embuary.helper-2.0.8.zip";
         hash = "sha256-MHwDXPcXCWsUbQTjkS8NyPwuvNllagA6k/JFj8dxwtk=";
       })
@@ -101,6 +113,9 @@ in
           [ -d "$dir/$name/libs" ] && addonPythonPath="$addonPythonPath:$dir/$name/libs"
           [ -d "$dir/$name/resources/lib" ] && addonPythonPath="$addonPythonPath:$dir/$name/resources/lib"
       done
+
+      mkdir -p "$out/share/kodi/userdata/addon_data"
+      cp -r "${./script.skinshortcuts-settings}" "$out/share/kodi/userdata/addon_data/script.skinshortcuts"
 
       mkdir -p "$out/bin"
       makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi_with_addons" \
