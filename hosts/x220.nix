@@ -22,7 +22,7 @@
       setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
       setup.gaming.enable = false;
-      setup.tv.enable = false;
+      setup.tv.enable = true;
       setup.laptop.enable = true;
 
       monitors = [

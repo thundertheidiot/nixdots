@@ -1,10 +1,11 @@
 # This package provides:
-# 1. $out/share/kodi/addons, this is linked to $KODI_HOME/addons by home manager
+# 1. $out/share/kodi/addons, this is linked to ${config.programs.kodi.datadir}/addons by home manager
 # 2. $out/bin/kodi, this is a wrapper for kodi with the correct PYTHONPATH and LD_LIBRARY_PATH
 
 {
   lib,
   pkgs,
+  config,
   ...
 }: let
   addonDir = "/share/kodi/addons";
@@ -46,6 +47,37 @@ in
       "${pkgs.kodiPackages.certifi}${addonDir}/script.module.certifi"
       "${pkgs.kodiPackages.signals}${addonDir}/script.module.addon.signals"
       "${pkgs.kodiPackages.myconnpy}${addonDir}/script.module.myconnpy"
+      (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.simpleeval/script.module.simpleeval-0.9.10.zip";
+        hash = "sha256-7bMSSYytPxGHv9ytpXm2cZi1oxzM3hSgFVOxry0/Zqg=";
+      })
+      (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.unidecode/script.module.unidecode-1.3.6.zip";
+        hash = "sha256-pJrEhB2I6z8+hnWsp1m7YBJO8FE5Iw6CJrIXdlOETKY=";
+      })
+      (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.simplecache/script.module.simplecache-2.0.2.zip";
+        hash = "sha256-xdOBIi99nspcDIKkjxcW1r/BqL8O9NxdDViTuvMtUmo=";
+      })
+      (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.skinshortcuts/script.skinshortcuts-2.0.3.zip";
+        hash = "sha256-XtZ42ng3mEqsN1Vi07Tryzsgk1LgVhfIUE7hW3AHVEY=";
+      })
+      (pkgs.fetchgit {
+        url = "https://github.com/b-jesch/script.module.pvr.artwork";
+        rev = "6bac060ea6736be1020375e3ec143f1942eb74e1";
+        hash = "sha256-aE4gMhX8uE3LyH+i4UW9CqsL/quqctXcL45g4uLzLL4=";
+      })
+      (pkgs.fetchzip {
+        url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.embuary.helper/script.embuary.helper-2.0.8.zip";
+        hash = "sha256-MHwDXPcXCWsUbQTjkS8NyPwuvNllagA6k/JFj8dxwtk=";
+      })
+      (pkgs.fetchgit {
+        url = "https://github.com/b-jesch/skin.estuary.modv2";
+        rev = "25d9514ad194a1161f0289fb793f725b7d9cd536";
+        hash = "sha256-N1yLI8T8PxaldQP1z8TFv+XLYsWSBhnw9wa1hcpVcZM=";
+      })
+      ./script.firefox.launcher
     ];
 
     nativeBuildInputs = with pkgs; [xml2 makeWrapper];

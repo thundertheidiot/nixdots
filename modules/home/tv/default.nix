@@ -4,7 +4,25 @@
   pkgs,
   ...
 }: let
-  customKodi = import ./kodi.nix {inherit pkgs lib;};
+  customKodi = import ./kodi.nix {inherit config pkgs lib;};
+
+  guisettings = ''
+    <settings version="2">
+      <setting id="lookadfeel.skin">skin.estuary.modv2</setting>
+      <setting id="locale.timezonecountry">Finland</setting>
+      <setting id="locale.timezone">Europe/Helsinki</setting>
+
+      <setting id="locale.use24hourclock">true</setting>
+    </settings>
+  '';
+
+  createSettings = pkgs.writeShellScriptBin "createSettings" ''
+    userdata="${config.programs.kodi.datadir}/userdata"
+    guisettings="${config.programs.kodi.datadir}/userdata/guisettings.xml"
+
+    [ ! -d "$userdata" ] && mkdir --parents "$userdata"
+    [ ! -f "$guisettings" ] && echo "${guisettings}" > "$guisettings"
+  '';
 
   specialWorkspace = "special:tv";
 
@@ -12,7 +30,7 @@
     pkgs.writeShellScriptBin "${bin}" ''
       kill -s SIGUSR1 $(pidof waybar)
       ${pkgs.hyprland}/bin/hyprctl dispatch togglespecialworkspace ${specialWorkspace}
-      ${pkgs.firefox}/bin/firefox -P tv --kiosk --new-window "${url}"
+      ${pkgs.hyprland}/bin/hyprctl dispatch exec "[fullscreen] ${pkgs.firefox}/bin/firefox -P tv --new-window "${url}" --fullscreen"
       kill -s SIGUSR1 $(pidof waybar)
     '';
 
@@ -23,20 +41,14 @@
 
     youtubeTv = openInKiosk "youtube_tv" "https://youtube.com/tv";
     areenaTv = openInKiosk "areena_tv" "https://areena.yle.fi";
-
-    firefoxNonKiosk = pkgs.writeShellScriptBin "firefox_tv" ''
-      kill -s SIGUSR1 $(pidof waybar)
-      ${pkgs.hyprland}/bin/hyprctl dispatch togglespecialworkspace ${specialWorkspace}
-      ${pkgs.hyprland}/bin/hyprctl dispatch exec "[fullscreen] ${pkgs.firefox}/bin/firefox -P tv --new-window"
-      kill -s SIGUSR1 $(pidof waybar)
-    '';
+    firefoxTv = openInKiosk "firefox_tv" "";
 
     installPhase = ''
       mkdir --parents "$out/bin"
 
       cp ${youtubeTv}/bin/youtube_tv "$out/bin/youtube_tv"
       cp ${areenaTv}/bin/areena_tv "$out/bin/areena_tv"
-      cp ${firefoxNonKiosk}/bin/firefox_tv "$out/bin/firefox_tv"
+      cp ${firefoxTv}/bin/firefox_tv "$out/bin/firefox_tv"
     '';
   };
 in {
@@ -45,6 +57,11 @@ in {
       enable = true;
       recursive = true;
       source = "${customKodi}/share/kodi/addons/";
+    };
+
+    xdg.dataFile."kodi/userdata/addon_data/script.skinshortcuts/skin.estuary.modv2.properties" = {
+      enable = true;
+      text = builtins.readFile ./estuarymod-properties;
     };
 
     home.packages = [
@@ -57,7 +74,10 @@ in {
         "${specialWorkspace},rounding:false,border:false,shadow:false,gapsin:0,gapsout:0"
       ];
       windowrulev2 = [ "fullscreen,class:(Kodi)" ];
-      exec-once = [ "${customKodi}/bin/kodi_with_addons -fs" ];
+      exec-once = [
+        "${createSettings}/bin/createSettings && bash -c \"while ! [[ $(pgrep kodi) ]]; do ${customKodi}/bin/kodi_with_addons -fs & sleep 1; done\""
+      ];
+      bind = ["ALT, F4, killactive"];
     };
 
     programs.firefox.profiles."tv" = {
@@ -93,11 +113,6 @@ in {
       datadir = "${xdg.dataHome}/kodi";
 
       addonSettings = {
-        "plugin.video.invidious" = {
-          auto_instance = "false";
-          instance_url = "http://127.0.0.1:3000";
-          disable_dash = "true";
-        };
       };
 
       package = customKodi;

@@ -1,3 +1,9 @@
-Manual actions for now:
+* kodi.nix
+
+The provided kodi package wraps kodi with LD_LIBRARY_PATH and PYTHON_PATH, and provides an addon folder which **is not** included in the KODI_HOME path. The default nix package for kodi breaks kodi a bit, it doesn't seem to remember the extensions existing.
+
+The intended usage is for you to symlink $out/share/kodi/addons to $KODI_HOME/addons, with for example home-manager.
+
+* Not (yet) declaratively managed stuff
 - Enable all extensions
 - Set quality to 1080p in youtube enhancer settings (forces youtube.com/tv to use good quality)
