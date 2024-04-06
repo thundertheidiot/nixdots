@@ -280,7 +280,7 @@ in {
           "clock" = {
             interval = 1;
             timezone = "${config.timeZone}";
-            format = "{:%d.%m.%Y %T}";
+            format = "{:%d.%m.%Y (%a) %T}";
           };
 
           "hyprland/language" = {
