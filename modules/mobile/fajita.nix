@@ -1,6 +1,9 @@
 { config, inputs, pkgs, lib,... }: {
   config = {
     system.stateVersion = "24.05";
+
+    networking.hostName = "fajita";
+    time.timeZone = "Europe/Helsinki";
     
     mobile.boot.stage-1.kernel.useStrictKernelConfig = true;
     mobile.boot.stage-1.networking.enable = true;
