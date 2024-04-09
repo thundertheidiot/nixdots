@@ -18,7 +18,7 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
       discord
       webcord
 
-      # retroarchFull
+      #retroarchFull
     ]
     ++ (with pkgs.ataraxiasjel; [
       proton-ge

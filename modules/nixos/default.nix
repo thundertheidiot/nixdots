@@ -18,7 +18,6 @@
     nix.settings = {
       experimental-features = ["nix-command" "flakes"];
       allowed-users = [config.username];
-      extra-sandbox-paths = [config.programs.ccache.cacheDir];
     };
 
     systemd.extraConfig = ''
