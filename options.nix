@@ -88,6 +88,8 @@
       lib.mdDoc "Desktop specific things"
     );
 
+    setup.phone = lib.mkEnableOption ( lib.mdDoc "Phone setup" );
+
     setup.gpu = lib.mkOption {
       type = lib.types.enum [ "amd" "nvidia" "intel" "none" ];
       default = "none";

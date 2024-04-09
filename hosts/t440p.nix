@@ -25,6 +25,9 @@
       setup.tv.enable = false;
       setup.laptop.enable = true;
 
+      # Testing
+      setup.phone = true;
+
       monitors = [
         {
           name = "eDP-1";

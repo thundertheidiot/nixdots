@@ -295,11 +295,14 @@ in {
           "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
           "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
           "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"
-          "$shiftmod, B, exec, ${terminal} -e ${pkgs.nvtopPackages.full}/bin/nvtop"
+          "$shiftmod, B, exec, ${terminal} -e nvtop"
 
           ",XF86AudioPlay, exec, ${pkgs.mpc-cli}/bin/mpc toggle"
           ",XF86AudioNext, exec, ${pkgs.mpc-cli}/bin/mpc next"
           ",XF86AudioPrev, exec, ${pkgs.mpc-cli}/bin/mpc prev"
+          "$mod,P, exec, ${pkgs.mpc-cli}/bin/mpc toggle"
+          "$mod,bracketright, exec, ${pkgs.mpc-cli}/bin/mpc next"
+          "$mod,bracketleft, exec, ${pkgs.mpc-cli}/bin/mpc prev"
 
           "$shiftmod, return, layoutmsg, swapwithmaster master"
 

@@ -23,5 +23,6 @@ in {
     ./awesome
     ./hyprland
     ./tv
+    ./phone
   ];
 }

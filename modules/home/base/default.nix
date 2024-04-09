@@ -90,6 +90,9 @@ in
       atool zip unzip p7zip rar
       pulsemixer
       btop
+      (lib.mkIf (config.setup.gpu == "intel") nvtopPackages.intel)
+      (lib.mkIf (config.setup.gpu == "amd") nvtopPackages.amd)
+      (lib.mkIf (config.setup.gpu == "nvidia") nvtopPackages.nvidia)
       #nvtopPackages.full
 
       rustup openssl openssl.dev pkg-config
