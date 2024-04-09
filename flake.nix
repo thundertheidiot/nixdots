@@ -5,15 +5,32 @@
     self,
     nixpkgs,
     home-manager,
+    mobile-nixos,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
   in rec {
+    # packages."aarch64-linux".fajita = (import "${mobile-nixos}/lib/eval-with-configuration.nix" {
+    #   device = "oneplus-fajita";
+    #   pkgs = (import "${mobile-nixos}/pkgs.nix");
+    #   configuration = import ./modules/mobile/fajita.nix;
+    # });
+
     nixosConfigurations = gen ["desktop" "x220" "t440p" "digiboksi"] // {
       local = mkSystem (import ./local.nix) [];
       # iso = mkSystem (import ./hosts/iso.nix) [
       #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
       # ];
+      fajita = let
+        lib = (import "${mobile-nixos}/pkgs.nix").lib;
+      in lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          (import "${mobile-nixos}/lib/config/configuration.nix" { device = "oneplus-fajita"; })
+          ./modules/mobile/fajita.nix
+        ];
+      };
     };
 
     # defaultPackage = builtins.listToAttrs (builtins.map (arch: {
@@ -104,6 +121,11 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
+
+    mobile-nixos = {
+      url = "github:NixOS/mobile-nixos";
+      flake = false;
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";

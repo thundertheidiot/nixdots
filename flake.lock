@@ -672,6 +672,22 @@
         "type": "github"
       }
     },
+    "mobile-nixos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1711757427,
+        "narHash": "sha256-PqHK0J9YCRKlxpJp+UG+/xpwfIQRPVUPspvbbP3FB2M=",
+        "owner": "NixOS",
+        "repo": "mobile-nixos",
+        "rev": "f7087f8fdbd1309af315ef8c92345320aadc5edf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "mobile-nixos",
+        "type": "github"
+      }
+    },
     "niri": {
       "inputs": {
         "crane": [
@@ -1126,6 +1142,7 @@
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager_3",
         "hyprland": "hyprland",
+        "mobile-nixos": "mobile-nixos",
         "nix-gaming": "nix-gaming",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs_7",
