@@ -13,7 +13,14 @@
       # };
     };
 
-    users.users.${config.username}.extraGroups = [ "libvirtd" ];
+    environment.systemPackages = with pkgs; [
+      android-tools
+    ];
+
+    programs.adb.enable = true;
+    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+    users.users.${config.username}.extraGroups = [ "libvirtd" "adbusers" ];
 
     systemd.services."virsh-net" = {
       enable = true;
