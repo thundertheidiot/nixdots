@@ -21,15 +21,15 @@
       setup.hyprland.extraAutostart = [];
       setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
-      setup.gaming.enable = false;
+      setup.gaming.enable = true;
       setup.tv.enable = false;
       setup.laptop.enable = true;
 
       monitors = [
         {
-          name = "LVDS-1";
-          width = 1366;
-          height = 768;
+          name = "eDP-1";
+          width = 1920;
+          height = 1080;
         }
       ];
 

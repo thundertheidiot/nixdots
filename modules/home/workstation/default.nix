@@ -25,6 +25,7 @@ in {
       gajim
       cinny-desktop
       element-desktop
+      signal-desktop
 
       gparted
       gnome.seahorse
