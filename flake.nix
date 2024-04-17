@@ -22,7 +22,7 @@
       #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
       # ];
       fajita = let
-        lib = (import "${mobile-nixos}/pkgs.nix").lib;
+        lib = (import (import "${mobile-nixos}/pkgs).nix")).lib;
       in lib.nixosSystem {
         system = "aarch64-linux";
         specialArgs = { inherit inputs; };

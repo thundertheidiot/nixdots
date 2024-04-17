@@ -181,6 +181,7 @@ in {
           "workspace 6 silent,class:(easyeffects)"
 
           "fullscreen,class:(cs2)"
+          # "immediate,class:(.gamescope-wrapped)"
           "stayfocused, title:^()$,class:^(steam)$"
         ];
 
@@ -236,6 +237,7 @@ in {
         misc = {
           disable_hyprland_logo = true;
           force_default_wallpaper = 0;
+          vrr = 2;
         };
 
         general = {
@@ -246,6 +248,8 @@ in {
           "col.inactive_border" = "rgb(${colorsNoHash.background})";
 
           layout = "master";
+
+          allow_tearing = true;
         };
 
         decoration = {
