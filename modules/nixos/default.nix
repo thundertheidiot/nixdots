@@ -47,7 +47,7 @@
     };
 
     users.users.${config.username} = {
-      extraGroups = ["wheel" "networkmanager"];
+      extraGroups = ["wheel" "networkmanager" "docker"];
       isNormalUser = true;
     };
 

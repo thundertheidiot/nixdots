@@ -18,7 +18,11 @@
       xorg.xhost
       gparted
       wireguard-tools
+
+      distrobox
     ];
+
+    virtualisation.docker.enable = true;
 
     networking.firewall.checkReversePath = false;
     

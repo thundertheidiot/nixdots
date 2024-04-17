@@ -46,6 +46,9 @@ in {
       yt-dlp
       freetube
       python3
+
+      darktable
+      ansel
       # These don't work yet
       # (import ./packages/sibs.nix { inherit pkgs lib; })
       # (import ./packages/quickmedia.nix { inherit pkgs lib; })
