@@ -61,7 +61,7 @@
             home-manager.nixosModules.home-manager
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
-            ({config, ...}: {
+            ({config, lib, ...}: {
               time.timeZone = config.timeZone;
               networking.hostName = config.hostName;
 
@@ -85,6 +85,16 @@
                     hyprland = inputs.hyprland.packages.${final.system}.hyprland;
                     swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
+
+                    # deko funny
+                    # kdePackages.kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
+                    #   patches = prev.patches ++ [
+                    #     (builtins.fetchurl {
+                    #       url = "https://invent.kde.org/plasma/kwin/-/merge_requests/5511.patch";
+                    #       sha256 = sha256:1s8qjhaj76pinzqbz7ylw3ky5jhpvsf2jvadkhl9k0wx8blxxad5;
+                    #     })
+                    #   ];
+                    # });
                   })
                 ];
               };
