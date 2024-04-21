@@ -9,7 +9,7 @@
     inherit base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base10 base11 base12 base13 base14 base15;
   };
 in {
-  config = lib.mkIf (config.setup.hyprland.enable) (with config; {
+  config = lib.mkIf (config.setup.hyprland.enable || config.setup.swayfx.enable) (with config; {
     programs.waybar = {
       enable = true;
       style = ''

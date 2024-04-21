@@ -21,7 +21,7 @@ in {
     ./emacs
     ./firefox
     ./awesome
-    ./hyprland
+    ./wayland
     ./tv
     ./phone
   ];

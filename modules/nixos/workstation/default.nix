@@ -63,6 +63,8 @@
       };
     };
 
+    services.gvfs.enable = true;
+
     services.xserver.enable = true;
 
     services.getty = {

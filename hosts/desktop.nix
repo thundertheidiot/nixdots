@@ -14,6 +14,7 @@
       timeZone = "Europe/Helsinki";
 
       setup.userMachine.enable = true;
+      setup.swayfx.enable = true;
       setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''
         monitor=DP-3, 2560x1440@144, 1920x0, 1

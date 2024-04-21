@@ -51,6 +51,10 @@
       lib.mdDoc "Hyprland windowmanager."
     );
 
+    setup.swayfx.enable = lib.mkEnableOption (
+      lib.mdDoc "Swayfx windowmanager."
+    );
+
     setup.hyprland.extraConfig = lib.mkOption {
       default = "";
       example = "monitor=DP-3, 2560x1440@144, 0x0, 1";

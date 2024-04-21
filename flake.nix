@@ -83,6 +83,7 @@
                     };
                     agenix = inputs.agenix.packages.${final.system};
                     hyprland = inputs.hyprland.packages.${final.system}.hyprland;
+                    swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
                   })
                 ];
@@ -144,6 +145,10 @@
       # Gpu works, split monitor workspaces works, idk
       # url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
       url = "github:hyprwm/Hyprland";
+    };
+
+    swayfx = {
+      url = "github:WillPower3309/swayfx";
     };
 
     split-monitor-workspaces = {
