@@ -18,6 +18,8 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
       discord
       webcord
 
+      prismlauncher
+
       #retroarchFull
     ]
     ++ (with pkgs.ataraxiasjel; [

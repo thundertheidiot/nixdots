@@ -315,6 +315,7 @@
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 
 (add-hook 'org-mode-hook #'org-indent-mode)
+(add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 (th/local
  "l" '(:ignore t :wk "org link")
  "li" '(org-insert-link :wk "insert org link")
