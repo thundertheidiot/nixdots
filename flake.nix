@@ -5,7 +5,8 @@
     self,
     nixpkgs,
     home-manager,
-    mobile-nixos,
+      mobile-nixos,
+      hyprland,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -71,6 +72,7 @@
                 config.allowUnfree = true;
                 overlays = [
                   inputs.emacs-overlay.overlay
+                  inputs.hyprland.overlays.default
                   (final: prev: rec {
                     nur = import inputs.nur {
                       nurpkgs = prev;
@@ -86,11 +88,11 @@
                     swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
-                    hyprland = inputs.hyprland.packages.${final.system}.hyprland;
-                    xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
-                    hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
-                    wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
-                    udis86 = inputs.hyprland.packages.${final.system}.udis86;
+                    # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
+                    # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
+                    # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
+                    # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
+                    # udis86 = inputs.hyprland.packages.${final.system}.udis86;
 
                     # deko funny
                     # kdePackages.kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
@@ -137,7 +139,10 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # https://hydra.nixos.org/job/nixpkgs/trunk/unstable
+    # https://status.nixos.org/
+    # nixpkgs.url = "github:NixOS/nixpkgs?ref=7bb2ccd8cdc44c91edba16c48d2c8f331fb3d856";
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=333a92f65d499d2c89b49a1be65bc3e9e8f7051b";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     mobile-nixos = {
@@ -165,7 +170,10 @@
 
     hyprland = {
       # Gpu works, split monitor workspaces works, idk
+      # Old ass
       # url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
+      # 0.38. whatevevr works
+      # url = "github:hyprwm/Hyprland?ref=303b9956b2ae15508b09dffae602550ca17e6539";
       url = "github:hyprwm/Hyprland";
     };
 

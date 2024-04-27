@@ -18,7 +18,6 @@
       workstation.environment = "hyprland";
 
       setup.userMachine.enable = true;
-      setup.plasma.enable = true;
       setup.swayfx.enable = true;
       setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''
