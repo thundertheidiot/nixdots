@@ -16,12 +16,13 @@ in {
   imports = [
     inputs.base16.homeManagerModule
     ./base
-    ./workstation
+    # ./workstation
+    (import ../workstation).home
     ./gaming
     ./emacs
     ./firefox
     ./awesome
-    ./wayland
+    # ./wayland
     ./tv
     ./phone
   ];

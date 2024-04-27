@@ -13,6 +13,10 @@
       hostName = "t440p";
       timeZone = "Europe/Helsinki";
 
+      workstation.enable = true;
+      workstation.utils = "generic/gtk";
+      workstation.environment = "hyprland";
+
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''

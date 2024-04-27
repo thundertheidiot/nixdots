@@ -9,6 +9,7 @@
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
+    mlib = import ./lib { inherit lib; };
   in rec {
     # packages."aarch64-linux".fajita = (import "${mobile-nixos}/lib/eval-with-configuration.nix" {
     #   device = "oneplus-fajita";
@@ -52,7 +53,7 @@
     in
       lib.nixosSystem {
         system = cfg.systemArch;
-        specialArgs = {inherit inputs;};
+        specialArgs = {inherit inputs mlib;};
         modules =
           common
           ++ extramodules
@@ -82,9 +83,14 @@
                       config.allowUnfree = final.config.allowUnfree;
                     };
                     agenix = inputs.agenix.packages.${final.system};
-                    hyprland = inputs.hyprland.packages.${final.system}.hyprland;
                     swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
+
+                    hyprland = inputs.hyprland.packages.${final.system}.hyprland;
+                    xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
+                    hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
+                    wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
+                    udis86 = inputs.hyprland.packages.${final.system}.udis86;
 
                     # deko funny
                     # kdePackages.kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
@@ -106,7 +112,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = {inherit inputs;};
+                extraSpecialArgs = {inherit inputs mlib;};
 
                 sharedModules =
                   common

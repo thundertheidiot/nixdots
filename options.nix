@@ -43,6 +43,24 @@
       ];
     };
 
+    workstation.enable = lib.mkEnableOption (
+      lib.mdDoc "User facing machine, e.g. a laptop or a desktop computer."
+    );
+
+    workstation.utils = lib.mkOption {
+      type = lib.types.enum [ "generic/gtk" "kde" ];
+      default = "generic/gtk";
+      example = "kde";
+      description = "The \"family of programs\" to use for utilities like ssh askpass or polkit.";
+    };
+
+    workstation.environment = lib.mkOption {
+      type = lib.types.enum [ "hyprland" "plasma" ]; # TODO: awesomewm, swayfx, qtile maybe
+      default = "hyprland";
+      example = "plasma";
+      description = "What \"desktop environment\" to install and configure.";
+    };
+
     setup.userMachine.enable = lib.mkEnableOption (
       lib.mdDoc "Base setup for a non server machine, for example a login manager, gui programs, gtk theme, etc."
     );

@@ -6,7 +6,8 @@
   ...
 }: {
   imports = [
-    ./workstation
+    # ./workstation
+    (import ../workstation).system
     ./gaming
     ./tv
     ./gpu

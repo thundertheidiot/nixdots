@@ -87,7 +87,6 @@
       };
     };
 
-    # Takes like 5 seconds of extra time on boot
     systemd.services."NetworkManager-wait-online".enable = false;
 
     services.xserver.displayManager.startx.enable = true;
