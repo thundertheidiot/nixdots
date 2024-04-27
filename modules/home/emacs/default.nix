@@ -70,6 +70,24 @@
           (catppuccin-theme :fetcher github :repo "catppuccin/emacs" :files ("catppuccin-theme.el"))
         '';
       };
+
+      smartparens = self.trivialBuild {
+        pname = "smartparens";
+        version = "1.0.0";
+
+        packageRequires = with pkgs.emacsPackages; [
+          dash
+        ];
+
+        src = pkgs.fetchgit {
+          url = "https://github.com/Fuco1/smartparens";
+          rev = "d3b616843167f04b8a9f53dd25e84818c9f6fbce";
+          sha256 = "sha256-ldt0O9nQP3RSsEvF5+irx6SRt2GVWbIao4IOO7lOexM=";
+        };
+        recipe = pkgs.writeText "recipe" ''
+          (smartparens :fetcher github :repo "Fuco1/smartparens")
+        '';
+      };
     };
 
     programs.emacs = {

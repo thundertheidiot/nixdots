@@ -33,6 +33,7 @@
         defaultFonts.monospace = ["UDEV Gothic 35NF"];
         defaultFonts.emoji = ["Noto Color Emoji"];
       };
+
     };
 
   home = {
@@ -74,7 +75,7 @@
 
       gtk = {
         enable = true;
-        gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
+        # gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
         font = {
           package = pkgs.cantarell-fonts;
           name = "Cantarell";
@@ -96,15 +97,6 @@
         iconTheme = {
           package = pkgs.papirus-icon-theme;
           name = "Papirus-Dark";
-        };
-      };
-
-      qt = {
-        enable = true;
-        platformTheme = "gnome";
-        style = {
-          name = "adwaita-dark";
-          # package = pkgs.catppuccin-kde;
         };
       };
 

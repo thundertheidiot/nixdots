@@ -94,7 +94,7 @@
 
                     # deko funny
                     # kdePackages.kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
-                    #   patches = prev.patches ++ [
+                    #   patches = final.patches ++ [
                     #     (builtins.fetchurl {
                     #       url = "https://invent.kde.org/plasma/kwin/-/merge_requests/5511.patch";
                     #       sha256 = sha256:1s8qjhaj76pinzqbz7ylw3ky5jhpvsf2jvadkhl9k0wx8blxxad5;
@@ -119,6 +119,7 @@
                   ++ [
                     cfg.home
                     inputs.agenix.homeManagerModules.default
+                    inputs.plasma-manager.homeManagerModules.plasma-manager
                   ];
 
                 users.${config.username} = ./modules/home;
@@ -146,6 +147,11 @@
 
     home-manager = {
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    plasma-manager = {
+      url = "github:pjones/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

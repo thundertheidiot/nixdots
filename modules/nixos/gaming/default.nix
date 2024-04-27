@@ -43,7 +43,7 @@
     services.joycond.enable = true;
 
     systemd.services."steamvr-setcap" = {
-      enable = true;
+      enable = false;
       description = "Run setcap to fix steamvr.";
       unitConfig.Type = "simple";
       serviceConfig = {

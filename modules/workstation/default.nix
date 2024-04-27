@@ -51,6 +51,17 @@ in {
         };
       };
 
+      services.displayManager.sddm = lib.mkMerge [
+        (lib.mkIf (config.setup.gpu == "intel" || config.setup.gpu == "amd") {
+          enable = true;
+          wayland = {
+            enable = true;
+            compositor = "kwin";
+          };
+        })
+        # TODO nvidia
+      ];
+
       systemd.services."NetworkManager-wait-online".enable = false;
     };
   };
