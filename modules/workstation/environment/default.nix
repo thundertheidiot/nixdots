@@ -2,6 +2,7 @@ let
   modules = [
     (import ./wayland)
     (import ./hyprland.nix)
+    (import ./plasma.nix)
   ];
 in {
   system = { mlib, ... }: {
