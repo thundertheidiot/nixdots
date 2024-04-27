@@ -8,7 +8,7 @@
     lib.mkIf (config.workstation.environment == "hyprland") {
       programs.hyprland.enable = true;
 
-      services.xserver.displayManager.sessionPackages = with pkgs; [
+      services.displayManager.sessionPackages = with pkgs; [
         hyprland
       ];
     };

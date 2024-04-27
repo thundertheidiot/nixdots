@@ -137,7 +137,7 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=333a92f65d499d2c89b49a1be65bc3e9e8f7051b";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     mobile-nixos = {
