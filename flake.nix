@@ -67,12 +67,17 @@
               time.timeZone = config.timeZone;
               networking.hostName = config.hostName;
 
+              nix.settings = {
+                substituters = ["https://hyprland.cachix.org"];
+                trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+              };
+
               nixpkgs = {
                 system = config.systemArch;
                 config.allowUnfree = true;
                 overlays = [
                   inputs.emacs-overlay.overlay
-                  inputs.hyprland.overlays.default
+                  # inputs.hyprland.overlays.default
                   (final: prev: rec {
                     nur = import inputs.nur {
                       nurpkgs = prev;
@@ -88,7 +93,7 @@
                     swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
-                    # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
+                    hyprland = inputs.hyprland.packages.${final.system}.hyprland;
                     # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
                     # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
                     # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
@@ -142,7 +147,7 @@
     # https://hydra.nixos.org/job/nixpkgs/trunk/unstable
     # https://status.nixos.org/
     # nixpkgs.url = "github:NixOS/nixpkgs?ref=7bb2ccd8cdc44c91edba16c48d2c8f331fb3d856";
-    nixpkgs.url = "github:NixOS/nixpkgs?ref=333a92f65d499d2c89b49a1be65bc3e9e8f7051b";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     mobile-nixos = {
