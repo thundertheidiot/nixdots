@@ -94,6 +94,7 @@ in {
           signal-desktop
 
           gimp
+          godot_4
 
           speedcrunch
 
