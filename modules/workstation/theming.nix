@@ -33,7 +33,6 @@
         defaultFonts.monospace = ["UDEV Gothic 35NF"];
         defaultFonts.emoji = ["Noto Color Emoji"];
       };
-
     };
 
   home = {
@@ -41,83 +40,89 @@
     pkgs,
     lib,
     ...
-  }:
-    lib.mkIf (config.workstation.enable) (let
-      cursor_package = pkgs.catppuccin-cursors.mochaLavender;
-      cursor_name = "Catppuccin-Mocha-Lavender-Cursors";
+  }: {
+    config = lib.mkIf (config.workstation.enable) (lib.mkMerge [
+      {
+        home.packages = with pkgs; [
+          jetbrains-mono
+          meslo-lgs-nf
+          udev-gothic-nf
+          cantarell-fonts
+        ];
 
-      colors = with config.scheme.withHashtag; {
-        background = base00;
-        foreground = base07;
-        inherit base00 base01 base02 base03 base04 base05 base06 base07 base08 base09 base10 base11 base12 base13 base14 base15;
-      };
-    in {
-      home.packages = with pkgs; [
-        jetbrains-mono
-        meslo-lgs-nf
-        udev-gothic-nf
-        cantarell-fonts
-      ];
-
-      fonts.fontconfig.enable = true;
-
-      xresources = {
-        path = "${config.xdg.configHome}/xresources";
-        properties = {
-          "Nsxiv.window.background" = "${colors.background}";
-          "Nsxiv.window.foreground" = "${colors.foreground}";
-          "Nsxiv.mark.foreground" = "${colors.base04}";
-
-          "Nsxiv.bar.background" = "${colors.foreground}";
-          "Nsxiv.bar.foreground" = "${colors.background}";
-        };
-      };
-
-      gtk = {
-        enable = true;
-        # gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
-        font = {
-          package = pkgs.cantarell-fonts;
-          name = "Cantarell";
-          size = 12;
-        };
-        theme = {
-          package = pkgs.catppuccin-gtk.override {
-            accents = ["mauve"];
-            size = "compact";
-            variant = "mocha";
+        fonts.fontconfig.enable = true;
+      }
+      (lib.mkIf (config.workstation.utils == "generic/gtk") (let
+        cursor_package = pkgs.catppuccin-cursors.mochaLavender;
+        cursor_name = "Catppuccin-Mocha-Lavender-Cursors";
+      in {
+        gtk = {
+          enable = true;
+          gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
+          font = {
+            package = pkgs.cantarell-fonts;
+            name = "Cantarell";
+            size = 12;
           };
-          name = "Catppuccin-Mocha-Compact-Mauve-Dark";
+          theme = {
+            package = pkgs.catppuccin-gtk.override {
+              accents = ["mauve"];
+              size = "compact";
+              variant = "mocha";
+            };
+            name = "Catppuccin-Mocha-Compact-Mauve-Dark";
+          };
+          cursorTheme = {
+            package = cursor_package;
+            name = cursor_name;
+            size = 24;
+          };
+          iconTheme = {
+            package = pkgs.papirus-icon-theme;
+            name = "Papirus-Dark";
+          };
         };
-        cursorTheme = {
+
+        xdg.configFile = {
+          "gtk-4.0/assets".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
+          "gtk-4.0/gtk.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
+          "gtk-4.0/gtk-dark.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
+        };
+
+        home.pointerCursor = {
           package = cursor_package;
           name = cursor_name;
           size = 24;
+
+          x11.defaultCursor = "left_ptr";
+          x11.enable = true;
+          gtk.enable = true;
         };
-        iconTheme = {
-          package = pkgs.papirus-icon-theme;
-          name = "Papirus-Dark";
-        };
-      };
+      }))
+      (lib.mkIf (config.workstation.environment == "plasma") {
+        home.packages = with pkgs; [
+          (catppuccin-kde.override {
+            accents = [ "mauve" ];
+            flavour = [ "mocha" ];
+          })
+          papirus-icon-theme
+        ];
 
-      xdg.configFile = {
-        "gtk-4.0/assets".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
-        "gtk-4.0/gtk.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
-        "gtk-4.0/gtk-dark.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
-      };
-
-      home.pointerCursor = {
-        package = cursor_package;
-        name = cursor_name;
-        size = 24;
-
-        x11.defaultCursor = "left_ptr";
-        x11.enable = true;
-        gtk.enable = true;
-      };
-
-      programs.fish.shellAliases = {
-        "sxiv" = "nsxiv";
-      };
-    });
+        programs.plasma = (let
+          V = val: {
+            value = val;
+            immutable = true;
+          };
+        in {
+          configFile = {
+            "auroraerc"."CatppuccinMocha-Modern"."ButtonSize" = V 0;
+            "kdeglobals"."KDE"."LookAndFeelPackage" = V "Catppuccin-Mocha-Mauve";
+            "kdeglobals"."Icons"."Theme" = V "Papirus-Dark";
+            "kdedefaults/kdeglobals"."Icons"."Theme" = V "Papirus-Dark";
+            "kdedefaults/kdeglobals"."General"."ColorScheme" = V "CatppuccinMochaMauve";
+          };
+        });
+      })
+    ]);
+  };
 }

@@ -25,6 +25,21 @@
         immutable = true;
       };
 
+      plasma-window-decorations = pkgs.stdenv.mkDerivation {
+        name = "plasma-window-decorations";
+
+        src = pkgs.fetchgit {
+          url = "https://github.com/nclarius/Plasma-window-decorations";
+          rev = "02058699173f5651816d4cb31960d08b45553255";
+          hash = "sha256-O4JTtj/q2lJRhWS+nhfQes8jitkrfsSBmENHZb5ioNI=";
+        };
+
+        installPhase = ''
+          mkdir --parents "$out/share/aurorae/themes"
+          cp -r "$src/ActiveAccentFrame" "$out/share/aurorae/themes/ActiveAccentFrame"
+        '';
+      };
+
       polonium = pkgs.buildNpmPackage {
         pname = "polonium";
         version = "1.0.0";
@@ -60,6 +75,11 @@
         recursive = true;
       };
 
+      xdg.dataFile."aurorae/themes/ActiveAccentFrame" = {
+        source = "${plasma-window-decorations}/share/aurorae/themes/ActiveAccentFrame";
+        recursive = true;
+      };
+
       programs.plasma = {
         enable = true;
 
@@ -82,6 +102,10 @@
         };
 
         shortcuts = {
+          "services/org.kde.dolphin.desktop"."_launch" = [];
+          ksmserver = {
+            "Lock Session" = [];
+          };
           kwin = {
             "Window Close" = "Meta+Q";
 
@@ -104,6 +128,19 @@
             "Window to Desktop 7" = "Meta+&";
             "Window to Desktop 8" = "Meta+*";
             "Window to Desktop 9" = "Meta+(";
+
+            "PoloniumFocusAbove" = "Meta+K";
+            "PoloniumFocusBelow" = "Meta+J";
+            "PoloniumFocusLeft" = "Meta+H";
+            "PoloniumFocusRight" = "Meta+L";
+
+            "PoloniumSwitchHalf" = "Meta+T";
+            "PoloniumSwitchMonocle" = "Meta+F";
+
+            "Move Window to Previous Screen" = "Meta+Shift+,";
+            "Move Window to Next Screen" = "Meta+Shift+.";
+            "Switch to Previous Screen" = "Meta+,";
+            "Switch to Next Screen" = "Meta+.";
           };
         };
 
@@ -112,6 +149,7 @@
             "RepeatDelay" = V 300;
             "RepeatRate" = V 50;
           };
+          "kdeglobals"."KDE"."SingleClick" = V false;
           "kwinrc"."Windows" = {
             "DelayFocusInterval" = V 0;
             "FocusPolicy" = V "FocusFollowsMouse";
@@ -127,6 +165,7 @@
           "kwinrc"."Script-polonium" = {
             "TilePopups" = V true;
             "EngineType" = V 1;
+            "Borders" = V 3;
           };
         };
       };

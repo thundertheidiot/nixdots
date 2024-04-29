@@ -45,9 +45,12 @@
     config,
     pkgs,
     lib,
+    mlib,
     ...
   }:
-    lib.mkIf (config.workstation.utils == "generic/gtk") {
+    lib.mkIf (config.workstation.utils == "generic/gtk") (let
+      colors = mlib.colors config;
+    in {
       home.packages = with pkgs; [
         gparted
         gnome.seahorse
@@ -59,6 +62,22 @@
         gnome.file-roller
         nsxiv # image viewer
       ];
+
+      xresources = {
+        path = "${config.xdg.configHome}/xresources";
+        properties = {
+          "Nsxiv.window.background" = "${colors.background}";
+          "Nsxiv.window.foreground" = "${colors.foreground}";
+          "Nsxiv.mark.foreground" = "${colors.base04}";
+
+          "Nsxiv.bar.background" = "${colors.foreground}";
+          "Nsxiv.bar.foreground" = "${colors.background}";
+        };
+      };
+
+      programs.fish.shellAliases = {
+        "sxiv" = "nsxiv";
+      };
 
       xdg.mime.enable = true;
       xdg.desktopEntries.nsxiv = {
@@ -211,5 +230,5 @@
           };
         };
       };
-    };
+    });
 }

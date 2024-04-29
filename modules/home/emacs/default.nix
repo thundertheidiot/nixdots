@@ -94,52 +94,52 @@
       enable = true;
       package = pkgs.emacs29-pgtk;
       extraConfig = builtins.readFile ./init.el;
-      extraPackages = epkgs: [
+      extraPackages = epkgs: with epkgs; [
         pkgs.emacs-lsp-booster
-        epkgs.eglot-booster
-        epkgs.indent-bars
+        eglot-booster
+        indent-bars
 
-        epkgs.diminish
-        epkgs.undo-tree
-        epkgs.evil
-        epkgs.evil-collection
-        epkgs.evil-better-visual-line
-        epkgs.smartparens
-        epkgs.evil-smartparens
-        epkgs.which-key
-        epkgs.general
+        diminish
+        undo-tree
+        evil
+        evil-collection
+        evil-better-visual-line
+        smartparens
+        evil-smartparens
+        which-key
+        general
 
-        epkgs.org-bullets
-        epkgs.solaire-mode
-        epkgs.catppuccin-theme
-        epkgs.hl-todo
-        epkgs.flymake
-        epkgs.eglot
-        epkgs.company
-        epkgs.company-box
-        epkgs.treesit-auto
+        org-bullets
+        solaire-mode
+        catppuccin-theme
+        hl-todo
+        flymake
+        eglot
+        company
+        company-box
+        treesit-auto
 
-        epkgs.rustic
-        epkgs.lua-mode
-        epkgs.gdscript-mode
-        epkgs.nix-mode
-        epkgs.rainbow-delimiters
+        rustic
+        lua-mode
+        gdscript-mode
+        nix-mode
+        rainbow-delimiters
 
-        epkgs.projectile
-        epkgs.ibuffer-projectile
-        epkgs.magit
-        epkgs.vterm
-        epkgs.eshell-vterm
-        epkgs.fish-completion
-        epkgs.vertico
-        epkgs.orderless
-        epkgs.consult
-        epkgs.marginalia
-        epkgs.popper
-        epkgs.simple-mpc
-        epkgs.empv
+        projectile
+        ibuffer-projectile
+        magit
+        vterm
+        eshell-vterm
+        fish-completion
+        vertico
+        orderless
+        consult
+        marginalia
+        popper
+        simple-mpc
+        empv
 
-        epkgs.ement
+        ement
       ];
     };
 
