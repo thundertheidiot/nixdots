@@ -137,10 +137,10 @@
             "PoloniumSwitchHalf" = "Meta+T";
             "PoloniumSwitchMonocle" = "Meta+F";
 
-            "Move Window to Previous Screen" = "Meta+Shift+,";
-            "Move Window to Next Screen" = "Meta+Shift+.";
-            "Switch to Previous Screen" = "Meta+,";
-            "Switch to Next Screen" = "Meta+.";
+            "Move Window One Screen to the Left" = "Meta+<";
+            "Move Window One Screen to the Right" = "Meta+>";
+            "Switch to Screen to the Left" = "Meta+,";
+            "Switch to Screen to the Right" = "Meta+.";
           };
         };
 
@@ -150,22 +150,30 @@
             "RepeatRate" = V 50;
           };
           "kdeglobals"."KDE"."SingleClick" = V false;
+          "kwinrc"."Xwayland"."XwaylandEavesdrops".value = "modifiers";
           "kwinrc"."Windows" = {
             "DelayFocusInterval" = V 0;
             "FocusPolicy" = V "FocusFollowsMouse";
             "NextFocusPrefersMouse" = V true;
+            "SeparateScreenFocus" = V true;
           };
           "kwinrc"."Desktops"."Number" = V 9;
           # Activities
           "kwinrc"."ModifierOnlyShortcuts"."Meta" = V "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
 
+          "kwinrc"."org.kde.kdecoration2" = {
+            "ButtonsOnLeft" = V "S";
+            "ButtonsOnRight" = V "IAX";
+          };
+
           "kwinrc"."Plugins" = {
             "poloniumEnabled" = V true;
           };
           "kwinrc"."Script-polonium" = {
-            "TilePopups" = V true;
+            "TilePopups" = V false;
             "EngineType" = V 1;
             "Borders" = V 3;
+            "InsertionPoint" = V 1;
           };
         };
       };

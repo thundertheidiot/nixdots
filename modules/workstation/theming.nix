@@ -41,7 +41,17 @@
     lib,
     ...
   }: {
-    config = lib.mkIf (config.workstation.enable) (lib.mkMerge [
+    config = lib.mkIf (config.workstation.enable) (let
+      qt-theme-package = pkgs.catppuccin-kde.override {
+        accents = ["mauve"];
+        flavour = ["mocha"];
+      };
+      gtk-theme-package = pkgs.catppuccin-gtk.override {
+        accents = ["mauve"];
+        size = "compact";
+        variant = "mocha";
+      };
+    in (lib.mkMerge [
       {
         home.packages = with pkgs; [
           jetbrains-mono
@@ -65,11 +75,7 @@
             size = 12;
           };
           theme = {
-            package = pkgs.catppuccin-gtk.override {
-              accents = ["mauve"];
-              size = "compact";
-              variant = "mocha";
-            };
+            package = gtk-theme-package;
             name = "Catppuccin-Mocha-Compact-Mauve-Dark";
           };
           cursorTheme = {
@@ -89,6 +95,15 @@
           "gtk-4.0/gtk-dark.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
         };
 
+        qt = {
+          enable = true;
+          platformTheme.name = "qtct";
+          style = {
+            name = "Catppuccin-Mocha-Mauve";
+            package = qt-theme-package;
+          };
+        };
+
         home.pointerCursor = {
           package = cursor_package;
           name = cursor_name;
@@ -101,17 +116,14 @@
       }))
       (lib.mkIf (config.workstation.environment == "plasma") {
         home.packages = with pkgs; [
-          (catppuccin-kde.override {
-            accents = [ "mauve" ];
-            flavour = [ "mocha" ];
-          })
+          qt-theme-package
           papirus-icon-theme
         ];
 
-        programs.plasma = (let
+        programs.plasma = let
           V = val: {
             value = val;
-            immutable = true;
+            immutable = false;
           };
         in {
           configFile = {
@@ -121,8 +133,8 @@
             "kdedefaults/kdeglobals"."Icons"."Theme" = V "Papirus-Dark";
             "kdedefaults/kdeglobals"."General"."ColorScheme" = V "CatppuccinMochaMauve";
           };
-        });
+        };
       })
-    ]);
+    ]));
   };
 }
