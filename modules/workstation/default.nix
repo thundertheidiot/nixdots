@@ -25,6 +25,8 @@ in {
 
       virtualisation.docker.enable = true;
 
+      networking.firewall.checkReversePath = false;
+
       security.polkit.enable = true;
 
       hardware.bluetooth = {
