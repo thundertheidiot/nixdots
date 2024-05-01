@@ -63,6 +63,8 @@
       description = "What \"desktop environment\" to install and configure.";
     };
 
+    workstation.plasma.tilingwm = lib.mkEnableOption "Configure plasma into a tiling wm environment.";
+
     setup.userMachine.enable = lib.mkEnableOption (
       lib.mdDoc "Base setup for a non server machine, for example a login manager, gui programs, gtk theme, etc."
     );

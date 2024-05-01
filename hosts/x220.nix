@@ -17,6 +17,7 @@
       workstation.laptop = true;
       workstation.utils = "kde";
       workstation.environment = "plasma";
+      workstation.plasma.tilingwm = true;
 
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;

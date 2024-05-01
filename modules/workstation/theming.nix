@@ -10,13 +10,13 @@
         udev-gothic-nf
         cantarell-fonts
         noto-fonts-color-emoji
-        (pkgs.catppuccin-gtk.override {
+        (catppuccin-gtk.override {
           accents = ["mauve"];
           size = "compact";
           variant = "mocha";
         })
-        pkgs.papirus-icon-theme
-        pkgs.catppuccin-cursors.mochaLavender
+        papirus-icon-theme
+        catppuccin-cursors.mochaLavender
       ];
 
       # Catppuccin tty
