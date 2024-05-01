@@ -11,7 +11,7 @@
     ./gaming
     ./tv
     ./gpu
-    ./laptop
+    # ./laptop
     ./desktop.nix
   ];
 

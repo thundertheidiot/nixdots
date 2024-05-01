@@ -3,6 +3,7 @@ let
     (import ./utils/generic.nix)
     (import ./environment/default.nix)
     (import ./theming.nix)
+    (import ./laptop.nix)
   ];
 in {
   system = {

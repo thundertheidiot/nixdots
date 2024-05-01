@@ -14,8 +14,9 @@
       timeZone = "Europe/Helsinki";
 
       workstation.enable = true;
-      workstation.utils = "generic/gtk";
-      workstation.environment = "hyprland";
+      workstation.laptop = true;
+      workstation.utils = "kde";
+      workstation.environment = "plasma";
 
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;
@@ -23,11 +24,10 @@
         monitor=LVDS-1,1366x768@60,0x0,1
       '';
       setup.hyprland.extraAutostart = [];
-      setup.awesomeWM.enable = true;
+      setup.awesomeWM.enable = false;
       setup.firefox.enable = true;
       setup.gaming.enable = false;
-      setup.tv.enable = true;
-      setup.laptop.enable = true;
+      setup.tv.enable = false;
 
       monitors = [
         { name = "LVDS-1"; width = 1366; height = 768; }

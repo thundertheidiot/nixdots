@@ -5,9 +5,13 @@
   ...
 }: {
   config = lib.mkIf (config.setup.tv.enable) (with config; {
-    services.xserver.displayManager.lightdm = {
-      enable = true;
-      autoLogin.timeout = 0;
+    services.displayManager.sddm = {
+      settings = {
+        Autologin = {
+          Session = "hyprland.desktop";
+          User = "${config.username}";
+        };
+      };
     };
 
     services.xserver.displayManager.autoLogin = {

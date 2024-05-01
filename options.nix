@@ -47,6 +47,8 @@
       lib.mdDoc "User facing machine, e.g. a laptop or a desktop computer."
     );
 
+    workstation.laptop = lib.mkEnableOption "Power management.";
+
     workstation.utils = lib.mkOption {
       type = lib.types.enum [ "generic/gtk" "kde" ];
       default = "generic/gtk";

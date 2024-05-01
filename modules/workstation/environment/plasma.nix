@@ -80,6 +80,18 @@
         recursive = true;
       };
 
+      xdg.dataFile."applications/emacsclient-plasma.desktop" = {
+        text = ''
+          [Desktop Entry]
+          Exec=emacsclient -c
+          Name=emacsclient -c
+          NoDisplay=true
+          StartupNotify=false
+          Type=Application
+          X-KDE-GlobalAccel-CommandShortcut=true
+        '';
+      };
+
       programs.plasma = {
         enable = true;
 
@@ -101,8 +113,28 @@
           };
         };
 
+        # Stupidest thing ever?
+        shortcuts."services/emacsclient-plasma.desktop"."_launch" = "Meta+E";
+
         shortcuts = {
+          # Remove defaults
           "services/org.kde.dolphin.desktop"."_launch" = [];
+          plasmashell = {
+            "manage activities" = [];
+            "activate task manager entry 1" = [];
+            "activate task manager entry 2" = [];
+            "activate task manager entry 3" = [];
+            "activate task manager entry 4" = [];
+            "activate task manager entry 5" = [];
+            "activate task manager entry 6" = [];
+            "activate task manager entry 7" = [];
+            "activate task manager entry 8" = [];
+            "activate task manager entry 9" = [];
+            "activate task manager entry 10" = [];
+          };
+          "kwin"."Overview" = [];
+          "kwin"."Edit Tiles" = [];
+
           ksmserver = {
             "Lock Session" = [];
           };

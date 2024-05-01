@@ -4,6 +4,8 @@
       tlp
     ];
 
+    services.power-profiles-daemon.enable = lib.mkForce false;
+
     services.tlp = {
       enable = true;
       settings = {
