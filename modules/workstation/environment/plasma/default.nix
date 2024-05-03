@@ -11,6 +11,10 @@
         enable = true;
         enableQt5Integration = true;
       };
+
+      environment.plasma6.excludePackages = with pkgs; [
+        libsForQt5.elisa
+      ];
     };
 
   home = { lib, config, pkgs, ... }: lib.mkIf (config.workstation.environment == "plasma") (let
@@ -66,6 +70,11 @@
             name = "Launch Web Browser";
             key = "Meta+W";
             command = "firefox";
+          };
+          "restart-kwin" = {
+            name = "Restart Kwin";
+            key = "Meta+Shift+R";
+            command = "kwin_wayland --replace";
           };
         };
 

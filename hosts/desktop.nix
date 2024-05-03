@@ -14,8 +14,9 @@
       timeZone = "Europe/Helsinki";
 
       workstation.enable = true;
-      workstation.utils = "generic/gtk";
-      workstation.environment = "hyprland";
+      workstation.utils = "kde";
+      workstation.plasma.tilingwm = true;
+      workstation.environment = "plasma";
 
       setup.userMachine.enable = true;
       setup.swayfx.enable = true;
