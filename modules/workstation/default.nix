@@ -1,6 +1,8 @@
 let
   modules = [
     (import ./utils/generic.nix)
+    (import ./utils/kde.nix)
+    (import ./programs/alacritty.nix)
     (import ./environment/default.nix)
     (import ./theming.nix)
     (import ./laptop.nix)

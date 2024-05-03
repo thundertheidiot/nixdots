@@ -64,7 +64,7 @@
           "term" = {
             name = "Launch Terminal";
             key = "Meta+Return";
-            command = "konsole";
+            command = "alacritty";
           };
           "web" = {
             name = "Launch Web Browser";
