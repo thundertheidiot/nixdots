@@ -10,7 +10,7 @@
     ];
 
     services.pantalaimon = {
-      enable = true;
+      enable = false;
       settings = {
         Default = {
           LogLevel = "Debug";

@@ -19,10 +19,7 @@
       immutable = true;
     };
   in (lib.mkMerge [
-    {
-      # The emacs binding setup is cursed enough to warrant it's own section
-
-      # This is needed for the actually functional binding
+    { # Cursed Meta+E binding setup
       xdg.dataFile."applications/emacsclient-plasma.desktop" = {
         text = ''
           [Desktop Entry]
@@ -36,7 +33,6 @@
       };
 
       programs.plasma = {
-        # This makes no sense
         configFile.kglobalshortcutsrc = {
           "services/org.kde.dolphin.desktop"."_launch" = V "";
           "useless/key-for-workaround.desktop"."_launch".value = "Meta+E";
@@ -92,8 +88,6 @@
             "activate task manager entry 10" = [];
           };
 
-          "services/org.kde.krunner.desktop"._launch = "Meta+D";
-
           kwin = {
             "Switch to Desktop 1" = "Meta+1";
             "Switch to Desktop 2" = "Meta+2";
@@ -114,13 +108,25 @@
             "Window to Desktop 7" = "Meta+&";
             "Window to Desktop 8" = "Meta+*";
             "Window to Desktop 9" = "Meta+(";
+
+            "Window Fullscreen" = "Meta+Shift+F";
           };
+
+          "services/org.kde.krunner.desktop"._launch = "Meta+D";
+
+          "KDE Keyboard Layout Switcher"."Switch to Next Keyboard Layout" = "Meta+Space";
         };
 
         configFile = {
           "kcminputrc"."Keyboard" = {
             "RepeatDelay" = V 300;
             "RepeatRate" = V 50;
+          };
+
+          "kglobalshortcutsrc"."services/org.kde.spectacle.desktop" = {
+            "FullScreenScreenShot" = V "";
+            "RectangularRegionScreenShot" = V "Print";
+            "_launch" = V "Shift+Print";
           };
 
           "kdeglobals"."KDE"."SingleClick" = V false;
@@ -168,6 +174,8 @@
 
             "PoloniumSwitchHalf" = "Meta+T";
             "PoloniumSwitchMonocle" = "Meta+F";
+
+            "PoloniumRetileWindow" = "Meta+Shift+Space";
 
             "Move Window One Screen to the Left" = "Meta+<";
             "Move Window One Screen to the Right" = "Meta+>";
