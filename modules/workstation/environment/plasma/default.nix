@@ -32,19 +32,19 @@
         '';
       };
 
-      xdg.configFile."autostart/plasma-bind-emacsclient.desktop" = {
-        text = ''
-          [Desktop Entry]
-          Exec=sh -c "${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file $XDG_CONFIG_HOME/kglobalshortcutsrc --group services --group emacsclient-plasma.desktop --key _launch Meta+E && qdbus org.kde.KWin /KWin reconfigure"
-          Name=bind emacsclient
-        '';
-      };
+      # xdg.configFile."autostart/plasma-bind-emacsclient.desktop" = {
+      #   text = ''
+      #     [Desktop Entry]
+      #     Exec=sh -c "${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file $XDG_CONFIG_HOME/kglobalshortcutsrc --group services --group emacsclient-plasma.desktop --key _launch Meta+E && qdbus org.kde.KWin /KWin reconfigure"
+      #     Name=bind emacsclient
+      #   '';
+      # };
 
       # Plasma manager just couldn't do it consistently for whatever reason.
-      home.activation.plasmaEmacsBindingHack = ''
-        run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/kglobalshortcutsrc --group services --group org.kde.dolphin.desktop --key _launch ""
-        # run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/kglobalshortcutsrc --group services --group emacsclient-plasma.desktop --key _launch Meta+E
-      '';
+      # home.activation.plasmaEmacsBindingHack = ''
+      #   run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/kglobalshortcutsrc --group services --group org.kde.dolphin.desktop --key _launch ""
+      #   # run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/kglobalshortcutsrc --group services --group emacsclient-plasma.desktop --key _launch Meta+E
+      # '';
 
       home.activation.plasmaPowerdevilSettings = ''
         run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/powerdevilrc --group AC --group Display --key DimDisplayWhenIdle false
@@ -71,10 +71,18 @@
             key = "Meta+W";
             command = "firefox";
           };
+          "emacs" = {
+            name = "Launch Web Browser";
+            key = "Meta+E";
+            command = "emacsclient -c";
+          };
         };
 
         shortcuts = {
           # Remove defaults
+          "services/org.kde.dolphin.desktop"._launch = [];
+          "services/emacsclient-plasma.desktop"._launch = ["Meta+E" "Meta+F24"];
+          
           plasmashell = {
             "manage activities" = [];
             "activate task manager entry 1" = [];
