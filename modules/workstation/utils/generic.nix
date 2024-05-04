@@ -7,24 +7,10 @@
   }:
     lib.mkIf (config.workstation.utils == "generic/gtk") {
       environment.systemPackages = with pkgs; [
-        gnome.gnome-keyring
         gparted
       ];
 
       services.gvfs.enable = true;
-
-      services.gnome.gnome-keyring.enable = true;
-      programs.seahorse.enable = true;
-
-      security.pam.services.gnome-keyring = {
-        name = "gnome-keyring";
-        enableGnomeKeyring = true;
-        text = ''
-          auth optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
-          session optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
-          password optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
-        '';
-      };
 
       systemd.user.services.polkit-gnome-authentication-agent-1 = {
         description = "polkit-gnome-authentication-agent-1";
@@ -53,8 +39,6 @@
     in {
       home.packages = with pkgs; [
         gparted
-        gnome.seahorse
-        gnome.gnome-keyring
         blueberry
         (pkgs.cinnamon.nemo-with-extensions.overrideAttrs (final: prev: {
           extensions = with pkgs.cinnamon; [nemo-fileroller];
@@ -116,16 +100,6 @@
             value = ["nsxiv.desktop"];
           })
           config.xdg.desktopEntries.nsxiv.mimeType);
-      };
-
-      services.gnome-keyring = {
-        enable = true;
-        components = ["pkcs11" "secrets" "ssh"];
-      };
-
-      services.gpg-agent = {
-        enable = true;
-        pinentryPackage = pkgs.pinentry-gnome3;
       };
     });
 }

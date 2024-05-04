@@ -3,6 +3,7 @@ let
     (import ./utils/generic.nix)
     (import ./utils/kde.nix)
     (import ./programs/alacritty.nix)
+    (import ./programs/gnome-keyring.nix)
     (import ./environment/default.nix)
     (import ./theming.nix)
     (import ./laptop.nix)

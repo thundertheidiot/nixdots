@@ -14,7 +14,14 @@
 
       environment.plasma6.excludePackages = with pkgs; [
         libsForQt5.elisa
+        kdePackages.kwallet
+        kdePackages.kwallet-pam
       ];
+
+      security.pam.services = {
+        login.kwallet.enable = lib.mkForce false;
+        kde.kwallet.enable = lib.mkForce false;
+      };
     };
 
   home = { lib, config, pkgs, ... }: lib.mkIf (config.workstation.environment == "plasma") (let
@@ -130,6 +137,12 @@
           "kcminputrc"."Keyboard" = {
             "RepeatDelay" = V 300;
             "RepeatRate" = V 50;
+          };
+
+          # Gnome keyring is used instead
+          "kwalletrc" = {
+            Wallet.Enabled = V false;
+            "org.freedesktop.secrets"."apiEnabled" = V false;
           };
 
           "kdeglobals"."KDE"."SingleClick" = V false;

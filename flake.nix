@@ -78,6 +78,7 @@
                 overlays = [
                   inputs.emacs-overlay.overlay
                   # inputs.hyprland.overlays.default
+                  inputs.waybar.overlays.default
                   (final: prev: rec {
                     nur = import inputs.nur {
                       nurpkgs = prev;
@@ -110,14 +111,6 @@
                         ];
                       });
                     };
-                    # kdePackages.kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
-                    #   patches = prev.patches ++ [
-                    #     (builtins.fetchurl {
-                    #       url = "https://invent.kde.org/plasma/kwin/-/merge_requests/5511.patch";
-                    #       sha256 = sha256:1s8qjhaj76pinzqbz7ylw3ky5jhpvsf2jvadkhl9k0wx8blxxad5;
-                    #     })
-                    #   ];
-                    # });
                   })
                 ];
               };
@@ -191,6 +184,8 @@
       # url = "github:hyprwm/Hyprland?ref=303b9956b2ae15508b09dffae602550ca17e6539";
       url = "github:hyprwm/Hyprland";
     };
+
+    waybar.url = "github:Alexays/Waybar";
 
     swayfx = {
       url = "github:WillPower3309/swayfx";
