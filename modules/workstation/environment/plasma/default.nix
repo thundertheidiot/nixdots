@@ -23,7 +23,7 @@
       immutable = true;
     };
   in (lib.mkMerge [
-    { # Cursed Meta+E binding setup
+    {
       xdg.dataFile."applications/emacsclient-plasma.desktop" = {
         text = ''
           [Desktop Entry]
@@ -130,12 +130,6 @@
           "kcminputrc"."Keyboard" = {
             "RepeatDelay" = V 300;
             "RepeatRate" = V 50;
-          };
-
-          "kglobalshortcutsrc"."services/org.kde.spectacle.desktop" = {
-            "FullScreenScreenShot" = V "";
-            "RectangularRegionScreenShot" = V "Print";
-            "_launch" = V "Shift+Print";
           };
 
           "kdeglobals"."KDE"."SingleClick" = V false;
