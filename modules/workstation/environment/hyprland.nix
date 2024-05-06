@@ -138,7 +138,7 @@
             };
 
             accel_profile = "flat";
-            sensitivity = -0.5;
+            sensitivity = 0.0;
           };
 
           device = [

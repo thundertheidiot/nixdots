@@ -44,8 +44,8 @@
     services.xserver = {
       xkb.layout = "us";
       xkb.options = "eurosign:e";
-      libinput.enable = true;
     };
+    services.libinput.enable = true;
 
     users.users.${config.username} = {
       extraGroups = ["wheel" "networkmanager" "docker"];

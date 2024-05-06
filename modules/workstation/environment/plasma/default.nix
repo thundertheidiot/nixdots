@@ -11,6 +11,17 @@
         enable = true;
         enableQt5Integration = true;
       };
+
+      environment.plasma6.excludePackages = with pkgs; [
+        libsForQt5.elisa
+        kdePackages.kwallet
+        kdePackages.kwallet-pam
+      ];
+
+      security.pam.services = {
+        login.kwallet.enable = lib.mkForce false;
+        kde.kwallet.enable = lib.mkForce false;
+      };
     };
 
   home = { lib, config, pkgs, ... }: lib.mkIf (config.workstation.environment == "plasma") (let
@@ -32,19 +43,15 @@
         '';
       };
 
-      xdg.configFile."autostart/plasma-bind-emacsclient.desktop" = {
-        text = ''
-          [Desktop Entry]
-          Exec=sh -c "${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file $XDG_CONFIG_HOME/kglobalshortcutsrc --group services --group emacsclient-plasma.desktop --key _launch Meta+E && qdbus org.kde.KWin /KWin reconfigure"
-          Name=bind emacsclient
-        '';
+      programs.plasma = {
+        configFile.kglobalshortcutsrc = {
+          "services/org.kde.dolphin.desktop"."_launch" = V "";
+          "useless/key-for-workaround.desktop"."_launch".value = "Meta+E";
+          "services/emacsclient-plasma.desktop"."_launch" = V "Meta+E";
+        };
       };
-
-      # Plasma manager just couldn't do it consistently for whatever reason.
-      home.activation.plasmaEmacsBindingHack = ''
-        run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/kglobalshortcutsrc --group services --group org.kde.dolphin.desktop --key _launch ""
-        # run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/kglobalshortcutsrc --group services --group emacsclient-plasma.desktop --key _launch Meta+E
-      '';
+    }
+    {
 
       home.activation.plasmaPowerdevilSettings = ''
         run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/powerdevilrc --group AC --group Display --key DimDisplayWhenIdle false
@@ -64,17 +71,25 @@
           "term" = {
             name = "Launch Terminal";
             key = "Meta+Return";
-            command = "konsole";
+            command = "alacritty";
           };
           "web" = {
             name = "Launch Web Browser";
             key = "Meta+W";
             command = "firefox";
           };
+          "restart-kwin" = {
+            name = "Restart Kwin";
+            key = "Meta+Shift+R";
+            command = "kwin_wayland --replace";
+          };
         };
 
         shortcuts = {
-          # Remove defaults
+          # Removing conflicting defaults
+          "kwin"."Overview" = [];
+          "kwin"."Show Desktop" = [];
+          
           plasmashell = {
             "manage activities" = [];
             "activate task manager entry 1" = [];
@@ -88,7 +103,6 @@
             "activate task manager entry 9" = [];
             "activate task manager entry 10" = [];
           };
-          "kwin"."Overview" = [];
 
           kwin = {
             "Switch to Desktop 1" = "Meta+1";
@@ -110,13 +124,25 @@
             "Window to Desktop 7" = "Meta+&";
             "Window to Desktop 8" = "Meta+*";
             "Window to Desktop 9" = "Meta+(";
+
+            "Window Fullscreen" = "Meta+Shift+F";
           };
+
+          "services/org.kde.krunner.desktop"._launch = "Meta+D";
+
+          "KDE Keyboard Layout Switcher"."Switch to Next Keyboard Layout" = "Meta+Space";
         };
 
         configFile = {
           "kcminputrc"."Keyboard" = {
             "RepeatDelay" = V 300;
             "RepeatRate" = V 50;
+          };
+
+          # Gnome keyring is used instead
+          "kwalletrc" = {
+            Wallet.Enabled = V false;
+            "org.freedesktop.secrets"."apiEnabled" = V false;
           };
 
           "kdeglobals"."KDE"."SingleClick" = V false;
@@ -164,6 +190,8 @@
 
             "PoloniumSwitchHalf" = "Meta+T";
             "PoloniumSwitchMonocle" = "Meta+F";
+
+            "PoloniumRetileWindow" = "Meta+Shift+Space";
 
             "Move Window One Screen to the Left" = "Meta+<";
             "Move Window One Screen to the Right" = "Meta+>";

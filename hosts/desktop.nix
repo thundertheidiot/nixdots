@@ -15,6 +15,7 @@
 
       workstation.enable = true;
       workstation.utils = "generic/gtk";
+      workstation.plasma.tilingwm = true;
       workstation.environment = "hyprland";
 
       setup.userMachine.enable = true;
