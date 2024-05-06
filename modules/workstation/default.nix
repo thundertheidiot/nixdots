@@ -57,6 +57,8 @@ in {
         };
       };
 
+      boot.kernelPackages = pkgs.linuxPackages_cachyos_lto;
+
       services.displayManager.sddm = lib.mkMerge [
         (lib.mkIf (config.setup.gpu == "intel" || config.setup.gpu == "amd") {
           enable = true;

@@ -100,17 +100,17 @@
                     # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
                     # udis86 = inputs.hyprland.packages.${final.system}.udis86;
 
-                    # deko funny
-                    kdePackages = prev.kdePackages // {
-                      kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
-                        patches = prev.patches ++ [
-                          (builtins.fetchurl {
-                            url = "https://invent.kde.org/plasma/kwin/-/merge_requests/5511.patch";
-                            sha256 = sha256:0bbv66f0hhkscn171d9xlhx1ghpds0a448n723i6hi6829wxf733;
-                          })
-                        ];
-                      });
-                    };
+                    # feels useless
+                    # kdePackages = prev.kdePackages // {
+                    #   kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
+                    #     patches = prev.patches ++ [
+                    #       (builtins.fetchurl {
+                    #         url = "https://invent.kde.org/plasma/kwin/-/merge_requests/5511.patch";
+                    #         sha256 = sha256:0bbv66f0hhkscn171d9xlhx1ghpds0a448n723i6hi6829wxf733;
+                    #       })
+                    #     ];
+                    #   });
+                    # };
                   })
                 ];
               };
