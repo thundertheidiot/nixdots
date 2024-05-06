@@ -27,7 +27,7 @@
       setup.firefox.enable = true;
       setup.gaming.enable = true;
       setup.tv.enable = false;
-      setup.laptop.enable = false;
+      setup.laptop.enable = true;
 
       # Testing
       setup.phone = true;
