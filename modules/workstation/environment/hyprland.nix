@@ -104,7 +104,7 @@
             "workspace 6 silent,class:(easyeffects)"
 
             "fullscreen,class:(cs2)"
-            # "immediate,class:(.gamescope-wrapped)"
+            "immediate,class:(.gamescope-wrapped)"
             "stayfocused, title:^()$,class:^(steam)$"
           ];
 
@@ -113,6 +113,8 @@
             "XDG_CURRENT_DESKTOP,Hyprland"
             "XDG_SESSION_TYPE,wayland"
             "XDG_SESSION_DESKTOP,Hyprland"
+
+            "WLR_DRM_NO_ATOMIC,1"
           ];
 
           exec-once =

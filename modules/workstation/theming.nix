@@ -99,10 +99,22 @@
           enable = true;
           platformTheme.name = "qtct";
           style = {
-            name = "Catppuccin-Mocha-Mauve";
-            package = qt-theme-package;
+            name = "kvantum";
           };
         };
+
+        xdg.dataFile."Kvantum/Catppuccin-Mocha-Mauve" = {
+          source = "${(pkgs.catppuccin-kvantum.override {
+            accent = "Mauve";
+            variant = "Mocha";
+          })}/share/Kvantum/Catppuccin-Mocha-Mauve";
+          recursive = true;
+        };
+
+        xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
+          [General]
+          theme=Catppuccin-Mocha-Mauve
+        '';
 
         home.pointerCursor = {
           package = cursor_package;

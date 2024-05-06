@@ -82,14 +82,7 @@ in {
     imports = mlib.getHomes modules;
 
     config = lib.mkIf config.workstation.enable 
-      (let
-        # This allows global keybindings in mumble, they don't work with the wayland backend
-        # By running mumble through xwayland, windowmanagers like hyprland can pass in keys in the hacky way
-        xwayland-mumble = pkgs.writeShellScriptBin "mumble" ''
-          export QT_QPA_PLATFORM=xcb
-          ${pkgs.mumble}/bin/mumble
-        '';
-      in {
+      {
         home.packages = with pkgs; [
           mpc-cli
           libnotify
@@ -111,7 +104,15 @@ in {
 
           ansel
 
-          xwayland-mumble
+          obs-studio
+          kdePackages.kdenlive
+
+          (mumble.overrideAttrs (prev: {
+            postFixup = builtins.replaceStrings
+              ["wrapProgram $out/bin/mumble"]
+              ["wrapProgram $out/bin/mumble --set QT_QPA_PLATFORM xcb"] # Run with xwayland to make keybindings work
+              prev.postFixup;
+          }))
         ];
 
         xdg.userDirs = {
@@ -220,6 +221,6 @@ in {
             "Ctrl+r" = "script-binding quality_menu/reload";
           };
         };
-      });
+      };
   };
 }
