@@ -59,6 +59,8 @@ in {
 
       boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
 
+      services.cpupower-gui.enable = true;
+
       services.displayManager.sddm = lib.mkMerge [
         (lib.mkIf (config.setup.gpu == "intel" || config.setup.gpu == "amd") {
           enable = true;
