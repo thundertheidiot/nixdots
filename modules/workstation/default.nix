@@ -108,6 +108,8 @@ in {
 
           ansel
 
+          (pkgs."2311".blender)
+
           obs-studio
           kdePackages.kdenlive
 
