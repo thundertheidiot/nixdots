@@ -20,7 +20,7 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
 
       prismlauncher
 
-      #retroarchFull
+      retroarchFull
     ]
     ++ (with pkgs.ataraxiasjel; [
       proton-ge

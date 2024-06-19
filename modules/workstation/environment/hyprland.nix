@@ -165,7 +165,7 @@
           misc = {
             disable_hyprland_logo = true;
             force_default_wallpaper = 0;
-            vrr = 2;
+            vrr = 0;
           };
 
           general = {

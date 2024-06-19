@@ -7,6 +7,11 @@
         extraPkgs = pkgs: with pkgs; [
           libkrb5
           keyutils
+
+          # steamvr
+          libcef
+          openvr
+          gperftools # steamvr home symlink libtcmalloc_minimal.so.0
         ];
       };
       remotePlay.openFirewall = true;

@@ -182,7 +182,7 @@
       # url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
       # 0.38. whatevevr works
       # url = "github:hyprwm/Hyprland?ref=303b9956b2ae15508b09dffae602550ca17e6539";
-      url = "github:hyprwm/Hyprland";
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     };
 
     waybar.url = "github:Alexays/Waybar";
