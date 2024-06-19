@@ -94,6 +94,8 @@ in {
           element-desktop
           signal-desktop
 
+          libreoffice
+
           gimp
           godot_4
 
