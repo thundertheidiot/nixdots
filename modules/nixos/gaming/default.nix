@@ -37,21 +37,29 @@
           hash = "sha256-lgVVhnj209o9kCGTxOGmCRCyhT91QRvlQfOYyvyGj2Y=";
         };
 
-        # mesonFlags = prev.mesonFlags ++ [
-        #   "-Dc_args=-fno-omit-frame-pointer"
-        #   "-Dc_link_args=-fno-omit-frame-pointer"
-        #   "-Dcpp_args=-fno-omit-frame-pointer"
-        #   "-Dcpp_link_args=-fno-omit-frame-pointer"
-        #   "--buildtype=debugoptimized"
-        #   "-Db_sanitize=address,undefined"
-        # ];
       });
     };
 
     environment.systemPackages = [
-      (pkgs.writeShellScriptBin "newgamescope" ''
-      "${pkgs.gamescope}/bin/gamescope" $@
-      '')
+      (pkgs.writeShellScriptBin "new-gamescope" (let
+        pkg = pkgs.gamescope.overrideAttrs (final: prev: {
+          mesonFlags = prev.mesonFlags ++ [
+            "-Dc_args=-fno-omit-frame-pointer"
+            "-Dc_link_args=-fno-omit-frame-pointer"
+            "-Dcpp_args=-fno-omit-frame-pointer"
+            "-Dcpp_link_args=-fno-omit-frame-pointer"
+            "--buildtype=debugoptimized"
+            "-Db_sanitize=address,undefined"
+          ];
+          
+          postInstall = builtins.replaceStrings
+            ["wrapProgram $out/bin/gamescope"]
+            ["wrapProgram $out/bin/gamescope --set LD_PRELOAD \"${pkgs.libgcc}/lib/libasan.so\""]
+            prev.postInstall;
+        });
+      in ''
+      "${pkg}/bin/gamescope" $@
+      ''))
     ];
 
     programs.nix-ld.libraries = with pkgs; [

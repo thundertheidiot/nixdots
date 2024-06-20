@@ -338,6 +338,12 @@
 (fset #'jsonrpc--log-event #'ignore)
 (add-hook 'prog-mode-hook #'eglot-ensure)
 
+(th/leader
+  "c" '(:ignore t :wk "code")
+  "ca" '((lambda () (interactive)
+	   (eglot-code-actions 1 (point-max) nil t))
+	 :wk "code actions"))
+
 (require 'eglot-booster)
 (eglot-booster-mode)
 
