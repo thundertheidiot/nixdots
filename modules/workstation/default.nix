@@ -61,6 +61,9 @@ in {
 
       services.cpupower-gui.enable = true;
 
+      xdg.portal.enable = true;
+      services.flatpak.enable = true;
+
       services.displayManager.sddm = lib.mkMerge [
         (lib.mkIf (config.setup.gpu == "intel" || config.setup.gpu == "amd") {
           enable = true;

@@ -183,7 +183,7 @@
             rounding = 6;
 
             blur = {
-              enabled = true;
+              enabled = false;
               size = 3;
               passes = 1;
             };

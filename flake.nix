@@ -95,7 +95,7 @@
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
                     hyprland = inputs.hyprland.packages.${final.system}.hyprland;
-                    # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
+                    xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
                     # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
                     # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
                     # udis86 = inputs.hyprland.packages.${final.system}.udis86;
@@ -150,7 +150,7 @@
     # https://hydra.nixos.org/job/nixpkgs/trunk/unstable
     # https://status.nixos.org/
     # nixpkgs.url = "github:NixOS/nixpkgs?ref=7bb2ccd8cdc44c91edba16c48d2c8f331fb3d856";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     mobile-nixos = {
@@ -159,7 +159,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -182,7 +182,8 @@
       # url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
       # 0.38. whatevevr works
       # url = "github:hyprwm/Hyprland?ref=303b9956b2ae15508b09dffae602550ca17e6539";
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+      # latest before clipboard break
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=4cdddcfe466cb21db81af0ac39e51cc15f574da9";
     };
 
     waybar.url = "github:Alexays/Waybar";

@@ -79,7 +79,9 @@
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
     boot.kernelParams = [
-      "video=1920x1080-32"
+      "video=1920x1080x32"
+      "video=DP-1:1920x1080@144"
+      "video=DP-3:2560x1440@144"
     ];
 
     fileSystems."/" = {

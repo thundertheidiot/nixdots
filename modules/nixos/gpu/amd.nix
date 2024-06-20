@@ -11,6 +11,9 @@
 
     hardware.opengl.extraPackages = with pkgs; [
       rocmPackages.clr.icd
+      vulkan-loader
+      vulkan-validation-layers
+      vulkan-extension-layer
     ];
 
     environment.systemPackages = with pkgs; [
@@ -35,7 +38,7 @@
     ];
 
     services.xserver.enable = true;
-    services.xserver.videoDrivers = ["modesetting" "amdgpu"];
+    services.xserver.videoDrivers = ["modesetting"];
     # services.xserver.videoDrivers = ["amdgpu"];
     boot.initrd.kernelModules = ["amdgpu"];
   };
