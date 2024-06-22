@@ -39,8 +39,19 @@
       setup.gpu = "amd";
 
       monitors = [
-        {name = "DP-3"; width = 2560; height = 1440; refresh = 144; x = 1920;}
-        {name = "DP-1"; width = 1920; height = 1080; refresh = 144;}
+        {
+          name = "DP-3";
+          width = "2560";
+          height = "1440";
+          refresh = "144";
+          x = "1920";
+        }
+        {
+          name = "DP-1";
+          width = "1920";
+          height = "1080";
+          refresh = "144";
+        }
       ];
     };
   };
@@ -56,6 +67,7 @@
   system = {
     lib,
     config,
+    mlib,
     ...
   }: {
     system.stateVersion = "24.05";
@@ -78,11 +90,11 @@
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
-    boot.kernelParams = [
-      "video=1920x1080x32"
-      "video=DP-1:1920x1080@144"
-      "video=DP-3:2560x1440@144"
-    ];
+
+    # boot.kernelParams = [
+    #   "video=DP-1:1920x1080-32@144"
+    #   "video=DP-3:2560x1440-32@144"
+    # ];
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/1ffc3323-6810-406d-b4f6-15d247602689";

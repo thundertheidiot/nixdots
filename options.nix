@@ -36,7 +36,7 @@
 
     monitors = lib.mkOption {
       default = [];
-      type = lib.types.listOf lib.types.set;
+      type = lib.types.listOf lib.types.attrs;
       example = [
         {name = "DP-3"; width = 2560; height = 1440; refresh = 144; x = 1920;}
         {name = "DP-1"; width = 1920; height = 1080; refresh = 144;}

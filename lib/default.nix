@@ -17,4 +17,15 @@
 
   getSystems = list: builtins.map (module: module.system) list;
   getHomes = list: builtins.map (module: module.home) list;
+
+  getMon = {
+    name,
+      width ? 1920,
+      height ? 1080,
+      refresh ? 60,
+      x ? 0,
+      y ? 0,
+  }: {
+    inherit name width height refresh x y;
+  };
 }
