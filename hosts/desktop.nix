@@ -91,10 +91,9 @@
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    # boot.kernelParams = [
-    #   "video=DP-1:1920x1080-32@144"
-    #   "video=DP-3:2560x1440-32@144"
-    # ];
+    boot.kernelParams = [
+      "video=1920x1080-32"
+    ];
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/1ffc3323-6810-406d-b4f6-15d247602689";

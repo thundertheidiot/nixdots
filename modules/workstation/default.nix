@@ -7,7 +7,6 @@ let
     (import ./environment/default.nix)
     (import ./theming.nix)
     (import ./laptop.nix)
-    (import ./monitor.nix)
   ];
 in {
   system = {
