@@ -15,8 +15,13 @@ in lib.mkIf (config.setup.gaming.enable) (with config; {
     [
       lutris
       startsteam
+
       discord
+
       webcord
+      vesktop
+
+      mangohud
 
       prismlauncher
 
