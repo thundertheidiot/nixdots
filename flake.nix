@@ -5,35 +5,23 @@
     self,
     nixpkgs,
     home-manager,
-      mobile-nixos,
-      hyprland,
+    mobile-nixos,
+    hyprland,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
-    mlib = import ./lib { inherit lib; };
+    mlib = import ./lib {inherit lib;};
   in rec {
-    # packages."aarch64-linux".fajita = (import "${mobile-nixos}/lib/eval-with-configuration.nix" {
-    #   device = "oneplus-fajita";
-    #   pkgs = (import "${mobile-nixos}/pkgs.nix");
-    #   configuration = import ./modules/mobile/fajita.nix;
-    # });
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
-    nixosConfigurations = gen ["desktop" "x220" "t440p" "digiboksi"] // {
-      local = mkSystem (import ./local.nix) [];
-      # iso = mkSystem (import ./hosts/iso.nix) [
-      #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
-      # ];
-      fajita = let
-        lib = (import (import "${mobile-nixos}/pkgs).nix")).lib;
-      in lib.nixosSystem {
-        system = "aarch64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          (import "${mobile-nixos}/lib/config/configuration.nix" { device = "oneplus-fajita"; })
-          ./modules/mobile/fajita.nix
-        ];
+    nixosConfigurations =
+      gen ["desktop" "x220" "t440p" "digiboksi"]
+      // {
+        local = mkSystem (import ./local.nix) [];
+        # iso = mkSystem (import ./hosts/iso.nix) [
+        #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
+        # ];
       };
-    };
 
     # defaultPackage = builtins.listToAttrs (builtins.map (arch: {
     #   name = arch;
@@ -63,7 +51,11 @@
             home-manager.nixosModules.home-manager
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
-            ({config, lib, ...}: {
+            ({
+              config,
+              lib,
+              ...
+            }: {
               time.timeZone = config.timeZone;
               networking.hostName = config.hostName;
 
@@ -139,7 +131,8 @@
       };
 
     gen = hosts:
-      builtins.listToAttrs (builtins.map (s: {
+      builtins.listToAttrs (builtins.map
+        (s: {
           name = s;
           value = mkSystem (import ./hosts/${s}.nix) [];
         })
@@ -150,7 +143,8 @@
     # https://hydra.nixos.org/job/nixpkgs/trunk/unstable
     # https://status.nixos.org/
     # nixpkgs.url = "github:NixOS/nixpkgs?ref=7bb2ccd8cdc44c91edba16c48d2c8f331fb3d856";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     mobile-nixos = {
@@ -159,7 +153,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
