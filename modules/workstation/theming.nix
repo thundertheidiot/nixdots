@@ -78,7 +78,7 @@
               };
               theme = {
                 package = gtk-theme-package;
-                name = "Catppuccin-Mocha-Compact-Mauve-Dark";
+                name = "catppuccin-mocha-mauve-compact+default";
               };
               cursorTheme = {
                 package = cursor_package;

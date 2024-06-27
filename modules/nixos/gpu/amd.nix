@@ -5,11 +5,11 @@
   ...
 }: {
   config = lib.mkIf (config.setup.gpu == "amd") {
-    hardware.opengl.enable = true;
-    hardware.opengl.driSupport = true;
-    hardware.opengl.driSupport32Bit = true;
+    hardware.graphics.enable = true;
+    # hardware.opengl.driSupport = true;
+    hardware.graphics.enable32Bit = true;
 
-    hardware.opengl.extraPackages = with pkgs; [
+    hardware.graphics.extraPackages = with pkgs; [
       rocmPackages.clr.icd
       vulkan-loader
       vulkan-validation-layers
@@ -18,7 +18,7 @@
       amdvlk
     ];
 
-    hardware.opengl.extraPackages32 = with pkgs; [
+    hardware.graphics.extraPackages32 = with pkgs; [
       driversi686Linux.amdvlk
     ];
 

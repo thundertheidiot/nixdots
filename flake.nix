@@ -82,6 +82,10 @@
                       system = final.system;
                       config.allowUnfree = final.config.allowUnfree;
                     };
+                    "2405" = import inputs.nixpkgs-24-05 {
+                      system = final.system;
+                      config.allowUnfree = final.config.allowUnfree;
+                    };
                     agenix = inputs.agenix.packages.${final.system};
                     swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
