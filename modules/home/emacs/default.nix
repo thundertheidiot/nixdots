@@ -94,53 +94,54 @@
       enable = true;
       package = pkgs.emacs29-pgtk;
       extraConfig = builtins.readFile ./init.el;
-      extraPackages = epkgs: with epkgs; [
-        pkgs.emacs-lsp-booster
-        eglot-booster
-        indent-bars
+      extraPackages = epkgs:
+        with epkgs; [
+          pkgs.emacs-lsp-booster
+          eglot-booster
+          indent-bars
 
-        diminish
-        undo-tree
-        evil
-        evil-collection
-        evil-better-visual-line
-        smartparens
-        evil-smartparens
-        which-key
-        general
+          diminish
+          undo-tree
+          evil
+          evil-collection
+          evil-better-visual-line
+          smartparens
+          evil-smartparens
+          which-key
+          general
 
-        org-bullets
-        solaire-mode
-        catppuccin-theme
-        hl-todo
-        flymake
-        eglot
-        company
-        company-box
-        treesit-auto
+          org-bullets
+          solaire-mode
+          catppuccin-theme
+          hl-todo
+          flymake
+          eglot
+          company
+          company-box
+          treesit-auto
 
-        rustic
-        lua-mode
-        gdscript-mode
-        nix-mode
-        rainbow-delimiters
+          rustic
+          lua-mode
+          gdscript-mode
+          nix-mode
+          rainbow-delimiters
 
-        projectile
-        ibuffer-projectile
-        magit
-        vterm
-        eshell-vterm
-        fish-completion
-        vertico
-        orderless
-        consult
-        marginalia
-        popper
-        simple-mpc
-        empv
+          projectile
+          ibuffer-projectile
+          magit
+          vterm
+          eshell-vterm
+          fish-completion
+          vertico
+          orderless
+          consult
+          marginalia
+          popper
+          simple-mpc
+          empv
 
-        ement
-      ];
+          ement
+        ];
     };
 
     services.emacs = {
@@ -150,14 +151,14 @@
       startWithUserSession = true;
     };
 
-    xdg.mimeApps.defaultApplications = builtins.listToAttrs (builtins.map (mime: {
-      name = mime;
-      value = [ "emacsclient.desktop" ];
-    }) [
-      "text/plain"
-      "application/plain"
-    ]);
-
+    xdg.mimeApps.defaultApplications = builtins.listToAttrs (builtins.map
+      (mime: {
+        name = mime;
+        value = ["emacsclient.desktop"];
+      }) [
+        "text/plain"
+        "application/plain"
+      ]);
 
     xdg.configFile."emacs/.createdir" = {
       enable = true;

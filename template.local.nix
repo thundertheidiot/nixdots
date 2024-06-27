@@ -25,7 +25,7 @@
     setup.gpu = "amd";
   };
 
-  home = { ... }: {
+  home = {...}: {
     home.stateVersion = "24.05";
   };
 

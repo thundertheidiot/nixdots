@@ -121,12 +121,14 @@ in {
           "XDG_SESSION_DESKTOP,Hyprland"
         ];
 
-        exec-once = [
-          "${pkgs.mako}/bin/mako"
-          "${pkgs.hyprpaper}/bin/hyprpaper"
-          "${pkgs.waybar}/bin/waybar"
-          "${pkgs.swayosd}/bin/swayosd-server"
-        ] ++ config.setup.hyprland.extraAutostart;
+        exec-once =
+          [
+            "${pkgs.mako}/bin/mako"
+            "${pkgs.hyprpaper}/bin/hyprpaper"
+            "${pkgs.waybar}/bin/waybar"
+            "${pkgs.swayosd}/bin/swayosd-server"
+          ]
+          ++ config.setup.hyprland.extraAutostart;
 
         input = {
           kb_layout = "us,fi";

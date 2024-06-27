@@ -61,9 +61,8 @@
     XMONAD_CACHE_DIR = "${xdg.configHome}/xmonad";
     XMONAD_CONFIG_DIR = "${xdg.configHome}/xmonad";
     XMONAD_DATA_DIR = "${xdg.configHome}/xmonad";
-    MANGOHUD_CONFIGFILE = "${xdg.configHome}/mangohud.conf";
 
-    PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
+    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
 
     # Settings
 
@@ -87,7 +86,11 @@ in
       killall
       which
       rsync
-      atool zip unzip p7zip rar
+      atool
+      zip
+      unzip
+      p7zip
+      rar
       pulsemixer
       btop
       (lib.mkIf (config.setup.gpu == "intel") nvtopPackages.intel)
@@ -95,7 +98,10 @@ in
       (lib.mkIf (config.setup.gpu == "nvidia") nvtopPackages.nvidia)
       #nvtopPackages.full
 
-      rustup openssl openssl.dev pkg-config
+      rustup
+      openssl
+      openssl.dev
+      pkg-config
       alejandra
       agenix.default
       age

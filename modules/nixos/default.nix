@@ -27,10 +27,16 @@
 
     programs.nix-ld = {
       enable = true;
-      libraries = with pkgs; [ libGL ];
+      libraries = with pkgs; [libGL];
     };
 
-    security.sudo.enable = true;
+    security.sudo-rs = {
+      enable = true;
+      execWheelOnly = true;
+      # extraConfig = ''
+      #   Defaults lecture="never"
+      # '';
+    };
 
     hardware.enableRedistributableFirmware = true;
 

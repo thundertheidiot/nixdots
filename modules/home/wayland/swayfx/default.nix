@@ -1,5 +1,10 @@
-{ pkgs, config, lib, ... }: {
-  config = lib.mkIf (config.setup.swayfx.enable) ({
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}: {
+  config = lib.mkIf (config.setup.swayfx.enable) {
     wayland.windowManager.sway = {
       enable = true;
       package = pkgs.swayfx;
@@ -11,9 +16,7 @@
         gtk = true;
       };
 
-      config = {
-
-      };
+      config = {};
     };
-  });
+  };
 }

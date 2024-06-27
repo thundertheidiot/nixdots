@@ -1,7 +1,6 @@
 # This package provides:
 # 1. $out/share/kodi/addons, this is linked to ${config.programs.kodi.datadir}/addons by home manager
 # 2. $out/bin/kodi, this is a wrapper for kodi with the correct PYTHONPATH and LD_LIBRARY_PATH
-
 {
   lib,
   pkgs,

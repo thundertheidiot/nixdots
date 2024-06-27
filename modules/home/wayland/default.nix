@@ -1,4 +1,9 @@
-{ lib, pkgs, config, ... }: let
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}: let
   colors = with config.scheme.withHashtag; {
     background = base00;
     foreground = base07;

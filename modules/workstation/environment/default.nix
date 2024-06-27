@@ -5,11 +5,11 @@ let
     (import ./plasma)
   ];
 in {
-  system = { mlib, ... }: {
+  system = {mlib, ...}: {
     imports = mlib.getSystems modules;
   };
 
-  home = { mlib, ... }: {
+  home = {mlib, ...}: {
     imports = mlib.getHomes modules;
   };
 }

@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }: {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   config = lib.mkIf (config.setup.laptop.enable) {
     environment.systemPackages = with pkgs; [
       tlp

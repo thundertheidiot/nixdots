@@ -31,7 +31,11 @@
       setup.tv.enable = false;
 
       monitors = [
-        { name = "LVDS-1"; width = 1366; height = 768; }
+        {
+          name = "LVDS-1";
+          width = 1366;
+          height = 768;
+        }
       ];
 
       setup.gpu = "intel";

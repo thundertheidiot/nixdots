@@ -16,7 +16,7 @@
         DisableAppUpdate = true;
         FirefoxSuggest = {
           WebSuggestions = false;
-          SponsoredSuggestions  = false;
+          SponsoredSuggestions = false;
           ImproveSuggest = false;
         };
         ExtensionSettings = {
@@ -43,20 +43,30 @@
           privateDefault = "DuckDuckGo";
           engines = {
             "DuckDuckGo" = {
-              urls = [{
-                template = "https://duckduckgo.com/";
-                params = [
-                  { name = "q"; value = "{searchTerms}"; }
-                ];
-              }];
+              urls = [
+                {
+                  template = "https://duckduckgo.com/";
+                  params = [
+                    {
+                      name = "q";
+                      value = "{searchTerms}";
+                    }
+                  ];
+                }
+              ];
             };
             "Nix Packages" = {
-              urls = [{
-                template = "https://search.nixos.org/packages";
-                params = [
-                  { name = "query"; value = "{searchTerms}"; }
-                ];
-              }];
+              urls = [
+                {
+                  template = "https://search.nixos.org/packages";
+                  params = [
+                    {
+                      name = "query";
+                      value = "{searchTerms}";
+                    }
+                  ];
+                }
+              ];
             };
           };
         };

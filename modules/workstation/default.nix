@@ -17,9 +17,11 @@ in {
     inputs,
     ...
   }: {
-    imports = (mlib.getSystems modules) ++ [
-      inputs.nix-gaming.nixosModules.pipewireLowLatency
-    ];
+    imports =
+      (mlib.getSystems modules)
+      ++ [
+        inputs.nix-gaming.nixosModules.pipewireLowLatency
+      ];
 
     config = lib.mkIf (config.workstation.enable) {
       environment.systemPackages = with pkgs; [
@@ -88,7 +90,8 @@ in {
   }: {
     imports = mlib.getHomes modules;
 
-    config = lib.mkIf config.workstation.enable 
+    config =
+      lib.mkIf config.workstation.enable
       {
         home.packages = with pkgs; [
           mpc-cli
@@ -119,9 +122,11 @@ in {
           kdePackages.kdenlive
 
           (mumble.overrideAttrs (prev: {
-            postFixup = builtins.replaceStrings
+            postFixup =
+              builtins.replaceStrings
               ["wrapProgram $out/bin/mumble"]
               ["wrapProgram $out/bin/mumble --set QT_QPA_PLATFORM xcb"] # Run with xwayland to make keybindings work
+              
               prev.postFixup;
           }))
         ];

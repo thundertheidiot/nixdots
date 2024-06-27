@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }: {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   config = lib.mkIf (config.setup.desktop.enable) {
     virtualisation.libvirtd.enable = true;
     programs.virt-manager.enable = true;
@@ -18,9 +23,9 @@
     ];
 
     programs.adb.enable = true;
-    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+    boot.binfmt.emulatedSystems = ["aarch64-linux"];
 
-    users.users.${config.username}.extraGroups = [ "libvirtd" "adbusers" ];
+    users.users.${config.username}.extraGroups = ["libvirtd" "adbusers"];
 
     systemd.services."virsh-net" = {
       enable = true;
@@ -31,7 +36,7 @@
       serviceConfig = {
         ExecStart = "${pkgs.libvirt}/bin/virsh net-start default";
       };
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
     };
   };
 }

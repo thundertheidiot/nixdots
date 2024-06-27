@@ -84,7 +84,7 @@ in {
       workspace = [
         "${specialWorkspace},rounding:false,border:false,shadow:false,gapsin:0,gapsout:0"
       ];
-      windowrulev2 = [ "fullscreen,class:(Kodi)" ];
+      windowrulev2 = ["fullscreen,class:(Kodi)"];
       exec-once = [
         "${createSettings}/bin/createSettings && ${customKodi}/bin/kodi_with_addons -fs"
       ];
@@ -123,8 +123,7 @@ in {
       enable = true;
       datadir = "${xdg.dataHome}/kodi";
 
-      addonSettings = {
-      };
+      addonSettings = {};
 
       package = customKodi;
     };

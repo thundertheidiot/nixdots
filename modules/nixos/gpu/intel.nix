@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   config = lib.mkIf (config.setup.gpu == "intel") {
     hardware.opengl.enable = true;
     hardware.opengl.driSupport = true;

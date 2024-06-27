@@ -1,4 +1,8 @@
-{ lib, config, ... }: {
+{
+  lib,
+  config,
+  ...
+}: {
   options = {
     username = lib.mkOption {
       default = "thunder";
@@ -38,8 +42,19 @@
       default = [];
       type = lib.types.listOf lib.types.attrs;
       example = [
-        {name = "DP-3"; width = 2560; height = 1440; refresh = 144; x = 1920;}
-        {name = "DP-1"; width = 1920; height = 1080; refresh = 144;}
+        {
+          name = "DP-3";
+          width = 2560;
+          height = 1440;
+          refresh = 144;
+          x = 1920;
+        }
+        {
+          name = "DP-1";
+          width = 1920;
+          height = 1080;
+          refresh = 144;
+        }
       ];
     };
 
@@ -50,14 +65,14 @@
     workstation.laptop = lib.mkEnableOption "Power management.";
 
     workstation.utils = lib.mkOption {
-      type = lib.types.enum [ "generic/gtk" "kde" ];
+      type = lib.types.enum ["generic/gtk" "kde"];
       default = "generic/gtk";
       example = "kde";
       description = "The \"family of programs\" to use for utilities like ssh askpass or polkit.";
     };
 
     workstation.environment = lib.mkOption {
-      type = lib.types.enum [ "hyprland" "plasma" ]; # TODO: awesomewm, swayfx, qtile maybe
+      type = lib.types.enum ["hyprland" "plasma"]; # TODO: awesomewm, swayfx, qtile maybe
       default = "hyprland";
       example = "plasma";
       description = "What \"desktop environment\" to install and configure.";
@@ -86,7 +101,7 @@
     setup.hyprland.extraAutostart = lib.mkOption {
       default = [];
       type = lib.types.listOf lib.types.nonEmptyStr;
-      example = [ "gajim" ];
+      example = ["gajim"];
       description = "Extra exec-once lines for hyprland.";
     };
 
@@ -114,10 +129,10 @@
       lib.mdDoc "Desktop specific things"
     );
 
-    setup.phone = lib.mkEnableOption ( lib.mdDoc "Phone setup" );
+    setup.phone = lib.mkEnableOption (lib.mdDoc "Phone setup");
 
     setup.gpu = lib.mkOption {
-      type = lib.types.enum [ "amd" "nvidia" "intel" "none" ];
+      type = lib.types.enum ["amd" "nvidia" "intel" "none"];
       default = "none";
       example = "amd";
       description = "Gpu drivers to install.";
