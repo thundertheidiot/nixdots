@@ -9,12 +9,6 @@
 }: let
   addonDir = "/share/kodi/addons";
   pythonPath = with pkgs.python311Packages; makePythonPath [pillow pycryptodome urllib3 certifi six webencodings chardet charset-normalizer idna six dateutil];
-  inputstream-adaptive = pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: {
-    # extraInstallPhase = builtins.replaceStrings
-    #   ["libssd_wv.so"] ["libcdm_aarch64_loader.so"]
-    #   prev.extraInstallPhase;
-    extraInstallPhase = "";
-  });
 in
   pkgs.stdenv.mkDerivation rec {
     name = "kodi_with_addons";
@@ -38,7 +32,21 @@ in
       })
       "${pkgs.kodiPackages.websocket}${addonDir}/script.module.websocket"
       "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
-      "${inputstream-adaptive}${addonDir}/inputstream.adaptive"
+      "${(pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: { # remove extraInstallPhase which links a nonexistent so file
+        installPhase = let
+          n = "inputstream.adaptive";
+          version = prev.version;
+        in ''
+          runHook preInstall
+
+          make install
+
+          [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
+          [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
+
+          runHook postInstall
+        '';
+      }))}${addonDir}/inputstream.adaptive"
       "${pkgs.kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
       "${pkgs.kodiPackages.netflix}${addonDir}/plugin.video.netflix"
       "${pkgs.kodiPackages.jellyfin}${addonDir}/plugin.video.jellyfin"
