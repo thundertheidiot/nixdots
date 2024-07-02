@@ -112,6 +112,7 @@
               };
 
               imports = [
+                inputs.lix-module.nixosModules.default # lix
                 ./modules/nixos
               ];
 
@@ -152,6 +153,11 @@
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     naersk.url = "github:nix-community/naersk";
+
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0-rc1.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     mobile-nixos = {
       url = "github:NixOS/mobile-nixos";

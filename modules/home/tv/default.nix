@@ -122,7 +122,7 @@ in {
 
     programs.kodi = {
       enable = true;
-      datadir = "${config.xdg.dataHome}/kodi";
+      # datadir = "${config.xdg.dataHome}/kodi";
 
       addonSettings = {};
 

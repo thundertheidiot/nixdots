@@ -70,10 +70,9 @@ fn main() {
         }
     };
 
-    println!("Opening port: {:?}", serial_port);
-
     loop {
         let mut port = open_port(serial_port);
+        println!("Port {:?} opened successfully opened.", serial_port);
 
         let mut failed_to_fill_count: u8 = 0;
 
