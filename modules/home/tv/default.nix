@@ -23,14 +23,14 @@
 
     [ ! -d "$userdata" ] && mkdir --parents "$userdata"
     [ ! -d "$addondata" ] && mkdir --parents "$addondata"
-    [ ! -f "$guisettings" ] && echo "${guisettings}" > "$guisettings"
+    [ ! -f "$guisettings" ] && echo '${guisettings}' > "$guisettings"
 
     [ ! -d  "$userdata/addon_data/script.skinshortcuts" ] && cp -r --dereference "${customKodi}/share/kodi/userdata/addon_data/script.skinshortcuts" "$userdata/addon_data/script.skinshortcuts"
     chmod -R 777 "$userdata/addon_data/script.skinshortcuts"
 
     for i in plugin.video.jellyfin plugin.video.netflix plugin.video.youtube script.module.pvr.artwork service.xbmc.versioncheck; do
       mkdir --parents "$addondata/$i"
-      echo "<settings version="2">\n</settings>" >> "$addondata/$i"/settings.xml
+      echo "<settings version=\"2\">\n</settings>" >> "$addondata/$i"/settings.xml
     done
   '';
 
@@ -122,7 +122,7 @@ in {
 
     programs.kodi = {
       enable = true;
-      datadir = "${xdg.dataHome}/kodi";
+      datadir = "${config.xdg.dataHome}/kodi";
 
       addonSettings = {};
 

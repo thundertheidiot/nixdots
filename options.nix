@@ -62,6 +62,10 @@
       lib.mdDoc "User facing machine, e.g. a laptop or a desktop computer."
     );
 
+    tv.enable = lib.mkEnableOption (
+      lib.mdDoc "Configures kodi as a tv frontend thingy"
+    );
+
     workstation.laptop = lib.mkEnableOption "Power management.";
 
     workstation.utils = lib.mkOption {

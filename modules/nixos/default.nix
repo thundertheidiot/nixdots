@@ -8,6 +8,7 @@
   imports = [
     # ./workstation
     (import ../workstation).system
+    (import ../tv).system
     ./gaming
     ./tv
     ./gpu

@@ -13,6 +13,8 @@
       hostName = "desktop";
       timeZone = "Europe/Helsinki";
 
+      # tv.enable = true;
+
       workstation.enable = true;
       workstation.utils = "generic/gtk";
       workstation.plasma.tilingwm = true;
@@ -32,7 +34,7 @@
       setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
       setup.gaming.enable = true;
-      setup.tv.enable = true;
+      setup.tv.enable = false;
 
       setup.desktop.enable = true;
 
