@@ -30,13 +30,13 @@ in
   pkgs.writeShellScriptBin "create_kodi_settings" ''
     # Let kodi create it's settings if they don't exist
 
-    kodi_dir="${config.programs.kodi.datadir}"
-    [ ! -d "$kodi_dir" ] && {
-      ${config.programs.kodi.package}/bin/kodi &
-      PID=$!
-      while [ ! -d "$kodi_dir" ]; do :; done
-      kill $PID
-    }
+    # kodi_dir="${config.programs.kodi.datadir}"
+    # [ ! -d "$kodi_dir" ] && {
+    #   ${config.programs.kodi.package}/bin/kodi &
+    #   PID=$!
+    #   while [ ! -d "$kodi_dir" ]; do :; done
+    #   kill $PID
+    # }
 
     ${lib.strings.concatStringsSep "\n" commandList}
   ''
