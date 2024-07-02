@@ -18,18 +18,19 @@
 
   createSettings = pkgs.writeShellScriptBin "createSettings" ''
     userdata="${config.programs.kodi.datadir}/userdata"
+    addondata="${config.programs.kodi.datadir}/userdata/addon_data"
     guisettings="${config.programs.kodi.datadir}/userdata/guisettings.xml"
 
     [ ! -d "$userdata" ] && mkdir --parents "$userdata"
+    [ ! -d "$addondata" ] && mkdir --parents "$addondata"
     [ ! -f "$guisettings" ] && echo "${guisettings}" > "$guisettings"
 
     [ ! -d  "$userdata/addon_data/script.skinshortcuts" ] && cp -r --dereference "${customKodi}/share/kodi/userdata/addon_data/script.skinshortcuts" "$userdata/addon_data/script.skinshortcuts"
     chmod -R 777 "$userdata/addon_data/script.skinshortcuts"
 
-    addondata="$userdata/addon_data"
     for i in plugin.video.jellyfin plugin.video.netflix plugin.video.youtube script.module.pvr.artwork service.xbmc.versioncheck; do
-      mkdir --parents "$i"
-      echo "<settings version="2">\n</settings>" >> "$i"/settings.xml
+      mkdir --parents "$addondata/$i"
+      echo "<settings version="2">\n</settings>" >> "$addondata/$i"/settings.xml
     done
   '';
 
