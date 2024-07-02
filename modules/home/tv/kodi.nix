@@ -133,7 +133,8 @@ in
 
       mkdir -p "$out/bin"
       # old kodi for now
-      makeWrapper "${pkgs."2311".kodi}/bin/kodi" "$out/bin/kodi_with_addons" \
+      makeWrapper "${pkgs."2311".kodi-wayland}/bin/kodi" "$out/bin/kodi_with_addons" \
+       --set LIBVA_DRIVER_NAME i965 \
        --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
        --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [glib nspr nss stdenv.cc.cc.lib])}:$dir/inputstream.adaptive"
     '';
