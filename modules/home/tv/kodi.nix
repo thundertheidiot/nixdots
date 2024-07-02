@@ -9,6 +9,11 @@
 }: let
   addonDir = "/share/kodi/addons";
   pythonPath = with pkgs.python311Packages; makePythonPath [pillow pycryptodome urllib3 certifi six webencodings chardet charset-normalizer idna six dateutil];
+  inputstream-adaptive = pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: {
+    extraInstallPhase = builtins.replaceStrings
+      ["libssd_wv.so"] ["libcdm_aarch64_loader.so"]
+      prev.extraInstallPhase;
+  });
 in
   pkgs.stdenv.mkDerivation rec {
     name = "kodi_with_addons";
@@ -32,7 +37,7 @@ in
       })
       "${pkgs.kodiPackages.websocket}${addonDir}/script.module.websocket"
       "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
-      "${pkgs.kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
+      "${inputstream-adaptive}${addonDir}/inputstream.adaptive"
       "${pkgs.kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
       "${pkgs.kodiPackages.netflix}${addonDir}/plugin.video.netflix"
       "${pkgs.kodiPackages.jellyfin}${addonDir}/plugin.video.jellyfin"
