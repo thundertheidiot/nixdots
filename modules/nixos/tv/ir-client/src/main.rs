@@ -81,7 +81,7 @@ fn main() {
             match data {
                 Ok(byte) => {
                     use crate::buttons::KeyCode::*;
-                    dbg!(b);
+                    dbg!(byte);
                     match get_keycode(byte) {
                         Key(c) => match device.click(c) {
                             Err(e) => println!(
