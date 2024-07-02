@@ -151,6 +151,8 @@
     nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
+    naersk.url = "github:nix-community/naersk";
+
     mobile-nixos = {
       url = "github:NixOS/mobile-nixos";
       flake = false;

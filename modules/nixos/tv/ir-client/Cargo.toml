@@ -1,0 +1,18 @@
+[package]
+name = "ir-client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+colored = "2.1.0"
+mouse-keyboard-input = "0.9.1"
+robust-arduino-serial = "0.1.1"
+serial = "0.4.0"
+
+[profile.release]
+opt-level = 3
+debug = false
+lto = true
+codegen-units = 1
+panic = 'abort'
+strip = true

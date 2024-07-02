@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  inputs,
   ...
 }: {
   config = lib.mkIf (config.setup.tv.enable) (with config; {
@@ -17,6 +18,23 @@
     services.displayManager.autoLogin = {
       enable = true;
       user = config.username;
+    };
+
+    systemd.services."ir-client" = let
+      naersk = pkgs.callPackage inputs.naersk {};
+      ir-client = naersk.buildPackage {
+        src = ./ir-client;
+      };
+    in {
+      enable = true;
+      description = "Use tv remote as an input.";
+      unitConfig = {
+        Type = "simple";
+      };
+      serviceConfig = {
+        ExecStart = "${ir-client}/bin/ir-client";
+      };
+      wantedBy = ["multi-user.target"];
     };
 
     services.postgresql = {
