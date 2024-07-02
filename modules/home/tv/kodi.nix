@@ -32,21 +32,22 @@ in
       })
       "${pkgs.kodiPackages.websocket}${addonDir}/script.module.websocket"
       "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
-      "${(pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: { # remove extraInstallPhase which links a nonexistent so file
-        installPhase = let
-          n = "inputstream.adaptive";
-          version = prev.version;
-        in ''
-          runHook preInstall
+      "${pkgs."2311".kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
+      # "${(pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: { # remove extraInstallPhase which links a nonexistent so file
+      #   installPhase = let
+      #     n = "inputstream.adaptive";
+      #     version = prev.version;
+      #   in ''
+      #     runHook preInstall
 
-          make install
+      #     make install
 
-          [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
-          [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
+      #     [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
+      #     [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
 
-          runHook postInstall
-        '';
-      }))}${addonDir}/inputstream.adaptive"
+      #     runHook postInstall
+      #   '';
+      # }))}${addonDir}/inputstream.adaptive"
       "${pkgs.kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
       "${pkgs.kodiPackages.netflix}${addonDir}/plugin.video.netflix"
       "${pkgs.kodiPackages.jellyfin}${addonDir}/plugin.video.jellyfin"
