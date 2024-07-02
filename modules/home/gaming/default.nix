@@ -75,7 +75,7 @@ in
         cpu_power
         gpu_stats=1
         gpu_temp
-        gpu_power 
+        gpu_power
         vulkan_driver
         ram
         vram

@@ -32,7 +32,7 @@
       setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
       setup.gaming.enable = true;
-      setup.tv.enable = false;
+      setup.tv.enable = true;
 
       setup.desktop.enable = true;
 

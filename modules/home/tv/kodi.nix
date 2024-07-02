@@ -10,7 +10,8 @@
   addonDir = "/share/kodi/addons";
   pythonPath = with pkgs.python311Packages; makePythonPath [pillow pycryptodome urllib3 certifi six webencodings chardet charset-normalizer idna six dateutil];
   inputstream-adaptive = pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: {
-    extraInstallPhase = builtins.replaceStrings
+    extraInstallPhase =
+      builtins.replaceStrings
       ["libssd_wv.so"] ["libcdm_aarch64_loader.so"]
       prev.extraInstallPhase;
   });
