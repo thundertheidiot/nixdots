@@ -15,8 +15,8 @@ in
     srcs = [
       (pkgs.fetchgit {
         url = "https://github.com/aajanki/plugin.video.yleareena.jade";
-        rev = "9b89fabf6ad1cae08d92b3309029061ca9ab66e5";
-        hash = "sha256-uLWWJTX6aHsjzJneqab2VczJO+33tg8nP7fPQ/GpqZg=";
+        rev = "f91c9fd92c37ca5a15f34894885c1476c87591b5";
+        hash = "sha256-V5Ue0dyiusbF2E7Q//23J15kFvZDTB+s6ein5OgV6sM=";
       })
       (pkgs.fetchzip {
         url = "http://ftp.halifax.rwth-aachen.de/xbmc/addons/nexus/script.module.kodi-six/script.module.kodi-six-0.1.3.1.zip";
@@ -131,7 +131,8 @@ in
       cp -r "${./script.skinshortcuts-settings}" "$out/share/kodi/userdata/addon_data/script.skinshortcuts"
 
       mkdir -p "$out/bin"
-      makeWrapper "${pkgs.kodi}/bin/kodi" "$out/bin/kodi_with_addons" \
+      # old kodi for now
+      makeWrapper "${pkgs."2311".kodi}/bin/kodi" "$out/bin/kodi_with_addons" \
        --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
        --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [glib nspr nss stdenv.cc.cc.lib])}:$dir/inputstream.adaptive"
     '';
