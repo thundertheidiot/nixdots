@@ -15,8 +15,8 @@
 
       workstation.enable = true;
       workstation.laptop = true;
-      workstation.utils = "kde";
-      workstation.environment = "plasma";
+      workstation.utils = "generic/gtk";
+      workstation.environment = "hyprland";
       workstation.plasma.tilingwm = true;
 
       setup.userMachine.enable = true;
@@ -28,7 +28,7 @@
       setup.awesomeWM.enable = false;
       setup.firefox.enable = true;
       setup.gaming.enable = false;
-      setup.tv.enable = false;
+      setup.tv.enable = true;
 
       monitors = [
         {
