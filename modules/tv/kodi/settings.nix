@@ -12,6 +12,10 @@
       "/settings/setting[@id='locale.timezone']" = "Europe/Helsinki";
       "/settings/setting[@id='locale.use24hourclock']" = true;
     };
+
+    "userdata/addon_data/plugin.video.youtube.xml" = {
+      "/settings/@version" = 2;
+    };
   };
 
   ensureDir = file: "( mkdir -p \"$(dirname ${file})\"; touch ${file} )";

@@ -27,7 +27,7 @@ fn open_port(serial_port: &str) -> SystemPort {
             Ok(mut port) => {
                 // seems safe idk
                 port.configure(&SETTINGS).unwrap();
-                port.set_timeout(Duration::from_secs(1)).unwrap();
+                port.set_timeout(Duration::from_millis(10)).unwrap();
                 return port;
             }
             Err(e) => {
@@ -75,37 +75,52 @@ fn main() {
         println!("Port {:?} opened successfully opened.", serial_port);
 
         let mut failed_to_fill_count: u8 = 0;
+        let mut previous_repeat_bit: u8 = 0;
 
         loop {
-            let data = read_i8(&mut port);
+            let data = robust_arduino_serial::read_i16(&mut port);
             match data {
                 Ok(byte) => {
                     use crate::buttons::KeyCode::*;
-                    dbg!(byte);
-                    match get_keycode(byte) {
-                        Key(c) => match device.click(c) {
-                            Err(e) => println!(
-                                "Warn: Unable to press keycode {c}, error message: {}.",
-                                e.to_string().red()
-                            ),
-                            _ => (),
-                        },
-                        Unimplemented => {
-                            dbg!("Unimplemented key");
-                        }
-                        Invalid => println!("Warn: Invalid key received."),
-                        Suspend => {
-                            match std::fs::write("/sys/power/state", "mem") {
-                                Ok(_) => (),
-                                Err(e) => println!(
-                                    "Error: {}, unable to suspend system.",
-                                    e.to_string().red()
-                                ),
-                            };
+
+                    let character: i8 = (byte & 0xff) as i8;
+                    let repeat: u8 = (byte >> 8) as u8;
+
+                    if previous_repeat_bit == 0 && repeat == 1 {
+                        previous_repeat_bit = repeat;
+                    // ignore first repeated press
+                    } else {
+                        previous_repeat_bit = repeat;
+
+                        match get_keycode(character) {
+                            Key(c) => {
+                                // let _ = device.click(c);
+                                match device.click(c) {
+                                    Err(e) => println!(
+                                        "Warn: Unable to press keycode {c}, error message: {}.",
+                                        e.to_string().red()
+                                    ),
+                                    _ => (),
+                                }
+                            }
+                            Unimplemented => {
+                                dbg!("Unimplemented key");
+                            }
+                            Invalid => println!("Warn: Invalid key received."),
+                            Suspend => {
+                                match std::fs::write("/sys/power/state", "mem") {
+                                    Ok(_) => (),
+                                    Err(e) => println!(
+                                        "Error: {}, unable to suspend system.",
+                                        e.to_string().red()
+                                    ),
+                                };
+                            }
                         }
                     }
                 }
-                Err(e) => {
+                Err(ref e) => {
+                    // dbg!(e);
                     if failed_to_fill_count > 100 {
                         println!("Error: Unable to read serial device for 100 consecutive tries, attempting to reconnect...");
                         break;
@@ -115,7 +130,7 @@ fn main() {
                     }
                 }
             }
-            thread::sleep(Duration::from_millis(50));
+            // println!("frame");
         }
     }
 }

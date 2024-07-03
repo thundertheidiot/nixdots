@@ -25,10 +25,9 @@ void loop() {
     if (IrReceiver.decodedIRData.protocol == NEC) {
       int data = IrReceiver.decodedIRData.command;
       IrReceiver.resume();
-      //IrReceiver.printIRResultShort(&Serial);
+      IrReceiver.printIRResultShort(&Serial);
 
       send(data);
-      delay(DELAY);
     } else {
       IrReceiver.resume();
     }
