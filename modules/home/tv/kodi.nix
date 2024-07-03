@@ -32,22 +32,22 @@ in
       })
       "${pkgs.kodiPackages.websocket}${addonDir}/script.module.websocket"
       "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
-      "${pkgs."2311".kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
-      # "${(pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: { # remove extraInstallPhase which links a nonexistent so file
-      #   installPhase = let
-      #     n = "inputstream.adaptive";
-      #     version = prev.version;
-      #   in ''
-      #     runHook preInstall
+      # "${pkgs."2311".kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
+      "${(pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: { # remove extraInstallPhase which links a nonexistent so file
+        installPhase = let
+          n = "inputstream.adaptive";
+          version = prev.version;
+        in ''
+          runHook preInstall
 
-      #     make install
+          make install
 
-      #     [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
-      #     [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
+          [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
+          [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
 
-      #     runHook postInstall
-      #   '';
-      # }))}${addonDir}/inputstream.adaptive"
+          runHook postInstall
+        '';
+      }))}${addonDir}/inputstream.adaptive"
       "${pkgs.kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
       "${pkgs.kodiPackages.netflix}${addonDir}/plugin.video.netflix"
       "${pkgs.kodiPackages.jellyfin}${addonDir}/plugin.video.jellyfin"
@@ -100,8 +100,8 @@ in
       })
       (pkgs.fetchgit {
         url = "https://github.com/b-jesch/skin.estuary.modv2";
-        rev = "25d9514ad194a1161f0289fb793f725b7d9cd536";
-        hash = "sha256-N1yLI8T8PxaldQP1z8TFv+XLYsWSBhnw9wa1hcpVcZM=";
+        rev = "ff20d3754c0d042028be97059ae5af28135e553f";
+        hash = "sha256-Lrv7QHz65PwJw197ANdP3/CREGybgl3mFA6R/S8SfO4=";
       })
       ./script.firefox.launcher
     ];
@@ -133,8 +133,8 @@ in
 
       mkdir -p "$out/bin"
       # old kodi for now
-      makeWrapper "${pkgs."2311".kodi-wayland}/bin/kodi" "$out/bin/kodi_with_addons" \
-       --set LIBVA_DRIVER_NAME i965 \
+       # --set LIBVA_DRIVER_NAME i965 \
+      makeWrapper "${pkgs.kodi-wayland}/bin/kodi" "$out/bin/kodi_with_addons" \
        --prefix PYTHONPATH : ${pythonPath}:$addonPythonPath \
        --prefix LD_LIBRARY_PATH ":" "${lib.makeLibraryPath (with pkgs; [glib nspr nss stdenv.cc.cc.lib])}:$dir/inputstream.adaptive"
     '';
