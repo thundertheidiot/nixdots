@@ -1,7 +1,6 @@
 use crate::buttons::get_keycode;
 use crate::serial::SystemPort;
 use mouse_keyboard_input::VirtualDevice;
-use robust_arduino_serial::read_i8;
 use serial;
 use serial::SerialPort;
 use std::io::ErrorKind;

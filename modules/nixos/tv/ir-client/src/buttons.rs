@@ -20,12 +20,12 @@ pub fn get_keycode(code: i8) -> KeyCode {
         86 => Key(KEY_VOLUMEUP),
         87 => Key(KEY_VOLUMEDOWN),
 
-        88 => Unimplemented, // TODO CHUP
-        89 => Unimplemented, // TODO CHDN
+        88 => Key(KEY_EQUAL), // TODO CHUP
+        89 => Key(KEY_MINUS), // TODO CHDN
 
-        -105 => Key(KEY_BACK),
-        -102 => Key(KEY_PLAYPAUSE),
-        -103 => Key(KEY_FORWARD),
+        -105 => Key(KEY_R),     // rewind
+        -102 => Key(KEY_SPACE), // PLAYPAUSE
+        -103 => Key(KEY_F),     // forward
 
         -107 => Key(KEY_ESC),
         -106 => Unimplemented, // TODO Menu
@@ -48,8 +48,8 @@ pub fn get_keycode(code: i8) -> KeyCode {
         -109 => Unimplemented, // TODO Guide
         -101 => Unimplemented, // TODO Rec
 
-        70 => Unimplemented, // TODO Red
-        71 => Unimplemented, // TODO Yellow
+        70 => Key(KEY_MUTE), // TODO Red
+        71 => Key(KEY_F8),   // TODO Yellow
         72 => Unimplemented, // TODO Green
         73 => Unimplemented, // TODO Blue
 
