@@ -14,7 +14,7 @@
       timeZone = "Europe/Helsinki";
 
       workstation.enable = true;
-      workstation.laptop = true;
+      workstation.laptop = false;
       workstation.utils = "generic/gtk";
       workstation.environment = "hyprland";
       workstation.plasma.tilingwm = true;
