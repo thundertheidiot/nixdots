@@ -89,7 +89,10 @@ in {
       exec-once = [
         "${createSettings}/bin/createSettings && ${customKodi}/bin/kodi_with_addons -fs"
       ];
-      bind = ["ALT, F4, killactive"];
+      bind = [
+        "ALT, F4, killactive"
+        "SUPER, F12, ${customKodi}/bin/kodi_with_addons -fs"
+      ];
     };
 
     programs.firefox.profiles."tv" = {

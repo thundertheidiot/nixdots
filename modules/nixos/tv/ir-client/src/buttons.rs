@@ -50,10 +50,10 @@ pub fn get_keycode(code: i8) -> KeyCode {
         -109 => Unimplemented, // TODO Guide
         -101 => Unimplemented, // TODO Rec
 
-        70 => Key(KEY_MUTE),                        // Red - toggle mute
-        71 => Key(KEY_F8),                          // Yellow - kodi toggle mute
-        72 => Unimplemented,                        // TODO Green
-        73 => Command("su -c kodi_with_addons tv"), // TODO Blue
+        70 => Key(KEY_MUTE),                         // Red - toggle mute
+        71 => Key(KEY_F8),                           // Yellow - kodi toggle mute
+        72 => Unimplemented,                         // TODO Green
+        73 => KeyCombo(vec![KEY_LEFTMETA, KEY_F12]), // TODO Blue
 
         115 => Suspend,
 
