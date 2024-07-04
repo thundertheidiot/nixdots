@@ -102,6 +102,32 @@ fn main() {
                                     _ => (),
                                 }
                             }
+                            KeyCombo(c) => {
+                                for k in &c {
+                                    match device.press(*k) {
+                                        Err(e) => println!(
+                                            "Warn: Unable to press keycode {k}, error message: {}.",
+                                            e.to_string().red()
+                                        ),
+                                        _ => (),
+                                    }
+                                }
+                                thread::sleep(Duration::from_millis(100));
+                                for k in c {
+                                    match device.release(k) {
+                                        Err(e) => println!(
+                                            "Warn: Unable to release keycode {k}, error message: {}.",
+                                            e.to_string().red()
+                                        ),
+                                        _ => (),
+                                    }
+                                }
+                            }
+                            Command(command) => {
+                                let _ = std::process::Command::new("bash")
+                                    .args(["-c", command])
+                                    .output();
+                            }
                             Unimplemented => {
                                 dbg!("Unimplemented key");
                             }

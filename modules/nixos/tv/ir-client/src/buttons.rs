@@ -3,6 +3,8 @@ use mouse_keyboard_input::key_codes::*;
 #[derive(Debug)]
 pub enum KeyCode {
     Key(u16),
+    KeyCombo(Vec<u16>),
+    Command(&'static str),
     Invalid,
     Unimplemented,
     Suspend,
@@ -28,8 +30,8 @@ pub fn get_keycode(code: i8) -> KeyCode {
         -103 => Key(KEY_F),     // forward
 
         -107 => Key(KEY_ESC),
-        -106 => Unimplemented, // TODO Menu
-        -108 => Unimplemented, // TODO Screen icon?
+        -106 => Key(KEY_ESC),                        // TODO Menu
+        -108 => KeyCombo(vec![KEY_LEFTALT, KEY_F4]), // TODO Screen icon?
 
         97 => Key(KEY_1),
         98 => Key(KEY_2),
@@ -40,18 +42,18 @@ pub fn get_keycode(code: i8) -> KeyCode {
         103 => Key(KEY_7),
         104 => Key(KEY_8),
         105 => Key(KEY_9),
-        96 => Key(KEY_10),
 
         112 => Key(KEY_BACKSPACE),
-        -111 => Unimplemented,
+        96 => Key(KEY_10),
+        -111 => Key(KEY_T), // TXT
 
         -109 => Unimplemented, // TODO Guide
         -101 => Unimplemented, // TODO Rec
 
-        70 => Key(KEY_MUTE), // TODO Red
-        71 => Key(KEY_F8),   // TODO Yellow
-        72 => Unimplemented, // TODO Green
-        73 => Unimplemented, // TODO Blue
+        70 => Key(KEY_MUTE),                        // Red - toggle mute
+        71 => Key(KEY_F8),                          // Yellow - kodi toggle mute
+        72 => Unimplemented,                        // TODO Green
+        73 => Command("su -c kodi_with_addons tv"), // TODO Blue
 
         115 => Suspend,
 
