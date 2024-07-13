@@ -66,20 +66,9 @@
       clang
       gcc
       cryptsetup
-    ];
 
-    # services.keyd = {
-    #   enable = true;
-    #   keyboards.default.ids = [
-    #     "*"
-    #   ];
-    #   keyboards.default.settings = {
-    #     main = {
-    #       capslock = "overload(meta, esc)";
-    #       # esc = "overload(meta, esc)";
-    #     };
-    #   };
-    # };
+      nh
+    ];
 
     services.openssh = {
       enable = true;
