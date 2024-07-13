@@ -17,6 +17,8 @@
       workstation.utils = "generic/gtk";
       workstation.environment = "hyprland";
 
+      workstation.keyd.enable = true;
+
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''

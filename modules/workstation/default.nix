@@ -7,6 +7,7 @@ let
     (import ./environment/default.nix)
     (import ./theming.nix)
     (import ./laptop.nix)
+    (import ./keyd.nix)
   ];
 in {
   system = {

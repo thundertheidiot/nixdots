@@ -66,6 +66,14 @@
       lib.mdDoc "Configures kodi as a tv frontend thingy"
     );
 
+    workstation.keyd.enable = lib.mkEnableOption "Keyboard settings through keyd.";
+    workstation.keyd.ids = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = ["*"];
+      example = ["1ea7:0907"];
+      description = "Device ids for keyd";
+    };
+
     workstation.laptop = lib.mkEnableOption "Power management.";
 
     workstation.utils = lib.mkOption {
