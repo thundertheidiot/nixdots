@@ -17,6 +17,8 @@
       workstation.utils = "generic/gtk";
       workstation.environment = "hyprland";
 
+      workstation.keyd.enable = true;
+
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''
@@ -65,6 +67,8 @@
     boot.initrd.kernelModules = [];
     boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
+
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/85995899-d984-4241-87b4-2fc77e05f66f";

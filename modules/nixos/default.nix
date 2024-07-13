@@ -63,24 +63,23 @@
       neovim
       wget
       git
-      keyd
       clang
       gcc
       cryptsetup
     ];
 
-    services.keyd = {
-      enable = true;
-      keyboards.default.ids = [
-        "*"
-      ];
-      keyboards.default.settings = {
-        main = {
-          capslock = "overload(meta, esc)";
-          # esc = "overload(meta, esc)";
-        };
-      };
-    };
+    # services.keyd = {
+    #   enable = true;
+    #   keyboards.default.ids = [
+    #     "*"
+    #   ];
+    #   keyboards.default.settings = {
+    #     main = {
+    #       capslock = "overload(meta, esc)";
+    #       # esc = "overload(meta, esc)";
+    #     };
+    #   };
+    # };
 
     services.openssh = {
       enable = true;

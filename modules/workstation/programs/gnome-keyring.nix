@@ -9,15 +9,15 @@
       services.gnome.gnome-keyring.enable = true;
       programs.seahorse.enable = true;
 
-      programs.ssh.askPassword = lib.mkForce "${pkgs.gnome.seahorse}/libexec/seahorse/ssh-askpass";
+      programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
 
       security.pam.services.gnome-keyring = {
         name = "gnome-keyring";
         enableGnomeKeyring = true;
         text = ''
-          auth optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
-          session optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
-          password optional ${pkgs.gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
+          auth optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so
+          session optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
+          password optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so
         '';
       };
     };
@@ -30,8 +30,8 @@
   }:
     lib.mkIf (config.workstation.enable) {
       home.packages = with pkgs; [
-        gnome.seahorse
-        gnome.gnome-keyring
+        seahorse
+        gnome-keyring
       ];
 
       services.gnome-keyring = {
