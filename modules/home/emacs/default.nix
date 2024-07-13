@@ -7,6 +7,7 @@
   config = lib.mkIf (config.setup.userMachine.enable) (with config; {
     home.packages = with pkgs; [
       nil # nix language server
+      clang-tools # clangd + clang-format
     ];
 
     services.pantalaimon = {

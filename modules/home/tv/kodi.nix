@@ -33,7 +33,8 @@ in
       "${pkgs.kodiPackages.websocket}${addonDir}/script.module.websocket"
       "${pkgs.kodiPackages.six}${addonDir}/script.module.six"
       # "${pkgs."2311".kodiPackages.inputstream-adaptive}${addonDir}/inputstream.adaptive"
-      "${(pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: { # remove extraInstallPhase which links a nonexistent so file
+      "${(pkgs.kodiPackages.inputstream-adaptive.overrideAttrs (prev: {
+        # remove extraInstallPhase which links a nonexistent so file
         installPhase = let
           n = "inputstream.adaptive";
           version = prev.version;

@@ -116,6 +116,8 @@ in {
 
           ansel
 
+          qmk
+
           (pkgs."2311".blender)
 
           obs-studio

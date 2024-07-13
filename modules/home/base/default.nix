@@ -64,6 +64,8 @@
 
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
 
+    QMK_HOME = "${config.homeDirectory}/.local/src/qmk";
+
     # Settings
 
     MOZ_USE_XINPUT2 = "1";

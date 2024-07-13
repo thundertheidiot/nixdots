@@ -1,6 +1,7 @@
 let
   modules = [
   ];
+  kodiDir = config: "${config.homeDirectory}/.local/share/kodi/";
 in {
   system = {
     config,
@@ -57,7 +58,7 @@ in {
 
       programs.kodi = {
         enable = true;
-        # datadir = "${config.xdg.dataHome}/kodi";
+        datadir = kodiDir config;
       };
     };
   };

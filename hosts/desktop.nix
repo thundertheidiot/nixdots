@@ -24,7 +24,7 @@
       setup.swayfx.enable = true;
       setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''
-        monitor=DP-3, 2560x1440@144, 1920x0, 1, vrr,2
+        monitor=DP-3, 2560x1440@144, 1920x0, 1, vrr,0
         monitor=DP-1, 1920x1080@144, 0x0, 1, vrr,0
         source=~/.config/hypr/crt.conf
       '';

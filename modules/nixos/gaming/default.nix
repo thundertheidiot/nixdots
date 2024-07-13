@@ -33,7 +33,7 @@
       # Mouse movement = spinbot
       # https://github.com/ValveSoftware/gamescope/issues/1184
       # https://github.com/ValveSoftware/gamescope/issues/1141
-      package = pkgs.gamescope.overrideAttrs (final: prev: rec {
+      package = pkgs."2405".gamescope.overrideAttrs (final: prev: rec {
         version = "3.14.0";
 
         src = pkgs.fetchFromGitHub {
