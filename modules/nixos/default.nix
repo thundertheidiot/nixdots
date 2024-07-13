@@ -63,7 +63,6 @@
       neovim
       wget
       git
-      keyd
       clang
       gcc
       cryptsetup

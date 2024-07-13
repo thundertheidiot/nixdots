@@ -44,7 +44,7 @@
           (pkgs.cinnamon.nemo-with-extensions.overrideAttrs (final: prev: {
             extensions = with pkgs.cinnamon; [nemo-fileroller];
           }))
-          gnome.file-roller
+          file-roller
           nsxiv # image viewer
         ];
 
