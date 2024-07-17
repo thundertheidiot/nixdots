@@ -15,12 +15,10 @@
 
       workstation.enable = true;
       workstation.utils = "generic/gtk";
-      workstation.environment = "hyprland";
+      workstation.environment = ["hyprland"];
 
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;
-      setup.hyprland.extraConfig = "";
-      setup.hyprland.extraAutostart = [];
       setup.awesomeWM.enable = false;
       setup.firefox.enable = true;
       setup.gaming.enable = false;

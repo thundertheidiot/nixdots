@@ -5,7 +5,7 @@
     pkgs,
     ...
   }:
-    lib.mkIf (config.workstation.environment == "hyprland") {
+    lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {
       programs.hyprland.enable = true;
 
       services.displayManager.sessionPackages = with pkgs; [
@@ -21,7 +21,7 @@
     inputs,
     ...
   }:
-    lib.mkIf (config.workstation.environment == "hyprland") (
+    lib.mkIf (builtins.elem "hyprland" config.workstation.environment) (
       let
         colorsNoHash = mlib.colorsNoHash config;
 
@@ -85,7 +85,8 @@
           package = pkgs.hyprland;
 
           plugins = [
-            inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
+            (lib.mkIf (config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1)
+              inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces)
           ];
 
           extraConfig = config.setup.hyprland.extraConfig;
@@ -98,6 +99,12 @@
               count = 10;
               keep_focused = 1;
             };
+
+            debug.disable_logs = false;
+
+            monitor = lib.mkIf (config.monitors != []) (builtins.map (mon: let
+              m = mlib.getMon mon;
+            in with m; "${name}, ${width}x${height}@${refresh}, ${x}x${y}, 1${if (hyprlandExtra != "") then ", ${hyprlandExtra}" else ""}") config.monitors);
 
             windowrulev2 = [
               # "workspace 9 silent,class:(steam)"

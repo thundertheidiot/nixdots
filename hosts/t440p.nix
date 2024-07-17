@@ -15,24 +15,18 @@
 
       workstation.enable = true;
       workstation.utils = "generic/gtk";
-      workstation.environment = "hyprland";
+      workstation.environment = ["hyprland"];
 
       workstation.keyd.enable = true;
 
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;
-      setup.hyprland.extraConfig = ''
-        monitor=eDP-1,1920x1080@60,0x0,1
-      '';
       setup.hyprland.extraAutostart = [];
       setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
       setup.gaming.enable = true;
       setup.tv.enable = false;
       setup.laptop.enable = true;
-
-      # Testing
-      setup.phone = true;
 
       monitors = [
         {

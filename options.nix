@@ -84,9 +84,9 @@
     };
 
     workstation.environment = lib.mkOption {
-      type = lib.types.enum ["hyprland" "plasma"]; # TODO: awesomewm, swayfx, qtile maybe
-      default = "hyprland";
-      example = "plasma";
+      type = lib.types.listOf (lib.types.enum ["hyprland" "plasma" "cosmic"]);
+      default = ["hyprland"];
+      example = ["plasma"];
       description = "What \"desktop environment\" to install and configure.";
     };
 
@@ -109,6 +109,8 @@
       example = "monitor=DP-3, 2560x1440@144, 0x0, 1";
       description = "Extra configuration for hyprland.";
     };
+
+    setup.hyprland.forceMultiMonitor = lib.mkEnableOption "Enable multi monitor workspaces plugin, even if multiple monitors aren't present.";
 
     setup.hyprland.extraAutostart = lib.mkOption {
       default = [];

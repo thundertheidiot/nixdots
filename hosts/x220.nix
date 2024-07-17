@@ -16,14 +16,11 @@
       workstation.enable = true;
       workstation.laptop = false;
       workstation.utils = "generic/gtk";
-      workstation.environment = "hyprland";
+      workstation.environment = ["hyprland"];
       workstation.plasma.tilingwm = true;
 
       setup.userMachine.enable = true;
       setup.hyprland.enable = true;
-      setup.hyprland.extraConfig = ''
-        monitor=LVDS-1,1366x768@60,0x0,1
-      '';
       setup.hyprland.extraAutostart = [];
       setup.awesomeWM.enable = false;
       setup.firefox.enable = true;

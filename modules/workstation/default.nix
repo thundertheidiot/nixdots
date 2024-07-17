@@ -32,6 +32,7 @@ in {
 
       virtualisation.docker.enable = true;
 
+      # vpn
       networking.firewall.checkReversePath = false;
 
       security.polkit.enable = true;

@@ -20,12 +20,14 @@
 
   getMon = {
     name,
-    width ? 1920,
-    height ? 1080,
-    refresh ? 60,
-    x ? 0,
-    y ? 0,
+    width ? "1920",
+    height ? "1080",
+    refresh ? "60",
+    x ? "0",
+      y ? "0",
+      scale ? "1",
+      hyprlandExtra ? "",
   }: {
-    inherit name width height refresh x y;
+    inherit name width height refresh x y hyprlandExtra;
   };
 }
