@@ -66,6 +66,10 @@
             "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | swappy -f -
           }
         '';
+
+        splitMonitorWorkspaces = (config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1);
+        workspace = if splitMonitorWorkspaces then "split-workspace" else "workspace";
+        moveToWorkspaceSilent = if splitMonitorWorkspaces then "split-movetoworkspacesilent" else "movetoworkspacsilent";
       in {
         home.packages = with pkgs; [
           screenshot
@@ -95,16 +99,21 @@
             "$mod" = "SUPER";
             "$shiftmod" = "SUPER_SHIFT";
 
+            debug.disable_logs = false;
+
             plugin.split-monitor-workspaces = {
               count = 10;
               keep_focused = 1;
             };
 
-            debug.disable_logs = false;
-
             monitor = lib.mkIf (config.monitors != []) (builtins.map (mon: let
               m = mlib.getMon mon;
             in with m; "${name}, ${width}x${height}@${refresh}, ${x}x${y}, 1${if (hyprlandExtra != "") then ", ${hyprlandExtra}" else ""}") config.monitors);
+
+            workspace = lib.mkIf (!splitMonitorWorkspaces && config.monitors != []) (builtins.map (n: let
+              mon = (builtins.head config.monitors).head;
+            in "${n}, monitor:${mon}")
+            );
 
             windowrulev2 = [
               # "workspace 9 silent,class:(steam)"
@@ -260,27 +269,27 @@
               "$mod, F, fullscreen, 1"
               "$shiftmod, F, fullscreen"
 
-              "$mod, 1, split-workspace, 1"
-              "$mod, 2, split-workspace, 2"
-              "$mod, 3, split-workspace, 3"
-              "$mod, 4, split-workspace, 4"
-              "$mod, 5, split-workspace, 5"
-              "$mod, 6, split-workspace, 6"
-              "$mod, 7, split-workspace, 7"
-              "$mod, 8, split-workspace, 8"
-              "$mod, 9, split-workspace, 9"
-              "$mod, 0, split-workspace, 0"
+              "$mod, 1, ${workspace}, 1"
+              "$mod, 2, ${workspace}, 2"
+              "$mod, 3, ${workspace}, 3"
+              "$mod, 4, ${workspace}, 4"
+              "$mod, 5, ${workspace}, 5"
+              "$mod, 6, ${workspace}, 6"
+              "$mod, 7, ${workspace}, 7"
+              "$mod, 8, ${workspace}, 8"
+              "$mod, 9, ${workspace}, 9"
+              "$mod, 0, ${workspace}, 0"
 
-              "$shiftmod, 1, split-movetoworkspacesilent, 1"
-              "$shiftmod, 2, split-movetoworkspacesilent, 2"
-              "$shiftmod, 3, split-movetoworkspacesilent, 3"
-              "$shiftmod, 4, split-movetoworkspacesilent, 4"
-              "$shiftmod, 5, split-movetoworkspacesilent, 5"
-              "$shiftmod, 6, split-movetoworkspacesilent, 6"
-              "$shiftmod, 7, split-movetoworkspacesilent, 7"
-              "$shiftmod, 8, split-movetoworkspacesilent, 8"
-              "$shiftmod, 9, split-movetoworkspacesilent, 9"
-              "$shiftmod, 0, split-movetoworkspacesilent, 0"
+              "$shiftmod, 1, ${moveToWorkspaceSilent}, 1"
+              "$shiftmod, 2, ${moveToWorkspaceSilent}, 2"
+              "$shiftmod, 3, ${moveToWorkspaceSilent}, 3"
+              "$shiftmod, 4, ${moveToWorkspaceSilent}, 4"
+              "$shiftmod, 5, ${moveToWorkspaceSilent}, 5"
+              "$shiftmod, 6, ${moveToWorkspaceSilent}, 6"
+              "$shiftmod, 7, ${moveToWorkspaceSilent}, 7"
+              "$shiftmod, 8, ${moveToWorkspaceSilent}, 8"
+              "$shiftmod, 9, ${moveToWorkspaceSilent}, 9"
+              "$shiftmod, 0, ${moveToWorkspaceSilent}, 0"
 
               "$mod, period, focusmonitor, r"
               "$mod, comma, focusmonitor, l"
