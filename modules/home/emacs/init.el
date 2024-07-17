@@ -9,10 +9,6 @@
 (unless (file-directory-p emacs-data-directory)
   (make-directory emacs-data-directory))
 
-(setq extrapkgs-dir (expand-file-name "extrapkgs/" emacs-data-directory))
-(unless (file-directory-p extrapkgs-dir)
-  (make-directory extrapkgs-dir))
-
 ;; Cleanup
 (setq backup-directory-alist `(("." . ,(expand-file-name "backup-files" emacs-data-directory))))
 
@@ -176,10 +172,6 @@
 	       saved-window-configurations)
 	      saved-window-configurations)))
 
-
-;; (load (expand-file-name "eglot-booster.el" extrapkgs-dir))
-;; (require 'eglot-booster)
-;; (load (expand-file-name "indent-bars.el" extrapkgs-dir))
 
 ;; Evil
 ;; (require 'undo-fu)
