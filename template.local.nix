@@ -8,8 +8,6 @@
     hostName = "desktop";
     timeZone = "Europe/Helsinki";
 
-    setup.userMachine.enable = true;
-    setup.hyprland.enable = true;
     setup.hyprland.extraConfig = ''
       monitor=DP-3, 2560x1440@144, 1920x0, 1
       monitor=DP-1, 1920x1080@144, 0x0, 1

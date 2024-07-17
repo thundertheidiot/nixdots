@@ -1,7 +1,9 @@
-{
+let
   systemArch = "x86_64-linux";
   username = "thunder";
   homeDirectory = "/home/thunder";
+in {
+  inherit systemArch username homeDirectory;
 
   options = {
     config,
@@ -9,7 +11,7 @@
     ...
   }: {
     config = {
-      username = "thunder";
+      username = username;
       hostName = "desktop";
       timeZone = "Europe/Helsinki";
 
@@ -20,16 +22,12 @@
       workstation.plasma.tilingwm = true;
       workstation.environment = ["hyprland"];
 
-      setup.userMachine.enable = true;
-      setup.swayfx.enable = true;
-      setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''
         source=~/.config/hypr/crt.conf
       '';
       setup.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
       ];
-      setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
       setup.gaming.enable = true;
       setup.tv.enable = false;

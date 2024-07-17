@@ -19,10 +19,7 @@
       workstation.environment = ["hyprland"];
       workstation.plasma.tilingwm = true;
 
-      setup.userMachine.enable = true;
-      setup.hyprland.enable = true;
       setup.hyprland.extraAutostart = [];
-      setup.awesomeWM.enable = false;
       setup.firefox.enable = true;
       setup.gaming.enable = false;
       setup.tv.enable = true;

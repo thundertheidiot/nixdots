@@ -44,16 +44,16 @@
       example = [
         {
           name = "DP-3";
-          width = 2560;
-          height = 1440;
-          refresh = 144;
-          x = 1920;
+          width = "2560";
+          height = "1440";
+          refresh = "144";
+          x = "1920";
         }
         {
           name = "DP-1";
-          width = 1920;
-          height = 1080;
-          refresh = 144;
+          width = "1920";
+          height = "1080";
+          refresh = "144";
         }
       ];
     };
@@ -92,18 +92,6 @@
 
     workstation.plasma.tilingwm = lib.mkEnableOption "Configure plasma into a tiling wm environment.";
 
-    setup.userMachine.enable = lib.mkEnableOption (
-      lib.mdDoc "Base setup for a non server machine, for example a login manager, gui programs, gtk theme, etc."
-    );
-
-    setup.hyprland.enable = lib.mkEnableOption (
-      lib.mdDoc "Hyprland windowmanager."
-    );
-
-    setup.swayfx.enable = lib.mkEnableOption (
-      lib.mdDoc "Swayfx windowmanager."
-    );
-
     setup.hyprland.extraConfig = lib.mkOption {
       default = "";
       example = "monitor=DP-3, 2560x1440@144, 0x0, 1";
@@ -118,10 +106,6 @@
       example = ["gajim"];
       description = "Extra exec-once lines for hyprland.";
     };
-
-    setup.awesomeWM.enable = lib.mkEnableOption (
-      lib.mdDoc "AwesomeWM windowmanager."
-    );
 
     setup.firefox.enable = lib.mkEnableOption (
       lib.mdDoc "Nix-managed firefox."
@@ -142,8 +126,6 @@
     setup.desktop.enable = lib.mkEnableOption (
       lib.mdDoc "Desktop specific things"
     );
-
-    setup.phone = lib.mkEnableOption (lib.mdDoc "Phone setup");
 
     setup.gpu = lib.mkOption {
       type = lib.types.enum ["amd" "nvidia" "intel" "none"];
