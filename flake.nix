@@ -60,8 +60,14 @@
               networking.hostName = config.hostName;
 
               nix.settings = {
-                substituters = ["https://hyprland.cachix.org"];
-                trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+                substituters = [
+                  "https://hyprland.cachix.org"
+                  "https://cosmic.cachix.org/"
+                ];
+                trusted-public-keys = [
+                  "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+                  "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+                ];
               };
 
               nixpkgs = {
@@ -113,6 +119,7 @@
 
               imports = [
                 inputs.lix-module.nixosModules.default # lix
+                inputs.cosmic.nixosModules.default
                 ./modules/nixos
               ];
 
@@ -171,6 +178,11 @@
 
     plasma-manager = {
       url = "github:pjones/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
