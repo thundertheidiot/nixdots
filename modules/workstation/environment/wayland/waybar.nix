@@ -6,7 +6,7 @@
 }: let
   colors = mlib.colors config;
 in {
-  config = lib.mkIf (config.workstation.environment == "hyprland") {
+  config = lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {
     programs.waybar = {
       enable = true;
       style = ''

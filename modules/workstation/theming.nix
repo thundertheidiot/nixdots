@@ -129,7 +129,7 @@
             };
           }
         ))
-        (lib.mkIf (config.workstation.environment == "plasma") {
+        (lib.mkIf (builtins.elem "plasma" config.workstation.environment) {
           home.packages = with pkgs; [
             qt-theme-package
             papirus-icon-theme

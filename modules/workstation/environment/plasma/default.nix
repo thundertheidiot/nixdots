@@ -5,7 +5,7 @@
     pkgs,
     ...
   }:
-    lib.mkIf (config.workstation.environment == "plasma")
+    lib.mkIf (builtins.elem "plasma" config.workstation.environment)
     {
       services.desktopManager.plasma6 = {
         enable = true;
@@ -22,6 +22,9 @@
         login.kwallet.enable = lib.mkForce false;
         kde.kwallet.enable = lib.mkForce false;
       };
+
+      # use gnome-keyring everywhere, because switching between gnome-keyring and kwallet constantly seems to break some things
+      # gnome-keyring seems to work better i think
     };
 
   home = {
@@ -30,7 +33,7 @@
     pkgs,
     ...
   }:
-    lib.mkIf (config.workstation.environment == "plasma") (
+    lib.mkIf (builtins.elem "plasma" config.workstation.environment) (
       let
         V = val: {
           value = val;

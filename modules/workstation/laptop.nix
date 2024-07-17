@@ -6,7 +6,7 @@
     ...
   }:
     lib.mkIf (config.workstation.laptop) (lib.mkMerge [
-      (lib.mkIf (config.workstation.environment != "plasma") {
+      (lib.mkIf (! (builtins.elem "plasma" config.workstation.environment)) {
         services.tlp = {
           enable = true;
           settings = {

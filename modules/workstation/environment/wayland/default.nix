@@ -12,7 +12,7 @@
       ./waybar.nix
     ];
 
-    config = lib.mkIf (config.workstation.environment == "hyprland") (
+    config = lib.mkIf (builtins.elem "hyprland" config.workstation.environment) (
       let
         colors = mlib.colors config;
       in {
