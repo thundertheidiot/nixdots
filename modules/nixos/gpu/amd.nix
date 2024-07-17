@@ -15,11 +15,11 @@
       vulkan-validation-layers
       vulkan-extension-layer
 
-      amdvlk
+      # amdvlk
     ];
 
     hardware.graphics.extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
+      # driversi686Linux.amdvlk
     ];
 
     environment.systemPackages = with pkgs; [
