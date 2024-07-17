@@ -3,6 +3,7 @@ let
     (import ./wayland)
     (import ./hyprland.nix)
     (import ./plasma)
+    (import ./cosmic.nix)
   ];
 in {
   system = {mlib, ...}: {
