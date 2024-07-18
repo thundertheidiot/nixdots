@@ -10,7 +10,7 @@
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
-    mlib = import ./lib {inherit lib;};
+    mlib = (import ./lib) {inherit lib;};
   in rec {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
@@ -22,11 +22,6 @@
         #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
         # ];
       };
-
-    # defaultPackage = builtins.listToAttrs (builtins.map (arch: {
-    #   name = arch;
-    #   value = home-manager.defaultPackage.arch;
-    # }) ["linux-x86_64" "aarch64-linux" "i686-linux"]);
 
     commonModules = cfg: [
       ./options.nix
@@ -116,6 +111,8 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = {inherit inputs mlib;};
+
+                backupFileExtension = "hm_backup";
 
                 sharedModules =
                   common
