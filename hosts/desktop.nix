@@ -83,16 +83,8 @@ in {
     boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
 
-    hardware.firmware = [
-      (pkgs.runCommandNoCC "crt-custom-edid" { compressFirmware = false; } ''
-        mkdir -p $out/lib/firmware/edid
-        cp "${./crt-edited.bin}" $out/lib/firmware/edid/crt.bin
-      '')
-    ];
-
     boot.kernelParams = [
       "video=1920x1080-32"
-      "drm.edid_firmware=HDMI-A-1:edid/crt.bin"
     ];
 
     hardware.ckb-next.enable = true;

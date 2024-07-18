@@ -142,6 +142,9 @@ in
           echo (set_color purple)$USER(set_color normal)'@'(set_color blue)(uname -n)(set_color normal) (pwd) '> '
         '';
       };
+      interactiveShellInit = let
+        nh-completions = (pkgs.runCommand "nh-completions" {} "${pkgs.nh}/bin/nh completions --shell fish > $out");
+      in (builtins.readFile nh-completions);
       shellAliases = {
         "m" = "mpv --no-video --loop=yes";
         "e" = "setsid -f emacsclient -c";
