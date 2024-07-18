@@ -105,7 +105,6 @@ in {
           mpc-cli
           libnotify
 
-          gajim
           cinny-desktop
           element-desktop
           signal-desktop
@@ -130,6 +129,15 @@ in {
 
           obs-studio
           kdePackages.kdenlive
+
+          (gajim.overrideAttrs (prev: {
+            nativeBuildInputs = prev.nativeBuildInputs ++ [pkgs.makeWrapper];
+
+            # fix gnome-keyring on kde
+            postInstall = prev.postInstall + ''
+              wrapProgram $out/bin/gajim --set XDG_CURRENT_DESKTOP GNOME
+            '';
+          }))
 
           (mumble.overrideAttrs (prev: {
             postFixup =

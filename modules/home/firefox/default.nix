@@ -37,6 +37,11 @@
           privacy-redirect
         ];
 
+        settings = {
+          "dom.private-attribution.submission.enabled" = false;
+          "browser.contentblocking.category" = "strict";
+        };
+
         search = {
           force = true;
           default = "DuckDuckGo";

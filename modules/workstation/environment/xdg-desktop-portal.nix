@@ -6,7 +6,10 @@
       ];
 
       xdg.portal.config = {
-        hyprland.default = "hyprland";
+        hyprland = {
+          default = "hyprland";
+          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+        };
       };
     })
     (lib.mkIf (builtins.elem "plasma" config.workstation.environment) {
@@ -14,7 +17,12 @@
         pkgs.kdePackages.xdg-desktop-portal-kde
       ];
 
-      xdg.portal.configPackages = [pkgs.kdePackages.xdg-desktop-portal-kde];
+      xdg.portal.config = {
+        kde = {
+          default = "kde";
+          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+        };
+      };
     })
     (lib.mkIf (builtins.elem "cosmic" config.workstation.environment) {
       xdg.portal.extraPortals = [
@@ -22,7 +30,10 @@
       ];
 
       xdg.portal.config = {
-        cosmic.default = "cosmic";
+        cosmic = {
+          default = "cosmic";
+          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+        };
       };
     })
   ];
