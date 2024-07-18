@@ -4,6 +4,7 @@ let
     (import ./hyprland.nix)
     (import ./plasma)
     (import ./cosmic.nix)
+    (import ./xdg-desktop-portal.nix)
   ];
 in {
   system = {mlib, ...}: {

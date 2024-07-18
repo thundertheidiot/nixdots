@@ -65,7 +65,13 @@ in {
 
       services.cpupower-gui.enable = true;
 
-      xdg.portal.enable = true;
+      xdg.portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+
+        config.common.default = "";
+      };
+        
       services.flatpak.enable = true;
 
       services.displayManager.sddm = lib.mkMerge [

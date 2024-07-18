@@ -98,21 +98,9 @@
 
                     hyprland = inputs.hyprland.packages.${final.system}.hyprland;
                     xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
-                    # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
-                    # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
+                    hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
+                    wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
                     # udis86 = inputs.hyprland.packages.${final.system}.udis86;
-
-                    # feels useless
-                    # kdePackages = prev.kdePackages // {
-                    #   kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
-                    #     patches = prev.patches ++ [
-                    #       (builtins.fetchurl {
-                    #         url = "https://invent.kde.org/plasma/kwin/-/merge_requests/5511.patch";
-                    #         sha256 = sha256:0bbv66f0hhkscn171d9xlhx1ghpds0a448n723i6hi6829wxf733;
-                    #       })
-                    #     ];
-                    #   });
-                    # };
                   })
                 ];
               };
@@ -120,6 +108,7 @@
               imports = [
                 inputs.lix-module.nixosModules.default # lix
                 inputs.cosmic.nixosModules.default
+                inputs.hyprland.nixosModules.default
                 ./modules/nixos
               ];
 

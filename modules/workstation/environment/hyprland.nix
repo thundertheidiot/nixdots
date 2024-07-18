@@ -3,10 +3,13 @@
     lib,
     config,
     pkgs,
+    inputs,
     ...
   }:
     lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {
-      programs.hyprland.enable = true;
+      programs.hyprland = {
+        enable = true;
+      };
 
       services.displayManager.sessionPackages = with pkgs; [
         hyprland

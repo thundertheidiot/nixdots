@@ -20,7 +20,7 @@ in {
       workstation.enable = true;
       workstation.utils = "generic/gtk";
       workstation.plasma.tilingwm = true;
-      workstation.environment = ["hyprland"];
+      workstation.environment = ["hyprland" "plasma"];
 
       setup.hyprland.extraConfig = ''
         source=~/.config/hypr/crt.conf
