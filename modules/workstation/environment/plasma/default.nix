@@ -12,19 +12,23 @@
         enableQt5Integration = true;
       };
 
+      # use gnome-keyring everywhere, because switching between gnome-keyring and kwallet constantly seems to break some things
+      # gnome-keyring seems to work better i think
       environment.plasma6.excludePackages = with pkgs; [
         libsForQt5.elisa
         kdePackages.kwallet
         kdePackages.kwallet-pam
+        kdePackages.kwalletmanager
       ];
 
+      system.activationScripts.sddmDisplayConfigLink.text = ''
+        ln -sfn ${config.homeDirectory}/.config/kwinoutputconfig.json /var/lib/sddm/.config/kwinoutputconfig.json
+      '';
+      
       security.pam.services = {
         login.kwallet.enable = lib.mkForce false;
         kde.kwallet.enable = lib.mkForce false;
       };
-
-      # use gnome-keyring everywhere, because switching between gnome-keyring and kwallet constantly seems to break some things
-      # gnome-keyring seems to work better i think
     };
 
   home = {
@@ -96,7 +100,7 @@
 
             shortcuts = {
               # Removing conflicting defaults
-              "kwin"."Overview" = [];
+              "kwin"."Overview" = "Meta";
               "kwin"."Show Desktop" = [];
 
               plasmashell = {
@@ -164,7 +168,7 @@
               "kwinrc"."Desktops"."Number" = V 9;
               "kwinrc"."Desktops"."Rows" = V 1;
               # Activities
-              "kwinrc"."ModifierOnlyShortcuts"."Meta" = V "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
+              # "kwinrc"."ModifierOnlyShortcuts"."Meta" = V "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
 
               "kwinrc"."org.kde.kdecoration2" = {
                 "ButtonsOnLeft" = V "S";

@@ -10,7 +10,7 @@
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
-    mlib = import ./lib {inherit lib;};
+    mlib = (import ./lib) {inherit lib;};
   in rec {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
@@ -22,11 +22,6 @@
         #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
         # ];
       };
-
-    # defaultPackage = builtins.listToAttrs (builtins.map (arch: {
-    #   name = arch;
-    #   value = home-manager.defaultPackage.arch;
-    # }) ["linux-x86_64" "aarch64-linux" "i686-linux"]);
 
     commonModules = cfg: [
       ./options.nix
@@ -98,21 +93,9 @@
 
                     hyprland = inputs.hyprland.packages.${final.system}.hyprland;
                     xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
-                    # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
-                    # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
+                    hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
+                    wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
                     # udis86 = inputs.hyprland.packages.${final.system}.udis86;
-
-                    # feels useless
-                    # kdePackages = prev.kdePackages // {
-                    #   kwin = prev.kdePackages.kwin.overrideAttrs (final: prev: {
-                    #     patches = prev.patches ++ [
-                    #       (builtins.fetchurl {
-                    #         url = "https://invent.kde.org/plasma/kwin/-/merge_requests/5511.patch";
-                    #         sha256 = sha256:0bbv66f0hhkscn171d9xlhx1ghpds0a448n723i6hi6829wxf733;
-                    #       })
-                    #     ];
-                    #   });
-                    # };
                   })
                 ];
               };
@@ -120,6 +103,7 @@
               imports = [
                 inputs.lix-module.nixosModules.default # lix
                 inputs.cosmic.nixosModules.default
+                inputs.hyprland.nixosModules.default
                 ./modules/nixos
               ];
 
@@ -127,6 +111,8 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = {inherit inputs mlib;};
+
+                backupFileExtension = "hm_backup";
 
                 sharedModules =
                   common

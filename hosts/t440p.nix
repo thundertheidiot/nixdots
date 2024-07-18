@@ -19,10 +19,7 @@
 
       workstation.keyd.enable = true;
 
-      setup.userMachine.enable = true;
-      setup.hyprland.enable = true;
       setup.hyprland.extraAutostart = [];
-      setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
       setup.gaming.enable = true;
       setup.tv.enable = false;

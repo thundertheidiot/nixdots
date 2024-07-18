@@ -81,7 +81,7 @@ in {
       createSettings
     ];
 
-    wayland.windowManager.hyprland.settings = lib.mkIf (config.setup.hyprland.enable) {
+    wayland.windowManager.hyprland.settings = lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {
       workspace = [
         "${specialWorkspace},rounding:false,border:false,shadow:false,gapsin:0,gapsout:0"
       ];

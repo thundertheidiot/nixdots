@@ -9,9 +9,6 @@
     username = "iso";
     hostName = "nixos-install";
     timeZone = "Europe/Helsinki";
-
-    setup.userMachine.enable = true;
-    setup.hyprland.enable = true;
   };
 
   home = {...}: {

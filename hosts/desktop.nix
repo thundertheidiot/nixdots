@@ -1,15 +1,18 @@
-{
+let
   systemArch = "x86_64-linux";
   username = "thunder";
   homeDirectory = "/home/thunder";
+in {
+  inherit systemArch username homeDirectory;
 
   options = {
     config,
-    pkgs,
+      pkgs,
+      mlib,
     ...
   }: {
     config = {
-      username = "thunder";
+      username = username;
       hostName = "desktop";
       timeZone = "Europe/Helsinki";
 
@@ -18,18 +21,14 @@
       workstation.enable = true;
       workstation.utils = "generic/gtk";
       workstation.plasma.tilingwm = true;
-      workstation.environment = ["hyprland"];
+      workstation.environment = ["hyprland" "plasma"];
 
-      setup.userMachine.enable = true;
-      setup.swayfx.enable = true;
-      setup.hyprland.enable = true;
       setup.hyprland.extraConfig = ''
         source=~/.config/hypr/crt.conf
       '';
       setup.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
       ];
-      setup.awesomeWM.enable = true;
       setup.firefox.enable = true;
       setup.gaming.enable = true;
       setup.tv.enable = false;
@@ -38,19 +37,21 @@
 
       setup.gpu = "amd";
 
-      monitors = [
+      monitors = mlib.mkMonitors [
         {
           name = "DP-3";
           width = "2560";
           height = "1440";
           refresh = "144";
           x = "1920";
+          hyprlandExtra = "vrr, 0";
         }
         {
           name = "DP-1";
           width = "1920";
           height = "1080";
           refresh = "144";
+          hyprlandExtra = "vrr, 0";
         }
       ];
     };
@@ -67,33 +68,33 @@
   system = {
     lib,
     config,
-    mlib,
+      mlib,
+      pkgs,
     ...
   }: {
     system.stateVersion = "24.05";
 
     boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
-    # boot.initrd.kernelModules = ["amdgpu"];
     boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
 
-    # services.xserver.enable = true;
-    # services.xserver.videoDrivers = ["amdgpu"];
+    hardware.firmware = [
+      (pkgs.runCommandNoCC "crt-custom-edid" { compressFirmware = false; } ''
+        mkdir -p $out/lib/firmware/edid
+        cp "${./crt-edited.bin}" $out/lib/firmware/edid/crt.bin
+      '')
+    ];
 
-    # hardware.opengl.enable = true;
-    # hardware.opengl.driSupport = true;
-    # hardware.opengl.driSupport32Bit = true;
-
-    # hardware.enableRedistributableFirmware = true;
+    boot.kernelParams = [
+      "video=1920x1080-32"
+      "drm.edid_firmware=HDMI-A-1:edid/crt.bin"
+    ];
 
     hardware.ckb-next.enable = true;
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    boot.kernelParams = [
-      "video=1920x1080-32"
-    ];
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/1ffc3323-6810-406d-b4f6-15d247602689";

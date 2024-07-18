@@ -25,8 +25,13 @@ in
 
         prismlauncher
 
-        retroarchBare
-        retroarch-assets
+        (retroarch.override {
+          cores = with libretro; [
+            snes9x
+            bsnes
+            parallel-n64
+          ];
+        })
       ]
       ++ (with pkgs.ataraxiasjel; [
         proton-ge
