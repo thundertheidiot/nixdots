@@ -53,6 +53,11 @@ in {
           refresh = "144";
           hyprlandExtra = "vrr, 0";
         }
+        {
+          name = "HDMI-A-1";
+          hyprlandExclude = true;
+          edid = ./crt-edited.bin;
+        }
       ];
     };
   };

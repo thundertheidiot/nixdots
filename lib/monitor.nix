@@ -8,10 +8,14 @@
       y ? "0",
       scale ? "1",
       hyprlandExtra ? "",
+      hyprlandExclude ? false,
       edid ? false,
       ...
   }: (mapAttrs (name: value:
-    if (name != edid) then
+    if ( # nonstringified attrs
+      name != "edid" &&
+      name != "hyprlandExclude"
+    ) then
       toString value
     else
       value
@@ -24,6 +28,7 @@
           x
           y
           hyprlandExtra
+          hyprlandExclude
           edid;
       });
 

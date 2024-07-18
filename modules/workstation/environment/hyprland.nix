@@ -16,6 +16,7 @@
       ];
     };
 
+  # Anything affected by monitor configuration is defined in modules/monitor.nix
   home = {
     mlib,
     lib,
@@ -91,10 +92,10 @@
           xwayland.enable = true;
           package = pkgs.hyprland;
 
-          plugins = [
-            (lib.mkIf (config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1)
-              inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces)
-          ];
+          # plugins = [
+          #   (lib.mkIf (config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1)
+          #     inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces)
+          # ];
 
           extraConfig = config.setup.hyprland.extraConfig;
 
@@ -103,21 +104,6 @@
             "$shiftmod" = "SUPER_SHIFT";
 
             debug.disable_logs = false;
-
-            plugin.split-monitor-workspaces = {
-              count = 10;
-              keep_focused = 1;
-            };
-
-            monitor = lib.mkIf (config.monitors != []) (builtins.map (mon: let
-              m = mlib.getMon mon;
-            in with m; "${name}, ${width}x${height}@${refresh}, ${x}x${y}, 1${if (hyprlandExtra != "") then ", ${hyprlandExtra}" else ""}") config.monitors);
-
-            workspace = lib.mkIf (!splitMonitorWorkspaces && config.monitors != []) (builtins.map (n: let
-              mon = (builtins.head config.monitors).name;
-            in "${builtins.toString n}, monitor:${mon}")
-              [1 2 3 4 5 6 7 8 9]
-            );
 
             windowrulev2 = [
               # "workspace 9 silent,class:(steam)"
@@ -272,28 +258,6 @@
               "$shiftmod, space, togglefloating"
               "$mod, F, fullscreen, 1"
               "$shiftmod, F, fullscreen"
-
-              "$mod, 1, ${hyprWorkspace}, 1"
-              "$mod, 2, ${hyprWorkspace}, 2"
-              "$mod, 3, ${hyprWorkspace}, 3"
-              "$mod, 4, ${hyprWorkspace}, 4"
-              "$mod, 5, ${hyprWorkspace}, 5"
-              "$mod, 6, ${hyprWorkspace}, 6"
-              "$mod, 7, ${hyprWorkspace}, 7"
-              "$mod, 8, ${hyprWorkspace}, 8"
-              "$mod, 9, ${hyprWorkspace}, 9"
-              "$mod, 0, ${hyprWorkspace}, 0"
-
-              "$shiftmod, 1, ${hyprMoveToWorkspaceSilent}, 1"
-              "$shiftmod, 2, ${hyprMoveToWorkspaceSilent}, 2"
-              "$shiftmod, 3, ${hyprMoveToWorkspaceSilent}, 3"
-              "$shiftmod, 4, ${hyprMoveToWorkspaceSilent}, 4"
-              "$shiftmod, 5, ${hyprMoveToWorkspaceSilent}, 5"
-              "$shiftmod, 6, ${hyprMoveToWorkspaceSilent}, 6"
-              "$shiftmod, 7, ${hyprMoveToWorkspaceSilent}, 7"
-              "$shiftmod, 8, ${hyprMoveToWorkspaceSilent}, 8"
-              "$shiftmod, 9, ${hyprMoveToWorkspaceSilent}, 9"
-              "$shiftmod, 0, ${hyprMoveToWorkspaceSilent}, 0"
 
               "$mod, period, focusmonitor, r"
               "$mod, comma, focusmonitor, l"

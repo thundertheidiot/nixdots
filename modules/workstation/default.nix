@@ -8,6 +8,7 @@ let
     (import ./theming.nix)
     (import ./laptop.nix)
     (import ./keyd.nix)
+    (import ../monitor.nix)
   ];
 in {
   system = {
@@ -55,6 +56,12 @@ in {
         alsa.support32Bit = true;
         pulse.enable = true;
         jack.enable = true;
+
+        wireplumber.extraConfig = {
+          "monitor.bluez.properties" = {
+            "bluez5.enable-hw-volume" = false;
+          };
+        };
 
         lowLatency = {
           enable = true;

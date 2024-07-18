@@ -5,7 +5,8 @@
 
   options = {
     config,
-    pkgs,
+      pkgs,
+      mlib,
     ...
   }: {
     config = {
@@ -25,7 +26,7 @@
       setup.tv.enable = false;
       setup.laptop.enable = true;
 
-      monitors = [
+      monitors = mlib.mkMonitors [
         {
           name = "eDP-1";
           width = "1920";

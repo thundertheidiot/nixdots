@@ -95,6 +95,8 @@
                     xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
                     hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
                     wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
+
+                    hyprland-split-monitor-workspaces = inputs.split-monitor-workspaces.packages.${final.system}.split-monitor-workspaces;
                     # udis86 = inputs.hyprland.packages.${final.system}.udis86;
                   })
                 ];
