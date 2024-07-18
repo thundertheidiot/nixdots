@@ -9,6 +9,7 @@
       scale ? "1",
       hyprlandExtra ? "",
       edid ? false,
+      ...
   }: (mapAttrs (name: value:
     if (name != edid) then
       toString value

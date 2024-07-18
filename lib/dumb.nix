@@ -24,6 +24,8 @@
       y ? "0",
       scale ? "1",
       hyprlandExtra ? "",
+      hyprlandExclude ? false,
+      ...
   }: {
     inherit name width height refresh x y hyprlandExtra;
   };
