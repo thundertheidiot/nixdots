@@ -134,7 +134,7 @@
       builtins.listToAttrs (builtins.map
         (s: {
           name = s;
-          value = mkSystem (import ./hosts/${s}.nix) [];
+          value = mkSystem (mlib.getHostConfig s) [];
         })
         hosts);
   };
