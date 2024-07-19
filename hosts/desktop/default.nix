@@ -7,8 +7,8 @@ in {
 
   options = {
     config,
-      pkgs,
-      mlib,
+    pkgs,
+    mlib,
     ...
   }: {
     config = {
@@ -73,8 +73,8 @@ in {
   system = {
     lib,
     config,
-      mlib,
-      pkgs,
+    mlib,
+    pkgs,
     ...
   }: {
     system.stateVersion = "24.05";
@@ -91,7 +91,6 @@ in {
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
-
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/1ffc3323-6810-406d-b4f6-15d247602689";

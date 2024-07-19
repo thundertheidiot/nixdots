@@ -78,7 +78,7 @@ in {
 
         config.common.default = "";
       };
-        
+
       services.flatpak.enable = true;
 
       services.displayManager.sddm = lib.mkMerge [
@@ -141,9 +141,11 @@ in {
             nativeBuildInputs = prev.nativeBuildInputs ++ [pkgs.makeWrapper];
 
             # fix gnome-keyring on kde
-            postInstall = prev.postInstall + ''
-              wrapProgram $out/bin/gajim --set XDG_CURRENT_DESKTOP GNOME
-            '';
+            postInstall =
+              prev.postInstall
+              + ''
+                wrapProgram $out/bin/gajim --set XDG_CURRENT_DESKTOP GNOME
+              '';
           }))
 
           (mumble.overrideAttrs (prev: {

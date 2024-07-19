@@ -71,9 +71,15 @@
           }
         '';
 
-        splitMonitorWorkspaces = (config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1);
-        hyprWorkspace = if splitMonitorWorkspaces then "split-workspace" else "workspace";
-        hyprMoveToWorkspaceSilent = if splitMonitorWorkspaces then "split-movetoworkspacesilent" else "movetoworkspacesilent";
+        splitMonitorWorkspaces = config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1;
+        hyprWorkspace =
+          if splitMonitorWorkspaces
+          then "split-workspace"
+          else "workspace";
+        hyprMoveToWorkspaceSilent =
+          if splitMonitorWorkspaces
+          then "split-movetoworkspacesilent"
+          else "movetoworkspacesilent";
       in {
         home.packages = with pkgs; [
           screenshot

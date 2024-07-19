@@ -1,8 +1,10 @@
-{ lib,
+{
+  lib,
   stdenv,
   fetchzip,
   buildFHSEnv,
-}: stdenv.mkDerivation rec {
+}:
+stdenv.mkDerivation rec {
   name = "custom-resolution-utility";
 
   src = fetchzip {
@@ -14,17 +16,18 @@
   installPhase = let
     fhs = buildFHSEnv {
       name = "cru_fhs";
-      targetPkgs = pkgs: with pkgs; [
-        glibc.bin
-        wineWowPackages.stagingFull
-      ];
+      targetPkgs = pkgs:
+        with pkgs; [
+          glibc.bin
+          wineWowPackages.stagingFull
+        ];
     };
   in ''
-    mkdir -p $out/bin
-    cp CRU.exe $out/CRU.exe
-    echo "#!/bin/sh
-${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
-    chmod +x $out/bin/cru
+        mkdir -p $out/bin
+        cp CRU.exe $out/CRU.exe
+        echo "#!/bin/sh
+    ${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
+        chmod +x $out/bin/cru
   '';
 
   meta = with lib; {

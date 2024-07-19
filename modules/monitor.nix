@@ -1,56 +1,85 @@
 {
-  system = {config, lib, pkgs, ...}: let
+  system = {
+    config,
+    lib,
+    pkgs,
+    ...
+  }: let
     inherit (builtins) filter isPath length;
 
-    edids = filter (s: s != {}) (map (s: with s;
-      if isPath edid then
-        { inherit name edid;}
-      else
-        {}
-    ) config.monitors);
-  in lib.mkMerge [
-    (lib.mkIf ((length edids) != 0) {
-      hardware.firmware = map (s: with s;
-        (pkgs.runCommandNoCC "${name}-edid-override" { compressFirmware = false; } ''
+    edids = filter (s: s != {}) (map (
+        s:
+          with s;
+            if isPath edid
+            then {inherit name edid;}
+            else {}
+      )
+      config.monitors);
+  in
+    lib.mkMerge [
+      (lib.mkIf ((length edids) != 0) {
+        hardware.firmware = map (s: with s; (pkgs.runCommandNoCC "${name}-edid-override" {compressFirmware = false;} ''
           mkdir -p "$out/lib/firmware/edid"
           cp "${edid}" "$out/lib/firmware/edid/${name}.bin"
         '')) edids;
 
-      boot.kernelParams = (map (s: with s;
-        "drm.edid_firmware=${name}:edid/${name}.bin"
-      ) edids);
+        boot.kernelParams =
+          map (
+            s: with s; "drm.edid_firmware=${name}:edid/${name}.bin"
+          )
+          edids;
 
-      environment.systemPackages = [
-        (pkgs.callPackage ../pkgs/cru.nix {})
-      ];
-    })
-  ];
+        environment.systemPackages = [
+          (pkgs.callPackage ../pkgs/cru.nix {})
+        ];
+      })
+    ];
 
-  home = {config, lib, pkgs, inputs, mlib, ...}: let
+  home = {
+    config,
+    lib,
+    pkgs,
+    inputs,
+    mlib,
+    ...
+  }: let
     inherit (builtins) elem;
-  in lib.mkMerge [
-    (lib.mkIf (elem "hyprland" config.workstation.environment) (let
-      splitMonitorWorkspaces = (config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1);
-      hyprWorkspace = if splitMonitorWorkspaces then "split-workspace" else "workspace";
-      hyprMoveToWorkspaceSilent = if splitMonitorWorkspaces then "split-movetoworkspacesilent" else "movetoworkspacesilent";
-    in {
-      wayland.windowManager.hyprland = {
-        plugins = lib.mkIf (splitMonitorWorkspaces) [pkgs.hyprland-split-monitor-workspaces];
+  in
+    lib.mkMerge [
+      (lib.mkIf (elem "hyprland" config.workstation.environment) (let
+        splitMonitorWorkspaces = config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1;
+        hyprWorkspace =
+          if splitMonitorWorkspaces
+          then "split-workspace"
+          else "workspace";
+        hyprMoveToWorkspaceSilent =
+          if splitMonitorWorkspaces
+          then "split-movetoworkspacesilent"
+          else "movetoworkspacesilent";
+      in {
+        wayland.windowManager.hyprland = {
+          plugins = lib.mkIf splitMonitorWorkspaces [pkgs.hyprland-split-monitor-workspaces];
 
-        settings = {
+          settings = {
             plugin.split-monitor-workspaces = {
               count = 10;
               keep_focused = 1;
             };
 
-            monitor = lib.mkIf (config.monitors != []) (builtins.map (m: with m;
-              lib.mkIf (!hyprlandExclude)
-                "${name}, ${width}x${height}@${refresh}, ${x}x${y}, 1${if (hyprlandExtra != "") then ", ${hyprlandExtra}" else ""}")
-              config.monitors);
+            monitor = lib.mkIf (config.monitors != []) (builtins.map (m:
+              with m;
+                lib.mkIf (!hyprlandExclude)
+                "${name}, ${width}x${height}@${refresh}, ${x}x${y}, 1${
+                  if (hyprlandExtra != "")
+                  then ", ${hyprlandExtra}"
+                  else ""
+                }")
+            config.monitors);
 
-            workspace = lib.mkIf (!splitMonitorWorkspaces && config.monitors != []) (builtins.map (n: let
-              mon = (builtins.head config.monitors).name;
-            in "${builtins.toString n}, monitor:${mon}")
+            workspace = lib.mkIf (!splitMonitorWorkspaces && config.monitors != []) (
+              builtins.map (n: let
+                mon = (builtins.head config.monitors).name;
+              in "${builtins.toString n}, monitor:${mon}")
               [1 2 3 4 5 6 7 8 9]
             );
 
@@ -77,8 +106,8 @@
               "$shiftmod, 9, ${hyprMoveToWorkspaceSilent}, 9"
               "$shiftmod, 0, ${hyprMoveToWorkspaceSilent}, 0"
             ];
+          };
         };
-      };
-    }))
-  ];
+      }))
+    ];
 }

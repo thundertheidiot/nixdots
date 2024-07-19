@@ -143,7 +143,7 @@ in
         '';
       };
       interactiveShellInit = let
-        nh-completions = (pkgs.runCommand "nh-completions" {} "${pkgs.nh}/bin/nh completions --shell fish > $out");
+        nh-completions = pkgs.runCommand "nh-completions" {} "${pkgs.nh}/bin/nh completions --shell fish > $out";
       in (builtins.readFile nh-completions);
       shellAliases = {
         "m" = "mpv --no-video --loop=yes";

@@ -24,7 +24,7 @@
       system.activationScripts.sddmDisplayConfigLink.text = ''
         ln -sfn ${config.homeDirectory}/.config/kwinoutputconfig.json /var/lib/sddm/.config/kwinoutputconfig.json
       '';
-      
+
       security.pam.services = {
         login.kwallet.enable = lib.mkForce false;
         kde.kwallet.enable = lib.mkForce false;

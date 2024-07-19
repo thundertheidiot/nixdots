@@ -5,8 +5,8 @@
 
   options = {
     config,
-      pkgs,
-      mlib,
+    pkgs,
+    mlib,
     ...
   }: {
     config = {

@@ -21,11 +21,11 @@
     height ? "1080",
     refresh ? "60",
     x ? "0",
-      y ? "0",
-      scale ? "1",
-      hyprlandExtra ? "",
-      hyprlandExclude ? false,
-      ...
+    y ? "0",
+    scale ? "1",
+    hyprlandExtra ? "",
+    hyprlandExclude ? false,
+    ...
   }: {
     inherit name width height refresh x y hyprlandExtra;
   };
