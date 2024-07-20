@@ -42,16 +42,6 @@ in {
           refresh = 144;
           x = 1920;
           hyprlandExtra = "vrr, 0";
-          customModes = [
-            {
-              real = "2560x1440@144";
-              display = "2560x1440@144";
-            }
-            {
-              real = "1920x1080@120.00";
-              display = "1920x1080@120";
-            }
-          ];
         }
         {
           name = "DP-1";
