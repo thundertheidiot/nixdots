@@ -23,9 +23,6 @@ in {
       workstation.plasma.tilingwm = true;
       workstation.environment = ["hyprland" "plasma"];
 
-      setup.hyprland.extraConfig = ''
-        source=~/.config/hypr/crt.conf
-      '';
       setup.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
       ];
@@ -40,30 +37,64 @@ in {
       monitors = mlib.mkMonitors [
         {
           name = "DP-3";
-          width = "2560";
-          height = "1440";
-          refresh = "144";
-          x = "1920";
+          width = 2560;
+          height = 1440;
+          refresh = 144;
+          x = 1920;
           hyprlandExtra = "vrr, 0";
+          customModes = [
+            {
+              real = "2560x1440@144";
+              display = "2560x1440@144";
+            }
+            {
+              real = "1920x1080@120.00";
+              display = "1920x1080@120";
+            }
+          ];
         }
         {
           name = "DP-1";
-          width = "1920";
-          height = "1080";
-          refresh = "144";
+          width = 1920;
+          height = 1080;
+          refresh = 144;
           hyprlandExtra = "vrr, 0";
         }
         {
           name = "HDMI-A-1";
           hyprlandExclude = true;
+          x = 4480;
+          y = 0;
           edid = ./crt-edited.bin;
+          customModes = [
+            {
+              real = "640x480@120.01";
+              display = "640x480@120";
+            }
+            {
+              real = "640x528@120.02";
+              display = "640x528@120";
+            }
+            {
+              real = "800x600@112.51";
+              display = "800x600@112";
+            }
+          ];
         }
       ];
     };
   };
 
-  home = {...}: {
+  home = {pkgs, ...}: {
     home.stateVersion = "24.05";
+
+    home.packages = [
+      (pkgs.writers.writeHaskellBin "crtmenu-hs" {
+        libraries = with pkgs.haskellPackages; [
+          process
+        ];
+      } (builtins.readFile ./crtmenu.hs))
+    ];
 
     gtk.gtk3.bookmarks = [
       "file:///mnt/4tb"

@@ -8,6 +8,7 @@
     home.packages = with pkgs; [
       nil # nix language server
       clang-tools # clangd + clang-format
+      haskell-language-server ghc
     ];
 
     services.pantalaimon = {
@@ -125,6 +126,7 @@
           lua-mode
           gdscript-mode
           nix-mode
+          haskell-mode
           rainbow-delimiters
 
           projectile

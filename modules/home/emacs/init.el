@@ -333,6 +333,7 @@
 (require 'eglot)
 (fset #'jsonrpc--log-event #'ignore)
 (add-hook 'prog-mode-hook #'eglot-ensure)
+(setq eglot-autoshutdown t)
 
 (th/leader
   "c" '(:ignore t :wk "code")
@@ -398,6 +399,12 @@
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
 (add-hook 'nix-mode-hook #'eglot-ensure)
+
+(require 'haskell-mode)
+(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+;; (add-to-list 'eglot-server-programs '(haskell-mode . ("haskell-language-server-wrapper")))
+(add-hook 'haskell-mode-hook #'eglot-ensure)
+
 
 ;; elisp compltion
 (add-hook 'emacs-lisp-mode-hook #'company-mode)

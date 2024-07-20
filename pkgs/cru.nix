@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
         mkdir -p $out/bin
         cp CRU.exe $out/CRU.exe
         echo "#!/bin/sh
-    ${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
+        ${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
         chmod +x $out/bin/cru
   '';
 

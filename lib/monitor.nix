@@ -11,6 +11,7 @@ with builtins; rec {
     hyprlandExtra ? "",
     hyprlandExclude ? false,
     edid ? false,
+    customModes ? false,
     ...
   }: (mapAttrs (
       name: value:
@@ -19,6 +20,7 @@ with builtins; rec {
             name
             != "edid"
             && name != "hyprlandExclude"
+            && name != "customModes"
           )
         then toString value
         else value
@@ -33,6 +35,7 @@ with builtins; rec {
         hyprlandExtra
         hyprlandExclude
         edid
+        customModes
         ;
     });
 
