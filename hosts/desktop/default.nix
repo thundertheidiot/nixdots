@@ -68,16 +68,36 @@ in {
           edid = ./crt-edited.bin;
           customModes = [
             {
+              real = "512x448@120.00";
+              display = "SNES 512x448";
+            }
+            {
               real = "640x480@120.01";
-              display = "640x480@120";
+              display = "EMU 640x480@120";
             }
             {
               real = "640x528@120.02";
-              display = "640x528@120";
+              display = "GC 640x528@120";
+            }
+            {
+              real = "480x320@120.00";
+              display = "GBA 480x320@120";
+            }
+            {
+              real = "640x480@144.87";
+              display = "640x480@144";
             }
             {
               real = "800x600@112.51";
               display = "800x600@112";
+            }
+            {
+              real = "1024x768@90.57";
+              display = "1024x768@90";
+            }
+            {
+              real = "1280x1024@67.02Hz";
+              display = "1280x1024@67";
             }
           ];
         }
@@ -87,14 +107,6 @@ in {
 
   home = {pkgs, ...}: {
     home.stateVersion = "24.05";
-
-    home.packages = [
-      (pkgs.writers.writeHaskellBin "crtmenu-hs" {
-        libraries = with pkgs.haskellPackages; [
-          process
-        ];
-      } (builtins.readFile ./crtmenu.hs))
-    ];
 
     gtk.gtk3.bookmarks = [
       "file:///mnt/4tb"
