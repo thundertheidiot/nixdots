@@ -23,11 +23,11 @@ stdenv.mkDerivation rec {
         ];
     };
   in ''
-        mkdir -p $out/bin
-        cp CRU.exe $out/CRU.exe
-        echo "#!/bin/sh
-        ${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
-        chmod +x $out/bin/cru
+    mkdir -p $out/bin
+    cp CRU.exe $out/CRU.exe
+    echo "#!/bin/sh
+    ${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
+    chmod +x $out/bin/cru
   '';
 
   meta = with lib; {

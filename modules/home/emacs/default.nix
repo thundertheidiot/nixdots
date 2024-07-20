@@ -8,7 +8,8 @@
     home.packages = with pkgs; [
       nil # nix language server
       clang-tools # clangd + clang-format
-      haskell-language-server ghc
+      haskell-language-server
+      ghc
     ];
 
     services.pantalaimon = {

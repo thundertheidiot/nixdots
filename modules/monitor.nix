@@ -18,10 +18,12 @@
   in
     lib.mkMerge [
       (lib.mkIf ((length edids) != 0) {
-        hardware.firmware = map (s: with s; (pkgs.runCommandNoCC "${name}-edid-override" {compressFirmware = false;} ''
-          mkdir -p "$out/lib/firmware/edid"
-          cp "${edid}" "$out/lib/firmware/edid/${name}.bin"
-        '')) edids;
+        hardware.firmware = map (s:
+          with s; (pkgs.runCommandNoCC "${name}-edid-override" {compressFirmware = false;} ''
+            mkdir -p "$out/lib/firmware/edid"
+            cp "${edid}" "$out/lib/firmware/edid/${name}.bin"
+          ''))
+        edids;
 
         boot.kernelParams =
           map (
@@ -63,7 +65,8 @@
           inherit (m) name x y customModes;
         }) (filter (m: isList m.customModes) config.monitors);
 
-        modeSwitcher = pkgs.writers.writeBash "modemenu"
+        modeSwitcher =
+          pkgs.writers.writeBash "modemenu"
           (let
             inherit (lib.strings) concatStringsSep;
             inherit (builtins) listToAttrs head;
@@ -71,25 +74,26 @@
             monitorSwitchScripts = listToAttrs (map
               (m: rec {
                 inherit (m) name x y customModes;
-                value = (pkgs.writers.writeBash "${name}_modemenu" ''
-                pos=${x}x${y}
+                value = pkgs.writers.writeBash "${name}_modemenu" ''
+                  pos=${x}x${y}
 
-                case $(echo -e "Disable\n${concatStringsSep "\n" (map (mode: mode.display) customModes)}" | tofi --prompt-text "Select mode: ") in
-                  "Disable")
-                    hyprctl keyword monitor "${name}, disabled"
-                    ;;
-                  ${concatStringsSep "\n" (map (m: with m; ''"${display}") hyprctl keyword monitor "${name}, ${real}, $pos, 1" ;;'') customModes)}
-                esac
-                '');
+                  case $(echo -e "Disable\n${concatStringsSep "\n" (map (mode: mode.display) customModes)}" | tofi --prompt-text "Select mode: ") in
+                    "Disable")
+                      hyprctl keyword monitor "${name}, disabled"
+                      ;;
+                    ${concatStringsSep "\n" (map (m: with m; ''"${display}") hyprctl keyword monitor "${name}, ${real}, $pos, 1" ;;'') customModes)}
+                  esac
+                '';
               })
               monitorsWithModes);
-          in if (length monitorsWithModes == 1) then
-            "${monitorSwitchScripts."${(head monitorsWithModes).name}"}"
-             else ''
-             case $(echo -e "${concatStringsSep "\n" (map (m: m.name) monitorsWithModes)}" | tofi --prompt-text "Select monitor: ") in
-             ${concatStringsSep "\n" (map (m: with m; "\"${name}\") ${monitorSwitchScripts.${name}} ;;") monitorsWithModes)}
-             esac
-             '');
+          in
+            if (length monitorsWithModes == 1)
+            then "${monitorSwitchScripts."${(head monitorsWithModes).name}"}"
+            else ''
+              case $(echo -e "${concatStringsSep "\n" (map (m: m.name) monitorsWithModes)}" | tofi --prompt-text "Select monitor: ") in
+              ${concatStringsSep "\n" (map (m: with m; "\"${name}\") ${monitorSwitchScripts.${name}} ;;") monitorsWithModes)}
+              esac
+            '');
       in {
         wayland.windowManager.hyprland = {
           plugins = lib.mkIf splitMonitorWorkspaces [pkgs.hyprland-split-monitor-workspaces];
@@ -118,7 +122,7 @@
             );
 
             bind = [
-              (lib.mkIf (builtins.length monitorsWithModes > 0) "$mod, C, exec, ${modeSwitcher}") 
+              (lib.mkIf (builtins.length monitorsWithModes > 0) "$mod, C, exec, ${modeSwitcher}")
 
               "$mod, 1, ${hyprWorkspace}, 1"
               "$mod, 2, ${hyprWorkspace}, 2"
