@@ -27,8 +27,9 @@
 	  (unless (frame-focus-state)
 	    (garbage-collect))))
 (setq use-short-answers t
-      native-comp-async-report-warnings-errors 'silent 
-      c-basic-offset 4
+      native-comp-async-report-warnings-errors 'silent
+      indent-tabs-mode t
+      c-basic-offset 'tab-width
       tab-width 4
       gc-cons-threshold (* 8 1024 1024)
 

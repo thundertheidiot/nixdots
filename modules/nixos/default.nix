@@ -6,21 +6,22 @@
   ...
 }: {
   imports = [
-    # ./workstation
     (import ../workstation).system
     (import ../tv).system
-    ./gaming
+    ../gaming
     ./tv
     ./gpu
-    # ./laptop
     ./desktop.nix
   ];
 
-  config = with config; {
+  config = {
     nix.settings = {
       experimental-features = ["nix-command" "flakes"];
       allowed-users = [config.username];
+      use-xdg-base-directories = true;
     };
+
+    m.gaming.enable = true;
 
     systemd.extraConfig = ''
       DefaultTimeoutStopSec=3s

@@ -11,6 +11,7 @@
   } @ inputs: let
     lib = nixpkgs.lib;
     mlib = (import ./lib) {inherit lib;};
+    mpkgs = import ./pkgs;
   in rec {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
@@ -37,7 +38,7 @@
     in
       lib.nixosSystem {
         system = cfg.systemArch;
-        specialArgs = {inherit inputs mlib;};
+        specialArgs = {inherit inputs mlib mpkgs;};
         modules =
           common
           ++ extramodules
@@ -112,7 +113,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = {inherit inputs mlib;};
+                extraSpecialArgs = {inherit inputs mlib mpkgs;};
 
                 backupFileExtension = "hm_backup";
 

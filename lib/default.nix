@@ -1,27 +1,25 @@
 {lib, ...}: let
-  inherit (builtins) readDir filter attrNames;
+  inherit (builtins) readDir filter attrNames mapAttrs;
   inherit (lib.attrsets) mergeAttrsList;
 
-  files = let
-    f = readDir ./.;
-  in
-    filter (s: s != "" && s != ./. + "/default.nix") # filter out self and dirs
-    
-    (map (
-      name:
-        if (f.${name} == "regular")
-        then ./. + "/${name}"
-        else ""
-    ) (attrNames f));
+  importFilesAndDirs = {
+    dir,
+    filterF ? (n: n != "default.nix"),
+  }:
+    map (f: import (dir + "/${f}"))
+    (filter filterF (attrNames (readDir dir)));
+
+  importFilesAndDirsAsAttrs = {
+    dir,
+    filterF ? (n: n != "default.nix"),
+  }:
+    mapAttrs (f: import (dir + "/${f}"))
+    (filter filterF (attrNames (readDir dir)));
 
   imports =
-    map (
-      f:
-        (import f)
-        {inherit lib;}
-    )
-    files;
+    map (f: f {inherit lib;})
+    (importFilesAndDirs {dir = ./.;});
 
   merged = mergeAttrsList imports;
 in
-  merged
+  {inherit importFilesAndDirs;} // merged

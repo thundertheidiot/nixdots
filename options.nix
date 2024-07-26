@@ -14,8 +14,15 @@
     homeDirectory = lib.mkOption {
       default = "/home/${config.username}";
       type = lib.types.nonEmptyStr;
-      example = "/any/other/place/for/a/home/directory";
+      example = "/any/other/place/for/a/directory";
       description = "User home directory.";
+    };
+
+    stubbornHomeDirectory = lib.mkOption {
+      default = "${config.homeDirectory}/.local/state/home";
+      type = lib.types.nonEmptyStr;
+      example = "/any/other/place/for/a/directory";
+      description = "Fake home directory for stubborn applications.";
     };
 
     hostName = lib.mkOption {
@@ -91,6 +98,13 @@
     };
 
     workstation.plasma.tilingwm = lib.mkEnableOption "Configure plasma into a tiling wm environment.";
+
+    emacs.enable = lib.mkEnableOption "Enable emacs";
+    emacs.flavor = lib.mkOption {
+      type = lib.types.listOf (lib.types.enum ["doom" "custom"]);
+      default = ["doom"];
+      description = "\"Flavor\" of emacs to install, will not exist forever."; # TODO: remove custom
+    };
 
     setup.hyprland.extraConfig = lib.mkOption {
       default = "";

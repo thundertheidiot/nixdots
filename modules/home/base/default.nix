@@ -66,7 +66,7 @@
 
     QMK_HOME = "${config.homeDirectory}/.local/src/qmk";
 
-    # Settings
+    STUBBORN_HOME = "${config.stubbornHomeDirectory}";
 
     MOZ_USE_XINPUT2 = "1";
     NVIM_LISTEN_ADDRESS = "/tmp/nvimsocket";

@@ -3,6 +3,7 @@
     config,
     lib,
     pkgs,
+    mpkgs,
     ...
   }: let
     inherit (builtins) filter isPath length;
@@ -32,7 +33,7 @@
           edids;
 
         environment.systemPackages = [
-          (pkgs.callPackage ../pkgs/cru.nix {})
+          (pkgs.callPackage mpkgs.cru {})
         ];
       })
     ];

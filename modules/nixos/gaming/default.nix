@@ -19,10 +19,15 @@
             openvr
             gperftools # steamvr home symlink libtcmalloc_minimal.so.0
           ];
+
         extraLibraries = pkgs:
           with pkgs; [
             gperftools
           ];
+
+        extraEnv = {
+          HOME = config.stubbornHomeDirectory; # send steam to jail
+        };
       };
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
