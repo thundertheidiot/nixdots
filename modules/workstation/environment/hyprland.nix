@@ -211,7 +211,7 @@
             animations.enabled = false;
 
             master = {
-              new_status = "master";
+              new_is_master = true;
               mfact = 0.5;
             };
 
