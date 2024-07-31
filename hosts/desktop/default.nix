@@ -21,7 +21,7 @@ in {
       workstation.enable = true;
       workstation.utils = "generic/gtk";
       workstation.plasma.tilingwm = true;
-      workstation.environment = ["hyprland" "plasma"];
+      workstation.environment = ["hyprland" "plasma" "cosmic"];
 
       setup.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
@@ -127,6 +127,10 @@ in {
     boot.kernelParams = [
       "video=1920x1080-32"
     ];
+
+    m.gaming.enable = true;
+    m.gaming.emulation = true;
+    m.gaming.games = ["duckgame" "minecraft"];
 
     hardware.ckb-next.enable = true;
 

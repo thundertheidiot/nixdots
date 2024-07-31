@@ -21,8 +21,6 @@
       use-xdg-base-directories = true;
     };
 
-    m.gaming.enable = true;
-
     systemd.extraConfig = ''
       DefaultTimeoutStopSec=3s
     '';

@@ -8,50 +8,9 @@
 lib.mkIf (config.setup.gaming.enable) (with config; {
   home.packages = with pkgs;
     [
-      lutris
-
-      discord
-
-      webcord
       vesktop
-
-      mangohud
-
-      prismlauncher
-
-      (pkgs.callPackage mpkgs.dgr {homeDirectory = config.stubbornHomeDirectory;})
-
-      (pkgs.writers.writeBashBin "gamelauncher" ''
-        while getopts \'w:h:c:\' OPTION; do
-        case "$OPTION" in
-        w) W="$OPTARG" ;;
-        h) H="$OPTARG" ;;
-        c) COMMAND="$OPTARG" ;;
-        esac
-        done
-
-        steam-run gamescope \
-        -S stretch \
-        --fullscreen \
-        -W $W \
-        -w $W \
-        -H $H \
-        -h $H \
-        -- $COMMAND
-      '')
-
-      (retroarch.override {
-        cores = with libretro; [
-          snes9x
-          bsnes
-          parallel-n64
-        ];
-      })
-    ]
-    ++ (with pkgs.ataraxiasjel; [
-      proton-ge
-      wine-ge
-    ]);
+      webcord # fallback
+    ];
 
   home.sessionVariables.MANGOHUD_CONFIGFILE = "${xdg.configHome}/mangohud.conf";
   systemd.user.sessionVariables.MANGOHUD_CONFIGFILE = "${xdg.configHome}/mangohud.conf";

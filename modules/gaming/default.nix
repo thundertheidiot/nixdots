@@ -3,6 +3,7 @@
   pkgs,
   lib,
   mlib,
+  mpkgs,
   ...
 }: let
   inherit (mlib) mkOpt mkEnOpt;
@@ -12,10 +13,8 @@ in {
   options = {
     m.gaming = {
       enable = mkEnOpt "Enable gaming module";
-      install = {
-        duckgame = mkEnOpt "Duck Game Rebuilt";
-      };
-      retro = mkEnOpt "Enable configuration for emulation.";
+      games = mkOpt (lib.types.listOf (lib.types.enum ["duckgame" "minecraft"])) [] {};
+      emulation = mkEnOpt "Enable configuration for emulation.";
     };
   };
 
@@ -23,18 +22,22 @@ in {
     (lib.mkIf (cfg.enable) {
       environment.systemPackages = let
         inherit (pkgs.ataraxiasjel) proton-ge wine-ge;
+        inherit (builtins) elem;
       in with pkgs; [
         lutris
         mangohud
-        prismlauncher
 
         wine-ge
         proton-ge
 
-        (lib.mkIf cfg.install.duckgame (pkgs.callPackage mpkgs.dgr {homeDirectory = config.stubbornHomeDirectory;}))
+        (lib.mkIf (elem "minecraft" cfg.games) prismlauncher)
+        (lib.mkIf (elem "duckgame" cfg.games) (pkgs.callPackage mpkgs.dgr {homeDirectory = config.stubbornHomeDirectory;}))
       ];
+
+      programs.gamemode.enable = true;
+      services.joycond.enable = true;
     })
-    (lib.mkIf (cfg.retro) {
+    (lib.mkIf (cfg.enable && cfg.emulation) {
       environment.systemPackages = with pkgs; [
         (retroarch.override {
           cores = with libretro; [
@@ -98,10 +101,6 @@ in {
           };
         });
       };
-
-      programs.gamemode.enable = true;
-
-      services.joycond.enable = true;
 
       systemd.services."steamvr-setcap" = {
         enable = false;
