@@ -34,6 +34,39 @@ in {
 
       setup.gpu = "amd";
 
+    };
+  };
+
+  home = {pkgs, ...}: {
+    # home.stateVersion = "24.05";
+
+    gtk.gtk3.bookmarks = [
+      "file:///mnt/4tb"
+    ];
+  };
+
+  system = {
+    lib,
+    config,
+    mlib,
+    pkgs,
+    ...
+  }: {
+    system.stateVersion = "24.05";
+
+    boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
+    boot.kernelModules = ["kvm-intel"];
+    boot.extraModulePackages = [];
+
+    boot.kernelParams = [
+      "video=1920x1080-32"
+    ];
+
+    meow = {
+      gaming.enable = true;
+      gaming.emulation = true;
+      gaming.games = ["duckgame" "minecraft"];
+
       monitors = mlib.mkMonitors [
         {
           name = "DP-3";
@@ -100,37 +133,17 @@ in {
           ];
         }
       ];
+
+      home = {
+        stateVersion = "24.05";
+        modules = [({...}: {
+          gtk.gtk3.bookmarks = [
+            "file:///mnt/4tb"
+          ];
+        })];
+      };
     };
-  };
 
-  home = {pkgs, ...}: {
-    home.stateVersion = "24.05";
-
-    gtk.gtk3.bookmarks = [
-      "file:///mnt/4tb"
-    ];
-  };
-
-  system = {
-    lib,
-    config,
-    mlib,
-    pkgs,
-    ...
-  }: {
-    system.stateVersion = "24.05";
-
-    boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
-    boot.kernelModules = ["kvm-intel"];
-    boot.extraModulePackages = [];
-
-    boot.kernelParams = [
-      "video=1920x1080-32"
-    ];
-
-    m.gaming.enable = true;
-    m.gaming.emulation = true;
-    m.gaming.games = ["duckgame" "minecraft"];
 
     hardware.ckb-next.enable = true;
 

@@ -8,7 +8,6 @@ let
     (import ./theming.nix)
     (import ./laptop.nix)
     (import ./keyd.nix)
-    (import ../monitor.nix)
   ];
 in {
   system = {

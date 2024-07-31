@@ -34,6 +34,7 @@
     pkgs,
     config,
     modulesPath,
+    mlib,
     ...
   }: {
     # Machine specific configuration, filesystems, bootloader, basically hardware-configuration.nix + system.stateVersion
@@ -43,6 +44,16 @@
       extraConfig = ''
         set timeout=1
       '';
+    };
+
+    meow = {
+      monitors = mlib.mkMonitors [
+        {
+          name = "HDMI-A-1";
+          width = 1360;
+          height = 768;
+        }
+      ];
     };
 
     hardware.graphics.enable = true;

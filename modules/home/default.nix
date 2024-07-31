@@ -14,7 +14,7 @@ in {
   scheme = "${inputs.tt-schemes}/base16/catppuccin-mocha.yaml";
 
   imports = [
-    inputs.base16.homeManagerModule
+    # inputs.base16.homeManagerModule
     ./base
     (import ../workstation).home
     (import ../tv).home

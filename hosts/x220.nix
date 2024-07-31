@@ -24,13 +24,6 @@
       setup.gaming.enable = false;
       setup.tv.enable = true;
 
-      monitors = [
-        {
-          name = "LVDS-1";
-          width = 1366;
-          height = 768;
-        }
-      ];
 
       setup.gpu = "intel";
     };
@@ -48,6 +41,16 @@
     ...
   }: {
     system.stateVersion = "23.05";
+
+    meow = {
+      monitors = [
+        {
+          name = "LVDS-1";
+          width = 1366;
+          height = 768;
+        }
+      ];
+    };
 
     boot.loader.grub.enable = true;
     boot.loader.grub.device = "/dev/sda";

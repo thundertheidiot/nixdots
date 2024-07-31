@@ -70,16 +70,6 @@
             "$grim" -o "$($hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | "$bemenu")" - | swappy -f -
           }
         '';
-
-        splitMonitorWorkspaces = config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1;
-        hyprWorkspace =
-          if splitMonitorWorkspaces
-          then "split-workspace"
-          else "workspace";
-        hyprMoveToWorkspaceSilent =
-          if splitMonitorWorkspaces
-          then "split-movetoworkspacesilent"
-          else "movetoworkspacesilent";
       in {
         home.packages = with pkgs; [
           screenshot
@@ -97,11 +87,6 @@
           systemd.enable = true;
           xwayland.enable = true;
           package = pkgs.hyprland;
-
-          # plugins = [
-          #   (lib.mkIf (config.setup.hyprland.forceMultiMonitor || (builtins.length config.monitors) > 1)
-          #     inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces)
-          # ];
 
           extraConfig = config.setup.hyprland.extraConfig;
 

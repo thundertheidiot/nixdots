@@ -8,10 +8,10 @@
 }: let
   inherit (mlib) mkOpt mkEnOpt;
 
-  cfg = config.m.gaming;
+  cfg = config.meow.gaming;
 in {
   options = {
-    m.gaming = {
+    meow.gaming = {
       enable = mkEnOpt "Enable gaming module";
       games = mkOpt (lib.types.listOf (lib.types.enum ["duckgame" "minecraft"])) [] {};
       emulation = mkEnOpt "Enable configuration for emulation.";

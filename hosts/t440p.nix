@@ -26,13 +26,6 @@
       setup.tv.enable = false;
       setup.laptop.enable = true;
 
-      monitors = mlib.mkMonitors [
-        {
-          name = "eDP-1";
-          width = "1920";
-          height = "1080";
-        }
-      ];
 
       setup.gpu = "intel";
     };
@@ -47,9 +40,24 @@
     lib,
     pkgs,
     modulesPath,
+    mlib,
     ...
   }: {
     system.stateVersion = "24.05";
+
+    meow = {
+      gaming.enable = true;
+      gaming.emulation = true;
+      gaming.games = ["duckgame"];
+
+      monitors = mlib.mkMonitors [
+        {
+          name = "eDP-1";
+          width = "1920";
+          height = "1080";
+        }
+      ];
+    };
 
     boot.loader.grub.enable = true;
     boot.loader.grub.device = "/dev/disk/by-id/ata-TOSHIBA_MQ01ABD100_97DOPOT9T";

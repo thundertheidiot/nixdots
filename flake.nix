@@ -108,25 +108,42 @@
                 inputs.cosmic.nixosModules.default
                 inputs.hyprland.nixosModules.default
                 ./modules/nixos
+                ./modules/home.nix
+                ./modules/monitor.nix
               ];
 
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
+              meow.home = {
+                user = config.username;
                 extraSpecialArgs = {inherit inputs mlib mpkgs;};
-
-                backupFileExtension = "hm_backup";
-
-                sharedModules =
-                  common
-                  ++ [
-                    cfg.home
-                    inputs.agenix.homeManagerModules.default
-                    inputs.plasma-manager.homeManagerModules.plasma-manager
-                  ];
-
-                users.${config.username} = ./modules/home;
+                sharedModules = common ++ [
+                  cfg.home
+                  inputs.agenix.homeManagerModules.default
+                  inputs.plasma-manager.homeManagerModules.plasma-manager
+                  inputs.base16.homeManagerModule
+                ];
+                modules = [
+                  ./modules/home
+                ];
               };
+
+              # home-manager = {
+              #   useGlobalPkgs = true;
+              #   useUserPackages = true;
+              #   extraSpecialArgs = {inherit inputs mlib mpkgs;};
+
+              #   backupFileExtension = "hm_backup";
+
+              #   sharedModules =
+              #     common
+              #     ++ [
+              #       cfg.home
+              #       inputs.agenix.homeManagerModules.default
+              #       inputs.plasma-manager.homeManagerModules.plasma-manager
+              #       inputs.base16.homeManagerModule
+              #     ];
+
+              #   users.${config.username} = ./modules/home;
+              # };
             })
           ];
       };

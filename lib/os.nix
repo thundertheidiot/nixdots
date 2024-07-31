@@ -10,4 +10,8 @@ in {
     else if (pathExists file) && (readFileType file) == "regular"
     then import file
     else throw "No ${file} or ${dir}/default.nix";
+
+  homeModule = module: {
+    meow.home.modules = [module];
+  };
 }
