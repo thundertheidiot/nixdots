@@ -5,7 +5,6 @@
     self,
     nixpkgs,
     home-manager,
-    mobile-nixos,
     hyprland,
     ...
   } @ inputs: let
@@ -47,6 +46,7 @@
             home-manager.nixosModules.home-manager
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
+            inputs.kmonad.nixosModules.default
             ({
               config,
               lib,
@@ -103,13 +103,11 @@
                 ];
               };
 
-              imports = [
+              imports = (import ./modules) ++ [
                 inputs.lix-module.nixosModules.default # lix
                 inputs.cosmic.nixosModules.default
                 inputs.hyprland.nixosModules.default
                 ./modules/nixos
-                ./modules/home.nix
-                ./modules/monitor.nix
               ];
 
               meow.home = {
@@ -172,9 +170,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    mobile-nixos = {
-      url = "github:NixOS/mobile-nixos";
-      flake = false;
+    kmonad = {
+      url = "github:kmonad/kmonad?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {

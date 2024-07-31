@@ -112,7 +112,7 @@
               "XDG_SESSION_TYPE,wayland"
               "XDG_SESSION_DESKTOP,Hyprland"
 
-              # "WLR_DRM_NO_ATOMIC,1"
+              "WLR_DRM_NO_ATOMIC,1"
             ];
 
             exec-once =

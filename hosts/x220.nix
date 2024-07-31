@@ -24,7 +24,6 @@
       setup.gaming.enable = false;
       setup.tv.enable = true;
 
-
       setup.gpu = "intel";
     };
   };
@@ -50,6 +49,8 @@
           height = 768;
         }
       ];
+
+      kmonad.enable = true;
     };
 
     boot.loader.grub.enable = true;

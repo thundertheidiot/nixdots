@@ -600,6 +600,28 @@
         "type": "github"
       }
     },
+    "kmonad": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "nix",
+        "lastModified": 1722406785,
+        "narHash": "sha256-9M09FN+zOW0QNzM7zqtY0kzvD3GoaPZl4r9NA+fgVrc=",
+        "owner": "kmonad",
+        "repo": "kmonad",
+        "rev": "840af41fab33829ed03ba932aa017f8912e6fb75",
+        "type": "github"
+      },
+      "original": {
+        "dir": "nix",
+        "owner": "kmonad",
+        "repo": "kmonad",
+        "type": "github"
+      }
+    },
     "lix": {
       "flake": false,
       "locked": {
@@ -633,22 +655,6 @@
       "original": {
         "type": "tarball",
         "url": "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0-rc1.tar.gz"
-      }
-    },
-    "mobile-nixos": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1721250279,
-        "narHash": "sha256-S47+MFnArDvR7OFCXU0BQoyLCBwSZws+t+bany7Ol6w=",
-        "owner": "NixOS",
-        "repo": "mobile-nixos",
-        "rev": "472073a51745cca03257cf625582252cdd04ec21",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "mobile-nixos",
-        "type": "github"
       }
     },
     "naersk": {
@@ -1166,8 +1172,8 @@
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager_3",
         "hyprland": "hyprland",
+        "kmonad": "kmonad",
         "lix-module": "lix-module",
-        "mobile-nixos": "mobile-nixos",
         "naersk": "naersk",
         "nix-gaming": "nix-gaming",
         "nixgl": "nixgl",
