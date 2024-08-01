@@ -67,8 +67,8 @@ in {
       gaming.emulation = true;
       gaming.games = ["duckgame" "minecraft"];
 
-      kmonad.enable = true;
-      kmonad.device = "/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd";
+      keyboard.enable = false;
+      keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];
 
       monitors = mlib.mkMonitors [
         {
