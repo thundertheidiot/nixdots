@@ -18,8 +18,6 @@
       workstation.utils = "generic/gtk";
       workstation.environment = ["hyprland"];
 
-      workstation.keyd.enable = true;
-
       setup.hyprland.extraAutostart = [];
       setup.firefox.enable = true;
       setup.gaming.enable = true;
@@ -50,6 +48,11 @@
       gaming.emulation = true;
       gaming.games = ["duckgame"];
 
+      keyboard = {
+        enable = true;
+        devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
+      };
+
       monitors = mlib.mkMonitors [
         {
           name = "eDP-1";
@@ -57,6 +60,10 @@
           height = "1080";
         }
       ];
+
+      home = {
+        stateVersion = "24.05";
+      };
     };
 
     boot.loader.grub.enable = true;

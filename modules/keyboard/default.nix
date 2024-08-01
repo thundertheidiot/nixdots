@@ -36,7 +36,7 @@ in {
             tab  q    w    e    r    t    y    u    i    o    p    [     ]    ret
             caps a    s    d    f    g    h    j    k    l    ;    '     \
             lsft 102d z    x    c    v    b    n    m    ,    .    /     rsft
-            lctl lmet lalt           spc            ralt cmps rctl up
+            lctl lmet lalt           spc            ralt rctl up
                                                               left down rght
           )
 
@@ -70,7 +70,7 @@ in {
             tab  q    w    e    r    t    y    u    i    o    p    [     ]    ret
             @esc @a   @s   @d   @f   g    h    @j   @k   @l   @;   '     \
             lsft 102d z    x    c    v    b    n    m    ,    .    /     rsft
-            lctl lmet lalt           @spc           @raise @base rctl up
+            lctl lmet lalt           @spc           @raise @base up
                                                               left down rght
           )
 
@@ -80,7 +80,7 @@ in {
             tab  q    w    e    r    t    y    u    i    o    p    [     ]    ret
             @esc a    s    d    f    g    h    j    k    l    ;    '     \
             lsft 102d z    x    c    v    b    n    m    ,    .    /     rsft
-            lctl lmet lalt           spc            _    _    rctl up
+            lctl lmet lalt           spc            @raise    @base up
                                                               left down rght
           )
 
@@ -90,7 +90,7 @@ in {
             _    _    _    _    _    _    _    7    8    9    _    _     _     _
             _    lmet lalt lsft lctl _    _    4    5    6    _    _     _
             _    _    _    _    _    _    _    _    1    2    3    _     _
-            _    _    _              _              0    _    _    _
+            _    _    _              _              0    _    _
                                                               _    _    _
           )
 
@@ -100,7 +100,7 @@ in {
             XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   pp   XX    XX    XX
             XX   XX   prnt XX   XX   @nrm XX   XX   XX   XX   XX   XX    XX
             XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX    XX
-            XX   XX   XX             XX             XX   XX   XX   XX
+            XX   XX   XX             XX             XX   XX   XX
                                                               XX   XX   XX
           )
 
