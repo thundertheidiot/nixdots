@@ -1,0 +1,68 @@
+{
+  "pins": {
+    "plugin.video.yleareena.jade": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "aajanki",
+        "repo": "plugin.video.yleareena.jade"
+      },
+      "branch": "master",
+      "revision": "f91c9fd92c37ca5a15f34894885c1476c87591b5",
+      "url": "https://github.com/aajanki/plugin.video.yleareena.jade/archive/f91c9fd92c37ca5a15f34894885c1476c87591b5.tar.gz",
+      "hash": "1hza2plf99z8x6n1yk23yqb68pi7nzyzzl2fv32wdfm2vk8ix5ap"
+    },
+    "plugin.video.youtube": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "anxdpanic",
+        "repo": "plugin.video.youtube"
+      },
+      "branch": "master",
+      "revision": "fee15d41db814bbcd26d0ce251a802293cebc6e4",
+      "url": "https://github.com/anxdpanic/plugin.video.youtube/archive/fee15d41db814bbcd26d0ce251a802293cebc6e4.tar.gz",
+      "hash": "0fkzy42wfi1ihza2w50xygsfnazvpvvz7h3dnjd1j9018gsmcrn8"
+    },
+    "script.embuary.info": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "sualfred",
+        "repo": "script.embuary.info"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "version": "2.0.10",
+      "revision": "6f3dd7e3743bf6dd795c60fadfb357ff8a5df8a8",
+      "url": "https://api.github.com/repos/sualfred/script.embuary.info/tarball/2.0.10",
+      "hash": "14xlc0pnxz3lfphhqw2vg2db60k6lwxzkky2y2z0pwkd7c5xk93b"
+    },
+    "script.module.pvr.artwork": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "b-jesch",
+        "repo": "script.module.pvr.artwork"
+      },
+      "branch": "master",
+      "revision": "55d25f4a89720752254815b3f732767f557d624a",
+      "url": "https://github.com/b-jesch/script.module.pvr.artwork/archive/55d25f4a89720752254815b3f732767f557d624a.tar.gz",
+      "hash": "11h8vahyhq6fiaw0bcp8ijcfijwli6fp762x2sb4igldfk6wndwb"
+    },
+    "skin.estuary.modv2": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "b-jesch",
+        "repo": "skin.estuary.modv2"
+      },
+      "branch": "Omega",
+      "revision": "cc50399e010225c8577879f423d9fde14810b8fe",
+      "url": "https://github.com/b-jesch/skin.estuary.modv2/archive/cc50399e010225c8577879f423d9fde14810b8fe.tar.gz",
+      "hash": "18wy377h0vvkzjzi57n6q58c0nzv6pihvvzqbc7zsrpgam3w917a"
+    }
+  },
+  "version": 3
+}

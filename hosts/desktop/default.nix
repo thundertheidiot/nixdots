@@ -16,7 +16,7 @@ in {
       hostName = "desktop";
       timeZone = "Europe/Helsinki";
 
-      tv.enable = true;
+      # tv.enable = true;
 
       workstation.enable = true;
       workstation.utils = "generic/gtk";
@@ -26,7 +26,6 @@ in {
       setup.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
       ];
-      setup.firefox.enable = true;
       setup.gaming.enable = true;
       setup.tv.enable = false;
 
@@ -66,6 +65,10 @@ in {
       gaming.enable = true;
       gaming.emulation = true;
       gaming.games = ["duckgame" "minecraft"];
+
+      firefox.enable = true;
+
+      # tv.enable = true;
 
       keyboard.enable = false;
       keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];

@@ -20,7 +20,6 @@
       workstation.plasma.tilingwm = true;
 
       setup.hyprland.extraAutostart = [];
-      setup.firefox.enable = true;
       setup.gaming.enable = false;
       setup.tv.enable = true;
 
@@ -42,6 +41,8 @@
     system.stateVersion = "23.05";
 
     meow = {
+      firefox.enable = true;
+
       monitors = [
         {
           name = "LVDS-1";
@@ -50,7 +51,7 @@
         }
       ];
 
-      kmonad.enable = true;
+      keyboard.enable = true;
     };
 
     boot.loader.grub.enable = true;

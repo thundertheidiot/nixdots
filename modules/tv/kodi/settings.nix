@@ -1,46 +1,75 @@
 {
-  config,
   lib,
-  pkgs,
+  writeShellApplication,
+  yq,
+  kodiHome,
   ...
 }: let
-  data = {
-    "userdata/guisettings.xml" = {
-      "/settings/@version" = 2;
-      "/settings/setting[@id='lookandfeel.skin']" = "skin.estuary.modv2";
-      "/settings/setting[@id='locale.timezonecountry']" = "Finland";
-      "/settings/setting[@id='locale.timezone']" = "Europe/Helsinki";
-      "/settings/setting[@id='locale.use24hourclock']" = true;
-    };
+  inherit (builtins) toString toJSON;
+  inherit (lib) mapAttrsToList;
+  inherit (lib.strings) concatStringsSep;
 
-    "userdata/addon_data/plugin.video.youtube.xml" = {
-      "/settings/@version" = 2;
+  kodiSettings = let
+    mkSetting = id: val: {
+      "@id" = id;
+      "@default" = "false";
+      "#text" = toString val;
+    };
+  in {
+    "userdata/guisettings.xml" = {
+      settings = {
+        "@version" = "2";
+        setting = [
+          (mkSetting "lookandfeel.skin" "skin.estuary.modv2")
+          (mkSetting "locale.timezonecountry" "Finland")
+          (mkSetting "locale.timezone" "Europe/Helsinki")
+          (mkSetting "locale.use24hourclock" true)
+          (mkSetting "general.addonupdates" 2)
+        ];
+      };
     };
   };
 
-  ensureDir = file: "( mkdir -p \"$(dirname ${file})\"; touch ${file} )";
-  xml = "${pkgs.xmlstarlet}/bin/xmlstarlet";
+  # This is some magic stolen from
+  # https://stackoverflow.com/questions/53661930/jq-recursively-merge-objects-and-concatenate-arrays
+  jqDeepmerge = ''
+  def deepmerge(a;b):
+  reduce b[] as $item (a;
+    reduce ($item | keys_unsorted[]) as $key (.;
+      $item[$key] as $val | ($val | type) as $type | .[$key] = if ($type == "object") then
+        deepmerge({}; [if .[$key] == null then {} else .[$key] end, $val])
+      elif ($type == "array") then
+        (.[$key] + $val | unique)
+      else
+        $val
+      end)
+    );'';
 
-  commandList =
-    lib.mapAttrsToList (
-      name: value: let
-        file = "${config.programs.kodi.datadir}/${name}";
-      in "${ensureDir file} && ${xml} edit ${
-        lib.strings.concatStringsSep " " (lib.mapAttrsToList (n: v: "--update ${n} --value ${toString v}") value)
-      } ${file} > ${file}.tmp && mv ${file}.tmp ${file}"
-    )
-    data;
+  createXml = mapAttrsToList (name: value: let
+    file = "${kodiHome}/${name}";
+  in ''
+  if [ ! -f "${file}" ]; then
+    mkdir -p "$(dirname ${file})"
+    echo -e "<settings>\n</settings>" > "${file}" 
+  fi
+  xq --argjson nix_settings '${toJSON value}' '${jqDeepmerge} deepmerge({}; [., $nix_settings])' --xml-output < "${file}" > "${file}.tmp"
+  mv "${file}.tmp" "${file}"
+  '') kodiSettings;
 in
-  pkgs.writeShellScriptBin "create_kodi_settings" ''
-    # Let kodi create it's settings if they don't exist
+  writeShellApplication {
+    name = "create_kodi_settings";
 
-    # kodi_dir="${config.programs.kodi.datadir}"
-    # [ ! -d "$kodi_dir" ] && {
-    #   ${config.programs.kodi.package}/bin/kodi &
-    #   PID=$!
-    #   while [ ! -d "$kodi_dir" ]; do :; done
-    #   kill $PID
-    # }
+    excludeShellChecks = ["SC2016"]; # shellcheck was failing on the single quotes in the xq command
 
-    ${lib.strings.concatStringsSep "\n" commandList}
-  ''
+    runtimeInputs = [yq];
+
+    text = ''
+      [ ! -d "${kodiHome}/userdata/addon_data/script.skinshortcuts" ] \
+      && mkdir -p "${kodiHome}/userdata/addon_data" \
+      && cp -r --dereference "${./script.skinshortcuts-settings}" "${kodiHome}/userdata/addon_data/script.skinshortcuts" \
+      && chown "$USER" "${kodiHome}/userdata/addon_data/script.skinshortcuts" \
+      && chmod -R 755 "${kodiHome}/userdata/addon_data/script.skinshortcuts"
+
+      ${concatStringsSep "\n" createXml}
+    '';
+  }

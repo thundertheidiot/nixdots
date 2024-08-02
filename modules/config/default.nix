@@ -26,9 +26,14 @@ in {
     '';
 
     mountScript = ''
-    ${concatStringsSep "\n" (map (f: with f;
-      "mountpoint -q \"${destination}\" && { mount -o bind,remount,ro \"${source}\" \"${destination}\"; } \
-      || { mount -o bind,ro \"${source}\" \"${destination}\"; }") cfg.mountDirectories)}
+    ${concatStringsSep "\n" (map (f: with f; ''
+      mkdir -p "${destination}"
+      if [ $(mountpoint -q "${destination}" ) ]; then
+        mount -o bind,remount,ro "${source}" "${destination}"
+      else
+        mount -o bind,ro "${source}" "${destination}"
+      fi
+      '') cfg.mountDirectories)}
     '';
   in {
     system.activationScripts = {

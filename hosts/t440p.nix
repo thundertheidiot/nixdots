@@ -19,7 +19,6 @@
       workstation.environment = ["hyprland"];
 
       setup.hyprland.extraAutostart = [];
-      setup.firefox.enable = true;
       setup.gaming.enable = true;
       setup.tv.enable = false;
       setup.laptop.enable = true;
@@ -47,6 +46,8 @@
       gaming.enable = true;
       gaming.emulation = true;
       gaming.games = ["duckgame"];
+
+      firefox.enable = true;
 
       keyboard = {
         enable = true;

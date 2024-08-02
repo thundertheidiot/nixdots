@@ -17,7 +17,6 @@
       workstation.utils = "generic/gtk";
       workstation.environment = ["hyprland"];
 
-      setup.firefox.enable = true;
       setup.gaming.enable = false;
       setup.tv.enable = true;
 
@@ -54,6 +53,14 @@
           height = 768;
         }
       ];
+
+      firefox = {
+        enable = true;
+        addons = {
+          "uBlock0@raymonhill.net" = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-11423598-latest.xpi";
+          "idcac-pub@guus.ninja" = "https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/addon-17568914-latest.xpi";
+        }
+      };
     };
 
     hardware.graphics.enable = true;

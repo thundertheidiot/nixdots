@@ -7,9 +7,8 @@
 }: {
   imports = [
     (import ../workstation).system
-    (import ../tv).system
     ../gaming
-    ./tv
+    # ./tv
     ./gpu
     ./desktop.nix
   ];

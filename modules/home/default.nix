@@ -17,10 +17,9 @@ in {
     # inputs.base16.homeManagerModule
     ./base
     (import ../workstation).home
-    (import ../tv).home
     ./gaming
     ./emacs
-    ./firefox
-    ./tv
+    # ./firefox
+    # ./tv
   ];
 }
