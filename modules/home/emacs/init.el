@@ -290,7 +290,7 @@
 
 ;; Evil collection
 (require 'evil-collection)
-(setq evil-collection-mode-list '(dashboard dired ibuffer simple-mpc magit))
+(setq evil-collection-mode-list '(dashboard woman dired ibuffer simple-mpc magit vterm))
 (evil-collection-init)
 
 ;; Evil better visual line
@@ -398,7 +398,7 @@
 
 (require 'nix-mode)
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
-(add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+(add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
 (add-hook 'nix-mode-hook #'eglot-ensure)
 
 (require 'haskell-mode)

@@ -6,7 +6,7 @@
 }: {
   config = lib.mkIf (config.workstation.enable) (with config; {
     home.packages = with pkgs; [
-      nil # nix language server
+      nixd # nix language server
       clang-tools # clangd + clang-format
       haskell-language-server
       ghc
