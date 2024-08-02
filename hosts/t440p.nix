@@ -48,6 +48,7 @@
       gaming.games = ["duckgame"];
 
       firefox.enable = true;
+      emacs.enable = true;
 
       keyboard = {
         enable = true;

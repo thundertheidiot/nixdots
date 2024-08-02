@@ -56,6 +56,8 @@
 
       tv.enable = true;
 
+      emacs.enable = true;
+
       firefox = {
         enable = true;
         addons = {

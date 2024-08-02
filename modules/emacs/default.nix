@@ -1,31 +1,20 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
-  config = lib.mkIf (config.workstation.enable) (with config; {
+{ config, pkgs, lib, mlib, ... }: let
+  cfg = config.meow.emacs;
+
+  inherit (mlib) mkEnOpt homeModule;
+  inherit (lib) mkIf;
+in {
+  options = {
+    meow.emacs.enable = mkEnOpt "Install and configure emacs.";
+  };
+
+  config = mkIf cfg.enable (homeModule ({config, ...}: {
     home.packages = with pkgs; [
-      nixd # nix language server
+      nixd
       clang-tools # clangd + clang-format
       haskell-language-server
       ghc
     ];
-
-    services.pantalaimon = {
-      enable = false;
-      settings = {
-        Default = {
-          LogLevel = "Debug";
-          SSL = true;
-        };
-        Kotiboksi = {
-          Homeserver = "https://matrix.kotiboksi.xyz";
-          ListenAddress = "127.0.0.1";
-          ListenPort = "8008";
-        };
-      };
-    };
 
     programs.emacs.overrides = self: super: {
       eglot-booster = self.trivialBuild {
@@ -166,7 +155,7 @@
 
     xdg.configFile."emacs/.createdir" = {
       enable = true;
-      text = "This file is here to make nix create \"${xdg.configHome}/emacs/\", so emacs uses it instead of \"${home.homeDirectory}/.emacs.d/\".";
+      text = "This file is here to make nix create \"${config.xdg.configHome}/emacs/\", so emacs uses it instead of \"${config.home.homeDirectory}/.emacs.d/\".";
     };
-  });
+  }));
 }

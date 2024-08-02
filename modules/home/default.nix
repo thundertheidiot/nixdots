@@ -18,7 +18,7 @@ in {
     ./base
     (import ../workstation).home
     ./gaming
-    ./emacs
+    # ./emacs
     # ./firefox
     # ./tv
   ];

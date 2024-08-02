@@ -5,4 +5,5 @@
   ./keyboard
   ./firefox.nix
   ./tv
+  ./emacs
 ]

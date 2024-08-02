@@ -26,6 +26,7 @@
 	(defun th/garbage-collect ()
 	  (unless (frame-focus-state)
 	    (garbage-collect))))
+
 (setq use-short-answers t
       native-comp-async-report-warnings-errors 'silent
       indent-tabs-mode t
@@ -64,15 +65,15 @@
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
 
 (set-face-attribute 'default nil
-		    :font "Monospace-9"
+		    :font "Monospace-14"
 		    :weight 'medium)
 
 (set-face-attribute 'variable-pitch nil
-		    :font "Sans-Serif-9"
+		    :font "Sans-Serif-14"
 		    :weight 'medium)
 
 (set-face-attribute 'fixed-pitch nil
-		    :font "Monospace-9"
+		    :font "Monospace-14"
 		    :weight 'medium)
 
 (set-face-attribute 'font-lock-comment-face nil
@@ -80,7 +81,7 @@
 (set-face-attribute 'font-lock-keyword-face nil
 		    :slant 'italic)
 
-(add-to-list 'default-frame-alist '(font . "Monospace-9"))
+(add-to-list 'default-frame-alist '(font . "Monospace-14"))
 
 (setq-default line-spacing 0.12)
 
@@ -584,4 +585,8 @@
 (require 'solaire-mode)
 (solaire-global-mode 1)
 
-(require 'ement)
+;; Fix tramp to nixos systems
+(require 'tramp-sh)
+ (setq tramp-remote-path
+       (append tramp-remote-path
+ 	        '(tramp-own-remote-path)))

@@ -42,6 +42,7 @@
 
     meow = {
       firefox.enable = true;
+      emacs.enable = true;
 
       monitors = [
         {

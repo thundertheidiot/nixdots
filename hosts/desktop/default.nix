@@ -67,7 +67,8 @@ in {
       gaming.games = ["duckgame" "minecraft"];
 
       firefox.enable = true;
-
+      emacs.enable = true;
+      
       # tv.enable = true;
 
       keyboard.enable = false;
