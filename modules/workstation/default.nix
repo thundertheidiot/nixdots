@@ -81,7 +81,7 @@ in {
       services.flatpak.enable = true;
 
       services.displayManager.sddm = lib.mkMerge [
-        (lib.mkIf (config.setup.gpu == "intel" || config.setup.gpu == "amd") {
+        (lib.mkIf (config.meow.gpu != "none") {
           enable = true;
           wayland = {
             enable = true;

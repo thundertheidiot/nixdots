@@ -1,6 +1,7 @@
 [
   ./home.nix
   ./monitor.nix
+  ./shell.nix
   ./config
   ./keyboard
   ./firefox.nix

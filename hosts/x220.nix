@@ -41,6 +41,7 @@
     meow = {
       firefox.enable = true;
       emacs.enable = true;
+      shell.enable = true;
 
       gpu = "intel";
 

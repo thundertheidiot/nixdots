@@ -57,6 +57,7 @@
       tv.enable = true;
 
       emacs.enable = true;
+      shell.enable = true;
 
       firefox = {
         enable = true;

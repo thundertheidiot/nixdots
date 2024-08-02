@@ -13,7 +13,7 @@
   inherit (mlib) mkOpt;
 in {
   options = {
-    config.meow.gpu = mkOpt (enum ["amd" "nvidia" "intel"]) "none" {
+    meow.gpu = mkOpt (enum ["amd" "nvidia" "intel"]) "none" {
       description = "Gpu type, this is used for installing drivers.";
     };
   };
@@ -25,6 +25,8 @@ in {
     }
     (mkIf (cfg == "intel") {
       boot.initrd.kernelModules = ["i915"];
+
+      environment.systemPackages = [pkgs.nvtopPackages.intel];
 
       hardware.graphics.extraPackages = with pkgs; [
         intel-media-driver
@@ -42,6 +44,7 @@ in {
 
       environment.systemPackages = with pkgs; [
         lact
+        nvtopPackages.amd
       ];
 
       systemd.services.lactd = {
@@ -61,6 +64,7 @@ in {
         "L+ /opt/rocm/hip - - - - ${pkgs.rocmPackages.clr}"
       ];
 
+      services.xserver.enable = true;
       services.xserver.videoDrivers = ["modesetting"];
       boot.initrd.kernelModules = ["amdgpu"];
     })
