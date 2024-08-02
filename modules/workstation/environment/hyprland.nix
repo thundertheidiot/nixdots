@@ -221,7 +221,7 @@
               "$mod, return, exec, ${terminal}"
               "$mod, W, exec, ${pkgs.firefox}/bin/firefox"
               "$mod, D, exec, $(${pkgs.tofi}/bin/tofi-run)"
-              "$mod, E, exec, $EDITOR"
+              "$mod, E, exec, emacsclient -c"
               "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
               "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
               "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"

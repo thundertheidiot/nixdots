@@ -120,34 +120,4 @@ in
       cache=${xdg.cacheHome}/npm
       init-module=${xdg.configHome}/npm/config/npm-init.js
     '';
-
-    programs.bash = {
-      enable = true;
-      profileExtra = ''
-        export PATH="$PATH:$HOME/.local/bin:$XDG_DATA_HOME/cargo/bin"
-      '';
-      initExtra = ''
-        if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
-        then
-          shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
-          exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
-        fi
-      '';
-    };
-
-    programs.fish = {
-      enable = true;
-      functions = {
-        fish_prompt = ''
-          echo (set_color purple)$USER(set_color normal)'@'(set_color blue)(uname -n)(set_color normal) (pwd) '> '
-        '';
-      };
-      interactiveShellInit = let
-        nh-completions = pkgs.runCommand "nh-completions" {} "${pkgs.nh}/bin/nh completions --shell fish > $out";
-      in (builtins.readFile nh-completions);
-      shellAliases = {
-        "m" = "mpv --no-video --loop=yes";
-        "e" = "setsid -f emacsclient -c";
-      };
-    };
   }
