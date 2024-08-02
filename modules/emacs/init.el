@@ -64,24 +64,31 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
 
-(set-face-attribute 'default nil
-		    :font "Monospace-14"
-		    :weight 'medium)
-
-(set-face-attribute 'variable-pitch nil
-		    :font "Sans-Serif-14"
-		    :weight 'medium)
-
-(set-face-attribute 'fixed-pitch nil
-		    :font "Monospace-14"
-		    :weight 'medium)
+(defun set-font-size-global (size)
+  (interactive "sFont size: ")
+  (let ((size (if (stringp size)
+		  (string-to-number size)
+		size)))
+    (set-face-attribute 'default nil
+			:font (format "Monospace-%d" size)
+			:weight 'medium)
+    
+    (set-face-attribute 'variable-pitch nil
+			:font (format "Sans-Serif-%d" size)
+			:weight 'medium)
+    
+    (set-face-attribute 'fixed-pitch nil
+			:font (format "Monospace-%d" size)
+			:weight 'medium)
+    
+    (add-to-list 'default-frame-alist '(font . (format "Monospace-%d" size)))))
 
 (set-face-attribute 'font-lock-comment-face nil
 		    :slant 'italic)
 (set-face-attribute 'font-lock-keyword-face nil
 		    :slant 'italic)
 
-(add-to-list 'default-frame-alist '(font . "Monospace-14"))
+(set-font-size-global 12)
 
 (setq-default line-spacing 0.12)
 
@@ -589,4 +596,6 @@
 (require 'tramp-sh)
  (setq tramp-remote-path
        (append tramp-remote-path
- 	        '(tramp-own-remote-path)))
+ 	       '(tramp-own-remote-path)))
+
+(require 'separedit)

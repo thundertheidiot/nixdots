@@ -133,7 +133,7 @@ in {
           simple-mpc
           empv
 
-          ement
+          separedit
         ];
     };
 
