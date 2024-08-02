@@ -64,31 +64,25 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
 
-(defun set-font-size-global (size)
-  (interactive "sFont size: ")
-  (let ((size (if (stringp size)
-		  (string-to-number size)
-		size)))
-    (set-face-attribute 'default nil
-			:font (format "Monospace-%d" size)
-			:weight 'medium)
-    
-    (set-face-attribute 'variable-pitch nil
-			:font (format "Sans-Serif-%d" size)
-			:weight 'medium)
-    
-    (set-face-attribute 'fixed-pitch nil
-			:font (format "Monospace-%d" size)
-			:weight 'medium)
-    
-    (add-to-list 'default-frame-alist '(font . (format "Monospace-%d" size)))))
+(set-face-attribute 'default nil
+		    :font "Monospace"
+		    :height 100
+		    :weight 'medium)
+
+(set-face-attribute 'variable-pitch nil
+		    :font "Sans-Serif"
+		    :weight 'medium)
+
+(set-face-attribute 'fixed-pitch nil
+		    :font "Monospace"
+		    :weight 'medium)
 
 (set-face-attribute 'font-lock-comment-face nil
 		    :slant 'italic)
 (set-face-attribute 'font-lock-keyword-face nil
 		    :slant 'italic)
 
-(set-font-size-global 12)
+(add-to-list 'default-frame-alist '(font . "Monospace"))
 
 (setq-default line-spacing 0.12)
 
@@ -592,7 +586,7 @@
 (require 'solaire-mode)
 (solaire-global-mode 1)
 
-;; Fix tramp to nixos systems
+;; Fix tramp for nixos systems
 (require 'tramp-sh)
  (setq tramp-remote-path
        (append tramp-remote-path

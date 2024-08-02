@@ -84,7 +84,7 @@ in {
 
     programs.emacs = {
       enable = true;
-      package = pkgs.emacs29-pgtk;
+      package = pkgs.emacs29;
       extraConfig = builtins.readFile ./init.el;
       extraPackages = epkgs:
         with epkgs; [
