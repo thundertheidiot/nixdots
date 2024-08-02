@@ -9,7 +9,7 @@
     (import ../workstation).system
     ../gaming
     # ./tv
-    ./gpu
+    # ./gpu
     ./desktop.nix
   ];
 

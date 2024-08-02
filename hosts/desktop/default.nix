@@ -30,9 +30,6 @@ in {
       setup.tv.enable = false;
 
       setup.desktop.enable = true;
-
-      setup.gpu = "amd";
-
     };
   };
 
@@ -68,7 +65,9 @@ in {
 
       firefox.enable = true;
       emacs.enable = true;
-      
+
+      gpu = "amd";
+
       # tv.enable = true;
 
       keyboard.enable = false;

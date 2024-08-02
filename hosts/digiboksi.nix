@@ -19,8 +19,6 @@
 
       setup.gaming.enable = false;
       # setup.tv.enable = true;
-
-      setup.gpu = "intel";
     };
   };
 
@@ -53,6 +51,8 @@
           height = 768;
         }
       ];
+
+      gpu = "intel";
 
       tv.enable = true;
 

@@ -22,9 +22,6 @@
       setup.gaming.enable = true;
       setup.tv.enable = false;
       setup.laptop.enable = true;
-
-
-      setup.gpu = "intel";
     };
   };
 
@@ -49,6 +46,8 @@
 
       firefox.enable = true;
       emacs.enable = true;
+
+      gpu = "intel";
 
       keyboard = {
         enable = true;

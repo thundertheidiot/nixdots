@@ -22,8 +22,6 @@
       setup.hyprland.extraAutostart = [];
       setup.gaming.enable = false;
       setup.tv.enable = true;
-
-      setup.gpu = "intel";
     };
   };
 
@@ -43,6 +41,8 @@
     meow = {
       firefox.enable = true;
       emacs.enable = true;
+
+      gpu = "intel";
 
       monitors = [
         {

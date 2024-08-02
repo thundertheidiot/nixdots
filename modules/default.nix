@@ -4,6 +4,7 @@
   ./config
   ./keyboard
   ./firefox.nix
+  ./gpu.nix
   ./tv
   ./emacs
 ]
