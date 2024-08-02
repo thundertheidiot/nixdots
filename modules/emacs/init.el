@@ -56,8 +56,7 @@
 (recentf-mode)
 
 (dolist (mode '(vterm-mode-hook
-	  simple-mpc-mode-hook
-	  eshell-mode-hook))
+	  simple-mpc-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (global-set-key (kbd "s-`") #'(lambda () (interactive) (insert "`")))
@@ -66,7 +65,7 @@
 
 (set-face-attribute 'default nil
 		    :font "Monospace"
-		    :height 100
+		    :height 98
 		    :weight 'medium)
 
 (set-face-attribute 'variable-pitch nil
@@ -242,8 +241,7 @@
  "s" '(:ignore t :wk "search")
 
  "o" '(:ignore t :wk "open")
- "ot" '(eshell :wk "eshell")
- "ov" '(vterm :wk "vterm")
+ "ot" '(vterm :wk "vterm")
 
  ":" '(execute-extended-command :wk "M-x")
  ";" '(execute-extended-command :wk "M-x")
@@ -437,8 +435,7 @@
  "ps" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "search project")
  "p." '(projectile-find-file :wk "find project file")
  "po" '(:ignore t :wk "open")
- "pot" '(projectile-run-eshell :wk "eshell")
- "pov" '(projectile-run-vterm :wk "vterm")
+ "pot" '(projectile-run-vterm :wk "vterm")
  "pog" '(projectile-vc :wk "project version control (git)")
  "pb" '(projectile-switch-to-buffer :wk "switch buffer in project"))
 
@@ -453,17 +450,8 @@
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
 (require 'vterm)
-(require 'eshell-vterm)
-(eshell-vterm-mode)
 (require 'fish-completion)
 (global-fish-completion-mode)
-
-(setq th/eshell-aliases
-      '((v . eshell-exec-visual)))
-
-(mapc (lambda (alias)
-	(defalias (car alias) (cdr alias)))
-      th/eshell-aliases)
 
 (require 'vertico)
 ;; (general-define-key :keymap vertico-map
@@ -516,8 +504,7 @@
 
 (require 'popper)
 (setq popper-reference-buffers
-      '("^\\*eshell.*\\*$" eshell-mode
-	"^\\*vterm.*\\*$" vterm-mode
+      '("^\\*vterm.*\\*$" vterm-mode
 	"\\*eldoc\\*" vterm-mode
 	("\\*elpaca-log\\*" . hide)
 	("\\*rustic.*\\*" . hide)

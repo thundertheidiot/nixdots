@@ -123,7 +123,6 @@ in {
           ibuffer-projectile
           magit
           vterm
-          eshell-vterm
           fish-completion
           vertico
           orderless
