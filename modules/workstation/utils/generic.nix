@@ -41,8 +41,8 @@
         home.packages = with pkgs; [
           gparted
           blueberry
-          (pkgs.cinnamon.nemo-with-extensions.overrideAttrs (final: prev: {
-            extensions = with pkgs.cinnamon; [nemo-fileroller];
+          (pkgs.nemo-with-extensions.overrideAttrs (final: prev: {
+            extensions = with pkgs; [nemo-fileroller];
           }))
           file-roller
           nsxiv # image viewer

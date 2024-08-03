@@ -76,6 +76,10 @@ in {
         };
       };
 
+      environment.systemPackages = [
+        (pkgs.writeShellScriptBin "newgamescope" ''exec "${pkgs.gamescope}/bin/gamescope" "$@"'')
+      ];
+
       programs.gamescope = {
         enable = true;
         # The newest gamescope refuses to actually work with any games

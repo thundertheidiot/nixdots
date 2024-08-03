@@ -7,8 +7,14 @@
     ...
   }:
     lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {
-      programs.hyprland = {
+      programs.hyprland = let
+        hypr = inputs.hyprland.packages.${pkgs.system};
+      in {
         enable = true;
+        package = hypr.hyprland;
+        portalPackage = hypr.xdg-desktop-portal-hyprland.override {
+          hyprland = hypr.hyprland;
+        };
       };
 
       services.displayManager.sessionPackages = with pkgs; [
@@ -82,11 +88,13 @@
           splash = false
         '';
 
-        wayland.windowManager.hyprland = {
+        wayland.windowManager.hyprland = let
+          hypr = inputs.hyprland.packages.${pkgs.system};
+        in {
           enable = true;
           systemd.enable = true;
           xwayland.enable = true;
-          package = pkgs.hyprland;
+          package = hypr.hyprland;
 
           extraConfig = config.setup.hyprland.extraConfig;
 
@@ -196,7 +204,8 @@
             animations.enabled = false;
 
             master = {
-              new_is_master = true;
+              new_status = "master";
+              new_on_top = true;
               mfact = 0.5;
             };
 

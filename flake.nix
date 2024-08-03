@@ -44,6 +44,7 @@
           ++ [
             cfg.system
             home-manager.nixosModules.home-manager
+            inputs.hyprland.nixosModules.default
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
             inputs.kmonad.nixosModules.default
@@ -92,10 +93,10 @@
                     swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
-                    hyprland = inputs.hyprland.packages.${final.system}.hyprland;
-                    xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
-                    hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
-                    wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
+                    # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
+                    # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
+                    # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
+                    # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
 
                     hyprland-split-monitor-workspaces = inputs.split-monitor-workspaces.packages.${final.system}.split-monitor-workspaces;
                     # udis86 = inputs.hyprland.packages.${final.system}.udis86;
@@ -205,7 +206,8 @@
       # 0.38. whatevevr works
       # url = "github:hyprwm/Hyprland?ref=303b9956b2ae15508b09dffae602550ca17e6539";
       # latest before clipboard break
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=4cdddcfe466cb21db81af0ac39e51cc15f574da9";
+      # url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=4cdddcfe466cb21db81af0ac39e51cc15f574da9";
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     };
 
     waybar.url = "github:Alexays/Waybar";
