@@ -77,24 +77,10 @@ in {
       };
 
       environment.systemPackages = [
-        (pkgs.writeShellScriptBin "newgamescope" ''exec "${pkgs.gamescope}/bin/gamescope" "$@"'')
-      ];
-
-      programs.gamescope = {
-        enable = true;
-        # The newest gamescope refuses to actually work with any games
-        # I don't know why but i can do this
-        package = pkgs."2405".gamescope.overrideAttrs (final: prev: rec {
+        # (pkgs.writeShellScriptBin "newgamescope" ''exec "${pkgs.gamescope}/bin/gamescope" "$@"'')
+        (pkgs."2405".gamescope.overrideAttrs (rec {
+          name = "gamescope-${version}";
           version = "3.14.0";
-
-          # patches = [
-          #   ./gamescope_shaders-path.patch
-          #   ./gamescope_use-pkgconfig.patch
-          # ];
-
-          # postPatch = ''
-          # substituteInPlace src/reshade_effect_manager.cpp --replace "@out@" "$out"
-          # '';
 
           src = pkgs.fetchFromGitHub {
             owner = "ValveSoftware";
@@ -103,7 +89,37 @@ in {
             fetchSubmodules = true;
             hash = "sha256-lgVVhnj209o9kCGTxOGmCRCyhT91QRvlQfOYyvyGj2Y=";
           };
-        });
+
+          postInstall = ''
+            mv $out/bin/gamescope $out/bin/gamescope-${version}
+          '';
+        }))
+      ];
+
+      programs.gamescope = {
+        enable = true;
+        # The newest gamescope refuses to actually work with any games
+        # I don't know why but i can do this
+        # package = pkgs."2405".gamescope.overrideAttrs (final: prev: rec {
+        #   version = "3.14.0";
+
+        #   # patches = [
+        #   #   ./gamescope_shaders-path.patch
+        #   #   ./gamescope_use-pkgconfig.patch
+        #   # ];
+
+        #   # postPatch = ''
+        #   # substituteInPlace src/reshade_effect_manager.cpp --replace "@out@" "$out"
+        #   # '';
+
+        #   src = pkgs.fetchFromGitHub {
+        #     owner = "ValveSoftware";
+        #     repo = "gamescope";
+        #     rev = "refs/tags/${version}";
+        #     fetchSubmodules = true;
+        #     hash = "sha256-lgVVhnj209o9kCGTxOGmCRCyhT91QRvlQfOYyvyGj2Y=";
+        #   };
+        # });
       };
 
       systemd.services."steamvr-setcap" = {
