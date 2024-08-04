@@ -133,6 +133,10 @@ in {
           empv
 
           separedit
+
+          all-the-icons
+          all-the-icons-dired
+          all-the-icons-ibuffer
         ];
     };
 

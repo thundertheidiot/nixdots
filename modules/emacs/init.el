@@ -93,6 +93,7 @@
 (require 'dired)
 (define-key dired-mode-map (kbd "SPC") nil)
 (define-key dired-mode-map (kbd "<backspace>") #'dired-up-directory)
+(define-key dired-mode-map (kbd "DEL") #'dired-up-directory)
 
 ;; Functions
 (defun make-mode-keymap (map outer)
@@ -290,7 +291,7 @@
 
 ;; Evil collection
 (require 'evil-collection)
-(setq evil-collection-mode-list '(dashboard woman dired ibuffer simple-mpc magit vterm))
+(setq evil-collection-mode-list '(dashboard woman dired  ibuffer simple-mpc magit vterm))
 (evil-collection-init)
 
 ;; Evil better visual line
@@ -463,7 +464,8 @@
 				("C-j" . vertico-next)
 				("C-k" . vertico-previous)
 				("C-u" . vertico-quick-exit)
-				("<backspace>" . vertico-directory-delete-char)))
+				("<backspace>" . vertico-directory-delete-char)
+				("DEL" . vertico-directory-delete-char)))
 
 (setq vertico-resize t)
 (vertico-mode)
@@ -580,3 +582,10 @@
  	       '(tramp-own-remote-path)))
 
 (require 'separedit)
+
+(when (display-graphic-p)
+  (require 'all-the-icons)
+  (require 'all-the-icons-dired)
+  (require 'all-the-icons-ibuffer)
+  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
+  (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))
