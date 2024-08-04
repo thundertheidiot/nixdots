@@ -13,7 +13,7 @@
   inherit (mlib) mkOpt;
 in {
   options = {
-    meow.gpu = mkOpt (enum ["amd" "nvidia" "intel"]) "none" {
+    meow.gpu = mkOpt (enum ["amd" "nvidia" "intel" "none"]) "none" {
       description = "Gpu type, this is used for installing drivers.";
     };
   };

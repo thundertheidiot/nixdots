@@ -22,4 +22,4 @@
 
   merged = mergeAttrsList imports;
 in
-  {inherit importFilesAndDirs;} // merged
+  {inherit importFilesAndDirs; fun = f: f;} // merged

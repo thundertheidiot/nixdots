@@ -50,7 +50,7 @@ in {
           end
 
           # Keep shell when entering nix-shell or nix run
-          ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+          # ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
         ''
         + (if config.meow.emacs.enable then ''
            function vterm_printf;

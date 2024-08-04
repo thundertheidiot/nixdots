@@ -33,14 +33,6 @@ in {
     };
   };
 
-  home = {pkgs, ...}: {
-    # home.stateVersion = "24.05";
-
-    gtk.gtk3.bookmarks = [
-      "file:///mnt/4tb"
-    ];
-  };
-
   system = {
     lib,
     config,
@@ -68,6 +60,8 @@ in {
       shell.enable = true;
 
       gpu = "amd";
+
+      virtualization.enable = true;
 
       # tv.enable = true;
 
@@ -151,6 +145,13 @@ in {
       };
     };
 
+    environment.systemPackages = with pkgs; [
+      android-tools
+    ];
+    
+    programs.adb.enable = true;
+    boot.binfmt.emulatedSystems = ["aarch64-linux"];
+    users.users.${config.username}.extraGroups = ["adbusers"];
 
     hardware.ckb-next.enable = true;
 

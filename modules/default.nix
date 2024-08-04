@@ -4,8 +4,10 @@
   ./shell.nix
   ./config
   ./keyboard
+  ./gaming
   ./firefox.nix
   ./gpu.nix
+  ./vm.nix
   ./tv
   ./emacs
 ]

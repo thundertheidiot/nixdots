@@ -25,10 +25,6 @@
     };
   };
 
-  home = {...}: {
-    home.stateVersion = "24.05";
-  };
-
   system = {
     config,
     lib,
@@ -54,6 +50,10 @@
       ];
 
       keyboard.enable = true;
+
+      home = {
+        stateVersion = "24.05";
+      };
     };
 
     boot.loader.grub.enable = true;

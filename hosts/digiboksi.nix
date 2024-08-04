@@ -22,10 +22,6 @@
     };
   };
 
-  home = {...}: {
-    home.stateVersion = "24.05";
-  };
-
   system = {
     lib,
     pkgs,
@@ -65,6 +61,10 @@
           "uBlock0@raymonhill.net" = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-11423598-latest.xpi";
           "idcac-pub@guus.ninja" = "https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/addon-17568914-latest.xpi";
         };
+      };
+
+      home = {
+        stateVersion = "24.05";
       };
     };
 

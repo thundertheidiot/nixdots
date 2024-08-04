@@ -18,9 +18,9 @@
       gen ["desktop" "x220" "t440p" "digiboksi"]
       // {
         local = mkSystem (import ./local.nix) [];
-        # iso = mkSystem (import ./hosts/iso.nix) [
-        #   "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
-        # ];
+        iso = mkSystem (import ./hosts/iso.nix) [
+          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
+        ];
       };
 
     commonModules = cfg: [
@@ -31,6 +31,10 @@
         age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
       })
     ];
+
+    nixosModules.default = ({...}: {
+      imports = ./modules;
+    });
 
     mkSystem = cfg: extramodules: let
       common = commonModules cfg;
@@ -47,7 +51,6 @@
             inputs.hyprland.nixosModules.default
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
-            inputs.kmonad.nixosModules.default
             ({
               config,
               lib,
@@ -81,16 +84,15 @@
                     };
                     firefox-addons = nur.repos.rycee.firefox-addons;
                     ataraxiasjel = nur.repos.ataraxiasjel;
-                    "2311" = import inputs.nixpkgs-23-11 {
-                      system = final.system;
-                      config.allowUnfree = final.config.allowUnfree;
-                    };
                     "2405" = import inputs.nixpkgs-24-05 {
                       system = final.system;
                       config.allowUnfree = final.config.allowUnfree;
                     };
+                    "2311" = import inputs.nixpkgs-23-11 {
+                      system = final.system;
+                      config.allowUnfree = final.config.allowUnfree;
+                    };
                     agenix = inputs.agenix.packages.${final.system};
-                    swayfx = inputs.swayfx.packages.${final.system}.swayfx-unwrapped;
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
                     # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
@@ -115,7 +117,7 @@
                 user = config.username;
                 extraSpecialArgs = {inherit inputs mlib mpkgs;};
                 sharedModules = common ++ [
-                  cfg.home
+                  # cfg.home
                   inputs.agenix.homeManagerModules.default
                   inputs.plasma-manager.homeManagerModules.plasma-manager
                   inputs.base16.homeManagerModule
@@ -124,25 +126,6 @@
                   ./modules/home
                 ];
               };
-
-              # home-manager = {
-              #   useGlobalPkgs = true;
-              #   useUserPackages = true;
-              #   extraSpecialArgs = {inherit inputs mlib mpkgs;};
-
-              #   backupFileExtension = "hm_backup";
-
-              #   sharedModules =
-              #     common
-              #     ++ [
-              #       cfg.home
-              #       inputs.agenix.homeManagerModules.default
-              #       inputs.plasma-manager.homeManagerModules.plasma-manager
-              #       inputs.base16.homeManagerModule
-              #     ];
-
-              #   users.${config.username} = ./modules/home;
-              # };
             })
           ];
       };
@@ -171,11 +154,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    kmonad = {
-      url = "github:kmonad/kmonad?dir=nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -200,21 +178,12 @@
     nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
 
     hyprland = {
-      # Gpu works, split monitor workspaces works, idk
-      # Old ass
-      # url = "github:hyprwm/Hyprland?ref=e1e41e54480282d9bec9957d3c578eb87bc1f2f2";
-      # 0.38. whatevevr works
-      # url = "github:hyprwm/Hyprland?ref=303b9956b2ae15508b09dffae602550ca17e6539";
       # latest before clipboard break
       # url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=4cdddcfe466cb21db81af0ac39e51cc15f574da9";
       url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     };
 
     waybar.url = "github:Alexays/Waybar";
-
-    swayfx = {
-      url = "github:WillPower3309/swayfx";
-    };
 
     split-monitor-workspaces = {
       # for the ref above
@@ -225,7 +194,6 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
-    nixgl.url = "github:nix-community/nixGL";
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     nur.url = "github:nix-community/NUR";

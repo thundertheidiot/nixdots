@@ -64,9 +64,9 @@
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
 
 (set-face-attribute 'default nil
-		    :font "Monospace"
-		    :height 98
-		    :weight 'medium)
+		    :family "Monospace"
+		    :height 90
+		    :weight 'regular)
 
 (set-face-attribute 'variable-pitch nil
 		    :font "Sans-Serif"

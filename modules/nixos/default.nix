@@ -7,10 +7,10 @@
 }: {
   imports = [
     (import ../workstation).system
-    ../gaming
+    # ../gaming
     # ./tv
     # ./gpu
-    ./desktop.nix
+    # ./desktop.nix
   ];
 
   config = {
@@ -29,6 +29,7 @@
       libraries = with pkgs; [libGL];
     };
 
+    security.sudo.enable = lib.mkForce false;
     security.sudo-rs = {
       enable = true;
       execWheelOnly = true;

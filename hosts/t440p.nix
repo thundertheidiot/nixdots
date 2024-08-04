@@ -25,10 +25,6 @@
     };
   };
 
-  home = {...}: {
-    home.stateVersion = "24.05";
-  };
-
   system = {
     config,
     lib,
