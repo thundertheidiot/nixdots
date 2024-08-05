@@ -399,49 +399,61 @@
 (require 'company-box)
 (add-hook 'company-mode #'company-box-mode)
 
-(require 'treesit-auto)
-(setq treesit-auto-install 'prompt)
-(treesit-auto-add-to-auto-mode-alist 'all)
-(global-treesit-auto-mode)
-(add-to-list 'treesit-extra-load-path (expand-file-name "tree-sitter/" user-emacs-directory))
+;; (require 'treesit-auto)
+;; (setq treesit-auto-install 'prompt)
+;; (treesit-auto-add-to-auto-mode-alist 'all)
+;; (global-treesit-auto-mode)
+;; (add-to-list 'treesit-extra-load-path (expand-file-name "tree-sitter/" user-emacs-directory))
+
+(with-eval-after-load 'rustic
+  (add-hook 'rustic-mode-hook #'eglot-ensure)
+  (setq rustic-format-trigger 'on-save
+	rustic-lsp-client 'eglot
+	rustic-format-on-save-method 'rustic-cargo-fmt
+	rustic-format-display-method 'ignore
+	rustic-use-rust-save-some-buffers t
+	compilation-ask-about-save nil))
+
+(with-eval-after-load 'nix-mode
+  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
+  (add-hook 'nix-mode-hook #'eglot-ensure))
+
+(with-eval-after-load 'haskell-mode
+  (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+  (add-hook 'haskell-mode-hook #'eglot-ensure))
+
+(with-eval-after-load 'lua-mode
+  (add-to-list 'auto-mode-alist '("\\.lua\\'" . lua-mode))
+  (add-hook 'lua-mode #'eglot-ensure))
+
+(with-eval-after-load 'gscript-mode
+  (add-to-list 'auto-mode-alist '("\\.gdscript\\'" . gdscript-mode))
+  (add-hook 'gdscript-mode-hook #'eglot-ensure))
+
+(with-eval-after-load 'fennel-mode
+  (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
+  (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
 
 (require 'rustic)
-(add-hook 'rustic-mode-hook #'lsp-deferred)
-(setq rustic-format-trigger 'on-save
-      rustic-lsp-client 'eglot
-      rustic-format-on-save-method 'rustic-cargo-fmt
-      rustic-format-display-method 'ignore
-      rustic-use-rust-save-some-buffers t
-      compilation-ask-about-save nil)
-
 (require 'nix-mode)
-(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
-(add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
-(add-hook 'nix-mode-hook #'eglot-ensure)
-
 (require 'haskell-mode)
-(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-;; (add-to-list 'eglot-server-programs '(haskell-mode . ("haskell-language-server-wrapper")))
-(add-hook 'haskell-mode-hook #'eglot-ensure)
+(require 'lua-mode)
+(require 'gdscript-mode)
+(require 'fennel-mode)
 
-
-;; elisp compltion
 (add-hook 'emacs-lisp-mode-hook #'company-mode)
 
-(require 'lua-mode)
-(add-to-list 'auto-mode-alist '("\\.lua\\'" . lua-mode))
-(add-hook 'lua-mode #'lsp-deferred)
-
-(add-hook 'csharp-mode-hook #'lsp-deferred)
+(add-hook 'csharp-mode-hook #'eglot-ensure)
+(add-hook 'csharp-mode-hook #'csharp-ts-mode)
 (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-mode))
 
-(require 'gdscript-mode)
-(add-to-list 'auto-mode-alist '("\\.gdscript\\'" . gdscript-mode))
-(add-hook 'gdscript-mode-hook #'lsp-deferred)
+
+(with-eval-after-load 'rainbow-delimiters
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'org-mode-hook #'rainbow-delimiters-mode))
 
 (require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'org-mode-hook #'rainbow-delimiters-mode)
 
 (require 'projectile)
 (setq projectile-switch-project-action #'projectile-dired)
@@ -581,7 +593,7 @@
 
 (require 'diminish)
 
-(defun meow--init-frame ()
+(defun th--init-frame ()
   "Initialize a frame."
   (when (display-graphic-p)
     (with-eval-after-load 'catppuccin-theme
@@ -596,12 +608,12 @@
 	(add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
   (unless (display-graphic-p)
     (xterm-mouse-mode 1))
-  (remove-hook 'server-after-make-frame-hook #'meow--init-frame))
+  (remove-hook 'server-after-make-frame-hook #'th--init-frame))
 
 
-;; (add-hook 'after-make-frame-functions #'meow--init-frame) ;; breaks emacs(client)
-(add-hook 'after-init-hook #'meow--init-frame)
-(add-hook 'server-after-make-frame-hook #'meow--init-frame)
+;; (add-hook 'after-make-frame-functions #'th--init-frame) ;; breaks emacs(client)
+(add-hook 'after-init-hook #'th--init-frame)
+(add-hook 'server-after-make-frame-hook #'th--init-frame)
 
 (require 'catppuccin-theme)
 (require 'solaire-mode)

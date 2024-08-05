@@ -14,6 +14,8 @@ in {
       clang-tools # clangd + clang-format
       haskell-language-server
       ghc
+      fennel-ls
+      nodePackages.bash-language-server
 
       imagemagick
     ];
@@ -111,13 +113,17 @@ in {
           eglot
           company
           company-box
-          treesit-auto
+
+          treesit-grammars.with-all-grammars
+          # treesit-auto
 
           rustic
           lua-mode
           gdscript-mode
           nix-mode
           haskell-mode
+          fennel-mode
+          
           rainbow-delimiters
 
           projectile
