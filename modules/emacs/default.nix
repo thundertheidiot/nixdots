@@ -51,19 +51,19 @@ in {
         '';
       };
 
-      catppuccin-theme = self.trivialBuild {
-        pname = "catppuccin-theme";
-        version = "1.0.0";
+      # catppuccin-theme = self.trivialBuild {
+      #   pname = "catppuccin-theme";
+      #   version = "1.0.0";
 
-        src = pkgs.fetchgit {
-          url = "https://github.com/catppuccin/emacs";
-          rev = "3d93abaa33e95f19b4a8b0e1e9bef1e3e68dd994";
-          sha256 = sha256:1j6nsy9is067288x2riabb7kc3grghb2g7bkvwndn2jyglbbxgi0;
-        };
-        recipe = pkgs.writeText "recipe" ''
-          (catppuccin-theme :fetcher github :repo "catppuccin/emacs" :files ("catppuccin-theme.el"))
-        '';
-      };
+      #   src = pkgs.fetchgit {
+      #     url = "https://github.com/catppuccin/emacs";
+      #     rev = "3d93abaa33e95f19b4a8b0e1e9bef1e3e68dd994";
+      #     sha256 = sha256:1j6nsy9is067288x2riabb7kc3grghb2g7bkvwndn2jyglbbxgi0;
+      #   };
+      #   recipe = pkgs.writeText "recipe" ''
+      #     (catppuccin-theme :fetcher github :repo "catppuccin/emacs" :files ("catppuccin-theme.el"))
+      #   '';
+      # };
 
       smartparens = self.trivialBuild {
         pname = "smartparens";
@@ -100,7 +100,6 @@ in {
           evil-collection
           evil-better-visual-line
           smartparens
-          evil-smartparens
           which-key
           general
 

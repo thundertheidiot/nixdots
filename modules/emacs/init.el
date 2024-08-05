@@ -1,8 +1,8 @@
 ;; -*- lexical-binding: t -*-
 (setq emacs-data-directory (let (
-				 (local-share 
-				  (or 
-				   (getenv "XDG_DATA_HOME") 
+				 (local-share
+				  (or
+				   (getenv "XDG_DATA_HOME")
 				   (concat (getenv "HOME") "/.local/share"))))
 			     (expand-file-name (concat local-share "/emacs/"))))
 
@@ -59,7 +59,7 @@
 	  simple-mpc-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-(global-set-key (kbd "s-`") #'(lambda () (interactive) (insert "`")))
+(global-set-key (kbd "s-`") #'(lambda () (interactive) (insert "`"))) ;; weird keyboard shenanigans
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
 
@@ -90,10 +90,10 @@
 (setq pixel-scroll-precision-large-scroll-height 40.0)
 (setq pixel-scroll-precision-use-momentum t)
 
-(require 'dired)
-(define-key dired-mode-map (kbd "SPC") nil)
-(define-key dired-mode-map (kbd "<backspace>") #'dired-up-directory)
-(define-key dired-mode-map (kbd "DEL") #'dired-up-directory)
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "SPC") nil)
+  (define-key dired-mode-map (kbd "<backspace>") #'dired-up-directory)
+  (define-key dired-mode-map (kbd "DEL") #'dired-up-directory))
 
 ;; Functions
 (defun make-mode-keymap (map outer)
@@ -102,7 +102,7 @@
 	outer))
 
 (defun comment-or-uncomment-region-or-line ()
-  "If a region is selected, either uncomment or comment it, if not, uncomment or comment the current line"
+  "If a region is selected, either uncomment or comment it, if not, uncomment or comment the current line."
   (interactive)
   (let (beg end)
     (if (region-active-p)
@@ -112,6 +112,7 @@
     (comment-or-uncomment-region beg end)))
 
 (defun eval-region-and-go-to-normal-mode ()
+  "Evaluate elisp in the selected region, and go back to normal mode."
   (interactive)
   (let (beg end)
     (if (region-active-p)
@@ -135,9 +136,9 @@
     window-list-string-formatted))
 
 (defun save-current-window-configuration (&optional name)
-  "Add `current-window-configuration` to saved window configurations."
+  "Add `current-window-configuration` to saved window configurations, if NAME is provided, give it a name."
   (interactive)
-  (add-to-list 'saved-window-configurations `(,(or name 
+  (add-to-list 'saved-window-configurations `(,(or name
 						   (if (string= (projectile-project-name) "-")
 						       (format "%s (%s)"
 							       (shell-command-to-string "date \"+%a %R\"")
@@ -159,7 +160,7 @@
   "Select a window configuration from the list."
   (interactive)
   (let ((config (cdr
-		 (assoc 
+		 (assoc
 		  (completing-read "Select a window configuration: " saved-window-configurations)
 		  saved-window-configurations))))
     (if config
@@ -167,6 +168,7 @@
       (message "Selected item is invalid, something has gone wrong."))))
 
 (defun delete-from-saved-window-configurations ()
+  "Select a window configuration to delete."
   (interactive)
   (setq saved-window-configurations
 	(delq (assoc
@@ -176,29 +178,53 @@
 	      saved-window-configurations)))
 
 
-;; Evil
-;; (require 'undo-fu)
-(require 'undo-tree)
-(global-undo-tree-mode)
-(setq th/undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
-(unless (file-directory-p th/undo-tree-dir)
-  (make-directory th/undo-tree-dir))
-(defadvice undo-tree-make-history-save-file-name
-  (after undo-tree activate)
-  (setq ad-return-value (concat th/undo-tree-dir ad-return-value)))
-(require 'evil)
-(setq evil-want-integration t)
-(setq evil-want-keybinding nil)
-(setq evil-vsplit-window-right t)
-(setq evil-split-window-below t)
-(setq evil-undo-system 'undo-tree)
-(evil-set-undo-system evil-undo-system)
-(evil-mode)
+(with-eval-after-load 'undo-tree
+  (global-undo-tree-mode)
+  (setq th/undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
+  (unless (file-directory-p th/undo-tree-dir)
+    (make-directory th/undo-tree-dir))
+  (defadvice undo-tree-make-history-save-file-name
+      (after undo-tree activate)
+    (setq ad-return-value (concat th/undo-tree-dir ad-return-value))))
 
-;; Which-key
+
+(with-eval-after-load 'evil
+  (setq
+   evil-want-integration t
+   evil-want-keybinding nil
+   evil-vsplit-window-right t
+   evil-split-window-below t
+   evil-undo-system 'undo-tree)
+  (evil-set-undo-system evil-undo-system)
+  (evil-mode))
+
+(with-eval-after-load 'evil-collection
+  (evil-collection-init '(dashboard
+			  woman
+			  pdf
+			  dired
+			  wdired
+			  image
+			  eglot
+			  ibuffer
+			  simple-mpc
+			  magit
+			  vterm)))
+
+(with-eval-after-load 'which-key
+  (which-key-setup-side-window-bottom)
+  (which-key-mode))
+
+(with-eval-after-load 'evil-better-visual-line
+  (evil-better-visual-line-on))
+
+(with-eval-after-load 'smartparens)
+
+(require 'undo-tree)
+(require 'evil)
+(require 'evil-collection)
+(require 'evil-better-visual-line)
 (require 'which-key)
-(which-key-setup-side-window-bottom)
-(which-key-mode)
 
 ;; General
 (require 'general)
@@ -209,7 +235,7 @@
 		  :prefix "SPC"
 		  :global-prefix "C-SPC")
 
-(general-create-definer th/local 
+(general-create-definer th/local
 		  :states '(normal insert visual emacs motion)
 		  :keymaps 'override
 		  :prefix "SPC l"
@@ -289,38 +315,19 @@
  "<C-wheel-up>" 'text-scale-increase
  "<C-wheel-down>" 'text-scale-decrease)
 
-;; Evil collection
-(require 'evil-collection)
-(setq evil-collection-mode-list '(dashboard
-				  woman
-				  pdf
-				  dired
-				  wdired
-				  image
-				  eglot
-				  ibuffer
-				  simple-mpc
-				  magit
-				  vterm))
-(evil-collection-init)
-
-;; Evil better visual line
-(require 'evil-better-visual-line)
-(evil-better-visual-line-on)
-
 ;; Smartparens
+(with-eval-after-load 'smartparens
+  (smartparens-global-mode))
+
 (require 'smartparens)
-(require 'evil-smartparens)
-(add-hook 'emacs-lisp-mode 'smartparens-mode)
-(add-hook 'rustic-mode-hook 'smartparens-mode)
-(smartparens-global-mode)
 
 ;; Org
+(require 'org)
 (setq org-src-preserve-indentation t
       org-src-tab-acts-natively t)
 
 (require 'org-tempo)
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+`(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
@@ -551,6 +558,8 @@
   "mh" '(simple-mpc-prev :wk "prev")
   "ml" '(simple-mpc-next :wk "next"))
 
+
+
 (require 'diminish)
 (diminish 'which-key-mode)
 (diminish 'font-lock-mode)
@@ -571,31 +580,37 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
 
-;; Theming
-(require 'catppuccin-theme)
-;; (catppuccin-reload)
-;; (load-theme 'catppuccin t)
-;; (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
-(add-hook 'server-after-make-frame-hook (lambda () (catppuccin-reload) (catppuccin-load-flavor 'mocha)))
-;; (add-hook 'server-after-make-frame-hook (lambda () (catppuccin-load-flavor 'mocha)))
-;; (add-hook 'emacs-startup-hook (lambda () (catppuccin-load-flavor 'mocha)))
-
-;; (add-hook 'after-init-hook (lambda () (catppuccin-reload)))
-
-(require 'solaire-mode)
-(solaire-global-mode 1)
-
 ;; Fix tramp for nixos systems
-(require 'tramp-sh)
- (setq tramp-remote-path
-       (append tramp-remote-path
- 	       '(tramp-own-remote-path)))
+(with-eval-after-load 'tramp-sh
+  (setq tramp-remote-path
+	(append tramp-remote-path
+ 		'(tramp-own-remote-path))))
 
 (require 'separedit)
 
-(when (display-graphic-p)
-  (require 'all-the-icons)
-  (require 'all-the-icons-dired)
-  (require 'all-the-icons-ibuffer)
-  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
-  (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))
+(defun meow--init-frame ()
+  "Initialize a frame."
+  (when (display-graphic-p)
+    (with-eval-after-load 'catppuccin-theme
+      (setq catppuccin-flavor 'mocha)
+      (catppuccin-reload))
+    (with-eval-after-load 'solaire-mode
+      (solaire-global-mode +1))
+    (with-eval-after-load 'all-the-icons
+      (with-eval-after-load 'all-the-icons-dired
+	(add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
+      (with-eval-after-load 'all-the-icons-ibuffer
+	(add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
+  (unless (display-graphic-p)
+    (xterm-mouse-mode 1)))
+
+
+;; (add-hook 'after-make-frame-functions #'meow--init-frame) ;; breaks emacs(client)
+(add-hook 'after-init-hook #'meow--init-frame)
+(add-hook 'server-after-make-frame-hook #'meow--init-frame)
+
+(require 'catppuccin-theme)
+(require 'solaire-mode)
+(require 'all-the-icons)
+(require 'all-the-icons-dired)
+(require 'all-the-icons-ibuffer)
