@@ -14,6 +14,8 @@ in {
       clang-tools # clangd + clang-format
       haskell-language-server
       ghc
+
+      imagemagick
     ];
 
     programs.emacs.overrides = self: super: {

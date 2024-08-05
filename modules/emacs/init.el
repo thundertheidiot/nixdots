@@ -291,7 +291,17 @@
 
 ;; Evil collection
 (require 'evil-collection)
-(setq evil-collection-mode-list '(dashboard woman dired  ibuffer simple-mpc magit vterm))
+(setq evil-collection-mode-list '(dashboard
+				  woman
+				  pdf
+				  dired
+				  wdired
+				  image
+				  eglot
+				  ibuffer
+				  simple-mpc
+				  magit
+				  vterm))
 (evil-collection-init)
 
 ;; Evil better visual line
