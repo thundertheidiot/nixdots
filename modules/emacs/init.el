@@ -468,25 +468,30 @@
 (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
 (require 'vterm)
-(require 'fish-completion)
-(global-fish-completion-mode)
 
-(require 'vertico)
-;; (general-define-key :keymap vertico-map
-;; 		    "C-j" #'vertico-next
-;; 		    "C-k" #'vertico-previous
-;; 		    "C-u" #'vertico-quick-exit
-;; 		    "<backspace>" #'vertico-directory-delete-char)
-(make-mode-keymap vertico-map '(
-				("C-j" . vertico-next)
-				("C-k" . vertico-previous)
-				("C-u" . vertico-quick-exit)
-				("<backspace>" . vertico-directory-delete-char)
-				("DEL" . vertico-directory-delete-char)))
 
-(setq vertico-resize t)
-(vertico-mode)
+(with-eval-after-load 'vertico
+  (make-mode-keymap vertico-map '(("C-j" . vertico-next)
+				  ("C-k" . vertico-previous)
+				  ("C-u" . vertico-quick-exit)
+				  ("<backspace>" . vertico-directory-delete-char)
+				  ("DEL" . vertico-directory-delete-char)))
+  (setq vertico-resize t)
+  (vertico-mode))
 
+(with-eval-after-load 'consult
+  (th/leader
+    "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
+    "sf" '(consult-fd :wk "find")
+    "bs" '(consult-buffer :wk "switch")))
+
+(with-eval-after-load 'orderless
+  (setq completion-styles '(orderless basic)
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles partial-completion)))))
+
+(with-eval-after-load
+    (marginalia-mode))
 
 (defun crm-indicator (args)
   (cons (format "[CRM%s] %s"
@@ -503,82 +508,51 @@
 
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-(require 'consult)
-(th/leader
-  "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
-  "sf" '(consult-fd :wk "M-x")
-  "bs" '(consult-buffer :wk "M-x"))
-
 (savehist-mode 1)
 
+(require 'vertico)
+(require 'consult)
 (require 'orderless)
-(setq completion-styles '(orderless basic)
-      completion-category-defaults nil
-      completion-category-overrides '((file (styles partial-completion))))
-
 (require 'marginalia)
-;; (general-define-key :keymap message-minibuffer-local-map
-;; 		    "C-m" #'marginalia-cycle)
-(marginalia-mode)
+
+(with-eval-after-load 'popper
+  (setq popper-reference-buffers
+	'("^\\*vterm.*\\*$" vterm-mode
+	  "\\*eldoc\\*" vterm-mode
+	  ("\\*elpaca-log\\*" . hide)
+	  ("\\*rustic.*\\*" . hide)
+	  ("\\*rustfmt\\*" . hide)
+	  ("\\*rust-analyzer.*\\*" . hide)
+	  ("\\*EGLOT.*\\*" . hide)
+	  ("\\*scratch\\*" . hide)
+	  ("\\*Warnings\\*" . hide)
+	  (compilation-mode . hide))
+	popper-group-function #'popper-group-by-projectile)
+  (th/leader
+    "op" '(:ignore t :wk "popper")
+    "opt" '(popper-toggle :wk "popper toggle")
+    "opm" '(popper-toggle-type :wk "popper toggle type")
+    "opc" '(popper-cycle :wk "popper cycle"))
+
+  (setq popper-window-height 20)
+
+  (popper-mode 1)
+  (popper-echo-mode 1))
+
+(with-eval-after-load 'simple-mpc
+  (th/leader
+    "m" '(:ignore t :wk "media")
+    "mm" '(simple-mpc :wk "open simple-mpc")
+    "ms" '(simple-mpc-query :wk "search")
+    "mp" '(simple-mpc-toggle :wk "play/pause")
+    "mC" '(simple-mpc-clear-current-playlist :wk "clear")
+    "mP" '(simple-mpc-view-current-playlist :wk "playlist")
+    "ma" '(simple-mpc-load-playlist :wk "load playlist")
+    "mh" '(simple-mpc-prev :wk "prev")
+    "ml" '(simple-mpc-next :wk "next")))
 
 (require 'popper)
-(setq popper-reference-buffers
-      '("^\\*vterm.*\\*$" vterm-mode
-	"\\*eldoc\\*" vterm-mode
-	("\\*elpaca-log\\*" . hide)
-	("\\*rustic.*\\*" . hide)
-	("\\*rustfmt\\*" . hide)
-	("\\*rust-analyzer.*\\*" . hide)
-	("\\*EGLOT.*\\*" . hide)
-	("\\*scratch\\*" . hide)
-	("\\*Warnings\\*" . hide)
-	(compilation-mode . hide))
-      popper-group-function #'popper-group-by-projectile)
-(th/leader
-  "op" '(:ignore t :wk "popper")
-  "opt" '(popper-toggle :wk "popper toggle")
-  "opm" '(popper-toggle-type :wk "popper toggle type")
-  "opc" '(popper-cycle :wk "popper cycle"))
-
-(setq popper-window-height 20)
-
-(popper-mode 1)
-(popper-echo-mode 1)
-
-
 (require 'simple-mpc)
-(th/leader
-  "m" '(:ignore t :wk "media")
-  "mm" '(simple-mpc :wk "open simple-mpc")
-  "ms" '(simple-mpc-query :wk "search")
-  "mp" '(simple-mpc-toggle :wk "play/pause")
-  "mC" '(simple-mpc-clear-current-playlist :wk "clear")
-  "mP" '(simple-mpc-view-current-playlist :wk "playlist")
-  "ma" '(simple-mpc-load-playlist :wk "load playlist")
-  "mh" '(simple-mpc-prev :wk "prev")
-  "ml" '(simple-mpc-next :wk "next"))
-
-
-
-(require 'diminish)
-(diminish 'which-key-mode)
-(diminish 'font-lock-mode)
-(diminish 'visual-line-mode)
-(diminish 'evil-collection-unimpaired-mode)
-(diminish 'smartparens-mode)
-(diminish 'evil-smartparens-mode)
-(diminish 'org-bullets-mode)
-(diminish 'hl-todo-mode)
-(diminish 'global-hl-todo-mode)
-(diminish 'company-mode)
-(diminish 'rainbow-delimiters-mode)
-(diminish 'projectile-mode)
-(diminish 'auto-revert-mode)
-(diminish 'eldoc-mode)
-(diminish 'undo-tree-mode)
-
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(global-set-key (kbd "ESC") 'keyboard-escape-quit)
 
 ;; Fix tramp for nixos systems
 (with-eval-after-load 'tramp-sh
@@ -587,6 +561,25 @@
  		'(tramp-own-remote-path))))
 
 (require 'separedit)
+
+(with-eval-after-load 'diminish
+  (diminish 'which-key-mode)
+  (diminish 'font-lock-mode)
+  (diminish 'visual-line-mode)
+  (diminish 'evil-collection-unimpaired-mode)
+  (diminish 'smartparens-mode)
+  (diminish 'evil-smartparens-mode)
+  (diminish 'org-bullets-mode)
+  (diminish 'hl-todo-mode)
+  (diminish 'global-hl-todo-mode)
+  (diminish 'company-mode)
+  (diminish 'rainbow-delimiters-mode)
+  (diminish 'projectile-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'eldoc-mode)
+  (diminish 'undo-tree-mode))
+
+(require 'diminish)
 
 (defun meow--init-frame ()
   "Initialize a frame."
@@ -602,7 +595,8 @@
       (with-eval-after-load 'all-the-icons-ibuffer
 	(add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
   (unless (display-graphic-p)
-    (xterm-mouse-mode 1)))
+    (xterm-mouse-mode 1))
+  (remove-hook 'server-after-make-frame-hook #'meow--init-frame))
 
 
 ;; (add-hook 'after-make-frame-functions #'meow--init-frame) ;; breaks emacs(client)

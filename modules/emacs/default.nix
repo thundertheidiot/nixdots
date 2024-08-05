@@ -124,7 +124,7 @@ in {
           ibuffer-projectile
           magit
           vterm
-          fish-completion
+
           vertico
           orderless
           consult
