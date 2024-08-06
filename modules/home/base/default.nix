@@ -103,6 +103,7 @@ in
       alejandra
       agenix.default
       age
+      gnupg
     ];
 
     xdg.enable = true;

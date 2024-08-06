@@ -117,7 +117,11 @@ in {
           company-box
 
           treesit-grammars.with-all-grammars
-          # treesit-auto
+
+          olivetti
+          org-roam
+
+          elfeed
 
           rustic
           lua-mode

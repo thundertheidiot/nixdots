@@ -73,6 +73,7 @@
 
 (set-face-attribute 'variable-pitch nil
 		    :font "Sans-Serif"
+		    :height 120
 		    :weight 'medium)
 
 (set-face-attribute 'fixed-pitch nil
@@ -220,6 +221,7 @@
 			  woman
 			  pdf
 			  dired
+			  elfeed
 			  wdired
 			  image
 			  eglot
@@ -342,12 +344,44 @@
   (add-hook 'org-mode-hook #'org-indent-mode)
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1))))
 
+(th/leader
+  "ol" '(org-open-at-point :wk "open org link"))
+
 (th/local
   "l" '(:ignore t :wk "org link")
   "li" '(org-insert-link :wk "insert org link")
   "lo" '(org-open-at-point :wk "open org link")
   "le" '(org-edit-special :wk "open org link")
   "lt" '(org-toggle-link-display :wk "toggle link display"))
+
+(use-package olivetti
+  :after org
+  :init (setq olivetti-min-body-width 50
+	      olivetti-body-width 80
+	      olivetti-style 'fancy
+	      olivetti-margin-width 12)
+  :config
+  (set-face-attribute 'olivetti-fringe nil :background "#313244")
+  :hook
+  (olivetti-mode-on . (lambda () (olivetti-set-width 85)))
+  (org-mode . olivetti-mode))
+
+(use-package org-roam
+  :after org
+  :init
+  (setq org-roam-directory (file-truename "~/Documents/org-roam"))
+  (unless (file-directory-p org-roam-directory)
+    (make-directory org-roam-directory))
+  :config
+  (org-roam-db-autosync-mode)
+  (org-roam-setup))
+
+(th/leader
+  "r" '(:ignore t :wk "roam")
+  "rb" '(org-roam-buffer-toggle :wk "buffer")
+  "rf" '(org-roam-node-find :wk "find")
+  "rc" '(org-roam-node-find :wk "find")
+  "ri" '(org-roam-node-insert :wk "find"))
 
 (use-package org-tempo
   :after org
