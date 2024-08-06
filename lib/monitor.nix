@@ -32,6 +32,7 @@ with builtins; rec {
         refresh
         x
         y
+        scale
         hyprlandExtra
         hyprlandExclude
         edid
