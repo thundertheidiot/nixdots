@@ -336,7 +336,6 @@
 
 (use-package org
   :demand t
-  :mode "\\.org\\'"
   :init
   (setq org-src-preserve-indentation t
 	org-src-tab-acts-natively t)
