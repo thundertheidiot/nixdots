@@ -2,10 +2,8 @@
   description = "nixos";
 
   outputs = {
-    self,
     nixpkgs,
     home-manager,
-    hyprland,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -19,7 +17,7 @@
       // {
         local = mkSystem (import ./local.nix) [];
         iso = mkSystem (import ./hosts/iso.nix) [
-          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
+          "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
         ];
       };
 
@@ -53,7 +51,6 @@
             inputs.chaotic.nixosModules.default
             ({
               config,
-              lib,
               ...
             }: {
               time.timeZone = config.timeZone;

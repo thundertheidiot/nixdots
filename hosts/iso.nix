@@ -10,18 +10,32 @@
     hostName = "nixos-install";
     timeZone = "Europe/Helsinki";
 
-    
+    workstation.enable = true;
+    workstation.utils = "generic/gtk";
+    workstation.environment = ["hyprland"];
   };
 
   system = {
     lib,
-    config,
+      config,
+      pkgs,
     ...
   }: {
-    system.stateVersion = "24.05";
+    system.stateVersion = "24.11";
 
     services = {
       qemuGuest.enable = true;
+    };
+
+    boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+
+    services.displayManager.sddm = {
+      settings = {
+        Autologin = {
+          Session = "hyprland.desktop";
+          User = "${config.username}";
+        };
+      };
     };
 
     users.users.${config.username} = {
