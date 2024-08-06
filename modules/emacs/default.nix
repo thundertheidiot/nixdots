@@ -110,7 +110,8 @@ in {
           solaire-mode
           catppuccin-theme
           hl-todo
-          flymake
+          flycheck
+          flycheck-eglot
           eglot
           company
           company-box

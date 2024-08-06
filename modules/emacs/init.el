@@ -366,8 +366,8 @@
   (global-hl-todo-mode 1))
 
 ;; IDE
-(use-package flymake
-  :hook (prog-mode . flymake-mode))
+;; (use-package flymake
+;;   :hook (prog-mode . flymake-mode))
 
 
 (use-package eglot
@@ -386,6 +386,14 @@
   :after eglot
   :config
   (eglot-booster-mode))
+
+(use-package flycheck
+  :config (global-flycheck-mode))
+
+(use-package flycheck-eglot
+  :after (flycheck eglot)
+  :config
+  (global-flycheck-eglot-mode 1))
 
 ;; (require 'indent-bars)
 ;; (add-hook 'prog-mode-hook #'indent-bars-mode)
@@ -599,21 +607,6 @@
 
 (use-package separedit)
 
-(defun th--init-frame ()
-  "Initialize a frame."
-  (when (display-graphic-p)
-    (with-eval-after-load 'catppuccin-theme
-      (setq catppuccin-flavor 'mocha)
-      (catppuccin-reload))
-    (with-eval-after-load 'solaire-mode
-      (solaire-global-mode +1))
-    (with-eval-after-load 'all-the-icons
-      (with-eval-after-load 'all-the-icons-dired
-	(add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
-      (with-eval-after-load 'all-the-icons-ibuffer
-	(add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode)))))
-
-
 (defvar th/first-server-frame-created nil)
 (defun th--unless-first-server-frame-created (func)
   (unless th/first-server-frame-created
@@ -643,6 +636,7 @@
      (lambda () (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)))))
 (use-package all-the-icons-dired
   :after all-the-icons
+  :diminish all-the-icons-dired-mode
   :hook
   (after-init . (lambda ()
 		  (when (display-graphic-p) (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))))
@@ -654,7 +648,8 @@
      (lambda () (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode)))))
 (use-package all-the-icons-ibuffer
   :after all-the-icons
+  :diminish all-the-icons-ibuffer-mode
   :hook
   (after-init . (lambda ()
 		  (when (display-graphic-p) (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
-  (server-after-make-frame . th--ati-dired))
+  (server-after-make-frame . th--ati-ibuffer))
