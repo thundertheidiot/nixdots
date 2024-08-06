@@ -14,6 +14,7 @@ in {
       clang-tools # clangd + clang-format
       haskell-language-server
       ghc
+      fennel
       fennel-ls
       nodePackages.bash-language-server
 

@@ -1,3 +1,6 @@
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
 ;; -*- lexical-binding: t -*-
 (setq emacs-data-directory (let (
 				 (local-share
@@ -90,11 +93,6 @@
 (setq pixel-scroll-precision-large-scroll-height 40.0)
 (setq pixel-scroll-precision-use-momentum t)
 
-(with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "SPC") nil)
-  (define-key dired-mode-map (kbd "<backspace>") #'dired-up-directory)
-  (define-key dired-mode-map (kbd "DEL") #'dired-up-directory))
-
 ;; Functions
 (defun make-mode-keymap (map outer)
   (mapc (lambda (inner)
@@ -124,7 +122,7 @@
 
 (defvar saved-window-configurations '())
 
-(require 'subr-x)
+(use-package subr-x)
 
 (defun format-window-list ()
   (let ((window-list-string-formatted) (value))
@@ -177,28 +175,47 @@
 	       saved-window-configurations)
 	      saved-window-configurations)))
 
+(with-eval-after-load 'diminish
+  (diminish 'font-lock-mode)
+  (diminish 'visual-line-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'eldoc-mode))
 
-(with-eval-after-load 'undo-tree
+(use-package dired
+  :config
+  (make-mode-keymap dired-mode-map '(("SPC" . nil)
+				     ("<backspace>" . dired-up-directory)))
+  (unless (display-graphic-p)
+    (define-key dired-mode-map (kbd "DEL") #'dired-up-directory)))
+
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :diminish global-undo-tree-mode
+  :config
   (global-undo-tree-mode)
-  (setq th/undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
+  (defvar th/undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
   (unless (file-directory-p th/undo-tree-dir)
     (make-directory th/undo-tree-dir))
   (defadvice undo-tree-make-history-save-file-name
       (after undo-tree activate)
     (setq ad-return-value (concat th/undo-tree-dir ad-return-value))))
 
-
-(with-eval-after-load 'evil
-  (setq
-   evil-want-integration t
-   evil-want-keybinding nil
-   evil-vsplit-window-right t
-   evil-split-window-below t
-   evil-undo-system 'undo-tree)
+(use-package evil
+  :after undo-tree
+  :init
+  (setq evil-want-integration t
+	evil-want-keybinding nil
+	evil-vsplit-window-right t
+	evil-split-window-below t
+	evil-undo-system 'undo-tree)
+  :config
   (evil-set-undo-system evil-undo-system)
   (evil-mode))
 
-(with-eval-after-load 'evil-collection
+(use-package evil-collection
+  :after evil
+  :diminish evil-collection-unimpaired-mode
+  :config
   (evil-collection-init '(dashboard
 			  woman
 			  pdf
@@ -211,24 +228,21 @@
 			  magit
 			  vterm)))
 
-(with-eval-after-load 'which-key
+(use-package which-key
+  :diminish which-key-mode
+  :config
   (which-key-setup-side-window-bottom)
   (which-key-mode))
 
-(with-eval-after-load 'evil-better-visual-line
+(use-package evil-better-visual-line
+  :after evil
+  :config
   (evil-better-visual-line-on))
 
-(with-eval-after-load 'smartparens)
+(use-package general
+  :config
+  (general-evil-setup))
 
-(require 'undo-tree)
-(require 'evil)
-(require 'evil-collection)
-(require 'evil-better-visual-line)
-(require 'which-key)
-
-;; General
-(require 'general)
-(general-evil-setup)
 (general-create-definer th/leader
 		  :states '(normal insert visual emacs motion)
 		  :keymaps 'override
@@ -315,44 +329,52 @@
  "<C-wheel-up>" 'text-scale-increase
  "<C-wheel-down>" 'text-scale-decrease)
 
-;; Smartparens
-(with-eval-after-load 'smartparens
+(use-package smartparens
+  :diminish smartparens-mode
+  :config
   (smartparens-global-mode))
 
-(require 'smartparens)
+(use-package org
+  :demand t
+  :mode "\\.org\\'"
+  :init
+  (setq org-src-preserve-indentation t
+	org-src-tab-acts-natively t)
+  (add-hook 'org-mode-hook #'org-indent-mode)
+  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1))))
 
-;; Org
-(require 'org)
-(setq org-src-preserve-indentation t
-      org-src-tab-acts-natively t)
-
-(require 'org-tempo)
-`(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-
-(add-hook 'org-mode-hook #'org-indent-mode)
-(add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 (th/local
- "l" '(:ignore t :wk "org link")
- "li" '(org-insert-link :wk "insert org link")
- "lo" '(org-open-at-point :wk "open org link")
- "le" '(org-edit-special :wk "open org link")
- "lt" '(org-toggle-link-display :wk "toggle link display"))
+  "l" '(:ignore t :wk "org link")
+  "li" '(org-insert-link :wk "insert org link")
+  "lo" '(org-open-at-point :wk "open org link")
+  "le" '(org-edit-special :wk "open org link")
+  "lt" '(org-toggle-link-display :wk "toggle link display"))
 
-(require 'org-bullets)
-(add-hook 'org-mode-hook #'org-bullets-mode)
+(use-package org-tempo
+  :after org
+  :config
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 
-;; hl-todo
-(require 'hl-todo)
-(global-hl-todo-mode 1)
+(use-package org-bullets
+  :diminish org-bullets-mode
+  :hook (org-mode . org-bullets-mode))
+
+(use-package hl-todo
+  :diminish hl-todo-mode
+  :diminish global-hl-todo-mode
+  :config
+  (global-hl-todo-mode 1))
 
 ;; IDE
-(require 'flymake)
-(add-hook 'prog-mode-hook #'flymake-mode)
+(use-package flymake
+  :hook (prog-mode . flymake-mode))
 
-(require 'eglot)
-(fset #'jsonrpc--log-event #'ignore)
-(add-hook 'prog-mode-hook #'eglot-ensure)
-(setq eglot-autoshutdown t)
+
+(use-package eglot
+  :hook (prog-mode . eglot-ensure)
+  :init
+  (fset #'jsonrpc--log-event #'ignore)
+  (setq eglot-autoshutdown t))
 
 (th/leader
   "c" '(:ignore t :wk "code")
@@ -360,53 +382,48 @@
 	   (eglot-code-actions 1 (point-max) nil t))
 	 :wk "code actions"))
 
-(require 'eglot-booster)
-(eglot-booster-mode)
+(use-package eglot-booster
+  :after eglot
+  :config
+  (eglot-booster-mode))
 
 ;; (require 'indent-bars)
 ;; (add-hook 'prog-mode-hook #'indent-bars-mode)
 
+(use-package company
+  :hook
+  (after-init . global-company-mode)
+  (prog-mode . company-mode)
+  :diminish company-mode
+  :init
+  (setq company-idle-delay 0.1)
+  :config
+  (general-define-key :states '(insert)
+		      "C-k" nil)
+  (define-key company-active-map (kbd "<return>") nil)
+  (define-key company-active-map (kbd "RET") nil)
+  (define-key company-active-map (kbd "<tab>") nil)
 
-(require 'company)
-(add-hook 'after-init-hook #'global-company-mode)
-(add-hook 'prog-mode-hook  #'company-mode)
-(setq company-idle-delay 0.1)
-(general-define-key :states '(insert)
-	      "C-k" nil)
-(define-key company-active-map (kbd "<return>") nil)
-(define-key company-active-map (kbd "RET") nil)
-(define-key company-active-map (kbd "<tab>") nil)
+  (make-mode-keymap company-mode-map '(
+				       ("C-j" . company-select-next)
+				       ("C-k" . company-select-previous)
+				       ("C-<return>" . company-complete-selection)
+				       ("C-RET" . company-complete-selection)
+				       ("S-<return>" . company-complete-selection)
+				       ("S-RET" . company-complete-selection)
+				       ("<escape>" . company-abort)
+				       ("ESC" . company-abort))))
 
-;; (general-define-key :keymap company-mode-map
-;; 	    "C-j" #'company-select-next
-;; 	    "C-k" #'company-select-previous
-;; 	    "C-<return>" #'company-complete-selection
-;; 	    "C-RET" #'company-complete-selection
-;; 	    "S-<return>" #'company-complete-selection
-;; 	    "S-RET" #'company-complete-selection
-;; 	    "<escape>" #'company-abort)
 
-(make-mode-keymap company-mode-map '(
-		    ("C-j" . company-select-next)
-		    ("C-k" . company-select-previous)
-		    ("C-<return>" . company-complete-selection)
-		    ("C-RET" . company-complete-selection)
-		    ("S-<return>" . company-complete-selection)
-		    ("S-RET" . company-complete-selection)
-		    ("<escape>" . company-abort)
-		    ("ESC" . company-abort)))
+(use-package company-box
+  :after company
+  :init (add-hook 'company-mode #'company-box-mode))
 
-(require 'company-box)
-(add-hook 'company-mode #'company-box-mode)
-
-;; (require 'treesit-auto)
-;; (setq treesit-auto-install 'prompt)
-;; (treesit-auto-add-to-auto-mode-alist 'all)
-;; (global-treesit-auto-mode)
-;; (add-to-list 'treesit-extra-load-path (expand-file-name "tree-sitter/" user-emacs-directory))
-
-(with-eval-after-load 'rustic
-  (add-hook 'rustic-mode-hook #'eglot-ensure)
+(use-package rustic
+  :after eglot
+  :mode "\\.rs\\'"
+  :hook (rustic-mode . eglot-ensure)
+  :init
   (setq rustic-format-trigger 'on-save
 	rustic-lsp-client 'eglot
 	rustic-format-on-save-method 'rustic-cargo-fmt
@@ -414,50 +431,55 @@
 	rustic-use-rust-save-some-buffers t
 	compilation-ask-about-save nil))
 
-(with-eval-after-load 'nix-mode
-  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
-  (add-hook 'nix-mode-hook #'eglot-ensure))
+(use-package nix-mode
+  :after eglot
+  :mode "\\.nix\\'"
+  :hook (nix-mode . eglot-ensure)
+  :init (add-to-list 'eglot-server-programs '(nix-mode . ("nixd"))))
 
-(with-eval-after-load 'haskell-mode
-  (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-  (add-hook 'haskell-mode-hook #'eglot-ensure))
+(use-package haskell-mode
+  :after eglot
+  :mode "\\.hs\\'"
+  :hook (haskell-mode . eglot-ensure))
 
-(with-eval-after-load 'lua-mode
-  (add-to-list 'auto-mode-alist '("\\.lua\\'" . lua-mode))
-  (add-hook 'lua-mode #'eglot-ensure))
+(use-package lua-mode
+  :after eglot
+  :mode "\\.lua\\'"
+  :hook (lua-mode . eglot-ensure))
 
-(with-eval-after-load 'gscript-mode
-  (add-to-list 'auto-mode-alist '("\\.gdscript\\'" . gdscript-mode))
-  (add-hook 'gdscript-mode-hook #'eglot-ensure))
+(use-package gdscript-mode
+  :after eglot
+  :mode "\\.gdscript\\'"
+  :hook (gdscript-mode . eglot-ensure))
 
-(with-eval-after-load 'fennel-mode
-  (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
-  (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
+(use-package fennel-mode
+  :after eglot
+  :mode "\\.fnl\\'"
+  :hook (fennel-mode . eglot-ensure)
+  :init (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
 
-(require 'rustic)
-(require 'nix-mode)
-(require 'haskell-mode)
-(require 'lua-mode)
-(require 'gdscript-mode)
-(require 'fennel-mode)
+(use-package csharp-mode
+  :after eglot
+  :mode "\\.cs\\'"
+  :hook
+  (csharp-mode . eglot-ensure)
+  (csharp-mode . csharp-ts-mode))
 
 (add-hook 'emacs-lisp-mode-hook #'company-mode)
 
-(add-hook 'csharp-mode-hook #'eglot-ensure)
-(add-hook 'csharp-mode-hook #'csharp-ts-mode)
-(add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-mode))
+(use-package rainbow-delimiters
+  :diminish rainbow-delimiters-mode
+  :hook
+  (prog-mode . rainbow-delimiters-mode)
+  (org-mode . rainbow-delimiters-mode))
 
+(use-package projectile
+  :diminish projectile-mode
+  :init
+  (setq projectile-switch-project-action #'projectile-dired)
+  :config
+  (projectile-mode))
 
-(with-eval-after-load 'rainbow-delimiters
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'org-mode-hook #'rainbow-delimiters-mode))
-
-(require 'rainbow-delimiters)
-
-(require 'projectile)
-(setq projectile-switch-project-action #'projectile-dired)
-(projectile-mode)
 (th/leader
  "P" '(:keymap projectile-command-map :package projectile)
  "p" '(:ignore t :package projectile :wk "project")
@@ -469,41 +491,49 @@
  "pog" '(projectile-vc :wk "project version control (git)")
  "pb" '(projectile-switch-to-buffer :wk "switch buffer in project"))
 
-(require 'ibuffer-projectile)
-(add-hook 'ibuffer-hook (lambda ()
+(use-package ibuffer-projectile
+  :config
+  (add-hook 'ibuffer-hook (lambda ()
 			  (ibuffer-projectile-set-filter-groups)
 			  (unless (eq ibuffer-sorting-mode 'alphabetic
-				      (ibuffer-do-sort-by-alphabetic)))))
+				      (ibuffer-do-sort-by-alphabetic))))))
+
+(use-package magit
+  :init
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
+	magit-auto-revert-mode nil))
+
+(use-package vterm)
 
 
-(require 'magit)
-(setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-
-(require 'vterm)
-
-
-(with-eval-after-load 'vertico
+(use-package vertico
+  :init
+  (setq vertico-resize t)
+  :config
   (make-mode-keymap vertico-map '(("C-j" . vertico-next)
 				  ("C-k" . vertico-previous)
 				  ("C-u" . vertico-quick-exit)
 				  ("<backspace>" . vertico-directory-delete-char)
 				  ("DEL" . vertico-directory-delete-char)))
-  (setq vertico-resize t)
   (vertico-mode))
 
-(with-eval-after-load 'consult
-  (th/leader
-    "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
-    "sf" '(consult-fd :wk "find")
-    "bs" '(consult-buffer :wk "switch")))
+(use-package consult)
 
-(with-eval-after-load 'orderless
+(th/leader
+  "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
+  "sf" '(consult-fd :wk "find")
+  "bs" '(consult-buffer :wk "switch"))
+
+(use-package orderless
+  :after (vertico consult)
+  :init
   (setq completion-styles '(orderless basic)
 	completion-category-defaults nil
 	completion-category-overrides '((file (styles partial-completion)))))
 
-(with-eval-after-load
-    (marginalia-mode))
+(use-package marginalia
+  :config
+  (marginalia-mode))
 
 (defun crm-indicator (args)
   (cons (format "[CRM%s] %s"
@@ -522,12 +552,8 @@
 
 (savehist-mode 1)
 
-(require 'vertico)
-(require 'consult)
-(require 'orderless)
-(require 'marginalia)
-
-(with-eval-after-load 'popper
+(use-package popper
+  :init
   (setq popper-reference-buffers
 	'("^\\*vterm.*\\*$" vterm-mode
 	  "\\*eldoc\\*" vterm-mode
@@ -539,59 +565,39 @@
 	  ("\\*scratch\\*" . hide)
 	  ("\\*Warnings\\*" . hide)
 	  (compilation-mode . hide))
-	popper-group-function #'popper-group-by-projectile)
-  (th/leader
-    "op" '(:ignore t :wk "popper")
-    "opt" '(popper-toggle :wk "popper toggle")
-    "opm" '(popper-toggle-type :wk "popper toggle type")
-    "opc" '(popper-cycle :wk "popper cycle"))
-
-  (setq popper-window-height 20)
-
+	popper-group-function #'popper-group-by-projectile
+	popper-window-height 20)
+  :config
   (popper-mode 1)
   (popper-echo-mode 1))
 
-(with-eval-after-load 'simple-mpc
-  (th/leader
-    "m" '(:ignore t :wk "media")
-    "mm" '(simple-mpc :wk "open simple-mpc")
-    "ms" '(simple-mpc-query :wk "search")
-    "mp" '(simple-mpc-toggle :wk "play/pause")
-    "mC" '(simple-mpc-clear-current-playlist :wk "clear")
-    "mP" '(simple-mpc-view-current-playlist :wk "playlist")
-    "ma" '(simple-mpc-load-playlist :wk "load playlist")
-    "mh" '(simple-mpc-prev :wk "prev")
-    "ml" '(simple-mpc-next :wk "next")))
+(th/leader
+  "op" '(:ignore t :wk "popper")
+  "opt" '(popper-toggle :wk "popper toggle")
+  "opm" '(popper-toggle-type :wk "popper toggle type")
+  "opc" '(popper-cycle :wk "popper cycle"))
 
-(require 'popper)
-(require 'simple-mpc)
+(use-package simple-mpc)
+
+(th/leader
+  "m" '(:ignore t :wk "media")
+  "mm" '(simple-mpc :wk "open simple-mpc")
+  "ms" '(simple-mpc-query :wk "search")
+  "mp" '(simple-mpc-toggle :wk "play/pause")
+  "mC" '(simple-mpc-clear-current-playlist :wk "clear")
+  "mP" '(simple-mpc-view-current-playlist :wk "playlist")
+  "ma" '(simple-mpc-load-playlist :wk "load playlist")
+  "mh" '(simple-mpc-prev :wk "prev")
+  "ml" '(simple-mpc-next :wk "next"))
 
 ;; Fix tramp for nixos systems
-(with-eval-after-load 'tramp-sh
+(use-package tramp-sh
+  :config
   (setq tramp-remote-path
 	(append tramp-remote-path
  		'(tramp-own-remote-path))))
 
-(require 'separedit)
-
-(with-eval-after-load 'diminish
-  (diminish 'which-key-mode)
-  (diminish 'font-lock-mode)
-  (diminish 'visual-line-mode)
-  (diminish 'evil-collection-unimpaired-mode)
-  (diminish 'smartparens-mode)
-  (diminish 'evil-smartparens-mode)
-  (diminish 'org-bullets-mode)
-  (diminish 'hl-todo-mode)
-  (diminish 'global-hl-todo-mode)
-  (diminish 'company-mode)
-  (diminish 'rainbow-delimiters-mode)
-  (diminish 'projectile-mode)
-  (diminish 'auto-revert-mode)
-  (diminish 'eldoc-mode)
-  (diminish 'undo-tree-mode))
-
-(require 'diminish)
+(use-package separedit)
 
 (defun th--init-frame ()
   "Initialize a frame."
@@ -605,18 +611,50 @@
       (with-eval-after-load 'all-the-icons-dired
 	(add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
       (with-eval-after-load 'all-the-icons-ibuffer
-	(add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
-  (unless (display-graphic-p)
-    (xterm-mouse-mode 1))
-  (remove-hook 'server-after-make-frame-hook #'th--init-frame))
+	(add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode)))))
 
 
-;; (add-hook 'after-make-frame-functions #'th--init-frame) ;; breaks emacs(client)
-(add-hook 'after-init-hook #'th--init-frame)
-(add-hook 'server-after-make-frame-hook #'th--init-frame)
+(defvar th/first-server-frame-created nil)
+(defun th--unless-first-server-frame-created (func)
+  (unless th/first-server-frame-created
+    (funcall func)
+    (setq th/first-server-frame-created t)))
 
-(require 'catppuccin-theme)
-(require 'solaire-mode)
-(require 'all-the-icons)
-(require 'all-the-icons-dired)
-(require 'all-the-icons-ibuffer)
+(use-package catppuccin-theme
+  :init
+  (setq catppuccin-flavor 'mocha)
+  :hook
+  (after-init . catppuccin-reload)
+  (server-after-make-frame . (lambda () (when (display-graphic-p)
+				    (th--unless-first-server-frame-created 'catppuccin-reload)))))
+
+(use-package solaire-mode
+  :hook
+  (after-init . (lambda ()
+		  (when (display-graphic-p) (solaire-global-mode +1))))
+  (server-after-make-frame . (lambda ()
+			       (when (display-graphic-p) (solaire-global-mode +1)))))
+
+(use-package all-the-icons)
+
+(defun th--ati-dired ()
+  (when (display-graphic-p)
+    (th--unless-first-server-frame-created
+     (lambda () (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)))))
+(use-package all-the-icons-dired
+  :after all-the-icons
+  :hook
+  (after-init . (lambda ()
+		  (when (display-graphic-p) (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))))
+  (server-after-make-frame . th--ati-dired))
+
+(defun th--ati-ibuffer ()
+  (when (display-graphic-p)
+    (th--unless-first-server-frame-created
+     (lambda () (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode)))))
+(use-package all-the-icons-ibuffer
+  :after all-the-icons
+  :hook
+  (after-init . (lambda ()
+		  (when (display-graphic-p) (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
+  (server-after-make-frame . th--ati-dired))
