@@ -301,9 +301,6 @@
   "bK" '(kill-buffer :wk "kill buffer")
   "bk" '(kill-this-buffer :wk "kill this buffer")
 
-  "g" '(:ignore t :wk "git")
-  "gg" '(magit-status :wk "open magit")
-
   "e" '(:ignore t :wk "emacs")
   "er" '(eval-region-and-go-to-normal-mode :wk "eval region or line")
   "eb" '(eval-buffer :wk "eval buffer")
@@ -452,6 +449,14 @@
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
 	magit-auto-revert-mode nil))
 
+(th/leader
+  "g" '(:ignore t :wk "git")
+  "gg" '(magit-status :wk "open magit")
+  "gd" '(:ignore t :wk "diff")
+  "gdu" '(magit-diff-unstaged :wk "diff unstaged")
+  "gds" '(magit-diff-staged :wk "diff staged")
+  "gc" '(magit-commit-create :wk "commit"))
+
 (use-package git-gutter-fringe+
   :hook
   (prog-mode . git-gutter+-mode)
@@ -463,6 +468,11 @@
   "ga" '(git-gutter+-stage-hunks :wk "stage hunks")
   "gn" '(git-gutter+-next-hunk :wk "next hunk")
   "gN" '(git-gutter+-previous-hunk :wk "previous hunk"))
+
+(use-package git-timemachine)
+
+(th/leader
+  "gt" '(git-timemachine-toggle :wk "git timemachine"))
 
 (use-package company
   :hook
