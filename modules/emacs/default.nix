@@ -41,7 +41,7 @@ in {
         src = pkgs.fetchgit {
           url = "https://github.com/jdtsmith/eglot-booster";
           rev = "caee55ee5285659964d0b9fe4101e28de09701ca";
-          sha256 = sha256:00c96vhmmxx9dspkqk6jir0y9nwb32zbf5ixqjjdzrjy0kh65ii8;
+          sha256 = "sha256:00c96vhmmxx9dspkqk6jir0y9nwb32zbf5ixqjjdzrjy0kh65ii8";
         };
         recipe = pkgs.writeText "recipe" ''
           (eglot-booster :fetcher github :repo "jdtsmith/eglot-booster" :files (:defaults "eglot-booster.el"))
@@ -59,7 +59,7 @@ in {
         src = pkgs.fetchgit {
           url = "https://github.com/jdtsmith/indent-bars";
           rev = "4583e3e9f507143cd4241131b77fc5e8b1722bbf";
-          sha256 = sha256:12c37pfmf3x1r9z8fv19xgf4nsir7a65l52r46a6gk2vd1dwz7fj;
+          sha256 = "sha256:12c37pfmf3x1r9z8fv19xgf4nsir7a65l52r46a6gk2vd1dwz7fj";
         };
         recipe = pkgs.writeText "recipe" ''
           (indent-bars :fetcher github :repo "jdtsmith/indent-bars" :files (:defaults "indent-bars.el"))
@@ -122,6 +122,8 @@ in {
           company-box
           apheleia
           smartparens
+
+          epkgs."git-gutter-fringe+"
 
           # treesit
           treesit-grammars.with-all-grammars

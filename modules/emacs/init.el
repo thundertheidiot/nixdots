@@ -26,9 +26,9 @@
 
 ;; Emacs
 (add-function :after after-focus-change-function
-	(defun th/garbage-collect ()
-	  (unless (frame-focus-state)
-	    (garbage-collect))))
+	      (defun th/garbage-collect ()
+		(unless (frame-focus-state)
+		  (garbage-collect))))
 
 (setq use-short-answers t
       native-comp-async-report-warnings-errors 'silent
@@ -59,7 +59,7 @@
 (recentf-mode)
 
 (dolist (mode '(vterm-mode-hook
-	  simple-mpc-mode-hook))
+		simple-mpc-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (global-set-key (kbd "s-`") #'(lambda () (interactive) (insert "`"))) ;; weird keyboard shenanigans
@@ -146,7 +146,7 @@
 							     (projectile-project-name)
 							     (shell-command-to-string "date \"+%a %R\"")
 							     (format-window-list))))
-						   . ,(current-window-configuration))))
+					      . ,(current-window-configuration))))
 
 (defun new-window-configuration ()
   "Save the current window configuration, create a new window and close every other window."
@@ -246,68 +246,69 @@
   (general-evil-setup))
 
 (general-create-definer th/leader
-		  :states '(normal insert visual emacs motion)
-		  :keymaps 'override
-		  :prefix "SPC"
-		  :global-prefix "C-SPC")
+  :states '(normal insert visual emacs motion)
+  :keymaps 'override
+  :prefix "SPC"
+  :global-prefix "C-SPC")
 
 (general-create-definer th/local
-		  :states '(normal insert visual emacs motion)
-		  :keymaps 'override
-		  :prefix "SPC l"
-		  :global-prefix "C-SPC l")
+  :states '(normal insert visual emacs motion)
+  :keymaps 'override
+  :prefix "SPC l"
+  :global-prefix "C-SPC l")
 
 (th/leader
- "w" '(:ignore t :wk "window")
- "wh" '(windmove-left :wk "move left")
- "wj" '(windmove-down :wk "move down")
- "wk" '(windmove-up :wk "move up")
- "wl" '(windmove-right :wk "move right")
- "<left>" '(windmove-left :wk "move left")
- "<down>" '(windmove-down :wk "move down")
- "<up>" '(windmove-up :wk "move up")
- "<right>" '(windmove-right :wk "move right")
- "wq" '(evil-quit :wk "close")
- "q" '(evil-quit :wk "close window")
- "ws" '(split-window-below :wk "horizontal split")
- "wv" '(split-window-right :wk "vertical split")
+  "w" '(:ignore t :wk "window")
+  "wh" '(windmove-left :wk "move left")
+  "wj" '(windmove-down :wk "move down")
+  "wk" '(windmove-up :wk "move up")
+  "wl" '(windmove-right :wk "move right")
+  "<left>" '(windmove-left :wk "move left")
+  "<down>" '(windmove-down :wk "move down")
+  "<up>" '(windmove-up :wk "move up")
+  "<right>" '(windmove-right :wk "move right")
+  "wq" '(evil-quit :wk "close")
+  "q" '(evil-quit :wk "close window")
+  "ws" '(split-window-below :wk "horizontal split")
+  "wv" '(split-window-right :wk "vertical split")
 
- "wc" '(:ignore t :wk "window configurations")
- "wcl" '(load-a-saved-window-configuration :wk "load")
- "wcs" '(save-current-window-configuration :wk "save")
- "wcn" '(new-window-configuration :wk "new")
- 
- "H" '((lambda () (interactive) (evil-window-increase-width 2)) :wk "increase window width")
- "J" '((lambda () (interactive) (evil-window-increase-height 2)) :wk "increase window height")
- 
- "l" '(:ignore t :wk "local (mode specific)")
- "s" '(:ignore t :wk "search")
+  "wc" '(:ignore t :wk "window configurations")
+  "wcl" '(load-a-saved-window-configuration :wk "load")
+  "wcs" '(save-current-window-configuration :wk "save")
+  "wcn" '(new-window-configuration :wk "new")
+  
+  "H" '((lambda () (interactive) (evil-window-increase-width 2)) :wk "increase window width")
+  "J" '((lambda () (interactive) (evil-window-increase-height 2)) :wk "increase window height")
+  
+  "l" '(:ignore t :wk "local (mode specific)")
+  "s" '(:ignore t :wk "search")
 
- "o" '(:ignore t :wk "open")
- "ot" '(vterm :wk "vterm")
+  "o" '(:ignore t :wk "open")
+  "ot" '(vterm :wk "vterm")
 
- ":" '(execute-extended-command :wk "M-x")
- ";" '(execute-extended-command :wk "M-x")
- "." '(find-file :wk "find file")
- ">" '((lambda () (interactive) (find-file nil (getenv "HOME"))) :wk "find file from ~/")
- 
- "h" '(:ignore t :wk "help")
- "hb" '(describe-bindings t :wk "describe binding")
- "hf" '(describe-function t :wk "describe function")
- "hv" '(describe-variable t :wk "describe variable")
- 
- "b" '(:ignore t :wk "buffer")
- "bi" '(ibuffer :wk "ibuffer")
- "bK" '(kill-buffer :wk "kill buffer")
- "bk" '(kill-this-buffer :wk "kill this buffer")
+  ":" '(execute-extended-command :wk "M-x")
+  ";" '(execute-extended-command :wk "M-x")
+  "." '(find-file :wk "find file")
+  ">" '((lambda () (interactive) (find-file nil (getenv "HOME"))) :wk "find file from ~/")
+  
+  "h" '(:ignore t :wk "help")
+  "hb" '(describe-bindings t :wk "describe binding")
+  "hf" '(describe-function t :wk "describe function")
+  "hv" '(describe-variable t :wk "describe variable")
+  
+  "b" '(:ignore t :wk "buffer")
+  "bi" '(ibuffer :wk "ibuffer")
+  "bK" '(kill-buffer :wk "kill buffer")
+  "bk" '(kill-this-buffer :wk "kill this buffer")
 
- "gg" '(magit-status :wk "open magit")
+  "g" '(:ignore t :wk "git")
+  "gg" '(magit-status :wk "open magit")
 
- "e" '(:ignore t :wk "emacs")
- "er" '(eval-region-and-go-to-normal-mode :wk "eval region or line")
- "eb" '(eval-buffer :wk "eval buffer")
- "ee" '(eval-expression :wk "eval expression"))
- 
+  "e" '(:ignore t :wk "emacs")
+  "er" '(eval-region-and-go-to-normal-mode :wk "eval region or line")
+  "eb" '(eval-buffer :wk "eval buffer")
+  "ee" '(eval-expression :wk "eval expression"))
+
 (general-define-key
  :states '(normal visual)
  "gc" 'comment-or-uncomment-region-or-line
@@ -423,6 +424,10 @@
 (use-package flycheck
   :config (global-flycheck-mode))
 
+(th/leader
+  "ce" '(flycheck-next-error :wk "next error")
+  "cE" '(flycheck-previous-error :wk "previous error"))
+
 (use-package flycheck-eglot
   :after (flycheck eglot)
   :config
@@ -433,6 +438,18 @@
   (setf (alist-get 'nixfmt apheleia-formatters)
 	'("alejandra"))
   (apheleia-global-mode +1))
+
+(use-package git-gutter-fringe+
+  :hook
+  (prog-mode . git-gutter+-mode)
+  :config
+  (set-face-background 'git-gutter+-added "green"))
+
+(th/leader
+  "gs" '(git-gutter+-show-hunk :wk "stage hunks")
+  "ga" '(git-gutter+-stage-hunks :wk "stage hunks")
+  "gn" '(git-gutter+-next-hunk :wk "next hunk")
+  "gN" '(git-gutter+-previous-hunk :wk "previous hunk"))
 
 (use-package company
   :hook
@@ -503,9 +520,6 @@
   :after eglot
   :mode "\\.janet\\'")
 
-  ;; :hook (janet-mode . eglot-ensure)
-  ;; :init (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
-
 (use-package csharp-mode
   :after eglot
   :mode "\\.cs\\'"
@@ -529,22 +543,22 @@
   (projectile-mode))
 
 (th/leader
- "P" '(:keymap projectile-command-map :package projectile)
- "p" '(:ignore t :package projectile :wk "project")
- "pp" '(projectile-switch-project :wk "switch project")
- "ps" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "search project")
- "p." '(projectile-find-file :wk "find project file")
- "po" '(:ignore t :wk "open")
- "pot" '(projectile-run-vterm :wk "vterm")
- "pog" '(projectile-vc :wk "project version control (git)")
- "pb" '(projectile-switch-to-buffer :wk "switch buffer in project"))
+  "P" '(:keymap projectile-command-map :package projectile)
+  "p" '(:ignore t :package projectile :wk "project")
+  "pp" '(projectile-switch-project :wk "switch project")
+  "ps" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "search project")
+  "p." '(projectile-find-file :wk "find project file")
+  "po" '(:ignore t :wk "open")
+  "pot" '(projectile-run-vterm :wk "vterm")
+  "pog" '(projectile-vc :wk "project version control (git)")
+  "pb" '(projectile-switch-to-buffer :wk "switch buffer in project"))
 
 (use-package ibuffer-projectile
   :config
   (add-hook 'ibuffer-hook (lambda ()
-			  (ibuffer-projectile-set-filter-groups)
-			  (unless (eq ibuffer-sorting-mode 'alphabetic
-				      (ibuffer-do-sort-by-alphabetic))))))
+			    (ibuffer-projectile-set-filter-groups)
+			    (unless (eq ibuffer-sorting-mode 'alphabetic
+					(ibuffer-do-sort-by-alphabetic))))))
 
 (use-package magit
   :init
@@ -585,11 +599,11 @@
 
 (defun crm-indicator (args)
   (cons (format "[CRM%s] %s"
-	  (replace-regexp-in-string
-	   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-	   crm-separator)
-	  (car args))
-  (cdr args)))
+		(replace-regexp-in-string
+		 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+		 crm-separator)
+		(car args))
+	(cdr args)))
 (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
 (setq minibuffer-prompt-properties
@@ -659,7 +673,7 @@
   :hook
   (after-init . catppuccin-reload)
   (server-after-make-frame . (lambda () (when (display-graphic-p)
-				    (th--unless-first-server-frame-created 'catppuccin-reload)))))
+					  (th--unless-first-server-frame-created 'catppuccin-reload)))))
 
 (use-package solaire-mode
   :hook
