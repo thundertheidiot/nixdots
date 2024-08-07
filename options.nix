@@ -79,13 +79,6 @@
 
     workstation.plasma.tilingwm = lib.mkEnableOption "Configure plasma into a tiling wm environment.";
 
-    emacs.enable = lib.mkEnableOption "Enable emacs";
-    emacs.flavor = lib.mkOption {
-      type = lib.types.listOf (lib.types.enum ["doom" "custom"]);
-      default = ["doom"];
-      description = "\"Flavor\" of emacs to install, will not exist forever."; # TODO: remove custom
-    };
-
     setup.hyprland.extraConfig = lib.mkOption {
       default = "";
       example = "monitor=DP-3, 2560x1440@144, 0x0, 1";
