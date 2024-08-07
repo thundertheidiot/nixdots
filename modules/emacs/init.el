@@ -58,10 +58,6 @@
 
 (recentf-mode)
 
-(dolist (mode '(vterm-mode-hook
-		simple-mpc-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
 (global-set-key (kbd "s-`") #'(lambda () (interactive) (insert "`"))) ;; weird keyboard shenanigans
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
@@ -120,6 +116,10 @@
       (setq beg (line-beginning-position) end (line-end-position)))
     (eval-region beg end)
     (evil-normal-state)))
+
+(defun turn-off-line-numbers ()
+  "Dumb function like this so i can hook it without a lambda."
+  (display-line-numbers-mode 0))
 
 (defvar saved-window-configurations '())
 
@@ -442,7 +442,7 @@
 (use-package git-gutter-fringe+
   :hook
   (prog-mode . git-gutter+-mode)
-  :config
+  :init
   (set-face-background 'git-gutter+-added "green"))
 
 (th/leader
@@ -461,11 +461,13 @@
   :config
   (general-define-key :states '(insert)
 		      "C-k" nil)
-  (define-key company-active-map (kbd "<return>") nil)
-  (define-key company-active-map (kbd "RET") nil)
-  (define-key company-active-map (kbd "<tab>") nil)
+  ;; (define-key company-active-map (kbd "<return>") nil)
+  ;; (define-key company-active-map (kbd "RET") nil)
+  ;; (define-key company-active-map (kbd "<tab>") nil)
 
-  (make-mode-keymap company-mode-map '(
+  (make-mode-keymap company-mode-map '(("<return>" . nil)
+				       ("RET" . nil)
+				       ("<tab>" . nil)
 				       ("C-j" . company-select-next)
 				       ("C-k" . company-select-previous)
 				       ("C-<return>" . company-complete-selection)
@@ -565,7 +567,8 @@
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
 	magit-auto-revert-mode nil))
 
-(use-package vterm)
+(use-package vterm
+  :hook (vterm-mode . turn-off-line-numbers))
 
 
 (use-package vertico
@@ -639,7 +642,8 @@
   "opm" '(popper-toggle-type :wk "popper toggle type")
   "opc" '(popper-cycle :wk "popper cycle"))
 
-(use-package simple-mpc)
+(use-package simple-mpc
+  :hook (simple-mpc-mode . turn-off-line-numbers))
 
 (th/leader
   "m" '(:ignore t :wk "media")
