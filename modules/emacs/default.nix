@@ -1,4 +1,10 @@
-{ config, pkgs, lib, mlib, ... }: let
+{
+  config,
+  pkgs,
+  lib,
+  mlib,
+  ...
+}: let
   cfg = config.meow.emacs;
 
   inherit (mlib) mkEnOpt homeModule;
@@ -10,15 +16,21 @@ in {
 
   config = mkIf cfg.enable (homeModule ({config, ...}: {
     home.packages = with pkgs; [
-      nixd
-      clang-tools # clangd + clang-format
-      haskell-language-server
       ghc
       fennel
-      fennel-ls
-      nodePackages.bash-language-server
+      janet
 
-      imagemagick
+      # lsp
+      nixd # nix
+      clang-tools # clangd + clang-format
+      haskell-language-server # haskell
+      fennel-ls # fennel
+      nodePackages.bash-language-server # bash
+
+      # formatters
+      alejandra
+
+      emacs-lsp-booster
     ];
 
     programs.emacs.overrides = self: super: {
@@ -54,20 +66,6 @@ in {
         '';
       };
 
-      # catppuccin-theme = self.trivialBuild {
-      #   pname = "catppuccin-theme";
-      #   version = "1.0.0";
-
-      #   src = pkgs.fetchgit {
-      #     url = "https://github.com/catppuccin/emacs";
-      #     rev = "3d93abaa33e95f19b4a8b0e1e9bef1e3e68dd994";
-      #     sha256 = sha256:1j6nsy9is067288x2riabb7kc3grghb2g7bkvwndn2jyglbbxgi0;
-      #   };
-      #   recipe = pkgs.writeText "recipe" ''
-      #     (catppuccin-theme :fetcher github :repo "catppuccin/emacs" :files ("catppuccin-theme.el"))
-      #   '';
-      # };
-
       smartparens = self.trivialBuild {
         pname = "smartparens";
         version = "1.0.0";
@@ -93,63 +91,69 @@ in {
       extraConfig = builtins.readFile ./init.el;
       extraPackages = epkgs:
         with epkgs; [
-          pkgs.emacs-lsp-booster
-          eglot-booster
-          indent-bars
-
-          diminish
+          # keybinds etc
           undo-tree
           evil
           evil-collection
           evil-better-visual-line
-          smartparens
           which-key
           general
 
+          # org
+          olivetti
+          org-roam
           org-bullets
-          solaire-mode
-          catppuccin-theme
+
+          # nice functionality
+          vertico
+          orderless
+          consult
+          marginalia
+          separedit
+
+          # ide
+          rainbow-delimiters
           hl-todo
           flycheck
           flycheck-eglot
           eglot
+          eglot-booster
           company
           company-box
+          apheleia
+          smartparens
 
+          # treesit
           treesit-grammars.with-all-grammars
 
-          olivetti
-          org-roam
-
-          elfeed
-
+          # languages
           rustic
           lua-mode
           gdscript-mode
           nix-mode
           haskell-mode
           fennel-mode
-          
-          rainbow-delimiters
+          janet-mode
 
+          # project management
           projectile
           ibuffer-projectile
           magit
-          vterm
 
-          vertico
-          orderless
-          consult
-          marginalia
+          # utils
           popper
           simple-mpc
           empv
+          elfeed
+          vterm
 
-          separedit
-
+          # nicer look
           all-the-icons
           all-the-icons-dired
           all-the-icons-ibuffer
+          solaire-mode
+          catppuccin-theme
+          diminish
         ];
     };
 

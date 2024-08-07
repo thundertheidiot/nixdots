@@ -428,8 +428,11 @@
   :config
   (global-flycheck-eglot-mode 1))
 
-;; (require 'indent-bars)
-;; (add-hook 'prog-mode-hook #'indent-bars-mode)
+(use-package apheleia
+  :config
+  (setf (alist-get 'nixfmt apheleia-formatters)
+	'("alejandra"))
+  (apheleia-global-mode +1))
 
 (use-package company
   :hook
@@ -462,13 +465,10 @@
 
 (use-package rustic
   :after eglot
-  :mode "\\.rs\\'"
+  :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . eglot-ensure)
   :init
-  (setq rustic-format-trigger 'on-save
-	rustic-lsp-client 'eglot
-	rustic-format-on-save-method 'rustic-cargo-fmt
-	rustic-format-display-method 'ignore
+  (setq rustic-lsp-client 'eglot
 	rustic-use-rust-save-some-buffers t
 	compilation-ask-about-save nil))
 
@@ -498,6 +498,13 @@
   :mode "\\.fnl\\'"
   :hook (fennel-mode . eglot-ensure)
   :init (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
+
+(use-package janet-mode
+  :after eglot
+  :mode "\\.janet\\'")
+
+  ;; :hook (janet-mode . eglot-ensure)
+  ;; :init (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
 
 (use-package csharp-mode
   :after eglot
