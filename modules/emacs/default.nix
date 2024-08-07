@@ -130,6 +130,8 @@ in {
 
           epkgs."git-gutter-fringe+"
           git-timemachine
+          magit
+          magit-todos
 
           # treesit
           treesit-grammars.with-all-grammars
@@ -146,7 +148,6 @@ in {
           # project management
           projectile
           ibuffer-projectile
-          magit
 
           # utils
           popper
