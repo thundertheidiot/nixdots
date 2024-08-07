@@ -1,4 +1,10 @@
-{lib, config, mlib, pkgs, ...}: let
+{
+  lib,
+  config,
+  mlib,
+  pkgs,
+  ...
+}: let
   cfg = config.meow.virtualization;
 
   inherit (mlib) mkEnOpt;

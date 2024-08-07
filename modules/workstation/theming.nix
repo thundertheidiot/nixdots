@@ -105,6 +105,10 @@
               };
             };
 
+            home.sessionVariables = {
+              QT_QPA_PLATFORMTHEME = "qt5ct";
+            };
+
             xdg.dataFile."Kvantum/Catppuccin-Mocha-Mauve" = {
               source = "${(pkgs.catppuccin-kvantum.override {
                 accent = "Mauve";

@@ -94,7 +94,11 @@ in {
         '';
       };
     in [
-      ({config, lib, ...}: {
+      ({
+        config,
+        lib,
+        ...
+      }: {
         home.packages = [kodiLauncher tvScripts];
 
         wayland.windowManager.hyprland.settings = lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {

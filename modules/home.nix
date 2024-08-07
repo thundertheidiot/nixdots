@@ -25,9 +25,9 @@ in {
       stateVersion = mkOpt str "thunder" {};
       directory = mkOpt str "/home/${cfg.user}" {};
 
-      file = mkOpt attrs {} { description = "Files to place in $HOME"; };
-      configFile = mkOpt attrs {} { description = "Files to place in $XDG_CONFIG_HOME"; };
-      dataFile = mkOpt attrs {} { description = "Files to place in $XDG_DATA_HOME"; };
+      file = mkOpt attrs {} {description = "Files to place in $HOME";};
+      configFile = mkOpt attrs {} {description = "Files to place in $XDG_CONFIG_HOME";};
+      dataFile = mkOpt attrs {} {description = "Files to place in $XDG_DATA_HOME";};
     };
   };
   config = {

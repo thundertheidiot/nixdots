@@ -6,11 +6,10 @@
   ...
 }:
 lib.mkIf (config.setup.gaming.enable) (with config; {
-  home.packages = with pkgs;
-    [
-      vesktop
-      webcord # fallback
-    ];
+  home.packages = with pkgs; [
+    vesktop
+    webcord # fallback
+  ];
 
   home.sessionVariables.MANGOHUD_CONFIGFILE = "${xdg.configHome}/mangohud.conf";
   systemd.user.sessionVariables.MANGOHUD_CONFIGFILE = "${xdg.configHome}/mangohud.conf";

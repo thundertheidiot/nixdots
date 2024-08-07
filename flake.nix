@@ -30,9 +30,9 @@
       })
     ];
 
-    nixosModules.default = ({...}: {
+    nixosModules.default = {...}: {
       imports = ./modules;
-    });
+    };
 
     mkSystem = cfg: extramodules: let
       common = commonModules cfg;
@@ -49,10 +49,7 @@
             inputs.hyprland.nixosModules.default
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
-            ({
-              config,
-              ...
-            }: {
+            ({config, ...}: {
               time.timeZone = config.timeZone;
               networking.hostName = config.hostName;
 
@@ -103,22 +100,26 @@
                 ];
               };
 
-              imports = (import ./modules) ++ [
-                inputs.lix-module.nixosModules.default # lix
-                inputs.cosmic.nixosModules.default
-                inputs.hyprland.nixosModules.default
-                ./modules/nixos
-              ];
+              imports =
+                (import ./modules)
+                ++ [
+                  inputs.lix-module.nixosModules.default # lix
+                  inputs.cosmic.nixosModules.default
+                  inputs.hyprland.nixosModules.default
+                  ./modules/nixos
+                ];
 
               meow.home = {
                 user = config.username;
                 extraSpecialArgs = {inherit inputs mlib mpkgs;};
-                sharedModules = common ++ [
-                  # cfg.home
-                  inputs.agenix.homeManagerModules.default
-                  inputs.plasma-manager.homeManagerModules.plasma-manager
-                  inputs.base16.homeManagerModule
-                ];
+                sharedModules =
+                  common
+                  ++ [
+                    # cfg.home
+                    inputs.agenix.homeManagerModules.default
+                    inputs.plasma-manager.homeManagerModules.plasma-manager
+                    inputs.base16.homeManagerModule
+                  ];
                 modules = [
                   ./modules/home
                 ];

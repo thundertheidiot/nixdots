@@ -19,21 +19,22 @@ in {
 
   config = let
     inherit (lib.strings) concatStringsSep;
-    
+
     symlinkScript = ''
-    ${concatStringsSep "\n" (map (f: with f;
-      "ln -sf \"${source}\" \"${destination}\"") cfg.symlinkFiles)}
+      ${concatStringsSep "\n" (map (f: with f; "ln -sf \"${source}\" \"${destination}\"") cfg.symlinkFiles)}
     '';
 
     mountScript = ''
-    ${concatStringsSep "\n" (map (f: with f; ''
-      mkdir -p "${destination}"
-      if [ $(mountpoint -q "${destination}" ) ]; then
-        mount -o bind,remount,ro "${source}" "${destination}"
-      else
-        mount -o bind,ro "${source}" "${destination}"
-      fi
-      '') cfg.mountDirectories)}
+      ${concatStringsSep "\n" (map (f:
+        with f; ''
+          mkdir -p "${destination}"
+          if [ $(mountpoint -q "${destination}" ) ]; then
+            mount -o bind,remount,ro "${source}" "${destination}"
+          else
+            mount -o bind,ro "${source}" "${destination}"
+          fi
+        '')
+      cfg.mountDirectories)}
     '';
   in {
     system.activationScripts = {

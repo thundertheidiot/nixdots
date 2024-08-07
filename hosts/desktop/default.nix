@@ -137,18 +137,20 @@ in {
 
       home = {
         stateVersion = "24.05";
-        modules = [({...}: {
-          gtk.gtk3.bookmarks = [
-            "file:///mnt/4tb"
-          ];
-        })];
+        modules = [
+          ({...}: {
+            gtk.gtk3.bookmarks = [
+              "file:///mnt/4tb"
+            ];
+          })
+        ];
       };
     };
 
     environment.systemPackages = with pkgs; [
       android-tools
     ];
-    
+
     programs.adb.enable = true;
     boot.binfmt.emulatedSystems = ["aarch64-linux"];
     users.users.${config.username}.extraGroups = ["adbusers"];

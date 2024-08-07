@@ -135,7 +135,7 @@ in {
                 monitor = lib.mkIf (mons != []) (builtins.map (m:
                   with m;
                     lib.mkIf (!hyprlandExclude)
-                      "${name}, ${width}x${height}@${refresh}, ${x}x${y}, ${scale}${
+                    "${name}, ${width}x${height}@${refresh}, ${x}x${y}, ${scale}${
                       if (hyprlandExtra != "")
                       then ", ${hyprlandExtra}"
                       else ""

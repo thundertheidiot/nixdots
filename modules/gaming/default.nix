@@ -23,16 +23,17 @@ in {
       environment.systemPackages = let
         inherit (pkgs.ataraxiasjel) proton-ge wine-ge;
         inherit (builtins) elem;
-      in with pkgs; [
-        lutris
-        mangohud
+      in
+        with pkgs; [
+          lutris
+          mangohud
 
-        wine-ge
-        proton-ge
+          wine-ge
+          proton-ge
 
-        (lib.mkIf (elem "minecraft" cfg.games) prismlauncher)
-        (lib.mkIf (elem "duckgame" cfg.games) (pkgs.callPackage mpkgs.dgr {homeDirectory = config.stubbornHomeDirectory;}))
-      ];
+          (lib.mkIf (elem "minecraft" cfg.games) prismlauncher)
+          (lib.mkIf (elem "duckgame" cfg.games) (pkgs.callPackage mpkgs.dgr {homeDirectory = config.stubbornHomeDirectory;}))
+        ];
 
       programs.gamemode.enable = true;
       services.joycond.enable = true;
@@ -78,7 +79,7 @@ in {
 
       environment.systemPackages = [
         # (pkgs.writeShellScriptBin "newgamescope" ''exec "${pkgs.gamescope}/bin/gamescope" "$@"'')
-        (pkgs."2405".gamescope.overrideAttrs (rec {
+        (pkgs."2405".gamescope.overrideAttrs rec {
           name = "gamescope-${version}";
           version = "3.14.0";
 
@@ -93,15 +94,15 @@ in {
           postInstall = ''
             mv $out/bin/gamescope $out/bin/gamescope-${version}
           '';
-        }))
+        })
 
-        (pkgs."2405".gamescope.overrideAttrs (rec {
+        (pkgs."2405".gamescope.overrideAttrs rec {
           name = "gamescope-24-05";
 
           postInstall = ''
             mv $out/bin/gamescope $out/bin/${name}
           '';
-        }))
+        })
       ];
 
       programs.gamescope = {

@@ -17,8 +17,8 @@
 
   system = {
     lib,
-      config,
-      pkgs,
+    config,
+    pkgs,
     ...
   }: {
     system.stateVersion = "24.11";
@@ -53,11 +53,13 @@
 
       home = {
         stateVersion = "24.05";
-        modules = [({...}: {
-          gtk.gtk3.bookmarks = [
-            "file:///mnt/4tb"
-          ];
-        })];
+        modules = [
+          ({...}: {
+            gtk.gtk3.bookmarks = [
+              "file:///mnt/4tb"
+            ];
+          })
+        ];
       };
     };
   };
