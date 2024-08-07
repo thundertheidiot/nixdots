@@ -220,6 +220,7 @@
   (evil-collection-init '(dashboard
 			  woman
 			  pdf
+			  org
 			  dired
 			  elfeed
 			  wdired
@@ -465,6 +466,10 @@
   "gds" '(magit-diff-staged :wk "diff staged")
   "gc" '(magit-commit-create :wk "commit"))
 
+(use-package magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
 (use-package git-gutter-fringe+
   :hook
   (prog-mode . git-gutter+-mode))
@@ -499,14 +504,11 @@
   :config
   (general-define-key :states '(insert)
 		      "C-k" nil)
-  ;; (define-key company-active-map (kbd "<return>") nil)
-  ;; (define-key company-active-map (kbd "RET") nil)
-  ;; (define-key company-active-map (kbd "<tab>") nil)
+  (define-key company-active-map (kbd "<return>") nil)
+  (define-key company-active-map (kbd "RET") nil)
+  (define-key company-active-map (kbd "<tab>") nil)
 
-  (make-mode-keymap company-mode-map '(("<return>" . nil)
-				       ("RET" . nil)
-				       ("<tab>" . nil)
-				       ("C-j" . company-select-next)
+  (make-mode-keymap company-mode-map '(("C-j" . company-select-next)
 				       ("C-k" . company-select-previous)
 				       ("C-<return>" . company-complete-selection)
 				       ("C-RET" . company-complete-selection)
