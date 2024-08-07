@@ -149,6 +149,15 @@ in {
 
     environment.systemPackages = with pkgs; [
       android-tools
+      (flashprint.overrideAttrs (prev: {
+        nativeBuildInputs = prev.nativeBuildInputs ++ [pkgs.makeWrapper];
+
+        installPhase =
+          builtins.replaceStrings
+          ["runHook postInstall"]
+          ["wrapProgram $out/bin/flashprint --set HOME ${config.stubbornHomeDirectory}\nrunHook postInstall"]
+          prev.installPhase;
+      }))
     ];
 
     programs.adb.enable = true;
