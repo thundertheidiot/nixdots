@@ -384,6 +384,14 @@
   "rc" '(org-roam-node-find :wk "find")
   "ri" '(org-roam-node-insert :wk "find"))
 
+(use-package org-download
+  :hook (dired-mode . org-download-enable)
+  :init (setq org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s"))
+
+(th/leader
+  "rs" '(org-download-screenshot :wk "screenshot")
+  "rc" '(org-download-clipboard :wk "image from clipboard"))
+
 (use-package org-tempo
   :after org
   :config
@@ -438,6 +446,11 @@
   (setf (alist-get 'nixfmt apheleia-formatters)
 	'("alejandra"))
   (apheleia-global-mode +1))
+
+(use-package magit
+  :init
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
+	magit-auto-revert-mode nil))
 
 (use-package git-gutter-fringe+
   :hook
@@ -561,11 +574,6 @@
 			    (ibuffer-projectile-set-filter-groups)
 			    (unless (eq ibuffer-sorting-mode 'alphabetic
 					(ibuffer-do-sort-by-alphabetic))))))
-
-(use-package magit
-  :init
-  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
-	magit-auto-revert-mode nil))
 
 (use-package vterm
   :hook (vterm-mode . turn-off-line-numbers))
