@@ -20,6 +20,10 @@ in {
       fennel
       janet
 
+      # org screenshot, todo make non hyprland specific and good
+      grim
+      slurp
+
       # lsp
       nixd # nix
       clang-tools # clangd + clang-format
@@ -102,6 +106,7 @@ in {
           # org
           olivetti
           org-roam
+          org-download
           org-bullets
 
           # nice functionality
@@ -124,6 +129,7 @@ in {
           smartparens
 
           epkgs."git-gutter-fringe+"
+          git-timemachine
 
           # treesit
           treesit-grammars.with-all-grammars
@@ -159,11 +165,15 @@ in {
         ];
     };
 
-    services.emacs = {
-      enable = true;
-      client.enable = true;
-      defaultEditor = true;
-      startWithUserSession = true;
+    # services.emacs = {
+    #   enable = true;
+    #   client.enable = true;
+    #   defaultEditor = true;
+    #   startWithUserSession = true;
+    # };
+
+    home.sessionVariables = {
+      EDITOR = "emacsclient -c -a ''";
     };
 
     xdg.mimeApps.defaultApplications = builtins.listToAttrs (builtins.map

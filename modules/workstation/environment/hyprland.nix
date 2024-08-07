@@ -37,6 +37,54 @@
 
         terminal = "${pkgs.alacritty}/bin/alacritty";
 
+        # screenshot = pkgs.writeShellApplication {
+        #   name = "screenshot";
+
+        #   runtimeInputs = with pkgs; [tofi grim slurp swappy hyprland wl-clipboard];
+
+        #   text = ''
+        #     dir = "${config.xdg.userDirs.pictures}/screenshots"
+        #     [ ! -d "$dir" ] && mkdir -p "$dir"
+
+        #     region=0
+        #     output=0
+
+        #     save=0
+        #     clipboard=0
+
+        #     annotate=0
+        #     file=""
+
+        #     exit_parent() {
+        #       echo "Error: $ERROR" > /dev/tty
+        #       exit 1
+        #     }
+
+        #     while getopts 'roascf:' OPTION; do
+        #       case "$OPTION" in
+        #         r) region=1 ;;
+        #         o) output=1 ;;
+
+        #         s) save=1 ;;
+        #         c) clipboard=1 ;;
+
+        #         a) annotate=1 ;;
+
+        #         f) file=$OPTARG ;;
+        #       esac
+        #     done
+
+        #     [ $region & $output ] && { ERROR="Cannot specify both region and output at the same time" trap exit_parent EXIT; }
+        #     [ $save & $clipboard ] && { ERROR="Cannot specify both save and clipboard at the same time" trap exit_parent EXIT; }
+
+        #     if [ $region & $clipboard ]; then
+        #       grim -g "$(slurp)"
+        #     elif
+
+        #     fi
+        #   '';
+        # };
+
         screenshot = pkgs.writeShellScriptBin "screenshot" ''
           #!/bin/sh
           . "$XDG_CONFIG_HOME/user-dirs.dirs"
@@ -119,6 +167,8 @@
               "XDG_CURRENT_DESKTOP,Hyprland"
               "XDG_SESSION_TYPE,wayland"
               "XDG_SESSION_DESKTOP,Hyprland"
+
+              "EDITOR,emacsclient -c -a ''"
 
               "WLR_DRM_NO_ATOMIC,1"
             ];
@@ -230,7 +280,7 @@
               "$mod, return, exec, ${terminal}"
               "$mod, W, exec, ${pkgs.firefox}/bin/firefox"
               "$mod, D, exec, $(${pkgs.tofi}/bin/tofi-run)"
-              "$mod, E, exec, emacsclient -c"
+              "$mod, E, exec, emacsclient -c -a ''"
               "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
               "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
               "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"

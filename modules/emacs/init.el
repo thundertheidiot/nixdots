@@ -223,6 +223,7 @@
 			  dired
 			  elfeed
 			  wdired
+			  emoji
 			  image
 			  eglot
 			  ibuffer
@@ -283,6 +284,10 @@
   "l" '(:ignore t :wk "local (mode specific)")
   "s" '(:ignore t :wk "search")
 
+  "d" '((lambda () (interactive)
+	  (when default-directory
+	    (dired default-directory))) :wk "dired")
+
   "o" '(:ignore t :wk "open")
   "ot" '(vterm :wk "vterm")
 
@@ -338,7 +343,8 @@
   :demand t
   :init
   (setq org-src-preserve-indentation t
-	org-src-tab-acts-natively t)
+	org-src-tab-acts-natively t
+	org-startup-with-inline-images t)
   (add-hook 'org-mode-hook #'org-indent-mode)
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1))))
 
@@ -377,11 +383,13 @@
 (th/leader
   "r" '(:ignore t :wk "roam")
   "rb" '(org-roam-buffer-toggle :wk "buffer")
-  "rf" '(org-roam-node-find :wk "find")
-  "rc" '(org-roam-node-find :wk "find")
-  "ri" '(org-roam-node-insert :wk "find"))
+  "rf" '(org-roam-node-find :wk "find node")
+  "rI" '(org-id-get-create :wk "create id")
+  "ri" '(org-roam-node-insert :wk "insert node"))
 
+(require 'org-download) ;; this makes zero sense but yeah
 (use-package org-download
+  :after org
   :hook (dired-mode . org-download-enable)
   :init (setq org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s"))
 
@@ -459,9 +467,7 @@
 
 (use-package git-gutter-fringe+
   :hook
-  (prog-mode . git-gutter+-mode)
-  :init
-  (set-face-background 'git-gutter+-added "green"))
+  (prog-mode . git-gutter+-mode))
 
 (th/leader
   "gs" '(git-gutter+-show-hunk :wk "stage hunks")
@@ -469,7 +475,16 @@
   "gn" '(git-gutter+-next-hunk :wk "next hunk")
   "gN" '(git-gutter+-previous-hunk :wk "previous hunk"))
 
-(use-package git-timemachine)
+(use-package git-timemachine
+  :config
+  (general-define-key
+   :states 'normal
+   :keymaps 'git-timemachine-mode-map
+   "p" 'git-timemachine-show-previous-revision
+   "n" 'git-timemachine-show-next-revision
+   "f" (lambda () (git-timemachine-show-nth-revision 1))
+   "g" 'git-timemachine-show-nth-revision
+   "c" 'git-timemachine-show-current-revision))
 
 (th/leader
   "gt" '(git-timemachine-toggle :wk "git timemachine"))
