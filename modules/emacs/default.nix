@@ -33,25 +33,9 @@ in {
 
       # formatters
       alejandra
-
-      emacs-lsp-booster
     ];
 
     programs.emacs.overrides = self: super: {
-      eglot-booster = self.trivialBuild {
-        pname = "eglot-booster";
-        version = "1.0.0";
-
-        src = pkgs.fetchgit {
-          url = "https://github.com/jdtsmith/eglot-booster";
-          rev = "caee55ee5285659964d0b9fe4101e28de09701ca";
-          sha256 = "sha256:00c96vhmmxx9dspkqk6jir0y9nwb32zbf5ixqjjdzrjy0kh65ii8";
-        };
-        recipe = pkgs.writeText "recipe" ''
-          (eglot-booster :fetcher github :repo "jdtsmith/eglot-booster" :files (:defaults "eglot-booster.el"))
-        '';
-      };
-
       indent-bars = self.trivialBuild {
         pname = "indent-bars";
         version = "1.0.0";
@@ -120,9 +104,10 @@ in {
           rainbow-delimiters
           hl-todo
           flycheck
-          flycheck-eglot
-          eglot
-          eglot-booster
+
+          lsp-mode
+          lsp-ui
+
           company
           company-box
           apheleia

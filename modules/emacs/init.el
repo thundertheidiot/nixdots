@@ -1,6 +1,7 @@
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
+
 ;; -*- lexical-binding: t -*-
 (setq emacs-data-directory (let (
 				 (local-share
@@ -226,7 +227,6 @@
 			  wdired
 			  emoji
 			  image
-			  eglot
 			  ibuffer
 			  simple-mpc
 			  magit
@@ -413,39 +413,28 @@
   :config
   (global-hl-todo-mode 1))
 
-;; IDE
-;; (use-package flymake
-;;   :hook (prog-mode . flymake-mode))
+(use-package lsp-mode
+  :demand t
+  :commands (lsp)
+  :hook (lsp-mode . (lambda ()
+		      (setq lsp-headerline-breadcrumb-segments '(project file))
+		      (lsp-headerline-breadcrumb-mode))))
 
-
-(use-package eglot
-  :hook (prog-mode . eglot-ensure)
-  :init
-  (fset #'jsonrpc--log-event #'ignore)
-  (setq eglot-autoshutdown t))
+(use-package lsp-ui
+  :after lsp-mode
+  :hook (lsp-mode . lsp-ui-mode))
 
 (th/leader
   "c" '(:ignore t :wk "code")
-  "ca" '((lambda () (interactive)
-	   (eglot-code-actions 1 (point-max) nil t))
-	 :wk "code actions"))
-
-(use-package eglot-booster
-  :after eglot
-  :config
-  (eglot-booster-mode))
+  "cr" '(lsp-rename :wk "lsp rename")
+  "S" '(lsp-workspace-shutdown :wk "lsp shutdown"))
 
 (use-package flycheck
   :config (global-flycheck-mode))
 
 (th/leader
-  "ce" '(flycheck-next-error :wk "next error")
-  "cE" '(flycheck-previous-error :wk "previous error"))
-
-(use-package flycheck-eglot
-  :after (flycheck eglot)
-  :config
-  (global-flycheck-eglot-mode 1))
+  "cn" '(flycheck-next-error :wk "next error")
+  "cN" '(flycheck-previous-error :wk "previous error"))
 
 (use-package apheleia
   :config
@@ -472,7 +461,9 @@
 
 (use-package git-gutter-fringe+
   :hook
-  (prog-mode . git-gutter+-mode))
+  (prog-mode . git-gutter+-mode)
+  (git-gutter+-mode . (lambda ()
+			(set-face-background 'git-gutter+-added "green"))))
 
 (th/leader
   "gs" '(git-gutter+-show-hunk :wk "stage hunks")
@@ -485,8 +476,10 @@
   (general-define-key
    :states 'normal
    :keymaps 'git-timemachine-mode-map
-   "p" 'git-timemachine-show-previous-revision
-   "n" 'git-timemachine-show-next-revision
+   "<" 'git-timemachine-show-previous-revision
+   "H" 'git-timemachine-show-previous-revision
+   ">" 'git-timemachine-show-next-revision
+   "L" 'git-timemachine-show-next-revision
    "f" (lambda () (git-timemachine-show-nth-revision 1))
    "g" 'git-timemachine-show-nth-revision
    "c" 'git-timemachine-show-current-revision))
@@ -523,50 +516,54 @@
   :init (add-hook 'company-mode #'company-box-mode))
 
 (use-package rustic
-  :after eglot
+  :after lsp-mode
   :mode ("\\.rs\\'" . rustic-mode)
-  :hook (rustic-mode . eglot-ensure)
+  :hook (rustic-mode . lsp)
   :init
-  (setq rustic-lsp-client 'eglot
+  (setq rustic-lsp-client 'lsp-mode
 	rustic-use-rust-save-some-buffers t
 	compilation-ask-about-save nil))
 
 (use-package nix-mode
-  :after eglot
+  :after lsp-mode
   :mode "\\.nix\\'"
-  :hook (nix-mode . eglot-ensure)
-  :init (add-to-list 'eglot-server-programs '(nix-mode . ("nixd"))))
+  :hook (nix-mode . lsp))
 
 (use-package haskell-mode
-  :after eglot
+  :after lsp-mode
   :mode "\\.hs\\'"
-  :hook (haskell-mode . eglot-ensure))
+  :hook (haskell-mode . lsp))
 
 (use-package lua-mode
-  :after eglot
+  :after lsp-mode
   :mode "\\.lua\\'"
-  :hook (lua-mode . eglot-ensure))
+  :hook (lua-mode . lsp))
 
 (use-package gdscript-mode
-  :after eglot
+  :after lsp-mode
   :mode "\\.gdscript\\'"
-  :hook (gdscript-mode . eglot-ensure))
+  :hook (gdscript-mode . lsp))
 
 (use-package fennel-mode
-  :after eglot
+  :after lsp-mode
   :mode "\\.fnl\\'"
-  :hook (fennel-mode . eglot-ensure)
-  :init (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
+  :hook (fennel-mode . lsp)
+  :init
+  (add-to-list 'lsp-language-id-configuration '(fennel-mode . "fennel"))
+  (lsp-register-client (make-lsp-client
+			:new-connection (lsp-stdio-connection "fennel-ls")
+			:activation-fn (lsp-activate-on "fennel")
+			:server-id 'fennel-ls)))
 
 (use-package janet-mode
-  :after eglot
+  :after lsp-mode
   :mode "\\.janet\\'")
 
 (use-package csharp-mode
-  :after eglot
+  :after lsp-mode
   :mode "\\.cs\\'"
   :hook
-  (csharp-mode . eglot-ensure)
+  (csharp-mode . lsp)
   (csharp-mode . csharp-ts-mode))
 
 (add-hook 'emacs-lisp-mode-hook #'company-mode)
@@ -661,7 +658,6 @@
 	  ("\\*rustic.*\\*" . hide)
 	  ("\\*rustfmt\\*" . hide)
 	  ("\\*rust-analyzer.*\\*" . hide)
-	  ("\\*EGLOT.*\\*" . hide)
 	  ("\\*scratch\\*" . hide)
 	  ("\\*Warnings\\*" . hide)
 	  (compilation-mode . hide))
