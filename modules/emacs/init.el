@@ -416,6 +416,7 @@
 (use-package lsp-mode
   :demand t
   :commands (lsp)
+  :init (setq lsp-auto-guess-root t)
   :hook (lsp-mode . (lambda ()
 		      (setq lsp-headerline-breadcrumb-segments '(project file))
 		      (lsp-headerline-breadcrumb-mode))))
