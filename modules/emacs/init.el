@@ -2,22 +2,11 @@
   (require 'use-package))
 (require 'diminish)
 
-;; -*- lexical-binding: t -*-
-(setq emacs-data-directory (let (
-				 (local-share
-				  (or
-				   (getenv "XDG_DATA_HOME")
-				   (concat (getenv "HOME") "/.local/share"))))
-			     (expand-file-name (concat local-share "/emacs/"))))
-
-(unless (file-directory-p emacs-data-directory)
-  (make-directory emacs-data-directory))
-
 ;; Cleanup
-(setq backup-directory-alist `(("." . ,(expand-file-name "backup-files" emacs-data-directory))))
+(setq backup-directory-alist `(("." . ,(expand-file-name "backup-files" user-emacs-directory))))
 
 
-(let ((auto-save-dir (expand-file-name "auto-saves/" emacs-data-directory)))
+(let ((auto-save-dir (expand-file-name "auto-saves/" user-emacs-directory)))
   (unless (file-directory-p auto-save-dir)
     (make-directory auto-save-dir))
   (setq auto-save-list-file-prefix auto-save-dir
@@ -45,7 +34,7 @@
 
       display-line-numbers-type 'relative
 
-      recentf-save-file (expand-file-name "recentf" emacs-data-directory)
+      recentf-save-file (expand-file-name "recentf" user-emacs-directory)
 
       backward-delete-char-untabify-method nil)
 
@@ -195,7 +184,7 @@
   :diminish global-undo-tree-mode
   :config
   (global-undo-tree-mode)
-  (defvar th/undo-tree-dir (expand-file-name "undo-tree/" emacs-data-directory))
+  (defvar th/undo-tree-dir (expand-file-name "undo-tree/" user-emacs-directory))
   (unless (file-directory-p th/undo-tree-dir)
     (make-directory th/undo-tree-dir))
   (defadvice undo-tree-make-history-save-file-name
