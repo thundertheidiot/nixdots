@@ -405,19 +405,26 @@
 
 (use-package lsp-mode
   :demand t
-  :commands (lsp)
-  :init (setq lsp-auto-guess-root t)
+  :diminish lsp-lens-mode
+  :init (setq lsp-auto-guess-root t
+	      lsp-enable-symbol-highlighting t)
   :hook (lsp-mode . (lambda ()
 		      (setq lsp-headerline-breadcrumb-segments '(project file))
 		      (lsp-headerline-breadcrumb-mode))))
 
 (use-package lsp-ui
   :after lsp-mode
+  :init (setq lsp-ui-doc-enable nil
+	      lsp-ui-show-with-cursor nil
+	      lsp-ui-show-with-mouse nil
+	      )
   :hook (lsp-mode . lsp-ui-mode))
 
 (th/leader
   "c" '(:ignore t :wk "code")
   "cr" '(lsp-rename :wk "lsp rename")
+  "ca" '(lsp-execute-code-action :wk "code action")
+  "ch" '(lsp-describe-thing-at-point :wk "help")
   "S" '(lsp-workspace-shutdown :wk "lsp shutdown"))
 
 (use-package flycheck
@@ -451,6 +458,7 @@
   :config (magit-todos-mode 1))
 
 (use-package git-gutter-fringe+
+  :diminish git-gutter+-mode
   :hook
   (prog-mode . git-gutter+-mode)
   (git-gutter+-mode . (lambda ()
@@ -508,6 +516,7 @@
 
 (use-package rustic
   :after lsp-mode
+  :diminish rustic-mode
   :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . lsp)
   :init
