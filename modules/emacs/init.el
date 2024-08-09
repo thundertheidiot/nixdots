@@ -390,7 +390,8 @@
 (use-package org-tempo
   :after org
   :config
-  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
+  (setq org-structure-template-alist (cons '("el" . "src emacs-lisp") org-structure-template-alist))
+  (setq org-structure-template-alist (cons '("fnl" . "src fennel") org-structure-template-alist)))
 
 (use-package org-bullets
   :diminish org-bullets-mode
