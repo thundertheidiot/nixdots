@@ -173,6 +173,7 @@
   (diminish 'eldoc-mode))
 
 (use-package dired
+  :init (setq dired-listing-switches "-alh")
   :config
   (make-mode-keymap dired-mode-map '(("SPC" . nil)
 				     ("<backspace>" . dired-up-directory)))
@@ -279,7 +280,6 @@
 	    (dired default-directory))) :wk "dired")
 
   "o" '(:ignore t :wk "open")
-  "ot" '(vterm :wk "vterm")
 
   ":" '(execute-extended-command :wk "M-x")
   ";" '(execute-extended-command :wk "M-x")
@@ -555,6 +555,9 @@
 			:activation-fn (lsp-activate-on "fennel")
 			:server-id 'fennel-ls)))
 
+(use-package ob-fennel
+  :after org)
+
 (use-package janet-mode
   :after lsp-mode
   :mode "\\.janet\\'")
@@ -686,6 +689,9 @@
   "ma" '(simple-mpc-load-playlist :wk "load playlist")
   "mh" '(simple-mpc-prev :wk "prev")
   "ml" '(simple-mpc-next :wk "next"))
+
+(use-package empv
+  :init (setq empv-invidious-instance "https://iv.datura.network/api/v1"))
 
 ;; Fix tramp for nixos systems
 (use-package tramp-sh
