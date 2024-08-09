@@ -141,6 +141,9 @@ in {
           elfeed
           vterm
 
+          eshell-vterm
+          fish-completion
+
           # nicer look
           all-the-icons
           all-the-icons-dired

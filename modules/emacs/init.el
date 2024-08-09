@@ -605,6 +605,40 @@
 (use-package vterm
   :hook (vterm-mode . turn-off-line-numbers))
 
+(th/leader
+  "ot" '(vterm :wk "vterm"))
+
+(use-package fish-completion)
+
+(use-package eshell
+  :after fish-completion
+  :after smartparens
+  :hook
+  (eshell-mode . turn-off-line-numbers)
+  (eshell-mode . smartparens-mode)
+  (eshell-mode . fish-completion-mode))
+
+(use-package eshell-vterm
+  :after (eshell vterm)
+  :demand t
+  :config
+  (eshell-vterm-mode))
+
+(th/leader
+  "oe" '((lambda () (interactive) (eshell t)):wk "eshell")'
+  "oE" '((lambda () (interactive) (select-window (split-window))
+	   (eshell t)) :wk "eshell in new window")
+  "poe" '((lambda () (interactive) (projectile-run-eshell t)) :wk "eshell")'
+  "poE" '((lambda () (interactive) (select-window (split-window))
+	    (projectile-run-eshell t)) :wk "eshell in new window"))
+
+(use-package pcre2el)
+(use-package dash)
+
+(defalias 'eshell/v 'eshell-exec-visual)
+(defmacro prx (&rest rx-sexp)
+  "Convert rx expression RX-SEXP to pcre compatible regexp."
+  `(rxt-elisp-to-pcre (rx ,@rx-sexp)))
 
 (use-package vertico
   :init
