@@ -80,6 +80,12 @@ in {
         alwaysTangle = true;
         defaultInitFile = true;
 
+        extraEmacsPackages = epkgs:
+          with epkgs; [
+            use-package
+            general
+          ];
+
         package = pkgs.emacs29-pgtk;
         alwaysEnsure = true;
       };

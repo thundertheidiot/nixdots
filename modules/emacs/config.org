@@ -1,21 +1,23 @@
 #+TITLE: GNU/Emacs
-#+STARTUP: showall
+#+STARTUP: overview
 #+PROPERTY: header-args:emacs-lisp :tangle yes
 
 Setup use-package
 
 #+begin_src emacs-lisp
-(eval-when-compile 
-  (require 'use-package))
+(require 'use-package)
+(require 'general)
+
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
+
 (use-package diminish
+  :demand t
   :config
   (diminish 'font-lock-mode)
   (diminish 'visual-line-mode)
   (diminish 'auto-revert-mode)
   (diminish 'eldoc-mode))
-
-(require 'use-package-ensure)
-(setq use-package-always-ensure t)
 #+end_src
 
 * Libraries
@@ -236,6 +238,21 @@ This is bound to =gc= in normal mode
     (comment-or-uncomment-region beg end)))
 #+end_src
 
+This is bound to =SPC er=
+
+#+begin_src emacs-lisp
+(defun eval-region-and-go-to-normal-mode ()
+  "Evaluate elisp in the selected region, and go back to normal mode."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+	(setq beg (region-beginning) end (region-end))
+      ;; else
+      (setq beg (line-beginning-position) end (line-end-position)))
+    (eval-region beg end)
+    (evil-normal-state)))
+#+end_src
+
 
 * Keybinding
 
@@ -262,15 +279,16 @@ Vi(m) bindings in emacs
 #+begin_src emacs-lisp
 (use-package evil
   :after undo-tree
+  :demand t
   :custom
   (evil-want-integration t)
   (evil-want-keybinding nil)
   (evil-vsplit-window-right t)
   (evil-split-window-below t)
   (evil-undo-system 'undo-tree)
-:config
-(evil-set-undo-system evil-undo-system)
-(evil-mode))
+  :config
+  (evil-set-undo-system evil-undo-system)
+  (evil-mode))
 #+end_src
 
 ** Evil mode improvements
@@ -279,6 +297,7 @@ Collection of evil-like bindings for other modes.
 
 #+begin_src emacs-lisp
 (use-package evil-collection
+  :demand t
   :after evil
   :diminish evil-collection-unimpaired-mode
   :config
@@ -302,6 +321,7 @@ j and k go down visual lines, not real lines
 
 #+begin_src emacs-lisp
 (use-package evil-better-visual-line
+  :demand t
   :after evil
   :config
   (evil-better-visual-line-on))
@@ -313,6 +333,7 @@ Which key
 
 #+begin_src emacs-lisp
 (use-package which-key
+  :demand t
   :diminish which-key-mode
   :config
   (which-key-setup-side-window-bottom)
@@ -321,25 +342,24 @@ Which key
 
 #+begin_src emacs-lisp
 (use-package general
+  :after (which-key evil)
   :demand t
-  :after (evil which-key)
   :config
   (general-evil-setup))
 
-;; For whatever reason this needs to happen after the block
-(general-create-definer th/leader
-  :states '(normal insert visual emacs motion)
-  :keymaps 'override
-  :prefix "SPC"
-  :global-prefix "C-SPC")
+;; (general-create-definer th/leader
+;;   :states '(normal insert visual emacs motion)
+;;   :keymaps 'override
+;;   :prefix "SPC"
+;;   :global-prefix "C-SPC")
 
-(general-create-definer th/local
-  :states '(normal insert visual emacs motion)
-  :keymaps 'override
-  :prefix "SPC l"
-  :global-prefix "C-SPC l")
+;; (general-create-definer th/local
+;;   :states '(normal insert visual emacs motion)
+;;   :keymaps 'override
+;;   :prefix "SPC l"
+;;   :global-prefix "C-SPC l")
 
-(th/leader
+(general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
   "w" '(:ignore t :wk "window")
   "wh" '(windmove-left :wk "move left")
   "wj" '(windmove-down :wk "move down")
@@ -423,22 +443,23 @@ Which key
 
 #+begin_src emacs-lisp
 (use-package org
-  :demand t
+  :defer t
+  :mode ("\\.org\\'" . org-mode)
   :custom
   (org-src-preserve-indentation t)
   (org-src-tab-acts-natively t)
   (org-startup-with-inline-images t)
-  :hook
-  (org-mode . org-indent-mode)
-  (org-mode . (lambda () (electric-indent-local-mode -1)))
-  :config
-  (th/local :keymaps 'org-mode-map
+  :init
+  (add-hook 'org-mode-hook #'org-indent-mode)
+  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
+  :general-config
+  (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
     "l" '(:ignore t :wk "org link")
     "li" '(org-insert-link :wk "insert org link")
     "lo" '(org-open-at-point :wk "open org link")
     "le" '(org-edit-special :wk "open org link")
     "lt" '(org-toggle-link-display :wk "toggle link display"))
-  (general-define-key :keymaps 'org-mode-map :states 'normal
+  (:keymaps 'org-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (org-open-at-point))
 		      (evil-ret)))))
@@ -458,13 +479,13 @@ Note taking
   :config
   (org-roam-db-autosync-mode)
   (org-roam-setup)
-  (th/leader
+  :general
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "r" '(:ignore t :wk "roam")
     "rb" '(org-roam-buffer-toggle :wk "buffer")
     "rf" '(org-roam-node-find :wk "find node")
     "rI" '(org-id-get-create :wk "create id")
-    "ri" '(org-roam-node-insert :wk "insert node"))
-  )
+    "ri" '(org-roam-node-insert :wk "insert node")))
 #+end_src
 
 ** Org download
@@ -474,10 +495,11 @@ Allow easily inserting images
 #+begin_src emacs-lisp
 (use-package org-download
   :after org
+  :demand t
   :hook (dired-mode . org-download-enable)
-  :init (setq org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s")
-  :config
-  (th/local :keymaps 'org-mode-map
+  :custom (org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s")
+  :general
+  (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
     "s" '(org-download-screenshot :wk "screenshot")
     "c" '(org-download-clipboard :wk "image from clipboard")))
 #+end_src
@@ -490,6 +512,7 @@ Faster inserting of templates like the source code blocks here.
 (use-package org-tempo
   :ensure nil ;; included with org
   :after org
+  :demand t
   :config
   (setq org-structure-template-alist (cons '("el" . "src emacs-lisp") org-structure-template-alist))
   (setq org-structure-template-alist (cons '("fnl" . "src fennel") org-structure-template-alist)))
@@ -516,7 +539,7 @@ Faster inserting of templates like the source code blocks here.
   :config
   (set-face-attribute 'olivetti-fringe nil :background "#313244")
   :hook
-  (olivetti-mode-on . (lambda () (olivetti-set-width 85)))
+  (olivetti-mode-on . (lambda () (olivetti-set-width olivetti-body-width)))
   (org-mode . olivetti-mode))
 #+end_src
 
@@ -532,8 +555,8 @@ Faster inserting of templates like the source code blocks here.
   :init
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
 	magit-auto-revert-mode nil)
-  :config
-  (th/leader
+  :general
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "g" '(:ignore t :wk "git")
     "gg" '(magit-status :wk "open magit")
     "gd" '(:ignore t :wk "diff")
@@ -551,13 +574,12 @@ Show added/deleted/edited parts in the fringe
   (set-face-background 'git-gutter+-deleted "red"))
 
 (use-package git-gutter-fringe+
-  :demand t
   :diminish git-gutter+-mode
   :hook
   (prog-mode . git-gutter+-mode)
   (git-gutter+-mode . th/configure-git-gutter-mode-faces)
-  :config
-  (th/leader
+  :general
+  (:states '(normal visual motion) :keymaps 'git-gutter+-mode-map :prefix "SPC"
     "gs" '(git-gutter+-show-hunk :wk "stage hunks")
     "ga" '(git-gutter+-stage-hunks :wk "stage hunks")
     "gn" '(git-gutter+-next-hunk :wk "next hunk")
@@ -568,7 +590,7 @@ Git timemachine lets you browse through the history of a file tracked by git
 
 #+begin_src emacs-lisp
 (use-package git-timemachine
-  :config
+  :general-config
   (general-define-key
    :states 'normal
    :keymaps 'git-timemachine-mode-map
@@ -580,7 +602,8 @@ Git timemachine lets you browse through the history of a file tracked by git
    "C-f" (lambda () (git-timemachine-show-nth-revision 1))
    "C-g" 'git-timemachine-show-nth-revision
    "C-c" 'git-timemachine-show-current-revision)
-  (th/leader
+  :general
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "gt" '(git-timemachine-toggle :wk "git timemachine")))
 #+end_src
 
@@ -591,11 +614,13 @@ Projectile is a project management tool for emacs
 #+begin_src emacs-lisp
 (use-package projectile
   :diminish projectile-mode
-  :init
-  (setq projectile-switch-project-action #'projectile-dired)
+  :defer t
+  :custom
+  (projectile-switch-project-action #'projectile-dired)
   :config
   (projectile-mode)
-  (th/leader
+  :general
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "P" '(:keymap projectile-command-map :package projectile)
     "p" '(:ignore t :package projectile :wk "project")
     "pp" '(projectile-switch-project :wk "switch project")
@@ -628,6 +653,7 @@ Highlight the following keywords in code
 
 #+begin_src emacs-lisp
 (use-package hl-todo
+  :demand t
   :diminish hl-todo-mode
   :diminish global-hl-todo-mode
   :custom
@@ -643,6 +669,7 @@ Index those keywords inside magit.
 #+begin_src emacs-lisp
 (use-package magit-todos
   :after magit
+  :hook (magit-mode . magit-todos-mode)
   :config (magit-todos-mode 1))
 #+end_src
 
@@ -650,37 +677,40 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :demand t
   :diminish lsp-lens-mode
-  :init (setq lsp-auto-guess-root t
-	      lsp-enable-symbol-highlighting t)
-  :hook (lsp-mode . (lambda ()
-		      (setq lsp-headerline-breadcrumb-segments '(project file))
-		      (lsp-headerline-breadcrumb-mode)))
-  :config
-  (th/leader
+  :demand t
+  :custom 
+  (lsp-auto-guess-root t)
+  (lsp-enable-symbol-highlighting t)
+  :init (add-hook 'lsp-mode (lambda ()
+			      (setq lsp-headerline-breadcrumb-segments '(project file))
+			      (lsp-headerline-breadcrumb-mode)))
+  :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "c" '(:ignore t :wk "code")
     "cr" '(lsp-rename :wk "lsp rename")
     "ca" '(lsp-execute-code-action :wk "code action")
     "ch" '(lsp-describe-thing-at-point :wk "help")
-    "S" '(lsp-workspace-shutdown :wk "lsp shutdown")))
+    "cS" '(lsp-workspace-shutdown :wk "lsp shutdown")))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package lsp-ui
   :after lsp-mode
-  :init (setq lsp-ui-doc-enable nil
-	      lsp-ui-show-with-cursor nil
-	      lsp-ui-show-with-mouse nil
-	      )
+  :custom 
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-show-with-cursor nil)
+  (lsp-ui-show-with-mouse nil)
   :hook (lsp-mode . lsp-ui-mode))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package flycheck
+  :demand t
   :config 
   (global-flycheck-mode)
-  (th/leader
+  :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "cn" '(flycheck-next-error :wk "next error")
     "cN" '(flycheck-previous-error :wk "previous error")))
 #+end_src
@@ -689,6 +719,7 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package apheleia
+  :demand t
   :config
   (setf (alist-get 'nixfmt apheleia-formatters)
 	'("alejandra"))
@@ -705,29 +736,38 @@ Move to corfu
   (after-init . global-company-mode)
   (prog-mode . company-mode)
   :diminish company-mode
-  :init
-  (setq company-idle-delay 0.1)
+  :custom
+  (company-idle-delay 0.1)
   :config
-  (general-define-key :states '(insert)
-		      "C-k" nil)
-  (define-key company-active-map (kbd "<return>") nil)
-  (define-key company-active-map (kbd "RET") nil)
-  (define-key company-active-map (kbd "<tab>") nil)
+  (general-def :states 'insert
+    "C-k" nil)
+  
+  (general-def :keymaps 'company-active-map
+    "RET" nil
+    "<tab>" nil)
 
-  (make-mode-keymap company-mode-map '(("C-j" . company-select-next)
-				       ("C-k" . company-select-previous)
-				       ("C-<return>" . company-complete-selection)
-				       ("C-RET" . company-complete-selection)
-				       ("S-<return>" . company-complete-selection)
-				       ("S-RET" . company-complete-selection)
-				       ("<escape>" . company-abort)
-				       ("ESC" . company-abort))))
+  (general-def :keymaps 'company-mode-map :states '(normal insert visual)
+    "C-j" 'company-select-next
+    "C-k" 'company-select-previous
+    "C-RET" 'company-complete-selection
+    "S-RET" 'company-complete-selection
+    "ESC" 'company-abort))
+
+
+  ;; (make-mode-keymap company-mode-map '(("C-j" . company-select-next)
+  ;; 				       ("C-k" . company-select-previous)
+  ;; 				       ("C-<return>" . company-complete-selection)
+  ;; 				       ("C-RET" . company-complete-selection)
+  ;; 				       ("S-<return>" . company-complete-selection)
+  ;; 				       ("S-RET" . company-complete-selection)
+  ;; 				       ("<escape>" . company-abort)
+  ;; 				       ("ESC" . company-abort))))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package company-box
   :after company
-  :init (add-hook 'company-mode #'company-box-mode))
+  :hook (company-mode . company-box-mode))
 #+end_src
 
 ** Languages
@@ -840,6 +880,7 @@ Smartparens-mode allows you to use parenthesis and some other characters more ea
 
 #+begin_src emacs-lisp
 (use-package smartparens
+  :demand t
   :diminish smartparens-mode
   :config
   (smartparens-global-mode))
@@ -865,7 +906,11 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
 
 #+begin_src emacs-lisp
 (use-package vterm
-  :hook (vterm-mode . turn-off-line-numbers))
+  :hook (vterm-mode . th/turn-off-line-numbers)
+  :commands (vterm)
+  :general
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+    "ot" '(vterm :wk "vterm")))
 #+end_src
 
 ** Eshell
@@ -883,14 +928,14 @@ Eshell itself
 #+begin_src emacs-lisp
 (use-package eshell
   :ensure nil ;; included with emacs
-  :after fish-completion
-  :after smartparens
+  ;; :demand t ;; TODO: fix general
+  :after (fish-completion smartparens)
   :hook
-  (eshell-mode . turn-off-line-numbers)
+  (eshell-mode . th/turn-off-line-numbers)
   (eshell-mode . smartparens-mode)
   (eshell-mode . fish-completion-mode)
-  :config
-  (th/leader
+  :general
+  (:states '(normal visual insert emacs motion) :prefix "SPC" :global-prefix "C-SPC" :keymaps 'override
     "oe" '((lambda () (interactive) (eshell t)):wk "eshell")'
     "oE" '((lambda () (interactive) (select-window (split-window))
              (eshell t)) :wk "eshell in new window")
@@ -928,8 +973,9 @@ Aliases and functions
 
 #+begin_src emacs-lisp
 (use-package consult
-  :config
-  (th/leader
+  :demand t
+  :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
     "sf" '(consult-fd :wk "find")
     "bs" '(consult-buffer :wk "switch")))
@@ -973,6 +1019,7 @@ Look into replacing this
 
 #+begin_src emacs-lisp
 (use-package popper
+  :demand t
   :init
   (setq popper-reference-buffers
 	'("^\\*vterm.*\\*$" vterm-mode
@@ -989,7 +1036,8 @@ Look into replacing this
   :config
   (popper-mode 1)
   (popper-echo-mode 1)
-  (th/leader
+  :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "op" '(:ignore t :wk "popper")
     "opt" '(popper-toggle :wk "popper toggle")
     "opm" '(popper-toggle-type :wk "popper toggle type")
@@ -999,7 +1047,7 @@ Look into replacing this
 ** Media playback "inside" emacs
 
 #+begin_src emacs-lisp
-(th/leader
+(general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
   "m" '(:ignore t :wk "media"))
 #+end_src
 
@@ -1007,16 +1055,9 @@ Control mpd from emacs
 
 #+begin_src emacs-lisp
 (use-package simple-mpc
-  :commands (simple-mpc
-	     simple-mpc-query
-	     simple-mpc-toggle
-	     simple-mpc-clear-current-playlist
-	     simple-mpc-view-current-playlist
-	     simple-mpc-prev
-	     simple-mpc-next)
-  :hook (simple-mpc-mode . turn-off-line-numbers)
-  :config
-  (th/leader 
+  :hook (simple-mpc-mode . th/turn-off-line-numbers)
+  :general
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC" 
     "m" '(:ignore t :wk "media")
     "mm" '(simple-mpc :wk "open simple-mpc")
     "ms" '(simple-mpc-query :wk "search")
@@ -1146,3 +1187,7 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		  (when (display-graphic-p) (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
   (server-after-make-frame . th--ati-ibuffer))
 #+end_src
+
+# Local Variables:
+# olivetti-body-width: 120
+# End:
