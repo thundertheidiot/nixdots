@@ -35,131 +35,55 @@ in {
       alejandra
     ];
 
-    programs.emacs.overrides = self: super: {
-      indent-bars = self.trivialBuild {
-        pname = "indent-bars";
-        version = "1.0.0";
+    # programs.emacs.overrides = self: super: {
+    #   indent-bars = self.trivialBuild {
+    #     pname = "indent-bars";
+    #     version = "1.0.0";
 
-        packageRequires = with pkgs.emacsPackages; [
-          compat
-        ];
+    #     packageRequires = with pkgs.emacsPackages; [
+    #       compat
+    #     ];
 
-        src = pkgs.fetchgit {
-          url = "https://github.com/jdtsmith/indent-bars";
-          rev = "4583e3e9f507143cd4241131b77fc5e8b1722bbf";
-          sha256 = "sha256:12c37pfmf3x1r9z8fv19xgf4nsir7a65l52r46a6gk2vd1dwz7fj";
-        };
-        recipe = pkgs.writeText "recipe" ''
-          (indent-bars :fetcher github :repo "jdtsmith/indent-bars" :files (:defaults "indent-bars.el"))
-        '';
-      };
+    #     src = pkgs.fetchgit {
+    #       url = "https://github.com/jdtsmith/indent-bars";
+    #       rev = "4583e3e9f507143cd4241131b77fc5e8b1722bbf";
+    #       sha256 = "sha256:12c37pfmf3x1r9z8fv19xgf4nsir7a65l52r46a6gk2vd1dwz7fj";
+    #     };
+    #     recipe = pkgs.writeText "recipe" ''
+    #       (indent-bars :fetcher github :repo "jdtsmith/indent-bars" :files (:defaults "indent-bars.el"))
+    #     '';
+    #   };
 
-      smartparens = self.trivialBuild {
-        pname = "smartparens";
-        version = "1.0.0";
+    #   smartparens = self.trivialBuild {
+    #     pname = "smartparens";
+    #     version = "1.0.0";
 
-        packageRequires = with pkgs.emacsPackages; [
-          dash
-        ];
+    #     packageRequires = with pkgs.emacsPackages; [
+    #       dash
+    #     ];
 
-        src = pkgs.fetchgit {
-          url = "https://github.com/Fuco1/smartparens";
-          rev = "d3b616843167f04b8a9f53dd25e84818c9f6fbce";
-          sha256 = "sha256-ldt0O9nQP3RSsEvF5+irx6SRt2GVWbIao4IOO7lOexM=";
-        };
-        recipe = pkgs.writeText "recipe" ''
-          (smartparens :fetcher github :repo "Fuco1/smartparens")
-        '';
-      };
-    };
+    #     src = pkgs.fetchgit {
+    #       url = "https://github.com/Fuco1/smartparens";
+    #       rev = "d3b616843167f04b8a9f53dd25e84818c9f6fbce";
+    #       sha256 = "sha256-ldt0O9nQP3RSsEvF5+irx6SRt2GVWbIao4IOO7lOexM=";
+    #     };
+    #     recipe = pkgs.writeText "recipe" ''
+    #       (smartparens :fetcher github :repo "Fuco1/smartparens")
+    #     '';
+    #   };
+    # };
 
     programs.emacs = {
       enable = true;
-      package = pkgs.emacs29-pgtk;
-      extraConfig = builtins.readFile ./init.el;
-      extraPackages = epkgs:
-        with epkgs; [
-          # keybinds etc
-          undo-tree
-          evil
-          evil-collection
-          evil-better-visual-line
-          which-key
-          general
+      package = pkgs.emacsWithPackagesFromUsePackage {
+        config = ./config.org;
+        alwaysTangle = true;
+        defaultInitFile = true;
 
-          # org
-          olivetti
-          org-roam
-          org-download
-          org-bullets
-
-          # nice functionality
-          vertico
-          orderless
-          consult
-          marginalia
-          separedit
-
-          # ide
-          rainbow-delimiters
-          hl-todo
-          flycheck
-
-          lsp-mode
-          lsp-ui
-
-          company
-          company-box
-          apheleia
-          smartparens
-
-          epkgs."git-gutter-fringe+"
-          git-timemachine
-          magit
-          magit-todos
-
-          # treesit
-          treesit-grammars.with-all-grammars
-
-          # languages
-          rustic
-          lua-mode
-          gdscript-mode
-          nix-mode
-          haskell-mode
-          fennel-mode
-          janet-mode
-
-          # project management
-          projectile
-          ibuffer-projectile
-
-          # utils
-          popper
-          simple-mpc
-          empv
-          elfeed
-          vterm
-
-          eshell-vterm
-          fish-completion
-
-          # nicer look
-          all-the-icons
-          all-the-icons-dired
-          all-the-icons-ibuffer
-          solaire-mode
-          catppuccin-theme
-          diminish
-        ];
+        package = pkgs.emacs29-pgtk;
+        alwaysEnsure = true;
+      };
     };
-
-    # services.emacs = {
-    #   enable = true;
-    #   client.enable = true;
-    #   defaultEditor = true;
-    #   startWithUserSession = true;
-    # };
 
     home.sessionVariables = {
       EDITOR = "emacsclient -c -a ''";
