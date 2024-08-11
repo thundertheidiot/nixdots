@@ -26,6 +26,10 @@ in {
       "e" = "setsid -f emacsclient -c";
     };
 
+    environment.variables = {
+      SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/keyring/ssh";
+    };
+
     programs.bash = {
       interactiveShellInit = ''
         if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
