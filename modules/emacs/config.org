@@ -643,7 +643,6 @@ Projectile is a project management tool for emacs
     "ps" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "search project")
     "p." '(projectile-find-file :wk "find project file")
     "po" '(:ignore t :wk "open")
-    "pot" '(projectile-run-vterm :wk "vterm")
     "pog" '(projectile-vc :wk "project version control (git)")
     "pb" '(projectile-switch-to-buffer :wk "switch buffer in project")))
 #+end_src
@@ -943,13 +942,31 @@ Rainbow delimiters gives colors to delimiters like parenthesis, which helps with
 Vterm is a full fledged terminal emulator inside emacs, it should work with any terminal application.
 
 #+begin_src emacs-lisp
+(defun th/vterm (&optional projectile)
+  (if projectile
+      (projectile-run-vterm t)
+    (vterm t))
+  (end-of-buffer)
+  (evil-append-line 1))
+
 (use-package vterm
   :hook (vterm-mode . th/turn-off-line-numbers)
   :commands (vterm)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "ot" '(vterm :wk "vterm")))
+    "ov" '((lambda () (interactive)
+	     (select-window (th/intelligent-split))
+	     (th/vterm)) :wk "vterm")
+    "oV" '((lambda () (interactive)
+	     (th/vterm)) :wk "vterm in this window")
+    "pov" '((lambda () (interactive)
+	     (select-window (th/intelligent-split))
+	     (th/vterm t)) :wk "vterm")
+    "poV" '((lambda () (interactive)
+	     (th/vterm t)) :wk "vterm in this window")))
 #+end_src
+
+#+RESULTS:
 
 ** Eshell
 
@@ -981,13 +998,17 @@ Eshell itself
   (eshell-mode . smartparens-mode)
   (eshell-mode . fish-completion-mode)
   :general-config
-  (:states '(normal visual) :keymaps 'eshell-mode-map
+  (general-def :states '(normal visual) :keymaps 'eshell-mode-map
 	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
-  (:states '(normal visual insert) :keymaps 'eshell-mode-map
+  (general-def :states '(normal visual insert) :keymaps 'eshell-mode-map
 	   "C->" (lambda () (interactive) 
 		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
   :general
-  (:states '(normal visual insert emacs motion) :prefix "SPC" :keymaps 'override :global-prefix "C-SPC"
+  (general-def :keymaps 'eshell-mode-map :states '(normal visual motion)
+	    "RET" (lambda () (interactive)
+		    (unless (ignore-errors (browse-url))
+		      (evil-ret))))
+  (general-def :states '(normal visual insert emacs motion) :prefix "SPC" :keymaps 'override :global-prefix "C-SPC"
     "oe" '((lambda () (interactive) 
 	     (select-window (th/intelligent-split)) 
 	     (th/eshell)) :wk "eshell")'
@@ -998,10 +1019,13 @@ Eshell itself
     "poE" '((lambda () (interactive) (th/eshell t)) :wk "eshell in new window")))
 #+end_src
 
+#+RESULTS:
+
 Aliases and functions
 
 #+begin_src emacs-lisp
 (defalias 'eshell/v 'eshell-exec-visual)
+
 (defmacro re (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
   "Convert rx expression RX-SEXP to pcre compatible regexp."
   `(rxt-elisp-to-pcre (rx ,@rx-sexp)))
@@ -1037,8 +1061,14 @@ Aliases and functions
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
     "sf" '(consult-fd :wk "find")
-    "bs" '(consult-buffer :wk "switch")))
+    "bs" '(consult-buffer :wk "switch")
+    "bo" '((lambda () (interactive)
+	     (select-window (th/intelligent-split))
+	     (consult-buffer)) :wk "open buffer in new window")
+    ))
 #+end_src
+
+#+RESULTS:
 
 #+begin_src emacs-lisp
 (use-package orderless
@@ -1076,7 +1106,7 @@ Aliases and functions
 
 Look into replacing this
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package popper
   :demand t
   :init
@@ -1101,6 +1131,17 @@ Look into replacing this
     "opt" '(popper-toggle :wk "popper toggle")
     "opm" '(popper-toggle-type :wk "popper toggle type")
     "opc" '(popper-cycle :wk "popper cycle")))
+#+end_src
+
+** Elfeed
+
+#+begin_src emacs-lisp
+(use-package elfeed
+  :custom
+  (elfeed-feeds '("https://howardism.org/index.xml" 
+		  "https://xenodium.com/rss.xml"
+		  "https://xeiaso.net/blog.rss"
+		  "https://jade.fyi/rss.xml")))
 #+end_src
 
 ** Media playback "inside" emacs
@@ -1177,7 +1218,28 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
     (general-def dired-mode-map "DEL" 'dired-up-directory)))
 #+end_src
 
+Casual dired has magit-like menus for dired commands
 
+#+begin_src emacs-lisp :tangle no
+(use-package casual-dired
+  :general
+  (:keymaps dired-mode-map
+	    "C-o" 'casual-dired-tmenu))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(use-package openwith
+  :custom
+  (openwith-associations '((rx nonl
+			       (or ".mkv"
+				   ".mp4"
+				   ".webm"
+				   ".mp3"
+				   ".opus"
+				   ".ogg"
+				   ".flac"))
+			   "mpv" (file))))
+#+end_src
 
 * Theming
 
