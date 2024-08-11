@@ -29,6 +29,7 @@ These are used somewhere later, but don't require any configuration.
 (use-package dash)
 #+end_src
 
+
 * Basic settings
 
 ** Cleanup
@@ -253,6 +254,17 @@ This is bound to =SPC er=
     (evil-normal-state)))
 #+end_src
 
+Intelligently split windows
+
+#+begin_src emacs-lisp
+(defun th/intelligent-split ()
+  (let ((width (window-total-width))
+	(height (window-total-height)))
+    (if (> (+ 10 (* 2 height)) width)
+	(split-window-below)
+      (split-window-right))))
+#+end_src
+
 
 * Keybinding
 
@@ -387,6 +399,7 @@ Which key
 
   "d" '((lambda () (interactive)
 	  (when default-directory
+	    (select-window (th/intelligent-split))
 	    (dired default-directory))) :wk "dired")
 
   "o" '(:ignore t :wk "open")
@@ -445,6 +458,7 @@ Which key
 (use-package org
   :defer t
   :mode ("\\.org\\'" . org-mode)
+  :diminish org-indent-mode
   :custom
   (org-src-preserve-indentation t)
   (org-src-tab-acts-natively t)
@@ -540,6 +554,7 @@ Faster inserting of templates like the source code blocks here.
   (set-face-attribute 'olivetti-fringe nil :background "#313244")
   :hook
   (olivetti-mode-on . (lambda () (olivetti-set-width olivetti-body-width)))
+  (olivetti-mode-on . git-gutter+-toggle-fringe)
   (org-mode . olivetti-mode))
 #+end_src
 
@@ -938,29 +953,42 @@ Eshell itself
 
 (use-package eshell
   :ensure nil ;; included with emacs
-  ;; :demand t ;; TODO: fix general
   :after (fish-completion smartparens)
+  :commands (eshell projectile-run-eshell)
   :hook
   (eshell-mode . th/turn-off-line-numbers)
   (eshell-mode . smartparens-mode)
   (eshell-mode . fish-completion-mode)
+  :general-config
+  (:states '(normal visual) :keymaps 'eshell-mode-map
+	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
+  (:states '(normal visual insert) :keymaps 'eshell-mode-map
+	   "C->" (lambda () (interactive) 
+		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">"))))
   :general
-  (:states '(normal visual insert emacs motion) :prefix "SPC" :global-prefix "C-SPC" :keymaps 'override
-    "oe" '((lambda () (interactive) (eshell t)):wk "eshell")'
-    "oE" '((lambda () (interactive) (select-window (split-window))
-             (eshell t)) :wk "eshell in new window")
-    "poe" '((lambda () (interactive) (projectile-run-eshell t)) :wk "eshell")'
-    "poE" '((lambda () (interactive) (select-window (split-window))
-              (projectile-run-eshell t)) :wk "eshell in new window")))
+  (:states '(normal visual insert emacs motion) :prefix "SPC" :global-prefix "C-SPC"
+    "oe" '((lambda () (interactive) 
+	     (select-window (th/intelligent-split)) 
+	     (th/eshell)) :wk "eshell")'
+    "oE" '((lambda () (interactive) (th/eshell)) :wk "eshell in this window")
+    "poe" '((lambda () (interactive) 
+	      (select-window (th/intelligent-split))
+	      (th/eshell t)) :wk "eshell")'
+    "poE" '((lambda () (interactive) (th/eshell t)) :wk "eshell in new window")))
 #+end_src
 
 Aliases and functions
 
 #+begin_src emacs-lisp
 (defalias 'eshell/v 'eshell-exec-visual)
-(defmacro prx (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
+(defmacro re (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
   "Convert rx expression RX-SEXP to pcre compatible regexp."
   `(rxt-elisp-to-pcre (rx ,@rx-sexp)))
+
+(defalias 'eshell/exit 'evil-quit)
+(defalias 'eshell/e 'evil-quit)
+
+(defalias 'eshell/less 'view-file)
 #+end_src
 
 
@@ -1114,13 +1142,20 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
 #+begin_src emacs-lisp
 (use-package dired
   :ensure nil
+  :demand t
   :init (setq dired-listing-switches "-alh")
+  :general-config
+  (:keymaps 'dired-mode-map :states '(normal insert visual motion)
+    "SPC" nil
+    "q" 'evil-quit
+    "<backspace>" 'dired-up-directory)
+  (:keymaps 'dired-mode-map :states '(normal visual motion) :prefix "SPC"
+    "oe" '((lambda () (interactive) (th/eshell)) :wk "eshell in this window"))
   :config
-  (make-mode-keymap dired-mode-map '(("SPC" . nil)
-				     ("<backspace>" . dired-up-directory)))
   (unless (display-graphic-p)
-    (define-key dired-mode-map (kbd "DEL") #'dired-up-directory)))
+    (general-def dired-mode-map "DEL" 'dired-up-directory)))
 #+end_src
+
 
 
 * Theming
@@ -1197,6 +1232,8 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		  (when (display-graphic-p) (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
   (server-after-make-frame . th--ati-ibuffer))
 #+end_src
+
+* End
 
 # Local Variables:
 # olivetti-body-width: 120
