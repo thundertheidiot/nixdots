@@ -1,10 +1,10 @@
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)
+;; (eval-when-compile
+;;   (require 'use-package))
+(require 'use-package)
+(use-package diminish)
 
 ;; Cleanup
 (setq backup-directory-alist `(("." . ,(expand-file-name "backup-files" user-emacs-directory))))
-
 
 (let ((auto-save-dir (expand-file-name "auto-saves/" user-emacs-directory)))
   (unless (file-directory-p auto-save-dir)
@@ -113,7 +113,8 @@
 
 (defvar saved-window-configurations '())
 
-(use-package subr-x)
+(use-package subr-x ;; included iwth emacs
+  :ensure nil)
 
 (defun format-window-list ()
   (let ((window-list-string-formatted) (value))
@@ -173,6 +174,7 @@
   (diminish 'eldoc-mode))
 
 (use-package dired
+  :ensure nil
   :init (setq dired-listing-switches "-alh")
   :config
   (make-mode-keymap dired-mode-map '(("SPC" . nil)
@@ -234,6 +236,8 @@
   (evil-better-visual-line-on))
 
 (use-package general
+  :demand t
+  :after (evil which-key)
   :config
   (general-evil-setup))
 
@@ -250,56 +254,56 @@
   :global-prefix "C-SPC l")
 
 (th/leader
-  "w" '(:ignore t :wk "window")
-  "wh" '(windmove-left :wk "move left")
-  "wj" '(windmove-down :wk "move down")
-  "wk" '(windmove-up :wk "move up")
-  "wl" '(windmove-right :wk "move right")
-  "<left>" '(windmove-left :wk "move left")
-  "<down>" '(windmove-down :wk "move down")
-  "<up>" '(windmove-up :wk "move up")
-  "<right>" '(windmove-right :wk "move right")
-  "wq" '(evil-quit :wk "close")
-  "q" '(evil-quit :wk "close window")
-  "ws" '(split-window-below :wk "horizontal split")
-  "wv" '(split-window-right :wk "vertical split")
+ "w" '(:ignore t :wk "window")
+ "wh" '(windmove-left :wk "move left")
+ "wj" '(windmove-down :wk "move down")
+ "wk" '(windmove-up :wk "move up")
+ "wl" '(windmove-right :wk "move right")
+ "<left>" '(windmove-left :wk "move left")
+ "<down>" '(windmove-down :wk "move down")
+ "<up>" '(windmove-up :wk "move up")
+ "<right>" '(windmove-right :wk "move right")
+ "wq" '(evil-quit :wk "close")
+ "q" '(evil-quit :wk "close window")
+ "ws" '(split-window-below :wk "horizontal split")
+ "wv" '(split-window-right :wk "vertical split")
 
-  "wc" '(:ignore t :wk "window configurations")
-  "wcl" '(load-a-saved-window-configuration :wk "load")
-  "wcs" '(save-current-window-configuration :wk "save")
-  "wcn" '(new-window-configuration :wk "new")
-  
-  "H" '((lambda () (interactive) (evil-window-increase-width 2)) :wk "increase window width")
-  "J" '((lambda () (interactive) (evil-window-increase-height 2)) :wk "increase window height")
-  
-  "l" '(:ignore t :wk "local (mode specific)")
-  "s" '(:ignore t :wk "search")
+ "wc" '(:ignore t :wk "window configurations")
+ "wcl" '(load-a-saved-window-configuration :wk "load")
+ "wcs" '(save-current-window-configuration :wk "save")
+ "wcn" '(new-window-configuration :wk "new")
+ 
+ "H" '((lambda () (interactive) (evil-window-increase-width 2)) :wk "increase window width")
+ "J" '((lambda () (interactive) (evil-window-increase-height 2)) :wk "increase window height")
+ 
+ "l" '(:ignore t :wk "local (mode specific)")
+ "s" '(:ignore t :wk "search")
 
-  "d" '((lambda () (interactive)
-	  (when default-directory
-	    (dired default-directory))) :wk "dired")
+ "d" '((lambda () (interactive)
+	 (when default-directory
+	   (dired default-directory))) :wk "dired")
 
-  "o" '(:ignore t :wk "open")
+ "o" '(:ignore t :wk "open")
 
-  ":" '(execute-extended-command :wk "M-x")
-  ";" '(execute-extended-command :wk "M-x")
-  "." '(find-file :wk "find file")
-  ">" '((lambda () (interactive) (find-file nil (getenv "HOME"))) :wk "find file from ~/")
-  
-  "h" '(:ignore t :wk "help")
-  "hb" '(describe-bindings t :wk "describe binding")
-  "hf" '(describe-function t :wk "describe function")
-  "hv" '(describe-variable t :wk "describe variable")
-  
-  "b" '(:ignore t :wk "buffer")
-  "bi" '(ibuffer :wk "ibuffer")
-  "bK" '(kill-buffer :wk "kill buffer")
-  "bk" '(kill-this-buffer :wk "kill this buffer")
+ ":" '(execute-extended-command :wk "M-x")
+ ";" '(execute-extended-command :wk "M-x")
+ "." '(find-file :wk "find file")
+ ">" '((lambda () (interactive) (find-file nil (getenv "HOME"))) :wk "find file from ~/")
+ 
+ "h" '(:ignore t :wk "help")
+ "hb" '(describe-bindings t :wk "describe binding")
+ "hf" '(describe-function t :wk "describe function")
+ "hv" '(describe-variable t :wk "describe variable")
+ 
+ "b" '(:ignore t :wk "buffer")
+ "bi" '(ibuffer :wk "ibuffer")
+ "bK" '(kill-buffer :wk "kill buffer")
+ "bk" '(kill-this-buffer :wk "kill this buffer")
 
-  "e" '(:ignore t :wk "emacs")
-  "er" '(eval-region-and-go-to-normal-mode :wk "eval region or line")
-  "eb" '(eval-buffer :wk "eval buffer")
-  "ee" '(eval-expression :wk "eval expression"))
+ "e" '(:ignore t :wk "emacs")
+ "er" '(eval-region-and-go-to-normal-mode :wk "eval region or line")
+ "eb" '(eval-buffer :wk "eval buffer")
+ "ee" '(eval-expression :wk "eval expression"))
 
 (general-define-key
  :states '(normal visual)
@@ -334,19 +338,23 @@
   :init
   (setq org-src-preserve-indentation t
 	org-src-tab-acts-natively t
+	org-return-follows-link t
 	org-startup-with-inline-images t)
   (add-hook 'org-mode-hook #'org-indent-mode)
-  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1))))
+  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
+  :config
+  (th/leader
+   "ol" '(org-open-at-point :wk "open org link")))
 
-(th/leader
-  "ol" '(org-open-at-point :wk "open org link"))
+;; (th/leader
+;;   "ol" '(org-open-at-point :wk "open org link"))
 
 (th/local
-  "l" '(:ignore t :wk "org link")
-  "li" '(org-insert-link :wk "insert org link")
-  "lo" '(org-open-at-point :wk "open org link")
-  "le" '(org-edit-special :wk "open org link")
-  "lt" '(org-toggle-link-display :wk "toggle link display"))
+ "l" '(:ignore t :wk "org link")
+ "li" '(org-insert-link :wk "insert org link")
+ "lo" '(org-open-at-point :wk "open org link")
+ "le" '(org-edit-special :wk "open org link")
+ "lt" '(org-toggle-link-display :wk "toggle link display"))
 
 (use-package olivetti
   :after org
@@ -371,11 +379,11 @@
   (org-roam-setup))
 
 (th/leader
-  "r" '(:ignore t :wk "roam")
-  "rb" '(org-roam-buffer-toggle :wk "buffer")
-  "rf" '(org-roam-node-find :wk "find node")
-  "rI" '(org-id-get-create :wk "create id")
-  "ri" '(org-roam-node-insert :wk "insert node"))
+ "r" '(:ignore t :wk "roam")
+ "rb" '(org-roam-buffer-toggle :wk "buffer")
+ "rf" '(org-roam-node-find :wk "find node")
+ "rI" '(org-id-get-create :wk "create id")
+ "ri" '(org-roam-node-insert :wk "insert node"))
 
 (require 'org-download) ;; this makes zero sense but yeah
 (use-package org-download
@@ -384,10 +392,11 @@
   :init (setq org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s"))
 
 (th/leader
-  "rs" '(org-download-screenshot :wk "screenshot")
-  "rc" '(org-download-clipboard :wk "image from clipboard"))
+ "rs" '(org-download-screenshot :wk "screenshot")
+ "rc" '(org-download-clipboard :wk "image from clipboard"))
 
 (use-package org-tempo
+  :ensure nil ;; included with org
   :after org
   :config
   (setq org-structure-template-alist (cons '("el" . "src emacs-lisp") org-structure-template-alist))
@@ -421,18 +430,18 @@
   :hook (lsp-mode . lsp-ui-mode))
 
 (th/leader
-  "c" '(:ignore t :wk "code")
-  "cr" '(lsp-rename :wk "lsp rename")
-  "ca" '(lsp-execute-code-action :wk "code action")
-  "ch" '(lsp-describe-thing-at-point :wk "help")
-  "S" '(lsp-workspace-shutdown :wk "lsp shutdown"))
+ "c" '(:ignore t :wk "code")
+ "cr" '(lsp-rename :wk "lsp rename")
+ "ca" '(lsp-execute-code-action :wk "code action")
+ "ch" '(lsp-describe-thing-at-point :wk "help")
+ "S" '(lsp-workspace-shutdown :wk "lsp shutdown"))
 
 (use-package flycheck
   :config (global-flycheck-mode))
 
 (th/leader
-  "cn" '(flycheck-next-error :wk "next error")
-  "cN" '(flycheck-previous-error :wk "previous error"))
+ "cn" '(flycheck-next-error :wk "next error")
+ "cN" '(flycheck-previous-error :wk "previous error"))
 
 (use-package apheleia
   :config
@@ -446,12 +455,12 @@
 	magit-auto-revert-mode nil))
 
 (th/leader
-  "g" '(:ignore t :wk "git")
-  "gg" '(magit-status :wk "open magit")
-  "gd" '(:ignore t :wk "diff")
-  "gdu" '(magit-diff-unstaged :wk "diff unstaged")
-  "gds" '(magit-diff-staged :wk "diff staged")
-  "gc" '(magit-commit-create :wk "commit"))
+ "g" '(:ignore t :wk "git")
+ "gg" '(magit-status :wk "open magit")
+ "gd" '(:ignore t :wk "diff")
+ "gdu" '(magit-diff-unstaged :wk "diff unstaged")
+ "gds" '(magit-diff-staged :wk "diff staged")
+ "gc" '(magit-commit-create :wk "commit"))
 
 (use-package magit-todos
   :after magit
@@ -465,10 +474,10 @@
 			(set-face-background 'git-gutter+-added "green"))))
 
 (th/leader
-  "gs" '(git-gutter+-show-hunk :wk "stage hunks")
-  "ga" '(git-gutter+-stage-hunks :wk "stage hunks")
-  "gn" '(git-gutter+-next-hunk :wk "next hunk")
-  "gN" '(git-gutter+-previous-hunk :wk "previous hunk"))
+ "gs" '(git-gutter+-show-hunk :wk "stage hunks")
+ "ga" '(git-gutter+-stage-hunks :wk "stage hunks")
+ "gn" '(git-gutter+-next-hunk :wk "next hunk")
+ "gN" '(git-gutter+-previous-hunk :wk "previous hunk"))
 
 (use-package git-timemachine
   :config
@@ -484,7 +493,7 @@
    "c" 'git-timemachine-show-current-revision))
 
 (th/leader
-  "gt" '(git-timemachine-toggle :wk "git timemachine"))
+ "gt" '(git-timemachine-toggle :wk "git timemachine"))
 
 (use-package company
   :hook
@@ -556,6 +565,7 @@
 			:server-id 'fennel-ls)))
 
 (use-package ob-fennel
+  :ensure nil ;; part of fennel-mode
   :after org)
 
 (use-package janet-mode
@@ -585,15 +595,15 @@
   (projectile-mode))
 
 (th/leader
-  "P" '(:keymap projectile-command-map :package projectile)
-  "p" '(:ignore t :package projectile :wk "project")
-  "pp" '(projectile-switch-project :wk "switch project")
-  "ps" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "search project")
-  "p." '(projectile-find-file :wk "find project file")
-  "po" '(:ignore t :wk "open")
-  "pot" '(projectile-run-vterm :wk "vterm")
-  "pog" '(projectile-vc :wk "project version control (git)")
-  "pb" '(projectile-switch-to-buffer :wk "switch buffer in project"))
+ "P" '(:keymap projectile-command-map :package projectile)
+ "p" '(:ignore t :package projectile :wk "project")
+ "pp" '(projectile-switch-project :wk "switch project")
+ "ps" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "search project")
+ "p." '(projectile-find-file :wk "find project file")
+ "po" '(:ignore t :wk "open")
+ "pot" '(projectile-run-vterm :wk "vterm")
+ "pog" '(projectile-vc :wk "project version control (git)")
+ "pb" '(projectile-switch-to-buffer :wk "switch buffer in project"))
 
 (use-package ibuffer-projectile
   :config
@@ -606,11 +616,12 @@
   :hook (vterm-mode . turn-off-line-numbers))
 
 (th/leader
-  "ot" '(vterm :wk "vterm"))
+ "ot" '(vterm :wk "vterm"))
 
 (use-package fish-completion)
 
 (use-package eshell
+  :ensure nil ;; included with emacs
   :after fish-completion
   :after smartparens
   :hook
@@ -625,12 +636,12 @@
   (eshell-vterm-mode))
 
 (th/leader
-  "oe" '((lambda () (interactive) (eshell t)):wk "eshell")'
-  "oE" '((lambda () (interactive) (select-window (split-window))
-	   (eshell t)) :wk "eshell in new window")
-  "poe" '((lambda () (interactive) (projectile-run-eshell t)) :wk "eshell")'
-  "poE" '((lambda () (interactive) (select-window (split-window))
-	    (projectile-run-eshell t)) :wk "eshell in new window"))
+ "oe" '((lambda () (interactive) (eshell t)):wk "eshell")'
+ "oE" '((lambda () (interactive) (select-window (split-window))
+	  (eshell t)) :wk "eshell in new window")
+ "poe" '((lambda () (interactive) (projectile-run-eshell t)) :wk "eshell")'
+ "poE" '((lambda () (interactive) (select-window (split-window))
+	   (projectile-run-eshell t)) :wk "eshell in new window"))
 
 (use-package pcre2el)
 (use-package dash)
@@ -654,9 +665,9 @@
 (use-package consult)
 
 (th/leader
-  "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
-  "sf" '(consult-fd :wk "find")
-  "bs" '(consult-buffer :wk "switch"))
+ "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
+ "sf" '(consult-fd :wk "find")
+ "bs" '(consult-buffer :wk "switch"))
 
 (use-package orderless
   :after (vertico consult)
@@ -705,30 +716,31 @@
   (popper-echo-mode 1))
 
 (th/leader
-  "op" '(:ignore t :wk "popper")
-  "opt" '(popper-toggle :wk "popper toggle")
-  "opm" '(popper-toggle-type :wk "popper toggle type")
-  "opc" '(popper-cycle :wk "popper cycle"))
+ "op" '(:ignore t :wk "popper")
+ "opt" '(popper-toggle :wk "popper toggle")
+ "opm" '(popper-toggle-type :wk "popper toggle type")
+ "opc" '(popper-cycle :wk "popper cycle"))
 
 (use-package simple-mpc
   :hook (simple-mpc-mode . turn-off-line-numbers))
 
 (th/leader
-  "m" '(:ignore t :wk "media")
-  "mm" '(simple-mpc :wk "open simple-mpc")
-  "ms" '(simple-mpc-query :wk "search")
-  "mp" '(simple-mpc-toggle :wk "play/pause")
-  "mC" '(simple-mpc-clear-current-playlist :wk "clear")
-  "mP" '(simple-mpc-view-current-playlist :wk "playlist")
-  "ma" '(simple-mpc-load-playlist :wk "load playlist")
-  "mh" '(simple-mpc-prev :wk "prev")
-  "ml" '(simple-mpc-next :wk "next"))
+ "m" '(:ignore t :wk "media")
+ "mm" '(simple-mpc :wk "open simple-mpc")
+ "ms" '(simple-mpc-query :wk "search")
+ "mp" '(simple-mpc-toggle :wk "play/pause")
+ "mC" '(simple-mpc-clear-current-playlist :wk "clear")
+ "mP" '(simple-mpc-view-current-playlist :wk "playlist")
+ "ma" '(simple-mpc-load-playlist :wk "load playlist")
+ "mh" '(simple-mpc-prev :wk "prev")
+ "ml" '(simple-mpc-next :wk "next"))
 
 (use-package empv
   :init (setq empv-invidious-instance "https://iv.datura.network/api/v1"))
 
 ;; Fix tramp for nixos systems
 (use-package tramp-sh
+  :ensure nil ;; part of emacs
   :config
   (setq tramp-remote-path
 	(append tramp-remote-path

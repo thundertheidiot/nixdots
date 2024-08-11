@@ -20,6 +20,8 @@
       use-xdg-base-directories = true;
     };
 
+    boot.tmp.cleanOnBoot = true;
+
     systemd.extraConfig = ''
       DefaultTimeoutStopSec=3s
     '';

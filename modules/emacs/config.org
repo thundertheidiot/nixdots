@@ -745,7 +745,29 @@ Index those keywords inside magit.
 
 ** Completion
 
-Move to corfu
+Corfu wip, notice :tangle no
+
+#+begin_src emacs-lisp :tangle no
+(use-package corfu
+  :demand t
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.18)
+  (corfu-cycle t)
+  :hook
+  (after-init . global-corfu-mode)
+  :general-config
+  (general-def :states '(insert normal) :keymaps corfu-map
+    "C-k" nil
+    "C-j" nil)
+  
+  (general-def :keymaps corfu-mode-map :states '(normal insert visual)
+    "SPC" 'corfu-insert-separator
+    "RET" nil
+    "C-j" 'corfu-next
+    "C-k" 'corfu-previous
+    "S-RET" 'corfu-insert))
+#+end_src
 
 #+begin_src emacs-lisp
 (use-package company
