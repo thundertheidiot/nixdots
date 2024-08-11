@@ -554,7 +554,6 @@ Faster inserting of templates like the source code blocks here.
   (set-face-attribute 'olivetti-fringe nil :background "#313244")
   :hook
   (olivetti-mode-on . (lambda () (olivetti-set-width olivetti-body-width)))
-  (olivetti-mode-on . git-gutter+-toggle-fringe)
   (org-mode . olivetti-mode))
 #+end_src
 
@@ -593,6 +592,7 @@ Show added/deleted/edited parts in the fringe
   :hook
   (prog-mode . git-gutter+-mode)
   (git-gutter+-mode . th/configure-git-gutter-mode-faces)
+  (olivetti-mode-on . git-gutter+-toggle-fringe)
   :general
   (:states '(normal visual motion) :keymaps 'git-gutter+-mode-map :prefix "SPC"
     "gs" '(git-gutter+-show-hunk :wk "stage hunks")
@@ -756,28 +756,27 @@ Move to corfu
   :custom
   (company-idle-delay 0.1)
   :config
-  (general-def :states 'insert
-    "C-k" nil)
-  
-  (general-def :keymaps 'company-active-map
-    "RET" nil
-    "<tab>" nil)
+  (general-define-key :states '(insert)
+		      "C-k" nil)
+  (define-key company-active-map (kbd "<return>") nil)
+  (define-key company-active-map (kbd "RET") nil)
+  (define-key company-active-map (kbd "<tab>") nil)
 
-  (general-def :keymaps 'company-mode-map :states '(normal insert visual)
-    "C-j" 'company-select-next
-    "C-k" 'company-select-previous
-    "C-RET" 'company-complete-selection
-    "S-RET" 'company-complete-selection
-    "ESC" 'company-abort))
+  ;; (general-def :keymaps 'company-mode-map :states '(normal insert visual)
+  ;;   "C-j" 'company-select-next
+  ;;   "C-k" 'company-select-previous
+  ;;   "C-RET" 'company-complete-selection
+  ;;   "S-RET" 'company-complete-selection
+  ;;   "ESC" 'company-abort))
 
-  ;; (make-mode-keymap company-mode-map '(("C-j" . company-select-next)
-  ;; 				       ("C-k" . company-select-previous)
-  ;; 				       ("C-<return>" . company-complete-selection)
-  ;; 				       ("C-RET" . company-complete-selection)
-  ;; 				       ("S-<return>" . company-complete-selection)
-  ;; 				       ("S-RET" . company-complete-selection)
-  ;; 				       ("<escape>" . company-abort)
-  ;; 				       ("ESC" . company-abort))))
+  (make-mode-keymap company-mode-map '(("C-j" . company-select-next)
+				       ("C-k" . company-select-previous)
+				       ("C-<return>" . company-complete-selection)
+				       ("C-RET" . company-complete-selection)
+				       ("S-<return>" . company-complete-selection)
+				       ("S-RET" . company-complete-selection)
+				       ("<escape>" . company-abort)
+				       ("ESC" . company-abort))))
 #+end_src
 
 #+begin_src emacs-lisp 
@@ -966,7 +965,7 @@ Eshell itself
 	   "C->" (lambda () (interactive) 
 		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">"))))
   :general
-  (:states '(normal visual insert emacs motion) :prefix "SPC" :global-prefix "C-SPC"
+  (:states '(normal visual insert emacs motion)  :prefix "SPC" :global-prefix "C-SPC"
     "oe" '((lambda () (interactive) 
 	     (select-window (th/intelligent-split)) 
 	     (th/eshell)) :wk "eshell")'
