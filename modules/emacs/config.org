@@ -582,6 +582,7 @@ Show added/deleted/edited parts in the fringe
   (:states '(normal visual motion) :keymaps 'git-gutter+-mode-map :prefix "SPC"
     "gs" '(git-gutter+-show-hunk :wk "stage hunks")
     "ga" '(git-gutter+-stage-hunks :wk "stage hunks")
+    "gr" '(git-gutter+-revert-hunks :wk "stage hunks")
     "gn" '(git-gutter+-next-hunk :wk "next hunk")
     "gN" '(git-gutter+-previous-hunk :wk "previous hunk")))
 #+end_src
@@ -720,6 +721,7 @@ Index those keywords inside magit.
 #+begin_src emacs-lisp
 (use-package apheleia
   :demand t
+  :diminish apheleia
   :config
   (setf (alist-get 'nixfmt apheleia-formatters)
 	'("alejandra"))
@@ -753,7 +755,6 @@ Move to corfu
     "S-RET" 'company-complete-selection
     "ESC" 'company-abort))
 
-
   ;; (make-mode-keymap company-mode-map '(("C-j" . company-select-next)
   ;; 				       ("C-k" . company-select-previous)
   ;; 				       ("C-<return>" . company-complete-selection)
@@ -764,9 +765,10 @@ Move to corfu
   ;; 				       ("ESC" . company-abort))))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp 
 (use-package company-box
   :after company
+  :diminish company-box-mode
   :hook (company-mode . company-box-mode))
 #+end_src
 
@@ -926,6 +928,14 @@ Fish-completion allows eshell to use completions from fish.
 Eshell itself
 
 #+begin_src emacs-lisp
+(defun th/eshell (&optional projectile)
+  (if projectile
+      (projectile-run-eshell t)
+    (eshell t))
+  (end-of-buffer)
+  (evil-append-line 1))
+
+
 (use-package eshell
   :ensure nil ;; included with emacs
   ;; :demand t ;; TODO: fix general
