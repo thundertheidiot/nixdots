@@ -964,9 +964,9 @@ Eshell itself
 	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
   (:states '(normal visual insert) :keymaps 'eshell-mode-map
 	   "C->" (lambda () (interactive) 
-		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">"))))
+		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
   :general
-  (:states '(normal visual insert emacs motion) :prefix "SPC" :global-prefix "C-SPC"
+  (:states '(normal visual insert emacs motion) :prefix "SPC" :keymaps 'override :global-prefix "C-SPC"
     "oe" '((lambda () (interactive) 
 	     (select-window (th/intelligent-split)) 
 	     (th/eshell)) :wk "eshell")'
