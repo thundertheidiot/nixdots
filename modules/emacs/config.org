@@ -418,7 +418,7 @@ Which key
   "b" '(:ignore t :wk "buffer")
   "bi" '(ibuffer :wk "ibuffer")
   "bK" '(kill-buffer :wk "kill buffer")
-  "bk" '(kill-this-buffer :wk "kill this buffer")
+  "bk" '(kill-current-buffer :wk "kill this buffer")
 
   "e" '(:ignore t :wk "emacs")
   "er" '(eval-region-and-go-to-normal-mode :wk "eval region or line")
@@ -448,6 +448,8 @@ Which key
  "<C-wheel-up>" 'text-scale-increase
  "<C-wheel-down>" 'text-scale-decrease)
 #+end_src
+
+#+RESULTS:
 
 
 * Org mode
@@ -486,8 +488,9 @@ Note taking
 #+begin_src emacs-lisp
 (use-package org-roam
   :after org
+  :demand t
   :init
-  (setq org-roam-directory (file-truename "~/Documents/org-roam"))
+  (setq org-roam-directory (file-truename "~/Documents/org/roam"))
   (unless (file-directory-p org-roam-directory)
     (make-directory org-roam-directory))
   :config
@@ -981,7 +984,7 @@ Fish-completion allows eshell to use completions from fish.
 Eshell itself
 
 #+begin_src emacs-lisp
-(defun th/eshell (&optional projectile)
+(defun th/eshell (&optional projectile &rest args)
   (if projectile
       (projectile-run-eshell t)
     (eshell t))
@@ -1138,11 +1141,15 @@ Look into replacing this
 #+begin_src emacs-lisp
 (use-package elfeed
   :custom
+  (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory))
+  (elfeed-enclosure-default-dir user-emacs-directory)
   (elfeed-feeds '("https://howardism.org/index.xml" 
 		  "https://xenodium.com/rss.xml"
 		  "https://xeiaso.net/blog.rss"
 		  "https://jade.fyi/rss.xml")))
 #+end_src
+
+#+RESULTS:
 
 ** Media playback "inside" emacs
 
