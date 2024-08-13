@@ -456,9 +456,24 @@ Which key
 
 ** Org itself
 
+#+begin_src emacs-lisp :tangle no
+(defun th/agenda-category ()
+  (let* ((file-name (when buffer-file-name
+		      (file-name-sans-extension
+		       (file-name-nondirectory))))
+	 (title (org-get-title))
+	 (category (org-get-category)))
+    (or (if (and
+	     title
+	     (string= category file-name))
+	    title
+	  category)
+	"")))
+#+end_src
+
 #+begin_src emacs-lisp
 (use-package org
-  :defer t
+  :demand t
   :mode ("\\.org\\'" . org-mode)
   :diminish org-indent-mode
   :custom
@@ -469,6 +484,8 @@ Which key
   (add-hook 'org-mode-hook #'org-indent-mode)
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
   :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+	   "oa" '(org-agenda :wk "org agenda"))
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
     "l" '(:ignore t :wk "org link")
     "li" '(org-insert-link :wk "insert org link")
@@ -479,6 +496,10 @@ Which key
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (org-open-at-point))
 		      (evil-ret)))))
+#+end_src
+
+#+begin_src emacs-lisp
+(setq calendar-week-start-day 1)
 #+end_src
 
 ** Org roam
@@ -496,6 +517,7 @@ Note taking
   :config
   (org-roam-db-autosync-mode)
   (org-roam-setup)
+  (setq org-agenda-files (org-roam-list-files))
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "r" '(:ignore t :wk "roam")
