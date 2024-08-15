@@ -258,6 +258,7 @@ Intelligently split windows
 
 #+begin_src emacs-lisp
 (defun th/intelligent-split ()
+  (interactive)
   (let ((width (window-total-width))
 	(height (window-total-height)))
     (if (> (+ 10 (* 2 height)) width)
@@ -354,16 +355,15 @@ Which key
 
 #+begin_src emacs-lisp
 (use-package general
-  :after (which-key evil)
   :demand t
   :config
-  (general-evil-setup))
+  (general-evil-setup)
+  (general-create-definer th/leader
+    :states '(normal insert visual emacs motion)
+    :keymaps 'override
+    :prefix "SPC"
+    :global-prefix "C-SPC"))
 
-;; (general-create-definer th/leader
-;;   :states '(normal insert visual emacs motion)
-;;   :keymaps 'override
-;;   :prefix "SPC"
-;;   :global-prefix "C-SPC")
 
 ;; (general-create-definer th/local
 ;;   :states '(normal insert visual emacs motion)
@@ -382,9 +382,7 @@ Which key
   "<up>" '(windmove-up :wk "move up")
   "<right>" '(windmove-right :wk "move right")
   "wq" '(evil-quit :wk "close")
-  "q" '(evil-quit :wk "close window")
-  "ws" '(split-window-below :wk "horizontal split")
-  "wv" '(split-window-right :wk "vertical split")
+  "ws" '(th/intelligent-split :wk "horizontal split")
 
   "wc" '(:ignore t :wk "window configurations")
   "wcl" '(load-a-saved-window-configuration :wk "load")
@@ -1013,7 +1011,6 @@ Eshell itself
   (end-of-buffer)
   (evil-append-line 1))
 
-
 (use-package eshell
   :ensure nil ;; included with emacs
   :after (fish-completion smartparens)
@@ -1029,6 +1026,8 @@ Eshell itself
 	   "C->" (lambda () (interactive) 
 		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
   :general
+  (th/leader
+   "os" 'eshell)
   (general-def :keymaps 'eshell-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (browse-url))
@@ -1049,16 +1048,26 @@ Eshell itself
 Aliases and functions
 
 #+begin_src emacs-lisp
-(defalias 'eshell/v 'eshell-exec-visual)
+(defun eshell/v (&rest args)
+  (select-window (th/intelligent-split))
+  (apply 'eshell-exec-visual args))
+
+(defalias 'eshell/V 'eshell-exec-visual)
 
 (defmacro re (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
   "Convert rx expression RX-SEXP to pcre compatible regexp."
   `(rxt-elisp-to-pcre (rx ,@rx-sexp)))
 
-(defalias 'eshell/exit 'evil-quit)
-(defalias 'eshell/e 'evil-quit)
-
 (defalias 'eshell/less 'view-file)
+#+end_src
+
+For some reason advice-add didn't seem to function, so this just manually replicates eshell/exit.
+
+#+begin_src emacs-lisp
+(defun eshell/exit ()
+  (evil-quit)
+  (throw 'eshell-terminal t))
+(defalias 'eshell/e 'eshell/exit)
 #+end_src
 
 

@@ -281,6 +281,7 @@
               "$mod, W, exec, ${pkgs.firefox}/bin/firefox"
               "$mod, D, exec, $(${pkgs.tofi}/bin/tofi-run)"
               "$mod, E, exec, emacsclient -c -a ''"
+              "$mod, semicolon, exec, emacsclient -c -a '' -e '(th/eshell)'"
               "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
               "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
               "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"
