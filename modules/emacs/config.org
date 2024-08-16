@@ -759,35 +759,6 @@ Index those keywords inside magit.
   :config (eglot-booster-mode))
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-(use-package lsp-mode
-  :diminish lsp-lens-mode
-  :demand t
-  :custom 
-  (lsp-auto-guess-root t)
-  (lsp-enable-symbol-highlighting t)
-  :init (add-hook 'lsp-mode (lambda ()
-			      (setq lsp-headerline-breadcrumb-segments '(project file))
-			      (lsp-headerline-breadcrumb-mode)))
-  :general-config
-  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "c" '(:ignore t :wk "code")
-    "cr" '(lsp-rename :wk "lsp rename")
-    "ca" '(lsp-execute-code-action :wk "code action")
-    "ch" '(lsp-describe-thing-at-point :wk "help")
-    "cS" '(lsp-workspace-shutdown :wk "lsp shutdown")))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(use-package lsp-ui
-  :after eglot
-  :custom 
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-show-with-cursor nil)
-  (lsp-ui-show-with-mouse nil)
-  :hook (lsp-mode . lsp-ui-mode))
-#+end_src
-
 #+begin_src emacs-lisp
 (use-package flycheck
   :demand t
