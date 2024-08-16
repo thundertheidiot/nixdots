@@ -735,8 +735,7 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package eglot
-  :defer t
-  :commands (eglot eglot-ensure)
+  :demand t
   :custom
   (eglot-autoshutdown t)
   :config
@@ -749,6 +748,12 @@ Index those keywords inside magit.
     "c" '(:ignore t :wk "code")
     "ca" ("code actions" . (lambda () (interactive)
 			     (eglot-code-actions 1 (point-max) nil t)))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package eglot-booster
+  :after eglot
+  :config (eglot-booster-mode))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -814,7 +819,7 @@ Index those keywords inside magit.
 
 Corfu wip
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (use-package corfu
   :demand t
   :custom
@@ -825,59 +830,15 @@ Corfu wip
   (after-init . global-corfu-mode)
   :config
   (make-mode-keymap corfu-mode-map '(("C-j" . nil)
-				     ("C-k" . nil)
-				     ("S-RET" . nil)))
+				     ("C-k" . nil)))
   
   (make-mode-keymap corfu-map '(("RET" . nil)
 				("<up>" . nil)
 				("<down>" . nil)
 				("C-j" . corfu-next)
 				("C-k" . corfu-previous)
-				("S-RET" . completion-at-point))))
-    ;; "SPC" 'corfu-insert-separator
-    ;; "RET" nil
-    ;; "C-j" 'corfu-next
-    ;; "C-k" 'corfu-previous
-    ;; "S-RET" 'corfu-insert))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package company
-  :hook
-  (after-init . global-company-mode)
-  (prog-mode . company-mode)
-  :diminish company-mode
-  :custom
-  (company-idle-delay 0.1)
-  :config
-  (general-define-key :states '(insert)
-		      "C-k" nil)
-  (define-key company-active-map (kbd "<return>") nil)
-  (define-key company-active-map (kbd "RET") nil)
-  (define-key company-active-map (kbd "<tab>") nil)
-
-  ;; (general-def :keymaps 'company-mode-map :states '(normal insert visual)
-  ;;   "C-j" 'company-select-next
-  ;;   "C-k" 'company-select-previous
-  ;;   "C-RET" 'company-complete-selection
-  ;;   "S-RET" 'company-complete-selection
-  ;;   "ESC" 'company-abort))
-
-  (make-mode-keymap company-mode-map '(("C-j" . company-select-next)
-				       ("C-k" . company-select-previous)
-				       ("C-<return>" . company-complete-selection)
-				       ("C-RET" . company-complete-selection)
-				       ("S-<return>" . company-complete-selection)
-				       ("S-RET" . company-complete-selection)
-				       ("<escape>" . company-abort)
-				       ("ESC" . company-abort))))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package company-box
-  :after company
-  :diminish company-box-mode
-  :hook (company-mode . company-box-mode))
+				("S-RET" . corfu-complete)
+				("S-<return>" . corfu-complete))))
 #+end_src
 
 ** Languages
@@ -984,7 +945,7 @@ Org src blocks in fennel
 *** Elisp
 
 #+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook #'company-mode)
+(add-hook 'emacs-lisp-mode-hook #'corfu-mode)
 #+end_src
 
 ** Misc nice things
@@ -1076,8 +1037,8 @@ Eshell itself
   (general-def :states '(normal visual) :keymaps 'eshell-mode-map
 	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
   (general-def :states '(normal visual insert) :keymaps 'eshell-mode-map
-	   "C->" (lambda () (interactive) 
-		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
+    "C->" (lambda () (interactive) 
+	    (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
   :general
   (general-def :keymaps 'eshell-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)

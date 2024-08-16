@@ -99,7 +99,7 @@ in {
             src = pkgs.fetchgit {
               url = "https://github.com/jdtsmith/eglot-booster";
               rev = "e19dd7ea81bada84c66e8bdd121408d9c0761fe6";
-              hash = "sha256-X8Z828g3mEqsN1Vi07Tryzsgk1LgVhfIUE7hW3AHVEY=";
+              hash = "sha256-vF34ZoUUj8RENyH9OeKGSPk34G6KXZhEZozQKEcRNhs=";
             };
             recipe = pkgs.writeText "recipe" ''
               (eglot-booster :fetcher github :repo "jdtsmith/eglot-booster" :files (:defaults "eglot-booster.el"))
