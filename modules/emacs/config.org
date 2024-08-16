@@ -404,6 +404,7 @@ Which key
   "<up>" '(windmove-up :wk "move up")
   "<right>" '(windmove-right :wk "move right")
   "wq" '(evil-quit :wk "close")
+  "ww" '(evil-quit :wk "close")
   "ws" '((lambda () (interactive) (th/intelligent-split t)) :wk "horizontal split")
 
   "wc" '(:ignore t :wk "window configurations")
