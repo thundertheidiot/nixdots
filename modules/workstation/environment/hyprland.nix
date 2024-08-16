@@ -278,7 +278,7 @@
 
             bind = [
               "$mod, return, exec, ${terminal}"
-              "$mod, W, exec, ${pkgs.firefox}/bin/firefox"
+              "$mod, W, exec, firefox"
               "$mod, D, exec, $(${pkgs.tofi}/bin/tofi-run)"
               "$mod, E, exec, emacsclient -c -a ''"
               "$mod, semicolon, exec, emacsclient -c -a '' -e '(th/eshell)'"

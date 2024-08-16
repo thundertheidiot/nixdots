@@ -270,17 +270,6 @@ Intelligently split windows
 	  (t (split-window-right)))))
 #+end_src
 
-#+begin_src emacs-lisp
-;; (defun th/intelligent-split ()
-;;   (interactive)
-;;   (let ((width (window-total-width))
-;; 	(height (window-total-height)))
-;;     (if (> (+ 10 (* 2 height)) width)
-;; 	(split-window-below)
-;;       (split-window-right))))
-#+end_src
-
-
 * Keybinding
 
 ** Evil mode and prerequisites
@@ -371,12 +360,7 @@ Which key
 (use-package general
   :demand t
   :config
-  (general-evil-setup)
-  (general-create-definer th/leader
-    :states '(normal insert visual emacs motion)
-    :keymaps 'override
-    :prefix "SPC"
-    :global-prefix "C-SPC"))
+  (general-evil-setup))
 
 ;; (general-create-definer th/leader
 ;;   :states '(normal insert visual emacs motion)
@@ -1001,7 +985,7 @@ Eshell itself
   (evil-append-line 1))
 
 (use-package eshell
-  :ensure nil ;; included with emacs
+  :ensure nil
   :after (fish-completion smartparens)
   :commands (eshell projectile-run-eshell)
   :hook

@@ -36,6 +36,7 @@ in {
   config = mkIf cfg.enable (homeModule {
     programs.firefox = {
       enable = true;
+      package = pkgs.firefox;
 
       policies = {
         DisableFirefoxStudies = true;

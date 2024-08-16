@@ -5,11 +5,13 @@
     substituters = [
       "https://hyprland.cachix.org"
       "https://cosmic.cachix.org/"
+      "https://nyx.chaotic.cx/"
       # "https://nix-community.cachix.org"
     ];
     trusted-public-keys = [
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+      "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
       # "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
@@ -111,14 +113,18 @@
                       };
                     });
 
-                    freetube = prev.freetube.overrideAttrs {
-                      version = "0.21.3";
+                    vulkan-validation-layers = prev.vulkan-validation-layers.overrideAttrs (oldAttrs: {
+                      buildInputs = oldAttrs.buildInputs ++ [prev.spirv-tools];
+                    });
 
-                      src = prev.fetchurl {
-                        url = "https://github.com/FreeTubeApp/FreeTube/releases/download/v0.21.3-beta/freetube_0.21.3_amd64.AppImage";
-                        hash = "sha256-sg/ycFo4roOJ2sW4naRCE6dwGXVQFzF8uwAZQkS2EY4=";
-                      };
-                    };
+                    # freetube = prev.freetube.overrideAttrs {
+                    #   version = "0.21.3";
+
+                    #   src = prev.fetchurl {
+                    #     url = "https://github.com/FreeTubeApp/FreeTube/releases/download/v0.21.3-beta/freetube_0.21.3_amd64.AppImage";
+                    #     hash = "sha256-sg/ycFo4roOJ2sW4naRCE6dwGXVQFzF8uwAZQkS2EY4=";
+                    #   };
+                    # };
 
                     # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
                     # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;

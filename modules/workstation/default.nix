@@ -68,7 +68,7 @@ in {
         };
       };
 
-      boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
+      # boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
 
       services.cpupower-gui.enable = true;
 
@@ -112,7 +112,7 @@ in {
           mpc-cli
           libnotify
 
-          cinny-desktop
+          # cinny-desktop
           element-desktop
           signal-desktop
 
@@ -127,7 +127,7 @@ in {
           yt-dlp
           python3
 
-          ansel
+          # ansel
 
           qmk
 
