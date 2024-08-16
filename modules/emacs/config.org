@@ -634,6 +634,7 @@ Show added/deleted/edited parts in the fringe
   (set-face-background 'git-gutter+-deleted "red"))
 
 (use-package git-gutter-fringe+
+  :commands (git-gutter+mode)
   :diminish git-gutter+-mode
   :hook
   (prog-mode . git-gutter+-mode)
