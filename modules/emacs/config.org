@@ -261,25 +261,23 @@ This is bound to =SPC er=
 Intelligently split windows
 
 #+begin_src emacs-lisp :tangle no
-(defun ligma ()
+(defun th/intelligent-split (&optional force)
   (interactive)
   (let ((width (window-total-width))
 	(height (window-total-height)))
-    (cond
-     ((and (< width 140) (< height 40)) (current-buffer))
-     ((> (+ 10 (* 2 height))) (split-window-below))
-     (t (split-window-right))
-     )))
+    (cond ((and (< width 140) (< height 40) (not force)) (current-buffer))
+	  ((> (+ 10 (* 2 height)) width) (split-window-below))
+	  (t (split-window-right)))))
 #+end_src
 
 #+begin_src emacs-lisp
-(defun th/intelligent-split ()
-  (interactive)
-  (let ((width (window-total-width))
-	(height (window-total-height)))
-    (if (> (+ 10 (* 2 height)) width)
-	(split-window-below)
-      (split-window-right))))
+;; (defun th/intelligent-split ()
+;;   (interactive)
+;;   (let ((width (window-total-width))
+;; 	(height (window-total-height)))
+;;     (if (> (+ 10 (* 2 height)) width)
+;; 	(split-window-below)
+;;       (split-window-right))))
 #+end_src
 
 
@@ -406,7 +404,7 @@ Which key
   "<up>" '(windmove-up :wk "move up")
   "<right>" '(windmove-right :wk "move right")
   "wq" '(evil-quit :wk "close")
-  "ws" '(th/intelligent-split :wk "horizontal split")
+  "ws" '((lambda () (interactive) (th/intelligent-split t)) :wk "horizontal split")
 
   "wc" '(:ignore t :wk "window configurations")
   "wcl" '(load-a-saved-window-configuration :wk "load")
