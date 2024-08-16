@@ -364,12 +364,20 @@ Which key
     :prefix "SPC"
     :global-prefix "C-SPC"))
 
+;; (general-create-definer th/leader
+;;   :states '(normal insert visual emacs motion)
+;;   :keymaps 'override
+;;   :prefix "SPC"
+;;   :global-prefix "C-SPC")
 
 ;; (general-create-definer th/local
 ;;   :states '(normal insert visual emacs motion)
 ;;   :keymaps 'override
 ;;   :prefix "SPC l"
 ;;   :global-prefix "C-SPC l")
+
+(general-def :keymaps 'override
+  "M-x" 'execute-extended-command)
 
 (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
   "w" '(:ignore t :wk "window")
@@ -714,6 +722,24 @@ Index those keywords inside magit.
 ** Lsp
 
 #+begin_src emacs-lisp
+(use-package eglot
+  :defer t
+  :commands (eglot eglot-ensure)
+  :custom
+  (eglot-autoshutdown t)
+  :config
+  (fset #'jsonrpc--log-event #'ignore)
+  (setq eglot-events-buffer-size 0
+	eglot-sync-connect nil
+	eglot-connect-timeout nil)
+  :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+    "c" '(:ignore t :wk "code")
+    "ca" ("code actions" . (lambda () (interactive)
+			     (eglot-code-actions 1 (point-max) nil t)))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
 (use-package lsp-mode
   :diminish lsp-lens-mode
   :demand t
@@ -732,9 +758,9 @@ Index those keywords inside magit.
     "cS" '(lsp-workspace-shutdown :wk "lsp shutdown")))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package lsp-ui
-  :after lsp-mode
+  :after eglot
   :custom 
   (lsp-ui-doc-enable nil)
   (lsp-ui-show-with-cursor nil)
@@ -753,6 +779,13 @@ Index those keywords inside magit.
     "cN" '(flycheck-previous-error :wk "previous error")))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package flycheck-eglot
+  :after (flycheck eglot)
+  :config
+  (global-flycheck-eglot-mode 1))
+#+end_src
+
 ** Formatting
 
 #+begin_src emacs-lisp
@@ -767,7 +800,7 @@ Index those keywords inside magit.
 
 ** Completion
 
-Corfu wip, notice :tangle no
+Corfu wip
 
 #+begin_src emacs-lisp :tangle no
 (use-package corfu
@@ -778,17 +811,22 @@ Corfu wip, notice :tangle no
   (corfu-cycle t)
   :hook
   (after-init . global-corfu-mode)
-  :general-config
-  (general-def :states '(insert normal) :keymaps corfu-map
-    "C-k" nil
-    "C-j" nil)
+  :config
+  (make-mode-keymap corfu-mode-map '(("C-j" . nil)
+				     ("C-k" . nil)
+				     ("S-RET" . nil)))
   
-  (general-def :keymaps corfu-mode-map :states '(normal insert visual)
-    "SPC" 'corfu-insert-separator
-    "RET" nil
-    "C-j" 'corfu-next
-    "C-k" 'corfu-previous
-    "S-RET" 'corfu-insert))
+  (make-mode-keymap corfu-map '(("RET" . nil)
+				("<up>" . nil)
+				("<down>" . nil)
+				("C-j" . corfu-next)
+				("C-k" . corfu-previous)
+				("S-RET" . completion-at-point))))
+    ;; "SPC" 'corfu-insert-separator
+    ;; "RET" nil
+    ;; "C-j" 'corfu-next
+    ;; "C-k" 'corfu-previous
+    ;; "S-RET" 'corfu-insert))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -823,7 +861,7 @@ Corfu wip, notice :tangle no
 				       ("ESC" . company-abort))))
 #+end_src
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (use-package company-box
   :after company
   :diminish company-box-mode
@@ -838,12 +876,12 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package rustic
-  :after lsp-mode
+  :after eglot
   :diminish rustic-mode
   :mode ("\\.rs\\'" . rustic-mode)
-  :hook (rustic-mode . lsp)
+  :hook (rustic-mode . eglot-ensure)
   :init
-  (setq rustic-lsp-client 'lsp-mode
+  (setq rustic-lsp-client 'eglot
 	rustic-use-rust-save-some-buffers t
 	compilation-ask-about-save nil))
 #+end_src
@@ -852,36 +890,36 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package nix-mode
-  :after lsp-mode
+  :after eglot
   :mode "\\.nix\\'"
-  :hook (nix-mode . lsp))
+  :hook (nix-mode . eglot-ensure))
 #+end_src
 
 *** Haskell
 
 #+begin_src emacs-lisp
 (use-package haskell-mode
-  :after lsp-mode
+  :after eglot
   :mode "\\.hs\\'"
-  :hook (haskell-mode . lsp))
+  :hook (haskell-mode . eglot-ensure))
 #+end_src
 
 *** Lua
 
 #+begin_src emacs-lisp
 (use-package lua-mode
-  :after lsp-mode
+  :after eglot
   :mode "\\.lua\\'"
-  :hook (lua-mode . lsp))
+  :hook (lua-mode . eglot-ensure))
 #+end_src
 
 *** Gdscript/godot
 
 #+begin_src emacs-lisp
 (use-package gdscript-mode
-  :after lsp-mode
+  :after eglot
   :mode "\\.gdscript\\'"
-  :hook (gdscript-mode . lsp))
+  :hook (gdscript-mode . eglot-ensure))
 #+end_src
 
 *** Fennel
@@ -890,15 +928,18 @@ Fennel is a nice lispy language, with lua compatibility
 
 #+begin_src emacs-lisp
 (use-package fennel-mode
-  :after lsp-mode
+  :after eglot
   :mode "\\.fnl\\'"
-  :hook (fennel-mode . lsp)
+  :hook (fennel-mode . eglot-ensure)
   :init
-  (add-to-list 'lsp-language-id-configuration '(fennel-mode . "fennel"))
-  (lsp-register-client (make-lsp-client
-			:new-connection (lsp-stdio-connection "fennel-ls")
-			:activation-fn (lsp-activate-on "fennel")
-			:server-id 'fennel-ls)))
+  (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls")))
+  ;; :init
+  ;; (add-to-list 'lsp-language-id-configuration '(fennel-mode . "fennel"))
+  ;; (lsp-register-client (make-lsp-client
+  ;; 			:new-connection (lsp-stdio-connection "fennel-ls")
+  ;; 			:activation-fn (lsp-activate-on "fennel")
+  ;; 			:server-id 'fennel-ls))
+  )
 #+end_src
 
 Org src blocks in fennel
@@ -913,7 +954,7 @@ Org src blocks in fennel
 
 #+begin_src emacs-lisp
 (use-package janet-mode
-  :after lsp-mode
+  :after eglot
   :mode "\\.janet\\'")
 #+end_src
 
@@ -921,10 +962,10 @@ Org src blocks in fennel
 
 #+begin_src emacs-lisp
 (use-package csharp-mode
-  :after lsp-mode
+  :after eglot
   :mode "\\.cs\\'"
   :hook
-  (csharp-mode . lsp)
+  (csharp-mode . eglot-ensure)
   (csharp-mode . csharp-ts-mode))
 #+end_src
 
@@ -1026,8 +1067,6 @@ Eshell itself
 	   "C->" (lambda () (interactive) 
 		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
   :general
-  (th/leader
-   "os" 'eshell)
   (general-def :keymaps 'eshell-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (browse-url))
@@ -1069,6 +1108,15 @@ For some reason advice-add didn't seem to function, so this just manually replic
   (throw 'eshell-terminal t))
 (defalias 'eshell/e 'eshell/exit)
 #+end_src
+
+#+begin_src emacs-lisp
+(use-package eshell-vterm
+  :demand t
+  :after eshell
+  :config 
+  (eshell-vterm-mode))
+#+end_src
+
 
 
 * Misc stuff
