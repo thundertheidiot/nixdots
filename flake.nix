@@ -104,6 +104,22 @@
                     agenix = inputs.agenix.packages.${final.system};
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
+                    # TODO: remove when works
+                    avrdude = prev.avrdude.overrideAttrs (prev: {
+                      src = prev.src.override {
+                        repo = "avrdude";
+                      };
+                    });
+
+                    freetube = prev.freetube.overrideAttrs {
+                      version = "0.21.3";
+
+                      src = prev.fetchurl {
+                        url = "https://github.com/FreeTubeApp/FreeTube/releases/download/v0.21.3-beta/freetube_0.21.3_amd64.AppImage";
+                        hash = "sha256-sg/ycFo4roOJ2sW4naRCE6dwGXVQFzF8uwAZQkS2EY4=";
+                      };
+                    };
+
                     # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
                     # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
                     # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
@@ -155,7 +171,7 @@
   inputs = {
     # https://hydra.nixos.org/job/nixpkgs/trunk/unstable
     # https://status.nixos.org/
-    # nixpkgs.url = "github:NixOS/nixpkgs?ref=7bb2ccd8cdc44c91edba16c48d2c8f331fb3d856";
+    # nixpkgs.url = "github:NixOS/nixpkgs?ref=8a5184b51f449368db552406a762eccd5079a959"; # freetube unstable
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";

@@ -24,6 +24,8 @@ in {
       grim
       slurp
 
+      emacs-lsp-booster
+
       # lsp
       nixd # nix
       clang-tools # clangd + clang-format
@@ -87,8 +89,23 @@ in {
           ];
 
         package = pkgs.emacs29-pgtk;
-        # package = pkgs.emacs-pgtk;
         alwaysEnsure = true;
+
+        override = final: prev: {
+          eglot-booster = final.trivialBuild {
+            pname = "eglot-booster";
+            version = "1.0.0";
+
+            src = pkgs.fetchgit {
+              url = "https://github.com/jdtsmith/eglot-booster";
+              rev = "e19dd7ea81bada84c66e8bdd121408d9c0761fe6";
+              hash = "sha256-X8Z828g3mEqsN1Vi07Tryzsgk1LgVhfIUE7hW3AHVEY=";
+            };
+            recipe = pkgs.writeText "recipe" ''
+              (eglot-booster :fetcher github :repo "jdtsmith/eglot-booster" :files (:defaults "eglot-booster.el"))
+            '';
+          };
+        };
       };
     };
 

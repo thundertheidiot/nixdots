@@ -149,7 +149,14 @@ in {
 
     environment.systemPackages = with pkgs; [
       android-tools
-      (flashprint.overrideAttrs (prev: {
+      (flashprint.overrideAttrs (prev: rec {
+        version = "5.8.6";
+
+        src = fetchurl {
+          url = "http://www.ishare3d.com/3dapp/public/FlashPrint-5/FlashPrint/flashprint5_${version}_amd64.deb";
+          hash = "sha256-oi/nEdOjhbYf9IZmppfKiEmlNGXdc907LS2x8jUck+M=";
+        };
+
         nativeBuildInputs = prev.nativeBuildInputs ++ [pkgs.makeWrapper];
 
         installPhase =
