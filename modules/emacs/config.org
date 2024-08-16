@@ -256,6 +256,18 @@ This is bound to =SPC er=
 
 Intelligently split windows
 
+#+begin_src emacs-lisp :tangle no
+(defun ligma ()
+  (interactive)
+  (let ((width (window-total-width))
+	(height (window-total-height)))
+    (cond
+     ((and (< width 140) (< height 40)) (current-buffer))
+     ((> (+ 10 (* 2 height))) (split-window-below))
+     (t (split-window-right))
+     )))
+#+end_src
+
 #+begin_src emacs-lisp
 (defun th/intelligent-split ()
   (interactive)
