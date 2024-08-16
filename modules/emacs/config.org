@@ -79,10 +79,14 @@ These are used somewhere later, but don't require any configuration.
 (global-visual-line-mode t)
 (savehist-mode 1)
 
-(recentf-mode)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
+#+end_src
+
+#+begin_src emacs-lisp
+(recentf-mode)
+(run-at-time "5 min" 300 'recentf-save-list)
 #+end_src
 
 This is here for my weird keyboards, due to their sizes, i don't have a separate grave key, instead i use (a modified) QK_GESC, where pressing shift + escape sends ~, and super + escape sends `.
