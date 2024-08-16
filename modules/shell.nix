@@ -95,6 +95,8 @@ in {
       QMK_HOME = "${config.homeDirectory}/.local/src/qmk";
 
       STUBBORN_HOME = "${config.stubbornHomeDirectory}";
+
+      PATH = "$PATH:$CARGO_HOME/bin";
     };
 
     programs.bash = {

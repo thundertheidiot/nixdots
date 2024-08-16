@@ -28,6 +28,7 @@ in {
       environment.systemPackages = with pkgs; [
         wireguard-tools
         distrobox
+        freetube
       ];
 
       virtualisation.docker.enable = true;
@@ -124,7 +125,6 @@ in {
 
           yle-dl
           yt-dlp
-          freetube
           python3
 
           ansel
