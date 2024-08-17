@@ -325,6 +325,7 @@ Collection of evil-like bindings for other modes.
 			  org
 			  dired
 			  elfeed
+			  ediff
 			  eshell
 			  wdired
 			  emoji
@@ -990,6 +991,8 @@ Eshell itself
   :ensure nil
   :after (fish-completion smartparens)
   :commands (eshell projectile-run-eshell)
+  :init
+  (setq eshell-history-size 100000)
   :hook
   (eshell-mode . th/turn-off-line-numbers)
   (eshell-mode . smartparens-mode)
@@ -1147,6 +1150,35 @@ Look into replacing this
     "opt" '(popper-toggle :wk "popper toggle")
     "opm" '(popper-toggle-type :wk "popper toggle type")
     "opc" '(popper-cycle :wk "popper cycle")))
+#+end_src
+
+** LLM
+
+Large language models inside emacs, powered by ollama.
+
+#+begin_src emacs-lisp
+(use-package ellama
+  :init
+  (require 'llm-ollama)
+  (setopt ellama-provider
+	  (make-llm-ollama
+	   :chat-model "llama3.1:8b"
+	   :embedding-model "nomic-embed-text"))
+
+  (setopt ellama-providers '(("llama3.1" . (make-llm-ollama
+					    :chat-model "llama3.1:8b"
+					    :embedding-model "nomic-embed-text"))
+			     ("mistral-nemo" . (make-llm-ollama
+						:chat-model "mistral-nemo:12b"
+						:embedding-model "nomic-embed-text"))
+			     ("deepseek-coder-v2" . (make-llm-ollama 
+						     :chat-model "deepseek-coder-v2:16b"
+						     :embedding-model "nomic-embed-text")))))
+
+(defun eshell/ollama-unload (model)
+  (call-process-shell-command 
+   (format 
+   "curl --silent --show-error http://localhost:11434/api/generate -d '{\"model\": \"%s\", \"keep_alive\":0}'" model)))
 #+end_src
 
 ** Elfeed

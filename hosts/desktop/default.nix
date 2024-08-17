@@ -50,6 +50,14 @@ in {
       "video=1920x1080-32"
     ];
 
+    services.ollama = {
+      acceleration = "rocm";
+      environmentVariables = {
+        HCC_AMDGPU_TARGET = "gfx1031";
+      };
+      rocmOverrideGfx = "10.3.1";
+    };
+
     meow = {
       gaming.enable = true;
       gaming.emulation = true;
