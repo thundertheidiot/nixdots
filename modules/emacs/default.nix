@@ -50,7 +50,7 @@ in {
             general
           ];
 
-        package = pkgs.emacs-pgtk;
+        package = pkgs.emacs29-pgtk;
         alwaysEnsure = true;
 
         override = final: prev: {
