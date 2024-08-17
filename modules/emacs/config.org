@@ -86,6 +86,8 @@ These are used somewhere later, but don't require any configuration.
 
 #+begin_src emacs-lisp
 (recentf-mode)
+(setq recentf-max-menu-items 100
+      recentf-max-saved-items 100)
 (run-at-time "5 min" 300 'recentf-save-list)
 #+end_src
 
