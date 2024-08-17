@@ -37,44 +37,6 @@ in {
       alejandra
     ];
 
-    # programs.emacs.overrides = self: super: {
-    #   indent-bars = self.trivialBuild {
-    #     pname = "indent-bars";
-    #     version = "1.0.0";
-
-    #     packageRequires = with pkgs.emacsPackages; [
-    #       compat
-    #     ];
-
-    #     src = pkgs.fetchgit {
-    #       url = "https://github.com/jdtsmith/indent-bars";
-    #       rev = "4583e3e9f507143cd4241131b77fc5e8b1722bbf";
-    #       sha256 = "sha256:12c37pfmf3x1r9z8fv19xgf4nsir7a65l52r46a6gk2vd1dwz7fj";
-    #     };
-    #     recipe = pkgs.writeText "recipe" ''
-    #       (indent-bars :fetcher github :repo "jdtsmith/indent-bars" :files (:defaults "indent-bars.el"))
-    #     '';
-    #   };
-
-    #   smartparens = self.trivialBuild {
-    #     pname = "smartparens";
-    #     version = "1.0.0";
-
-    #     packageRequires = with pkgs.emacsPackages; [
-    #       dash
-    #     ];
-
-    #     src = pkgs.fetchgit {
-    #       url = "https://github.com/Fuco1/smartparens";
-    #       rev = "d3b616843167f04b8a9f53dd25e84818c9f6fbce";
-    #       sha256 = "sha256-ldt0O9nQP3RSsEvF5+irx6SRt2GVWbIao4IOO7lOexM=";
-    #     };
-    #     recipe = pkgs.writeText "recipe" ''
-    #       (smartparens :fetcher github :repo "Fuco1/smartparens")
-    #     '';
-    #   };
-    # };
-
     programs.emacs = {
       enable = true;
       package = pkgs.emacsWithPackagesFromUsePackage {
