@@ -1225,7 +1225,10 @@ Control an mpv instance inside emacs
 
 #+begin_src emacs-lisp
 (use-package empv
-  :init (setq empv-invidious-instance "https://iv.datura.network/api/v1"))
+  :init (setq empv-invidious-instance "https://iv.nowhere.moe/api/v1"))
+
+(defun eshell/yt (&rest args)
+  (empv-youtube (mapconcat (lambda (s) (format "%s " s)) args)))
 #+end_src
 
 ** Separedit
