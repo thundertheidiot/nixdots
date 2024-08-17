@@ -260,7 +260,7 @@ This is bound to =SPC er=
 
 Intelligently split windows
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (defun th/intelligent-split (&optional force)
   (interactive)
   (let ((width (window-total-width))
