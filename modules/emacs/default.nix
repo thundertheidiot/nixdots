@@ -12,9 +12,20 @@
 in {
   options = {
     meow.emacs.enable = mkEnOpt "Install and configure emacs.";
+    meow.emacs.exwm = mkEnOpt "Install and configure EXWM.";
   };
 
   config = mkIf cfg.enable ({
+      environment.variables = lib.mkIf cfg.exwm {
+        EMACS_ENABLE_EXWM = "1";
+      };
+
+      services.xserver.displayManager.startx.enable = cfg.exwm;
+
+      environment.systemPackages = lib.mkIf cfg.exwm (with pkgs; [
+        wmctrl
+      ]);
+
       services.ollama.enable = true;
     }
     // homeModule ({config, ...}: {
@@ -53,10 +64,20 @@ in {
               general
             ];
 
-          package = pkgs.emacs29-pgtk;
+          package = pkgs.emacs-gtk;
           alwaysEnsure = true;
 
           override = final: prev: {
+            dwm-workspaces = final.trivialBuild {
+              pname = "dwm-workspaces";
+              version = "1.0";
+
+              src = ./dwm-workspaces.el;
+
+              recipe = pkgs.writeText "recipe" ''
+                (dwm-workspaces :fetcher github :repo "doesnt/exist" :files (:defaults "dwm-workspaces.el"))
+              '';
+            };
             eglot-booster = final.trivialBuild {
               pname = "eglot-booster";
               version = "1.0.0";

@@ -169,11 +169,11 @@ This may or may not be necessary somewhere, i don't remember.
 						   (if (string= (projectile-project-name) "-")
 						       (format "%s (%s)"
 							       (shell-command-to-string "date \"+%a %R\"")
-							       (format-window-list))
+							       (wcs--format-window-list))
 						     (format "%s: %s (%s)"
 							     (projectile-project-name)
 							     (shell-command-to-string "date \"+%a %R\"")
-							     (format-window-list))))
+							     (wcs--format-window-list))))
 					      . ,(current-window-configuration))))
 #+end_src
 
@@ -1369,6 +1369,155 @@ Solaire mode darkens "lesser" buffers like eshell or magit
   (after-init . (lambda ()
 		  (when (display-graphic-p) (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
   (server-after-make-frame . th--ati-ibuffer))
+#+end_src
+
+* EXWM
+
+#+begin_src emacs-lisp
+(when (getenv "EMACS_ENABLE_EXWM")
+  (setq mouse-autoselect-window t
+	follow-focus-mouse t)
+
+  (use-package dmenu
+    :demand t)
+
+  (use-package dwm-workspaces)
+  
+  (use-package exwm
+    :after dmenu
+    :demand t
+    :config
+    (when (executable-find "wmctrl")
+      (unless (eq (call-process "wmctrl" nil nil nil "-m") 0)
+	(progn
+	  (require 'exwm-config)
+	  (require 'exwm-randr)
+	  (require 'exwm-systemtray)
+	  (require 'exwm-xim)
+
+	  (defun th/exwm-shell-cmd (command) (start-process-shell-command (car (split-string command " ")) nil command))
+
+	  (mapc 'th/exwm-shell-cmd
+		'("xset r rate 300 50"
+		  "dbus-update-activation-environment --verbose --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY &"))
+
+	  (when (file-directory-p "/sys/class/power_supply/BAT0/")
+	    (display-battery-mode))
+
+	  (setq display-time-format "%H:%M:%S - %d %b %Y (%a)"
+		display-time-default-load-average nil)
+	  (display-time-mode 1)
+
+	  (setq exwm-input-line-mode-passthrough t)
+	  
+	  (setq exwm-input-global-keys
+		`((,(kbd "s-i") . exwm-input-toggle-keyboard)
+		  (,(kbd "s-d") . dmenu)
+		  (,(kbd "s-SPC") . ,(lambda () (interactive) (toggle-input-method)))
+		  (,(kbd "<XF86AudioPlay>") . simple-mpc-toggle)
+		  (,(kbd "<XF86AudioRaiseVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+")))
+		  (,(kbd "<XF86AudioLowerVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-")))
+
+		  (,(kbd "s-,") . dwm-workspaces--select-previous-monitor)
+		  (,(kbd "s-.") . dwm-workspaces--select-next-monitor)
+
+		  (,(kbd "s-1") . (lambda () (interactive) (dwm-workspaces--switch-by-index 1)))
+		  (,(kbd "s-2") . (lambda () (interactive) (dwm-workspaces--switch-by-index 2)))
+		  (,(kbd "s-3") . (lambda () (interactive) (dwm-workspaces--switch-by-index 3)))
+		  (,(kbd "s-4") . (lambda () (interactive) (dwm-workspaces--switch-by-index 4)))
+		  (,(kbd "s-5") . (lambda () (interactive) (dwm-workspaces--switch-by-index 5)))
+		  (,(kbd "s-6") . (lambda () (interactive) (dwm-workspaces--switch-by-index 6)))
+		  (,(kbd "s-7") . (lambda () (interactive) (dwm-workspaces--switch-by-index 7)))
+		  (,(kbd "s-8") . (lambda () (interactive) (dwm-workspaces--switch-by-index 8)))
+		  (,(kbd "s-9") . (lambda () (interactive) (dwm-workspaces--switch-by-index 9)))
+		  (,(kbd "s-1") . (lambda () (interactive) (dwm-workspaces--switch-by-index 1)))
+		  (,(kbd "s-2") . (lambda () (interactive) (dwm-workspaces--switch-by-index 2)))
+		  (,(kbd "s-3") . (lambda () (interactive) (dwm-workspaces--switch-by-index 3)))
+		  (,(kbd "s-4") . (lambda () (interactive) (dwm-workspaces--switch-by-index 4)))
+		  (,(kbd "s-5") . (lambda () (interactive) (dwm-workspaces--switch-by-index 5)))
+		  (,(kbd "s-6") . (lambda () (interactive) (dwm-workspaces--switch-by-index 6)))
+		  (,(kbd "s-7") . (lambda () (interactive) (dwm-workspaces--switch-by-index 7)))
+		  (,(kbd "s-8") . (lambda () (interactive) (dwm-workspaces--switch-by-index 8)))
+		  (,(kbd "s-9") . (lambda () (interactive) (dwm-workspaces--switch-by-index 9)))
+
+		  (,(kbd "s-!") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 1)))
+		  (,(kbd "s-@") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 2)))
+		  (,(kbd "s-#") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 3)))
+		  (,(kbd "s-$") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 4)))
+		  (,(kbd "s-%") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 5)))
+		  (,(kbd "s-^") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 6)))
+		  (,(kbd "s-&") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 7)))
+		  (,(kbd "s-*") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 8)))
+		  (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
+
+                  ;; ,@(mapc (lambda (i)
+                  ;;           `(,(kbd (format "s-%d" i)) .
+                  ;;             (lambda () (interactive)
+                  ;;               (dwm-workspaces--switch-by-index ,i))))
+                  ;;         (number-sequence 1 9))
+                  ;; ,@(cl-mapcar (lambda (c n)
+                  ;;                `(,(kbd (format "s-%c" c)) .
+                  ;;                  (lambda () (interactive)
+                  ;;                    (dwm-workspaces--move-window-by-index ,n))))
+                  ;;              '(?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
+                  ;;              (number-sequence 1 9))
+		  ))
+
+	  (mapc (lambda (keybind)
+		  (global-set-key (car keybind) (cdr keybind)))
+		exwm-input-global-keys)
+
+	  (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
+	    ;; remap SPC bs to the exwm switch buffer function
+	    ;; "bs" '(exwm-workspace-switch-to-buffer :wk "switch buffer")
+	    "y" '(:ignore t :wk "exwm")
+	    "yd" '(dmenu :wk "dmenu")
+	    "yf" '(exwm-floating-toggle-floating :wk "toggle floating"))
+
+	  (general-define-key 
+	   :states '(normal visual visual replace motion emacs operator-pending)
+	   :keymaps 'exwm-mode-map
+	   "<mouse-1>" (lambda () (interactive) (exwm-input--fake-key 'down))
+	   "<mouse-2>" nil
+	   "<mouse-3>" nil
+	   "<down-mouse-1>" nil
+	   "<down-mouse-2>" nil
+	   "<down-mouse-3>" nil
+
+	   "i" 'exwm-input-release-keyboard
+	   
+	   "h" (lambda () (interactive) (exwm-input--fake-key 'left))
+	   "j" (lambda () (interactive) (exwm-input--fake-key 'down))
+	   "k" (lambda () (interactive) (exwm-input--fake-key 'up))
+	   "l" (lambda () (interactive) (exwm-input--fake-key 'right)))
+
+	  (setq exwm-workspace-warp-cursor t
+		exwm-layout-show-all-buffers t
+		mouse-autoselect-window t
+		focus-follows-mouse t)
+
+	  (setq ibuffer-saved-filter-groups
+		'(("default"
+		   ("Process" (mode . comint-mode))
+		   )))
+
+	  (add-hook 'ibuffer-mode-hook
+		    (lambda ()
+		      (ibuffer-switch-to-saved-filter-groups "default")))
+
+	  (add-hook 'exwm-update-class-hook
+		    (lambda ()
+		      (if exwm-class-name
+			  (exwm-workspace-rename-buffer exwm-class-name)
+			(exwm-workspace-rename-buffer (generate-new-buffer-name "EXWM - Unknown window")))
+		      (exwm-workspace-rename-buffer (format "EXWM - %s" exwm-class-name))))
+
+	  (exwm-xim-enable)
+	  (exwm-randr-enable)
+	  (exwm-enable)
+	  (exwm-systemtray-enable)
+	  ))))
+  )
 #+end_src
 
 * End

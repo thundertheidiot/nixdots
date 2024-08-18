@@ -65,6 +65,36 @@ in {
           (pkgs.callPackage mpkgs.cru {})
         ];
       })
+      {
+        services.xserver.xrandrHeads = map (m:
+          with m; {
+            output =
+              if (xorgName != "")
+              then xorgName
+              else name;
+
+            inherit primary;
+            monitorConfig = ''
+              ${xorgModeline}
+              ${
+                if (xorgModeline != "")
+                then let
+                  inherit (lib.strings) splitString concatStrings;
+                  inherit (lib.lists) sublist;
+                  inherit (builtins) filter;
+
+                  split' = splitString " " xorgModeline;
+                  split = filter (s: s != "") split'; # get rid of empty entries caused by double spacing
+
+                  name = concatStrings (sublist 1 1 split);
+                in ''Option "PreferredMode" ${name}''
+                else ""
+              }
+              Option "Position" "${x} ${y}"
+            '';
+          })
+        mons;
+      }
       (
         mkIf (elem "hyprland" config.workstation.environment)
         (

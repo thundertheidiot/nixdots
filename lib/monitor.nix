@@ -10,6 +10,9 @@ with builtins; rec {
     scale ? "1",
     hyprlandExtra ? "",
     hyprlandExclude ? false,
+    primary ? false,
+    xorgName ? "",
+    xorgModeline ? "",
     edid ? false,
     customModes ? false,
     ...
@@ -21,6 +24,7 @@ with builtins; rec {
             != "edid"
             && name != "hyprlandExclude"
             && name != "customModes"
+            && name != "primary"
           )
         then toString value
         else value
@@ -35,6 +39,9 @@ with builtins; rec {
         scale
         hyprlandExtra
         hyprlandExclude
+        primary
+        xorgName
+        xorgModeline
         edid
         customModes
         ;

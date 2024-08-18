@@ -65,6 +65,7 @@ in {
 
       firefox.enable = true;
       emacs.enable = true;
+      emacs.exwm = true;
       shell.enable = true;
 
       gpu = "amd";
@@ -84,6 +85,8 @@ in {
           refresh = 144;
           x = 1920;
           hyprlandExtra = "vrr, 0";
+          primary = true;
+          xorgModeline = ''Modeline "2560x1440x143.9"  592.00  2560 2568 2600 2666  1440 1465 1473 1543 +hsync -vsync'';
         }
         {
           name = "DP-1";
@@ -91,12 +94,14 @@ in {
           height = 1080;
           refresh = 144;
           hyprlandExtra = "vrr, 0";
+          xorgModeline = ''Modeline "1920x1080x144.0"  325.08  1920 1944 1976 2056  1080 1083 1088 1098 +hsync +vsync'';
         }
         {
           name = "HDMI-A-1";
           hyprlandExclude = true;
           x = 4480;
           y = 0;
+          xorgName = "HDMI-1";
           edid = ./crt-edited.bin;
           customModes = [
             {
