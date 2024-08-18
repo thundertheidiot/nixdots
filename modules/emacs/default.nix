@@ -17,8 +17,19 @@ in {
 
   config = mkIf cfg.enable ({
       environment.variables = lib.mkIf cfg.exwm {
-        EMACS_ENABLE_EXWM = "1";
+        EMACS_ENABLE_EXWM = "1"; # used inside emacs
       };
+
+      services.xserver.displayManager.session = [
+        {
+          manage = "desktop";
+          name = "EXWM";
+          start = ''
+            exec ${pkgs.dbus}/bin/dbus-launch --exit-with-session emacs -mm &
+            waitPID=$!
+          '';
+        }
+      ];
 
       services.xserver.displayManager.startx.enable = cfg.exwm;
 

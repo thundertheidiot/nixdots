@@ -1384,7 +1384,7 @@ Solaire mode darkens "lesser" buffers like eshell or magit
   (use-package dwm-workspaces)
   
   (use-package exwm
-    :after dmenu
+    :after (dmenu dwm-workspaces)
     :demand t
     :config
     (when (executable-find "wmctrl")
@@ -1394,6 +1394,8 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 	  (require 'exwm-randr)
 	  (require 'exwm-systemtray)
 	  (require 'exwm-xim)
+
+	  (dwm-workspaces--init)
 
 	  (defun th/exwm-shell-cmd (command) (start-process-shell-command (car (split-string command " ")) nil command))
 
