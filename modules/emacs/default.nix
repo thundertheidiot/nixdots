@@ -40,6 +40,15 @@ in {
       services.ollama.enable = true;
     }
     // homeModule ({config, ...}: {
+      systemd.user.targets.exwm-session = lib.mkIf cfg.exwm {
+        Unit = {
+          Description = "EXWM session";
+          BindsTo = ["graphical-session.target"];
+          Wants = ["graphical-session-pre.target"];
+          After = ["graphical-session-pre.target"];
+        };
+      };
+
       home.packages = with pkgs; [
         ghc
         fennel
