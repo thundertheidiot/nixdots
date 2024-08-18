@@ -20,7 +20,7 @@ in {
         EMACS_ENABLE_EXWM = "1"; # used inside emacs
       };
 
-      services.xserver.displayManager.session = [
+      services.xserver.displayManager.session = lib.mkIf cfg.exwm [
         {
           manage = "desktop";
           name = "EXWM";
@@ -31,6 +31,7 @@ in {
         }
       ];
 
+      services.xserver.enable = cfg.exwm;
       services.xserver.displayManager.startx.enable = cfg.exwm;
 
       environment.systemPackages = lib.mkIf cfg.exwm (with pkgs; [
