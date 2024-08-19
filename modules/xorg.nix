@@ -1,11 +1,7 @@
-{
-  lib,
-  config,
-  ...
-}: let
+{lib, ...}: let
 in {
   config = {
-    services.xserver.config = ''
+    services.xserver.config = lib.mkAfter ''
       Section "InputClass"
         Identifier "libinput pointer catchall"
         MatchIsPointer "on"
