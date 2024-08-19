@@ -1402,6 +1402,14 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 
 	  (defun th/exwm-shell-cmd (command) (start-process-shell-command (car (split-string command " ")) nil command))
 
+	  (defun th/keyboard-layout ()
+	    (interactive)
+	    (let* ((output (shell-command-to-string "setxkbmap -query"))
+		   (layout (nth 2 (split-string output "\n"))))
+	      (if (string-match-p "us" layout)
+		  (shell-command-to-string "setxkbmap fi")
+		(shell-command-to-string "setxkbmap us"))))
+
 	  (mapc 'th/exwm-shell-cmd
 		'("xset r rate 300 50"
 		  "dbus-update-activation-environment --verbose --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY &"))
@@ -1448,7 +1456,7 @@ button event."
 	  (setq exwm-input-global-keys
 		`((,(kbd "s-i") . exwm-input-toggle-keyboard)
 		  (,(kbd "s-d") . dmenu)
-		  (,(kbd "s-SPC") . ,(lambda () (interactive) (toggle-input-method)))
+		  (,(kbd "s-SPC") . th/keyboard-layout)
 		  (,(kbd "<XF86AudioPlay>") . simple-mpc-toggle)
 		  (,(kbd "<XF86AudioRaiseVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+")))
 		  (,(kbd "<XF86AudioLowerVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-")))
