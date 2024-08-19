@@ -42,6 +42,7 @@
 
       firefox.enable = true;
       emacs.enable = true;
+      emacs.exwm = true;
       shell.enable = true;
 
       gpu = "intel";
@@ -63,6 +64,12 @@
         stateVersion = "24.05";
       };
     };
+
+    # environment.systemPackages = with pkgs; [
+    #   (nyxt.override {
+    #     sbclPackages = sbcl_2_4_6.pkgs;
+    #   })
+    # ];
 
     boot.loader.grub.enable = true;
     boot.loader.grub.device = "/dev/disk/by-id/ata-TOSHIBA_MQ01ABD100_97DOPOT9T";
