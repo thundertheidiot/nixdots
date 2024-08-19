@@ -15,6 +15,13 @@ in {
       EndSection
 
       Section "InputClass"
+        Identifier "Touchpad"
+        MatchIsTouchpad "on"
+        Driver "libinput"
+        Option "NaturalScrolling" "true"
+      EndSection
+
+      Section "InputClass"
         Identifier "Trackpoint Acceleration"
         MatchProduct "TPPS/2 IBM TrackPoint|DualPoint Stick|Synaptics Inc. Composite TouchPad / TrackPoint|ThinkPad USB Keyboard with TrackPoint|USB Trackpoint pointing device|Composite TouchPad / TrackPoint"
         Driver "libinput"
