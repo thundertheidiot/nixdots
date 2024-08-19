@@ -1448,6 +1448,8 @@ button event."
 		  (,(kbd "<XF86AudioPlay>") . simple-mpc-toggle)
 		  (,(kbd "<XF86AudioRaiseVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+")))
 		  (,(kbd "<XF86AudioLowerVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-")))
+		  
+		  (,(kbd "M-x") . execute-extended-command)
 
 		  (,(kbd "s-,") . dwm-workspaces--select-previous-monitor)
 		  (,(kbd "s-.") . dwm-workspaces--select-next-monitor)
@@ -1493,6 +1495,10 @@ button event."
                   ;;              '(?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
                   ;;              (number-sequence 1 9))
 		  ))
+	  
+	  (mapc (lambda (keybind)
+		  (global-set-key (car keybind) (cdr keybind)))
+		exwm-input-global-keys)
 
 	  ;; https://github.com/minad/corfu/discussions/408
           (defun get-focused-monitor-geometry ()
@@ -1525,9 +1531,6 @@ button event."
 
 	  (advice-add 'corfu--make-frame :around #'advise-corfu-make-frame-with-monitor-awareness)
 
-	  (mapc (lambda (keybind)
-		  (global-set-key (car keybind) (cdr keybind)))
-		exwm-input-global-keys)
 
 	  (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	    ;; remap SPC bs to the exwm switch buffer function
