@@ -1410,7 +1410,8 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		display-time-default-load-average nil)
 	  (display-time-mode 1)
 
-	  (setq exwm-input-line-mode-passthrough t)
+	  (setq exwm-input-line-mode-passthrough t
+		exwm-workspace-show-all-buffers t)
 
           (dolist (k `(
                        escape
