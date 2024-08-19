@@ -25,7 +25,6 @@ in {
         Identifier "Trackpoint Acceleration"
         MatchProduct "TPPS/2 IBM TrackPoint|DualPoint Stick|Synaptics Inc. Composite TouchPad / TrackPoint|ThinkPad USB Keyboard with TrackPoint|USB Trackpoint pointing device|Composite TouchPad / TrackPoint"
         Driver "libinput"
-        MatchDevicePath "/dev/input/event*"
         Option "AccelProfile" "adaptive"
       EndSection
     '';
