@@ -1161,13 +1161,16 @@ Large language models inside emacs, powered by ollama.
   :init
   (require 'llm-ollama)
   (setopt ellama-provider
-	  (make-llm-ollama
-	   :chat-model "llama3.1:8b"
-	   :embedding-model "nomic-embed-text"))
+          (make-llm-ollama
+           :chat-model "gemma2:9b"
+           :embedding-model "nomic-embed-text"))
 
   (setopt ellama-providers '(("llama3.1" . (make-llm-ollama
 					    :chat-model "llama3.1:8b"
 					    :embedding-model "nomic-embed-text"))
+			     ("gemma2" . (make-llm-ollama
+					  :chat-model "gemma2:9b"
+					  :embedding-model "nomic-embed-text"))
 			     ("mistral-nemo" . (make-llm-ollama
 						:chat-model "mistral-nemo:12b"
 						:embedding-model "nomic-embed-text"))
@@ -1178,7 +1181,7 @@ Large language models inside emacs, powered by ollama.
 (defun eshell/ollama-unload (model)
   (call-process-shell-command 
    (format 
-   "curl --silent --show-error http://localhost:11434/api/generate -d '{\"model\": \"%s\", \"keep_alive\":0}'" model)))
+    "curl --silent --show-error http://localhost:11434/api/generate -d '{\"model\": \"%s\", \"keep_alive\":0}'" model)))
 #+end_src
 
 ** Elfeed

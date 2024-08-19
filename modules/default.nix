@@ -8,6 +8,7 @@
   ./firefox.nix
   ./gpu.nix
   ./vm.nix
+  ./xorg.nix
   ./tv
   ./emacs
 ]

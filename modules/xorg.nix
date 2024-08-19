@@ -1,0 +1,26 @@
+{
+  lib,
+  config,
+  ...
+}: let
+in {
+  config = {
+    services.xserver.config = ''
+      Section "InputClass"
+        Identifier "libinput pointer catchall"
+        MatchIsPointer "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        Option "AccelProfile" "flat"
+      EndSection
+
+      Section "InputClass"
+        Identifier "Trackpoint Acceleration"
+        MatchProduct "TPPS/2 IBM TrackPoint|DualPoint Stick|Synaptics Inc. Composite TouchPad / TrackPoint|ThinkPad USB Keyboard with TrackPoint|USB Trackpoint pointing device|Composite TouchPad / TrackPoint"
+        Driver "libinput"
+        MatchDevicePath "/dev/input/event*"
+        Option "AccelProfile" "adaptive"
+      EndSection
+    '';
+  };
+}
