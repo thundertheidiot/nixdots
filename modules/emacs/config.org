@@ -1247,6 +1247,12 @@ Custom menus with transient
 
     ("j" "previous" empv-playlist-prev)
     ("k" "next" empv-playlist-next)
+
+    ("y" "search youtube" empv-youtube)
+    ("f" "play file" empv-play-file)
+    ("s" "select from playlist" empv-playlist-select)
+
+    ("x" "close mpv" empv-exit)
     ]
    ["Config"
     ("y" "toggle single" empv-toggle-file-loop)
@@ -1276,6 +1282,7 @@ Custom menus with transient
    ])
 
 (defun media-menu--toggle-mpv-or-mpd ()
+  (interactive)
   (empv--send-command 
    '("get_property_string" "playlist")
    (lambda (result)
@@ -1290,7 +1297,10 @@ Custom menus with transient
     ("e" "Open MPV menu" empv-menu)]
    ["MPD"
     ("m" "Open MPD menu" mpd-menu)]
-   ])
+   ["Playback"
+    ("p" "toggle playback" media-menu--toggle-mpv-or-mpd)
+    ]]
+   )
 #+end_src
 
 ** Separedit
