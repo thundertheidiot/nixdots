@@ -1234,6 +1234,65 @@ Control an mpv instance inside emacs
   (empv-youtube (mapconcat (lambda (s) (format "%s " s)) args)))
 #+end_src
 
+Custom menus with transient
+
+#+begin_src emacs-lisp
+(use-package transient)
+
+(transient-define-prefix empv-menu ()
+  "Transient menu for empv."
+  [["Playback"
+    ("p" "toggle" empv-toggle)
+    ("v" "toggle video" empv-toggle-video)
+
+    ("j" "previous" empv-playlist-prev)
+    ("k" "next" empv-playlist-next)
+    ]
+   ["Config"
+    ("y" "toggle single" empv-toggle-file-loop)
+    ("r" "toggle repeat" empv-toggle-playlist-loop)
+    
+    ("-" "volume down" empv-volume-down)
+    ("=" "volume up" empv-volume-up)
+    ]
+   ])
+
+(transient-define-prefix mpd-menu ()
+  "Transient menu for empv."
+  [["Playback"
+    ("p" "toggle" simple-mpc-toggle)
+    
+    ("j" "previous" simple-mpc-prev)
+    ("k" "next" simple-mpc-next)
+    ]
+   ["Config"
+    ("y" "toggle single" (lambda () (interactive)
+			   (simple-mpc-call nil "single")))
+    ("r" "toggle repeat" simple-mpc-toggle-repeat)
+
+    ("-" "volume down" simple-mpc-decrease-volume)
+    ("=" "volume up" simple-mpc-increase-volume)
+    ]
+   ])
+
+(defun media-menu--toggle-mpv-or-mpd ()
+  (empv--send-command 
+   '("get_property_string" "playlist")
+   (lambda (result)
+     (if (> (length (json-parse-string result)) 0)
+	 (empv-toggle)
+       (simple-mpc-toggle)))
+   ))
+
+(transient-define-prefix media-menu ()
+  "Transient menu for simple-mpc and empv."
+  [["MPV"
+    ("e" "Open MPV menu" empv-menu)]
+   ["MPD"
+    ("m" "Open MPD menu" mpd-menu)]
+   ])
+#+end_src
+
 ** Separedit
 
 Separedit allows you to edit a part of a buffer in another buffer, and use another major mode that way, a bit like org src blocks, but worse.
