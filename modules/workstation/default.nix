@@ -131,7 +131,8 @@ in {
 
           qmk
 
-          (pkgs."2311".blender)
+          # (pkgs."2311".blender)
+          blender
 
           obs-studio
           kdePackages.kdenlive

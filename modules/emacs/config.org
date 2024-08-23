@@ -904,6 +904,15 @@ Org src blocks in fennel
   (csharp-mode . csharp-ts-mode))
 #+end_src
 
+*** Common lisp
+
+#+begin_src emacs-lisp
+(use-package slime
+  :mode "\\.lisp\\'"
+  :custom
+  (inferior-lisp-program "sbcl"))
+#+end_src
+
 *** Elisp
 
 #+begin_src emacs-lisp
@@ -1076,15 +1085,34 @@ For some reason advice-add didn't seem to function, so this just manually replic
 #+begin_src emacs-lisp
 (use-package consult
   :demand t
+  :config
+  (setq consult-preview-excluded-buffers '(major-mode . exwm-mode))
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
+    "sg" '((lambda () (interactive)
+	     (when (consult-ripgrep (expand-file-name ""))
+	       (let ((search (if (string= (substring (car consult--grep-history) 0 1) "#")
+				 (substring (car consult--grep-history) 1 nil)
+			       (car consult--grep-history))))
+		 (add-to-history 'regexp-search-ring search)
+		 (add-to-history 'evil-ex-search-history search)
+		 (setq evil-ex-search-pattern (list search t t))
+		 (setq evil-ex-search-direction 'forward)))) :wk "grep")
     "sf" '(consult-fd :wk "find")
     "bs" '(consult-buffer :wk "switch")
     "bo" '((lambda () (interactive)
 	     (select-window (th/intelligent-split))
 	     (consult-buffer)) :wk "open buffer in new window")
     ))
+
+;; (defun consult-exwm-preview-fix (&rest _args)
+;;   "Kludge to stop EXWM buffers from stealing focus during Consult previews."
+;;   (when (derived-mode-p 'exwm-mode)
+;;     (when-let ((mini (active-minibuffer-window)))
+;;       (select-window (active-minibuffer-window)))))
+
+;; (advice-add
+;;     #'consult--buffer-preview :after #'consult-exwm-preview-fix)
 #+end_src
 
 #+RESULTS:
@@ -1248,7 +1276,7 @@ Custom menus with transient
     ("j" "previous" empv-playlist-prev)
     ("k" "next" empv-playlist-next)
 
-    ("y" "search youtube" empv-youtube)
+    ("Y" "search youtube" empv-youtube)
     ("f" "play file" empv-play-file)
     ("s" "select from playlist" empv-playlist-select)
 
@@ -1554,15 +1582,15 @@ button event."
 		  (,(kbd "s-8") . (lambda () (interactive) (dwm-workspaces--switch-by-index 8)))
 		  (,(kbd "s-9") . (lambda () (interactive) (dwm-workspaces--switch-by-index 9)))
 
-		  (,(kbd "s-!") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 1)))
-		  (,(kbd "s-@") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 2)))
-		  (,(kbd "s-#") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 3)))
-		  (,(kbd "s-$") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 4)))
-		  (,(kbd "s-%") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 5)))
-		  (,(kbd "s-^") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 6)))
-		  (,(kbd "s-&") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 7)))
-		  (,(kbd "s-*") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 8)))
-		  (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
+		  ;; (,(kbd "s-!") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 1)))
+		  ;; (,(kbd "s-@") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 2)))
+		  ;; (,(kbd "s-#") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 3)))
+		  ;; (,(kbd "s-$") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 4)))
+		  ;; (,(kbd "s-%") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 5)))
+		  ;; (,(kbd "s-^") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 6)))
+		  ;; (,(kbd "s-&") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 7)))
+		  ;; (,(kbd "s-*") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 8)))
+		  ;; (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
 
                   ;; ,@(mapc (lambda (i)
                   ;;           `(,(kbd (format "s-%d" i)) .
