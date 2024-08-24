@@ -737,7 +737,7 @@ Index those keywords inside magit.
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "c" '(:ignore t :wk "code")
-    "ca" ("code actions" . (lambda () (interactive)
+    "ca" '("code actions" . (lambda () (interactive)
 			     (eglot-code-actions 1 (point-max) nil t)))))
 #+end_src
 
