@@ -1234,17 +1234,18 @@ Control mpd from emacs
   :hook (simple-mpc-mode . th/turn-off-line-numbers)
   :custom
   (simple-mpc-volume-step-size 3)
-  :general
-  (:states '(normal visual motion) :keymaps 'override :prefix "SPC" 
-    "m" '(:ignore t :wk "media")
-    "mm" '(simple-mpc :wk "open simple-mpc")
-    "ms" '(simple-mpc-query :wk "search")
-    "mp" '(simple-mpc-toggle :wk "play/pause")
-    "mC" '(simple-mpc-clear-current-playlist :wk "clear")
-    "mP" '(simple-mpc-view-current-playlist :wk "playlist")
-    "ma" '(simple-mpc-load-playlist :wk "load playlist")
-    "mh" '(simple-mpc-prev :wk "prev")
-    "ml" '(simple-mpc-next :wk "next")))
+  ;; :general
+  ;; (:states '(normal visual motion) :keymaps 'override :prefix "SPC" 
+  ;;   "m" '(:ignore t :wk "media")
+  ;;   "mm" '(simple-mpc :wk "open simple-mpc")
+  ;;   "ms" '(simple-mpc-query :wk "search")
+  ;;   "mp" '(simple-mpc-toggle :wk "play/pause")
+  ;;   "mC" '(simple-mpc-clear-current-playlist :wk "clear")
+  ;;   "mP" '(simple-mpc-view-current-playlist :wk "playlist")
+  ;;   "ma" '(simple-mpc-load-playlist :wk "load playlist")
+  ;;   "mh" '(simple-mpc-prev :wk "prev")
+  ;;   "ml" '(simple-mpc-next :wk "next")))
+  )
 #+end_src
 
 Control an mpv instance inside emacs
@@ -1296,6 +1297,12 @@ Custom menus with transient
     
     ("j" "Previous" simple-mpc-prev :transient t)
     ("k" "Next" simple-mpc-next :transient t)]
+   ["Playlist"
+    ("l" "Load playlist" simple-mpc-load-playlist :transient t)
+    ("s" "Search" simple-mpc-query :transient t)
+    
+    ("c" "View playlist" simple-mpc-view-current-playlist :transient t)
+    ("C" "Clear playlist" simple-mpc-clear-current-playlist :transient t)]
    ["Settings"
     ("y" "Toggle Single" (lambda () (interactive)
 			   (simple-mpc-call nil "single")) :transient t)
@@ -1339,6 +1346,9 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
    ["Settings"
     ("-" "Volume down" media-menu--volume-decrease :transient t)
     ("=" "Volume up" media-menu--volume-increase :transient t)]])
+
+(general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC" 
+  "mm" '("media menu" . media-menu))
 #+end_src
 
 ** Separedit
