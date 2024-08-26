@@ -54,6 +54,7 @@ in {
         ghc
         fennel
         janet
+        sbcl
 
         # org screenshot, todo make non hyprland specific and good
         grim

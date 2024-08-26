@@ -737,7 +737,7 @@ Index those keywords inside magit.
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "c" '(:ignore t :wk "code")
-    "ca" ("code actions" . (lambda () (interactive)
+    "ca" '("code actions" . (lambda () (interactive)
 			     (eglot-code-actions 1 (point-max) nil t)))))
 #+end_src
 
@@ -902,6 +902,15 @@ Org src blocks in fennel
   :hook
   (csharp-mode . eglot-ensure)
   (csharp-mode . csharp-ts-mode))
+#+end_src
+
+*** Common lisp
+
+#+begin_src emacs-lisp
+(use-package slime
+  :mode "\\.lisp\\'"
+  :custom
+  (inferior-lisp-program "sbcl"))
 #+end_src
 
 *** Elisp
@@ -1076,18 +1085,44 @@ For some reason advice-add didn't seem to function, so this just manually replic
 #+begin_src emacs-lisp
 (use-package consult
   :demand t
+  :config
+  (setq consult-preview-excluded-buffers '(major-mode . exwm-mode))
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "sg" '((lambda () (interactive) (consult-ripgrep (expand-file-name ""))) :wk "M-x")
+    "sg" '((lambda () (interactive)
+	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
     "sf" '(consult-fd :wk "find")
     "bs" '(consult-buffer :wk "switch")
     "bo" '((lambda () (interactive)
 	     (select-window (th/intelligent-split))
 	     (consult-buffer)) :wk "open buffer in new window")
     ))
+
+(defun advice!-consult-exwm-preview-fix (&rest _args)
+  "Kludge to stop EXWM buffers from stealing focus during Consult previews."
+  (when (derived-mode-p 'exwm-mode)
+    (when-let ((mini (active-minibuffer-window)))
+      (select-window (active-minibuffer-window)))))
+
+(advice-add
+    #'consult--buffer-preview :after #'advice!-consult-exwm-preview-fix)
 #+end_src
 
-#+RESULTS:
+Save grep search into evil search history.
+
+#+begin_src emacs-lisp
+(defun advice!-consult-grep-evil-search-history (ret)
+  "Add the selected item to the evil search history."
+  (when ret ;; return value is nil if you quit early
+    (let ((search (if (string= (substring (car consult--grep-history) 0 1) "#")
+		      (substring (car consult--grep-history) 1 nil)
+		    (car consult--grep-history))))
+      (add-to-history 'regexp-search-ring search)
+      (add-to-history 'evil-ex-search-history search)
+      (setq evil-ex-search-pattern (list search t t))
+      (setq evil-ex-search-direction 'forward))))
+(advice-add 'consult--grep :filter-return #'advice!-consult-grep-evil-search-history)
+#+end_src
 
 #+begin_src emacs-lisp
 (use-package orderless
@@ -1105,14 +1140,14 @@ For some reason advice-add didn't seem to function, so this just manually replic
 #+end_src
 
 #+begin_src emacs-lisp
-(defun crm-indicator (args)
+(defun advice!-crm-indicator (args)
   (cons (format "[CRM%s] %s"
 		(replace-regexp-in-string
 		 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
 		 crm-separator)
 		(car args))
 	(cdr args)))
-(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+(advice-add #'completing-read-multiple :filter-args #'advice!-crm-indicator)
 
 (setq minibuffer-prompt-properties
       '(read-only t cursor-intangible-mode t face minibuffer-prompt)
@@ -1187,21 +1222,7 @@ Large language models inside emacs, powered by ollama.
     "curl --silent --show-error http://localhost:11434/api/generate -d '{\"model\": \"%s\", \"keep_alive\":0}'" model)))
 #+end_src
 
-** Elfeed
-
-#+begin_src emacs-lisp
-(use-package elfeed
-  :custom
-  (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory))
-  (elfeed-enclosure-default-dir user-emacs-directory)
-  (elfeed-feeds '("https://howardism.org/index.xml" 
-		  "https://xenodium.com/rss.xml"
-		  "https://xeiaso.net/blog.rss"
-		  "https://jade.fyi/rss.xml")))
-#+end_src
-
-#+RESULTS:
-
+** Elfeed #+begin_src emacs-lisp (use-package elfeed :custom (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory)) (elfeed-enclosure-default-dir user-emacs-directory) (elfeed-feeds '("https://howardism.org/index.xml" "https://xenodium.com/rss.xml" "https://xeiaso.net/blog.rss" "https://jade.fyi/rss.xml"))) #+end_src #+RESULTS:
 ** Media playback "inside" emacs
 
 #+begin_src emacs-lisp
@@ -1214,27 +1235,123 @@ Control mpd from emacs
 #+begin_src emacs-lisp
 (use-package simple-mpc
   :hook (simple-mpc-mode . th/turn-off-line-numbers)
-  :general
-  (:states '(normal visual motion) :keymaps 'override :prefix "SPC" 
-    "m" '(:ignore t :wk "media")
-    "mm" '(simple-mpc :wk "open simple-mpc")
-    "ms" '(simple-mpc-query :wk "search")
-    "mp" '(simple-mpc-toggle :wk "play/pause")
-    "mC" '(simple-mpc-clear-current-playlist :wk "clear")
-    "mP" '(simple-mpc-view-current-playlist :wk "playlist")
-    "ma" '(simple-mpc-load-playlist :wk "load playlist")
-    "mh" '(simple-mpc-prev :wk "prev")
-    "ml" '(simple-mpc-next :wk "next")))
+  :custom
+  (simple-mpc-volume-step-size 3)
+  ;; :general
+  ;; (:states '(normal visual motion) :keymaps 'override :prefix "SPC" 
+  ;;   "m" '(:ignore t :wk "media")
+  ;;   "mm" '(simple-mpc :wk "open simple-mpc")
+  ;;   "ms" '(simple-mpc-query :wk "search")
+  ;;   "mp" '(simple-mpc-toggle :wk "play/pause")
+  ;;   "mC" '(simple-mpc-clear-current-playlist :wk "clear")
+  ;;   "mP" '(simple-mpc-view-current-playlist :wk "playlist")
+  ;;   "ma" '(simple-mpc-load-playlist :wk "load playlist")
+  ;;   "mh" '(simple-mpc-prev :wk "prev")
+  ;;   "ml" '(simple-mpc-next :wk "next")))
+  )
 #+end_src
 
 Control an mpv instance inside emacs
 
 #+begin_src emacs-lisp
 (use-package empv
-  :init (setq empv-invidious-instance "https://iv.nowhere.moe/api/v1"))
+  :init 
+  (setq empv-invidious-instance "https://iv.nowhere.moe/api/v1")
+  (setq empv-volume-step 3))
 
 (defun eshell/yt (&rest args)
   (empv-youtube (mapconcat (lambda (s) (format "%s " s)) args)))
+#+end_src
+
+Custom menus with transient
+
+#+begin_src emacs-lisp
+(use-package transient)
+
+(transient-define-prefix empv-menu ()
+  "Transient menu for empv."
+  [["Menu"
+    ("q" "Quit" transient-quit-one)]
+   ["Playback"
+    ("p" "Toggle" empv-toggle :transient t)
+    ("v" "Toggle Video" empv-toggle-video :transient t)
+
+    ("j" "Previous" empv-playlist-prev :transient t)
+    ("k" "Next" empv-playlist-next :transient t)
+
+    ("x" "Close MPV" empv-exit :transient t)]
+   ["Playlist"
+    ("Y" "Search Youtube" empv-youtube)
+    ("f" "Play File" empv-play-file)
+    ("s" "Select From Playlist" empv-playlist-select)]
+   ["Settings"
+    ("y" "Toggle Single" empv-toggle-file-loop :transient t)
+    ("r" "Toggle Repeat" empv-toggle-playlist-loop :transient t)
+    
+    ("-" "Volume Down" empv-volume-down :transient t)
+    ("=" "Volume Up" empv-volume-up :transient t)]])
+
+(transient-define-prefix mpd-menu ()
+  "Transient menu for empv."
+  [["Menu"
+    ("q" "Quit" transient-quit-one)]
+   ["Playback"
+    ("p" "Toggle" simple-mpc-toggle :transient t)
+    
+    ("j" "Previous" simple-mpc-prev :transient t)
+    ("k" "Next" simple-mpc-next :transient t)]
+   ["Playlist"
+    ("l" "Load playlist" simple-mpc-load-playlist :transient t)
+    ("s" "Search" simple-mpc-query :transient t)
+    
+    ("c" "View playlist" simple-mpc-view-current-playlist :transient t)
+    ("C" "Clear playlist" simple-mpc-clear-current-playlist :transient t)]
+   ["Settings"
+    ("y" "Toggle Single" (lambda () (interactive)
+			   (simple-mpc-call nil "single")) :transient t)
+    ("r" "Toggle Repeat" simple-mpc-toggle-repeat :transient t)
+
+    ("-" "Volume Down" simple-mpc-decrease-volume :transient t)
+    ("=" "Volume Up" simple-mpc-increase-volume :transient t)]])
+
+(defmacro media-menu--mpv-or-mpd-action (mpv mpd &optional mpv-args mpd-args)
+  "If the mpv playlist is not empty, call MPV, else call MPD.
+MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
+  `(empv--send-command
+   '("get_property_string" "playlist")
+   (lambda (result)
+     (if (> (length (json-parse-string result)) 0)
+	 (apply ,mpv ,mpv-args)
+       (apply ,mpd ,mpd-args)))))
+
+(defun media-menu--toggle ()
+  (interactive)
+  (media-menu--mpv-or-mpd-action #'empv-toggle #'simple-mpc-toggle))
+
+(defun media-menu--volume-increase()
+  (interactive)
+  (media-menu--mpv-or-mpd-action #'empv-volume-up #'simple-mpc-increase-volume))
+
+(defun media-menu--volume-decrease()
+  (interactive)
+  (media-menu--mpv-or-mpd-action #'empv-volume-down #'simple-mpc-decrease-volume))
+
+(transient-define-prefix media-menu ()
+  "Transient menu for simple-mpc and empv."
+  [["Menu"
+    ("q" "Quit" transient-quit-one)
+    ("e" "Open MPV menu" empv-menu)
+    ("m" "Open MPD menu" mpd-menu)]
+   ["Playback"
+    ("p" "toggle playback" media-menu--toggle :transient t)
+    ("p" "toggle playback" media-menu--toggle :transient t)
+    ]
+   ["Settings"
+    ("-" "Volume down" media-menu--volume-decrease :transient t)
+    ("=" "Volume up" media-menu--volume-increase :transient t)]])
+
+(general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC" 
+  "mm" '("media menu" . media-menu))
 #+end_src
 
 ** Separedit
@@ -1433,7 +1550,7 @@ Solaire mode darkens "lesser" buffers like eshell or magit
             (cl-pushnew k exwm-input-prefix-keys))
 
 	  
-	  (defun advice-exwm-input--on-ButtonPress-line-mode (buffer button-event)
+	  (defun advice!-exwm-input--on-ButtonPress-line-mode (buffer button-event)
 	    "Handle button events in line mode.
 BUFFER is the `exwm-mode' buffer the event was generated
 on. BUTTON-EVENT is the X event converted into an Emacs event.
@@ -1454,7 +1571,7 @@ button event."
 		  ;; The event should be replayed
 		  xcb:Allow:ReplayPointer))))
 
-	  (advice-add 'exwm-input--on-ButtonPress-line-mode :override #'advice-exwm-input--on-ButtonPress-line-mode)
+	  (advice-add 'exwm-input--on-ButtonPress-line-mode :override #'advice!-exwm-input--on-ButtonPress-line-mode)
 	  
 	  (setq exwm-input-global-keys
 		`((,(kbd "s-i") . exwm-input-toggle-keyboard)
@@ -1488,15 +1605,15 @@ button event."
 		  (,(kbd "s-8") . (lambda () (interactive) (dwm-workspaces--switch-by-index 8)))
 		  (,(kbd "s-9") . (lambda () (interactive) (dwm-workspaces--switch-by-index 9)))
 
-		  (,(kbd "s-!") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 1)))
-		  (,(kbd "s-@") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 2)))
-		  (,(kbd "s-#") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 3)))
-		  (,(kbd "s-$") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 4)))
-		  (,(kbd "s-%") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 5)))
-		  (,(kbd "s-^") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 6)))
-		  (,(kbd "s-&") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 7)))
-		  (,(kbd "s-*") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 8)))
-		  (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
+		  ;; (,(kbd "s-!") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 1)))
+		  ;; (,(kbd "s-@") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 2)))
+		  ;; (,(kbd "s-#") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 3)))
+		  ;; (,(kbd "s-$") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 4)))
+		  ;; (,(kbd "s-%") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 5)))
+		  ;; (,(kbd "s-^") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 6)))
+		  ;; (,(kbd "s-&") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 7)))
+		  ;; (,(kbd "s-*") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 8)))
+		  ;; (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
 
                   ;; ,@(mapc (lambda (i)
                   ;;           `(,(kbd (format "s-%d" i)) .
@@ -1527,24 +1644,17 @@ button event."
                     (nth 3 geometry) ; Height
                     )))
 
-	  (defun advise-corfu-make-frame-with-monitor-awareness (orig-fun frame x y width height buffer)
+	  (defun advice!-corfu-make-frame-with-monitor-awareness (orig-fun frame x y width height buffer)
 	    "Advise `corfu--make-frame` to be monitor-aware, adjusting X and Y according to the focused monitor."
-
-	    ;; Get the geometry of the currently focused monitor
 	    (let* ((monitor-geometry (get-focused-monitor-geometry))
 		   (monitor-x (nth 0 monitor-geometry))
 		   (monitor-y (nth 1 monitor-geometry))
-		   ;; You may want to adjust the logic below if you have specific preferences
-		   ;; on where on the monitor the posframe should appear.
-		   ;; Currently, it places the posframe at its intended X and Y, but ensures
-		   ;; it's within the bounds of the focused monitor.
 		   (new-x (+ monitor-x x))
 		   (new-y (+ monitor-y y)))
 
-	      ;; Call the original function with potentially adjusted coordinates
 	      (funcall orig-fun frame new-x new-y width height buffer)))
 
-	  (advice-add 'corfu--make-frame :around #'advise-corfu-make-frame-with-monitor-awareness)
+	  (advice-add 'corfu--make-frame :around #'advice!-corfu-make-frame-with-monitor-awareness)
 
 
 	  (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
