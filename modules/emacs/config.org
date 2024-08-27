@@ -1209,6 +1209,9 @@ Large language models inside emacs, powered by ollama.
 			     ("gemma2" . (make-llm-ollama
 					  :chat-model "gemma2:9b"
 					  :embedding-model "nomic-embed-text"))
+			     ("gemma2_2b" . (make-llm-ollama
+					     :chat-model "gemma2:2b"
+					     :embedding-model "nomic-embed-text"))
 			     ("mistral-nemo" . (make-llm-ollama
 						:chat-model "mistral-nemo:12b"
 						:embedding-model "nomic-embed-text"))
