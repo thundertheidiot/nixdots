@@ -60,6 +60,9 @@ in {
         grim
         slurp
 
+        # latex
+        texlive.combined.scheme-full
+
         emacs-lsp-booster
 
         # lsp
@@ -68,6 +71,7 @@ in {
         haskell-language-server # haskell
         fennel-ls # fennel
         nodePackages.bash-language-server # bash
+        pyright # python
 
         # formatters
         alejandra

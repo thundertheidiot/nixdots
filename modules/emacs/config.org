@@ -1120,9 +1120,12 @@ Save grep search into evil search history.
       (add-to-history 'regexp-search-ring search)
       (add-to-history 'evil-ex-search-history search)
       (setq evil-ex-search-pattern (list search t t))
-      (setq evil-ex-search-direction 'forward))))
+      (setq evil-ex-search-direction 'forward))
+    ret))
 (advice-add 'consult--grep :filter-return #'advice!-consult-grep-evil-search-history)
 #+end_src
+
+#+RESULTS:
 
 #+begin_src emacs-lisp
 (use-package orderless
@@ -1231,6 +1234,7 @@ Control mpd from emacs
 
 #+begin_src emacs-lisp
 (use-package simple-mpc
+  :demand t
   :hook (simple-mpc-mode . th/turn-off-line-numbers)
   :custom
   (simple-mpc-volume-step-size 3)
@@ -1348,7 +1352,7 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
     ("=" "Volume up" media-menu--volume-increase :transient t)]])
 
 (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC" 
-  "mm" '("media menu" . media-menu))
+  "m" '("media menu" . media-menu))
 #+end_src
 
 ** Separedit
