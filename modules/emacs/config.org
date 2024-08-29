@@ -1261,7 +1261,11 @@ Control an mpv instance inside emacs
 (use-package empv
   :init 
   (setq empv-invidious-instance "https://iv.nowhere.moe/api/v1")
-  (setq empv-volume-step 3))
+  (setq empv-volume-step 3)
+  (setq empv-radio-channels '(("nowhere.moe Cyberia" . "https://radio.nowhere.moe/radio/cyberia.mp3")
+			      ("nowhere.moe Focus" . "https://radio.nowhere.moe/radio/focus.mp3")
+			      ("nowhere.moe Nihilism" . "https://radio.nowhere.moe/radio/nihilism.mp3")
+			      ("nowhere.moe Psychedelia" . "https://radio.nowhere.moe/radio/psychedelia.mp3"))))
 
 (defun eshell/yt (&rest args)
   (empv-youtube (mapconcat (lambda (s) (format "%s " s)) args)))
@@ -1306,7 +1310,7 @@ Custom menus with transient
     ("k" "Next" simple-mpc-next :transient t)]
    ["Playlist"
     ("l" "Load playlist" simple-mpc-load-playlist :transient t)
-    ("s" "Search" simple-mpc-query :transient t)
+    ("s" "Search" simple-mpc-query)
     
     ("c" "View playlist" simple-mpc-view-current-playlist :transient t)
     ("C" "Clear playlist" simple-mpc-clear-current-playlist :transient t)]
