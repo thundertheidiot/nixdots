@@ -21,7 +21,7 @@ in {
       workstation.enable = true;
       workstation.utils = "generic/gtk";
       workstation.plasma.tilingwm = true;
-      workstation.environment = ["hyprland" "plasma" "cosmic"];
+      workstation.environment = ["hyprland" "plasma"];
 
       setup.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"

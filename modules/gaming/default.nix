@@ -79,30 +79,30 @@ in {
 
       environment.systemPackages = [
         # (pkgs.writeShellScriptBin "newgamescope" ''exec "${pkgs.gamescope}/bin/gamescope" "$@"'')
-        (pkgs."2405".gamescope.overrideAttrs rec {
-          name = "gamescope-${version}";
-          version = "3.14.0";
+        # (pkgs."2405".gamescope.overrideAttrs rec {
+        #   name = "gamescope-${version}";
+        #   version = "3.14.0";
 
-          src = pkgs.fetchFromGitHub {
-            owner = "ValveSoftware";
-            repo = "gamescope";
-            rev = "refs/tags/${version}";
-            fetchSubmodules = true;
-            hash = "sha256-lgVVhnj209o9kCGTxOGmCRCyhT91QRvlQfOYyvyGj2Y=";
-          };
+        #   src = pkgs.fetchFromGitHub {
+        #     owner = "ValveSoftware";
+        #     repo = "gamescope";
+        #     rev = "refs/tags/${version}";
+        #     fetchSubmodules = true;
+        #     hash = "sha256-lgVVhnj209o9kCGTxOGmCRCyhT91QRvlQfOYyvyGj2Y=";
+        #   };
 
-          postInstall = ''
-            mv $out/bin/gamescope $out/bin/gamescope-${version}
-          '';
-        })
+        #   postInstall = ''
+        #     mv $out/bin/gamescope $out/bin/gamescope-${version}
+        #   '';
+        # })
 
-        (pkgs."2405".gamescope.overrideAttrs rec {
-          name = "gamescope-24-05";
+        # (pkgs."2405".gamescope.overrideAttrs rec {
+        #   name = "gamescope-24-05";
 
-          postInstall = ''
-            mv $out/bin/gamescope $out/bin/${name}
-          '';
-        })
+        #   postInstall = ''
+        #     mv $out/bin/gamescope $out/bin/${name}
+        #   '';
+        # })
       ];
 
       programs.gamescope = {
