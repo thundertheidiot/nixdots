@@ -941,6 +941,17 @@ Rainbow delimiters gives colors to delimiters like parenthesis, which helps with
   (org-mode . rainbow-delimiters-mode))
 #+end_src
 
+Buffer-env
+
+#+begin_src emacs-lisp
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
+
+;; (use-package inheritenv
+;;   :config
+;;   (inheritenv-add-advice 'shell-command-to-string))
+#+end_src
+
 
 
 * Terminals 

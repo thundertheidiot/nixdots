@@ -26,6 +26,13 @@ in {
       "e" = "setsid -f emacsclient -c";
     };
 
+    # stuff on nixos often requires additional per-project configuration
+    # direnv makes that easier, just automatically use shell.nix and flake.nix files
+    programs.direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+
     environment.variables = {
       SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/keyring/ssh";
 
