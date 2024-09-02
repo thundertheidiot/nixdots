@@ -20,14 +20,15 @@
       workstation.plasma.tilingwm = true;
 
       setup.hyprland.extraAutostart = [];
-      setup.gaming.enable = false;
-      setup.tv.enable = true;
+      # setup.gaming.enable = false;
+      # setup.tv.enable = true;
     };
   };
 
   system = {
     config,
     lib,
+    mlib,
     pkgs,
     modulesPath,
     ...
@@ -41,7 +42,7 @@
 
       gpu = "intel";
 
-      monitors = [
+      monitors = mlib.mkMonitors [
         {
           name = "LVDS-1";
           width = 1366;
@@ -49,7 +50,10 @@
         }
       ];
 
-      keyboard.enable = true;
+      keyboard = {
+        enable = true;
+        devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
+      };
 
       home = {
         stateVersion = "24.05";
@@ -64,9 +68,54 @@
     boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
 
-    fileSystems."/" = {
-      device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
-      fsType = "btrfs";
+    # fileSystems."/" = {
+    #   device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
+    #   fsType = "btrfs";
+    # };
+
+    disko.devices = {
+      nodev."/" = {
+        fsType = "tmpfs";
+        mountOptions = [
+          "size=10M"
+          "defaults"
+          "mode=755"
+        ];
+      };
+      disk.ssd = {
+        device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              name = "boot";
+              size = "1M";
+              type = "EF02";
+            };
+            main = {
+              name = "main";
+              size = "100%";
+              content = {
+                type = "btrfs";
+                subvolumes = {
+                  "/home" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/home";
+                  };
+                  "/nix" = {
+                    mountOptions = ["compress=zstd" "noatime"];
+                    mountpoint = "/nix";
+                  };
+                  "/tmp" = {
+                    mountpoint = "/tmp";
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
     };
 
     swapDevices = [];

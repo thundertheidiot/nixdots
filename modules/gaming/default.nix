@@ -100,8 +100,8 @@ in {
         #   name = "gamescope-24-05";
 
         #   postInstall = ''
-        #     mv $out/bin/gamescope $out/bin/${name}
-        #   '';
+        #         mv $out/bin/gamescope $out/bin/${name}
+        #     #   '';
         # })
       ];
 

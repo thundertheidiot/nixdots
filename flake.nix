@@ -64,6 +64,7 @@
             inputs.hyprland.nixosModules.default
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
+            inputs.disko.nixosModules.default
             ({config, ...}: {
               time.timeZone = config.timeZone;
               networking.hostName = config.hostName;
@@ -183,6 +184,8 @@
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     naersk.url = "github:nix-community/naersk";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
 
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0-rc1.tar.gz";
