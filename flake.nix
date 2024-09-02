@@ -21,8 +21,7 @@
     home-manager,
     ...
   } @ inputs: let
-    lib = nixpkgs.lib;
-    mlib = (import ./lib) {inherit lib;};
+    mlib = (import ./lib) {lib = nixpkgs.lib;};
     mpkgs = import ./pkgs;
   in rec {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
@@ -52,8 +51,16 @@
     mkSystem = cfg: extramodules: let
       common = commonModules cfg;
     in
-      lib.nixosSystem {
+      nixpkgs.lib.nixosSystem {
         system = cfg.systemArch;
+        pkgs = let
+          p = (import nixpkgs {system = cfg.systemArch;}).applyPatches;
+        in
+          import (p {
+            name = "nixpkgs-patched";
+            src = "${nixpkgs}";
+            patches = import ./patches;
+          }) {system = cfg.systemArch;};
         specialArgs = {inherit inputs mlib mpkgs;};
         modules =
           common
@@ -61,6 +68,8 @@
           ++ [
             cfg.system
             home-manager.nixosModules.home-manager
+            inputs.lix-module.nixosModules.default # lix
+            inputs.cosmic.nixosModules.default
             inputs.hyprland.nixosModules.default
             inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
@@ -87,7 +96,6 @@
                 config.allowUnfree = true;
                 overlays = [
                   inputs.emacs-overlay.overlay
-                  # inputs.hyprland.overlays.default
                   inputs.waybar.overlays.default
                   (final: prev: rec {
                     nur = import inputs.nur {
@@ -118,22 +126,18 @@
                       buildInputs = oldAttrs.buildInputs ++ [prev.spirv-tools];
                     });
 
-                    # freetube = prev.freetube.overrideAttrs {
-                    #   version = "0.21.3";
-
-                    #   src = prev.fetchurl {
-                    #     url = "https://github.com/FreeTubeApp/FreeTube/releases/download/v0.21.3-beta/freetube_0.21.3_amd64.AppImage";
-                    #     hash = "sha256-sg/ycFo4roOJ2sW4naRCE6dwGXVQFzF8uwAZQkS2EY4=";
-                    #   };
-                    # };
-
-                    # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
-                    # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
-                    # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
-                    # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
+                    libzip = prev.libzip.overrideAttrs (old: {
+                      patches = [
+                        # https://github.com/nih-at/libzip/issues/404
+                        (final.fetchpatch2 {
+                          name = "Check-for-zstd_TARGET-before-using-it-in-a-regex.patch";
+                          url = "https://github.com/nih-at/libzip/commit/c719428916b4d19e838f873b1a177b126a080d61.patch";
+                          hash = "sha256-4yjosuvVN/kPmmBtxxVXjOWrI3hdKJPQZrqL6BztZo8=";
+                        })
+                      ];
+                    });
 
                     hyprland-split-monitor-workspaces = inputs.split-monitor-workspaces.packages.${final.system}.split-monitor-workspaces;
-                    # udis86 = inputs.hyprland.packages.${final.system}.udis86;
                   })
                 ];
               };
@@ -141,9 +145,6 @@
               imports =
                 (import ./modules)
                 ++ [
-                  inputs.lix-module.nixosModules.default # lix
-                  inputs.cosmic.nixosModules.default
-                  inputs.hyprland.nixosModules.default
                   ./modules/nixos
                 ];
 
