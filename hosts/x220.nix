@@ -41,6 +41,8 @@
       shell.enable = true;
 
       gpu = "intel";
+      impermanence.enable = true;
+      impermanence.persist = "/persist";
 
       monitors = mlib.mkMonitors [
         {
@@ -60,8 +62,10 @@
       };
     };
 
+    users.users.thunder.initialPassword = "password";
+
     boot.loader.grub.enable = true;
-    boot.loader.grub.device = "/dev/sda";
+    # boot.loader.grub.device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
 
     boot.initrd.availableKernelModules = ["ehci_pci" "ahci" "usb_storage" "sd_mod" "sdhci_pci"];
     boot.initrd.kernelModules = [];
@@ -83,7 +87,7 @@
         ];
       };
       disk.ssd = {
-        device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
+        device = "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_250GB_S3YJNF0K236870M";
         type = "disk";
         content = {
           type = "gpt";
@@ -92,6 +96,15 @@
               name = "boot";
               size = "1M";
               type = "EF02";
+            };
+            efi = {
+              size = "500M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
             };
             main = {
               name = "main";
@@ -102,6 +115,10 @@
                   "/home" = {
                     mountOptions = ["compress=zstd"];
                     mountpoint = "/home";
+                  };
+                  "/persist" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/persist";
                   };
                   "/nix" = {
                     mountOptions = ["compress=zstd" "noatime"];
@@ -116,6 +133,12 @@
           };
         };
       };
+    };
+
+    fileSystems = {
+      "/nix".neededForBoot = true;
+      "/persist".neededForBoot = true;
+      "/tmp".neededForBoot = true;
     };
 
     swapDevices = [];

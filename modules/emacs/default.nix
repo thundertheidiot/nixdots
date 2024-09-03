@@ -13,6 +13,7 @@ in {
   options = {
     meow.emacs.enable = mkEnOpt "Install and configure emacs.";
     meow.emacs.exwm = mkEnOpt "Install and configure EXWM.";
+    meow.ollama = mkEnOpt "Ollama";
   };
 
   config = mkIf cfg.enable ({
@@ -38,7 +39,7 @@ in {
         wmctrl
       ]);
 
-      services.ollama.enable = true;
+      services.ollama.enable = config.meow.ollama;
     }
     // homeModule ({config, ...}: {
       # systemd.user.targets.exwm-session = lib.mkIf cfg.exwm {
