@@ -22,7 +22,7 @@ in {
       modules = mkOpt (listOf raw) [] {};
 
       user = mkOpt str "thunder" {};
-      stateVersion = mkOpt str "24.05" {};
+      stateVersion = mkOpt str "CHANGE" {};
       directory = mkOpt str "/home/${cfg.user}" {};
 
       file = mkOpt attrs {} {description = "Files to place in $HOME";};
