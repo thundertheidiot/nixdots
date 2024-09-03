@@ -2,6 +2,7 @@
   lib,
   mlib,
   config,
+  pkgs,
   ...
 }: let
   cfg = config.meow.impermanence;
@@ -9,7 +10,7 @@ in {
   options = {
     meow.impermanence = let
       inherit (mlib) mkOpt mkEnOpt;
-      inherit (lib.types) str;
+      inherit (lib.types) listOf str;
     in {
       enable = mkEnOpt "This impermanence module serves as a helper to using a tmpfs as your rootfs.";
       persist = mkOpt str "" {
@@ -26,61 +27,79 @@ in {
       depends = "/${cfg.persist}";
     };
 
-    persistMounts = paths: let
+    mkMount = path: let
+      inherit (builtins) isString isAttrs;
+
+      mkMount' = {
+        path,
+        persistPath ? "${cfg.persist}/${path}",
+        permissions ? "1777",
+        user ? "root",
+        group ? "root",
+      }: {
+        inherit persistPath path permissions user group;
+      };
+    in
+      if (builtins.isString path)
+      then mkMount' {inherit path;}
+      else if (builtins.isAttrs path)
+      then mkMount' path
+      else throw "Path provided to impermanence module is not a string or an attrset.";
+
+    mkMounts = list: map (p: mkMount p) list;
+
+    persistMounts = paths': let
       inherit (builtins) listToAttrs;
       inherit (lib.strings) concatStringsSep;
+
+      paths = map (p: mkMount p) paths';
     in {
-      fileSystems = listToAttrs (map (p: {
-          name = p;
+      systemd.services = listToAttrs (map (p:
+        with p; {
+          name = "persist-${path}";
+          enable = true;
           value = {
-            device =
-              # let
-              #   inherit (builtins) replaceStrings;
-              #   path = replaceStrings ["/"] ["_"] p;
-              # in
-              "${cfg.persist}/${p}";
-            fsType = "none";
-            options = ["bind"];
-            depends = "/${cfg.persist}";
+            description = "Bind mount ${path}.";
+            wantedBy = ["local-fs.target"];
+            before = ["local-fs.target"];
+            path = [pkgs.util-linux];
+            unitConfig.defaultDependencies = false;
+            serviceConfig = {
+              Type = "oneshot";
+              RemainAfterExit = true;
+              ExecStart = pkgs.writeShellScript "mount_${path}" ''
+                mount -o bind,X-fstrim.notrim,x-gvfs-hidden ${persistPath} ${path}
+                chmod ${permissions} ${persistPath}
+                chmod ${permissions} ${path}
+                chown ${user}:${group} ${persistPath}
+                chown ${user}:${group} ${path}
+              '';
+              ExecStop = "umount ${path} && rm ${path}";
+            };
           };
         })
-        paths);
+      paths);
 
-      systemd.tmpfiles.rules = map (p: "d ${p} 1777 root root -") paths;
-
-      # boot.initrd.postMountCommands = concatStringsSep "\n" (map (p: "mkdir --parents ${cfg.persist}/${p}") paths);
-
-      # system.activationScripts = listToAttrs (map (p: {
-      #     name = "${p}_create";
-      #     value = {text = "mkdir --parents ${cfg.persist}/${p}";};
-      #   })
-      #   paths);
+      systemd.tmpfiles.rules =
+        (map (p: with p; "d ${path} ${permissions} ${user} ${group} -") paths)
+        ++ (map (p: with p; "d ${persistPath} ${permissions} ${user} ${group} -") paths);
     };
 
     environmentEtcSource = loc: {
       source = "${cfg.persist}/etc/${loc}";
     };
   in
-    (persistMounts ["/var/log"])
+    (persistMounts [
+      {
+        path = "/var/log";
+        permissions = "644";
+      }
+      "/root/.cache/nix"
+      "/etc/NetworkManager/system-connections"
+    ])
     // {
-      # fileSystems =
-      #   # {
-      #   #   "/nix" = impermanence.nixFileSystem;
-      #   #   "/" = {
-      #   #     device = "none";
-      #   #     fsType = "tmpfs";
-      #   #     options = ["defaults" "size=64M" "mode=755"];
-      #   #   };
-      #   # }
-      #   # ++
-      #   builtins.listToAttrs (builtins.map (loc: {
-      #     name = loc;
-      #     value = mkPersistMount loc;
-      #   }) ["/var/log"]);
-
       system.activationScripts = {
-        openssh_dir.text = "mkdir ${cfg.persist}/etc/ssh";
-        # var_log_dir.text = "mkdir ${cfg.persist}/var/log";
+        openssh_dir.text = "mkdir --parents ${cfg.persist}/etc/ssh";
       };
 
       environment.etc = builtins.listToAttrs (builtins.map (loc: {

@@ -9,6 +9,7 @@
   ./gpu.nix
   ./vm.nix
   ./impermanence.nix
+  ./ssh.nix
   ./xorg.nix
   ./tv
   ./emacs

@@ -66,22 +66,10 @@
       nh
     ];
 
-    users.users = let
-      key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBKwHM/9spQfyeNIl/p8N8XBuoKj8UrhuhhlbEwkrgjZ thunder@disroot.org";
-    in {
-      root.openssh.authorizedKeys.keys = [key];
+    users.users = {
       ${config.username} = {
-        openssh.authorizedKeys.keys = [key];
         extraGroups = ["wheel" "networkmanager" "docker"];
         isNormalUser = true;
-      };
-    };
-
-    services.openssh = {
-      enable = true;
-      settings = {
-        PermitRootLogin = "no";
-        PasswordAuthentication = false;
       };
     };
   };
