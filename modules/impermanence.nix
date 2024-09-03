@@ -33,16 +33,20 @@ in {
       fileSystems = listToAttrs (map (p: {
           name = p;
           value = {
-            device = let
-              inherit (builtins) replaceStrings;
-              path = replaceStrings ["/"] ["_"] p;
-            in "${cfg.persist}/${path}";
+            device =
+              # let
+              #   inherit (builtins) replaceStrings;
+              #   path = replaceStrings ["/"] ["_"] p;
+              # in
+              "${cfg.persist}/${p}";
             fsType = "none";
             options = ["bind"];
             depends = "/${cfg.persist}";
           };
         })
         paths);
+
+      systemd.tmpfiles.rules = map (p: "d ${p} 1777 root root -") paths;
 
       # boot.initrd.postMountCommands = concatStringsSep "\n" (map (p: "mkdir --parents ${cfg.persist}/${p}") paths);
 
