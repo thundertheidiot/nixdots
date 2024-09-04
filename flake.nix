@@ -39,10 +39,6 @@
     commonModules = cfg: [
       ./options.nix
       cfg.options
-      ({config, ...}: {
-        age.identityPaths = ["${config.homeDirectory}/.ssh/id_agenix"];
-        age.secrets.kodi_youtube_api_keys.file = ./secrets/kodi_youtube_api_keys.age;
-      })
     ];
 
     nixosModules.default = {...}: {
@@ -62,12 +58,21 @@
             cfg.system
             home-manager.nixosModules.home-manager
             inputs.hyprland.nixosModules.default
-            inputs.agenix.nixosModules.default
             inputs.chaotic.nixosModules.default
+            inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default
+            ./sops
             ({config, ...}: {
               time.timeZone = config.timeZone;
               networking.hostName = config.hostName;
+
+              # sops.age.keyFile = "/home/thunder/.config/sops/age/keys.txt";
+
+              # sops.secrets."example_key" = {
+              #   sopsFile = ./sops/example.yaml;
+              #   format = "yaml";
+              #   path = "/home/thunder/sopstest";
+              # };
 
               nix.settings = {
                 substituters = [
@@ -104,7 +109,6 @@
                       system = final.system;
                       config.allowUnfree = final.config.allowUnfree;
                     };
-                    agenix = inputs.agenix.packages.${final.system};
                     awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
                     # TODO: remove when works
@@ -154,7 +158,6 @@
                   common
                   ++ [
                     # cfg.home
-                    inputs.agenix.homeManagerModules.default
                     inputs.plasma-manager.homeManagerModules.plasma-manager
                     inputs.base16.homeManagerModule
                   ];
@@ -238,6 +241,6 @@
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    agenix.url = "github:ryantm/agenix";
+    sops-nix.url = "github:Mic92/sops-nix";
   };
 }

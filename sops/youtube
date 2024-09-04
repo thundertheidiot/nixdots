@@ -1,0 +1,24 @@
+{
+	"data": "ENC[AES256_GCM,data:5iwPI4xG+ifEkzgV8CfTwwB7zr+HIu59huB/hE0Qtio7dNL34SMUIT+c3d77tr+AgoLD6INB3bRm2bQLM2mo0mKPjG/7vkyQrmxPPludO0Add7R9cNyi3UuLvFlXUy+iOS6qAyjACQo0XfpWW3driUdTuOCV0StjKfYLijtuojpWyUiyZTNIg5iFPGy3uaNXFRw0zfltHB2HZqf/mz+IQ9e92LFRnPyrckpbyVZ3oCca675OchpKMOych9ss+jmO+z2Mk0lAoeU1C+N3gDIfwBJsVNNJj8KJqH1GxKVEZUt0+TQFVyRcHlekZ2t7w/HFQvKAz4DGbtvR56gWfiMoXamykUbl/pOa+MelObJiecY32FDhxgo6++tbo+zd1MY=,iv:Sm13LMS8k2CETOzHqQi+NOFVjLT7b1jLLS+nM9B1TJs=,tag:zXadtkhONyFa96do85BPRA==,type:str]",
+	"sops": {
+		"kms": null,
+		"gcp_kms": null,
+		"azure_kv": null,
+		"hc_vault": null,
+		"age": [
+			{
+				"recipient": "age1est4jdeu803qv6jng7vrj9x92l3xs0mr6qwv6fpt0p7tdd26xd6s84k2pq",
+				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBmY0JIZDZORXI3WlkybEs2\nOXgzQXh0a1JvSExoeGsyQVVGR1VKV2NjbkRrCjF5Z1NRc1poZG1ocEd0VnVaaTlW\nSkVwOS9wTmFwTjNrT25aUndvdHk1M1EKLS0tIFZyaTVlY2tGRzFQWm4yRVJXZy8x\nYVdncDk1T0MzV2FOWWhvcmlTV09XMVEKN4nmCKQNZjA4UHyyF9JMXZGCulaQmzB2\n52Hi55g6gri60+tSjsvRqsR3atLEtqDm1MipjQEAqG2FS6152ytZxg==\n-----END AGE ENCRYPTED FILE-----\n"
+			},
+			{
+				"recipient": "age1dlh099k5q7uafl7esvrxtewjmmcw2vedmymfw3l8euckxxrqe9wqnhcus3",
+				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBxeW42eXdVZW9DOU1ZNGFB\nQk11OEF2VFRrRzZnN2cwVGluVFVsalJ1bGxjCm1OUWhxL1RrcFZIS1lXOWdLV0Fi\nbFJhZkJFNVZSenBwcGZCcXExUEM4Sm8KLS0tIGJTV2pZRWdhRkF6QW02MU50TGR4\nVHlka3ROSWw1c2dxSFloNEZyOTlOZnMKiFRVW1G6Db87vq+l323KAfTr1nSfs4Pd\n2w3msQqrn5Vjiq9Fwy3/yBpvHlYicn7AFI86eH9dqGLmsxTks8joIw==\n-----END AGE ENCRYPTED FILE-----\n"
+			}
+		],
+		"lastmodified": "2024-09-04T14:38:55Z",
+		"mac": "ENC[AES256_GCM,data:kjoqOpuxTNhzjtOzMnOwHFtINR3l/jrUV2aaC+AcfwMd/AvLyvLbHgFzqMjM4mxodJjt7APWqIdX22bcow7lDji3jhvPwTssyk1BsNbOWgMiebZWTGZoggrTpd1P7OHorpydiE7G//bPJQvfLHV4203XXuzVnQbxxQecozCcyRk=,iv:sbNSvm039wIIpFLYa879i5QWaizTrHnN3fX6Pusbuuo=,tag:NphEm3xCtJWcV8xLxn7/fQ==,type:str]",
+		"pgp": null,
+		"unencrypted_suffix": "_unencrypted",
+		"version": "3.9.0"
+	}
+}

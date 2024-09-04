@@ -58,6 +58,12 @@ in {
       recursive = true;
     };
 
+    sops.secrets."youtube_api_keys" = {
+      path = "${config.meow.home.directory}/.local/share/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
+      mode = "0644";
+      owner = config.meow.home.user;
+    };
+
     meow.home.modules = let
       kodiLauncher = pkgs.writeShellScriptBin "kodi" ''
         ${kodiSettings}/bin/create_kodi_settings
@@ -140,8 +146,6 @@ in {
             })
           ];
         };
-
-        age.secrets.kodi_youtube_api_keys.path = "${config.xdg.dataHome}/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
       })
     ];
 
