@@ -7,7 +7,7 @@
   en = config.meow.fullSetup;
 in {
   options = {
-    config.meow.fullSetup = mlib.mkEnOpt "Enable all the bells and whistles.";
+    meow.fullSetup = mlib.mkEnOpt "Enable all the bells and whistles.";
   };
 
   config = lib.mkIf en {
