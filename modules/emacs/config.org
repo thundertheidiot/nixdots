@@ -885,14 +885,6 @@ Org src blocks in fennel
   :after org)
 #+end_src
 
-*** Janet
-
-#+begin_src emacs-lisp
-(use-package janet-mode
-  :after eglot
-  :mode "\\.janet\\'")
-#+end_src
-
 *** C#
 
 #+begin_src emacs-lisp
@@ -902,15 +894,6 @@ Org src blocks in fennel
   :hook
   (csharp-mode . eglot-ensure)
   (csharp-mode . csharp-ts-mode))
-#+end_src
-
-*** Common lisp
-
-#+begin_src emacs-lisp
-(use-package slime
-  :mode "\\.lisp\\'"
-  :custom
-  (inferior-lisp-program "sbcl"))
 #+end_src
 
 *** Elisp
@@ -1515,7 +1498,7 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 
 * EXWM
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @exwm_enable@
 (when (getenv "EMACS_ENABLE_EXWM")
   (setq mouse-autoselect-window t
 	follow-focus-mouse t)

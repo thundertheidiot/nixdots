@@ -11,8 +11,11 @@
   inherit (lib) mkIf;
 in {
   options = {
-    meow.emacs.enable = mkEnOpt "Install and configure emacs.";
-    meow.emacs.exwm = mkEnOpt "Install and configure EXWM.";
+    meow.emacs = {
+      enable = mkEnOpt "Install and configure emacs.";
+      exwm = mkEnOpt "Install and configure EXWM.";
+    };
+
     meow.ollama = mkEnOpt "Ollama";
   };
 
@@ -54,8 +57,6 @@ in {
       home.packages = with pkgs; [
         ghc
         fennel
-        janet
-        sbcl
 
         # org screenshot, todo make non hyprland specific and good
         grim
@@ -81,7 +82,14 @@ in {
       programs.emacs = {
         enable = true;
         package = pkgs.emacsWithPackagesFromUsePackage {
-          config = ./config.org;
+          config = pkgs.substituteAll {
+            src = ./config.org;
+
+            exwm_enable =
+              if cfg.exwm
+              then "yes"
+              else "no";
+          };
           alwaysTangle = true;
           defaultInitFile = true;
 
