@@ -176,9 +176,6 @@
   };
 
   inputs = {
-    # https://hydra.nixos.org/job/nixpkgs/trunk/unstable
-    # https://status.nixos.org/
-    # nixpkgs.url = "github:NixOS/nixpkgs?ref=8a5184b51f449368db552406a762eccd5079a959"; # freetube unstable
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";

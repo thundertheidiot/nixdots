@@ -16,17 +16,14 @@ in {
       persist = mkOpt str "" {
         description = "Directory to use for persistance.";
       };
+
+      directories = mkOpt (listOf str) [] {
+        description = "Extra directories to persist.";
+      };
     };
   };
 
   config = lib.mkIf cfg.enable (let
-    mkPersistMount = loc: {
-      device = "${cfg.persist}/${loc}";
-      fsType = "none";
-      options = ["bind"];
-      depends = "/${cfg.persist}";
-    };
-
     mkMount = path: let
       inherit (builtins) isString isAttrs;
 
@@ -40,23 +37,24 @@ in {
         inherit persistPath path permissions user group;
       };
     in
-      if (builtins.isString path)
+      if (isString path)
       then mkMount' {inherit path;}
-      else if (builtins.isAttrs path)
+      else if (isAttrs path)
       then mkMount' path
       else throw "Path provided to impermanence module is not a string or an attrset.";
 
-    mkMounts = list: map (p: mkMount p) list;
-
     persistMounts = paths': let
       inherit (builtins) listToAttrs;
-      inherit (lib.strings) concatStringsSep;
 
       paths = map (p: mkMount p) paths';
     in {
       systemd.services = listToAttrs (map (p:
         with p; {
-          name = "persist-${path}";
+          name = let
+            pname =
+              builtins.replaceStrings ["/"] ["_"]
+              path;
+          in "persist-${pname}";
           enable = true;
           value = {
             description = "Bind mount ${path}.";
@@ -89,14 +87,17 @@ in {
       source = "${cfg.persist}/etc/${loc}";
     };
   in
-    (persistMounts [
-      {
-        path = "/var/log";
-        permissions = "644";
-      }
-      "/root/.cache/nix"
-      "/etc/NetworkManager/system-connections"
-    ])
+    (persistMounts (cfg.directories
+      ++ [
+        {
+          path = "/var/log";
+          permissions = "644";
+        }
+        "/var/lib/bluetooth"
+        # "/var/lib/nixos"
+        "/root/.cache/nix"
+        "/etc/NetworkManager/system-connections"
+      ]))
     // {
       system.activationScripts = {
         openssh_dir.text = "mkdir --parents ${cfg.persist}/etc/ssh";
@@ -105,6 +106,6 @@ in {
       environment.etc = builtins.listToAttrs (builtins.map (loc: {
         name = loc;
         value = environmentEtcSource loc;
-      }) ["machine-id" "ssh/ssh_host_rsa_key" "ssh/ssh_host_rsa_key.pub" "ssh/ssh_host_ed25519_key" "ssh/ssh_host_ed25519_key.pub"]);
+      }) ["machine-id" "shadow" "ssh/ssh_host_rsa_key" "ssh/ssh_host_rsa_key.pub" "ssh/ssh_host_ed25519_key" "ssh/ssh_host_ed25519_key.pub"]);
     });
 }

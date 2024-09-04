@@ -41,6 +41,7 @@
       shell.enable = true;
 
       gpu = "intel";
+
       impermanence.enable = true;
       impermanence.persist = "/persist";
 
@@ -71,11 +72,6 @@
     boot.initrd.kernelModules = [];
     boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
-
-    # fileSystems."/" = {
-    #   device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
-    #   fsType = "btrfs";
-    # };
 
     disko.devices = {
       nodev."/" = {
