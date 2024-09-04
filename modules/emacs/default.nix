@@ -14,6 +14,15 @@ in {
     meow.emacs = {
       enable = mkEnOpt "Install and configure emacs.";
       exwm = mkEnOpt "Install and configure EXWM.";
+
+      lang = {
+        latex = mkEnOpt "Latex support";
+        haskell = mkEnOpt "Haskell";
+        fennel = mkEnOpt "Fennel";
+        c_cxx = mkEnOpt "C/C++";
+        bash = mkEnOpt "Bash";
+        python = mkEnOpt "Python";
+      };
     };
 
     meow.ollama = mkEnOpt "Ollama";
@@ -45,35 +54,26 @@ in {
       services.ollama.enable = config.meow.ollama;
     }
     // homeModule ({config, ...}: {
-      # systemd.user.targets.exwm-session = lib.mkIf cfg.exwm {
-      #   Unit = {
-      #     Description = "EXWM session";
-      #     BindsTo = ["graphical-session.target"];
-      #     Wants = ["graphical-session-pre.target"];
-      #     After = ["graphical-session-pre.target"];
-      #   };
-      # };
-
       home.packages = with pkgs; [
-        ghc
-        fennel
+        (lib.mkIf cfg.lang.haskell ghc)
+        (lib.mkIf cfg.lang.fennel fennel)
 
         # org screenshot, todo make non hyprland specific and good
         grim
         slurp
 
         # latex
-        texlive.combined.scheme-full
+        (lib.mkIf cfg.lang.latex texlive.combined.scheme-full)
 
         emacs-lsp-booster
 
         # lsp
         nixd # nix
-        clang-tools # clangd + clang-format
-        haskell-language-server # haskell
-        fennel-ls # fennel
-        nodePackages.bash-language-server # bash
-        pyright # python
+        (lib.mkIf cfg.lang.c_cxx clang-tools)
+        (lib.mkIf cfg.lang.haskell haskell-language-server)
+        (lib.mkIf cfg.lang.fennel fennel-ls)
+        (lib.mkIf cfg.lang.bash nodePackages.bash-language-server)
+        (lib.mkIf cfg.lang.python pyright)
 
         # formatters
         alejandra
@@ -82,14 +82,22 @@ in {
       programs.emacs = {
         enable = true;
         package = pkgs.emacsWithPackagesFromUsePackage {
-          config = pkgs.substituteAll {
-            src = ./config.org;
-
-            exwm_enable =
-              if cfg.exwm
+          config = pkgs.substituteAll (let
+            tangle = cfg:
+              if cfg
               then "yes"
               else "no";
-          };
+          in {
+            src = ./config.org;
+
+            exwm_enable = tangle cfg.exwm;
+            lang_latex = tangle cfg.lang.latex;
+            lang_haskell = tangle cfg.lang.haskell;
+            lang_fennel = tangle cfg.lang.fennel;
+            lang_c_cxx = tangle cfg.lang.c_cxx;
+            lang_bash = tangle cfg.lang.bash;
+            lang_python = tangle cfg.lang.python;
+          });
           alwaysTangle = true;
           defaultInitFile = true;
 

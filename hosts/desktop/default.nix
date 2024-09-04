@@ -61,6 +61,8 @@ in {
     };
 
     meow = {
+      fullSetup = true;
+
       gaming.enable = true;
       gaming.emulation = true;
       gaming.games = ["duckgame" "minecraft"];

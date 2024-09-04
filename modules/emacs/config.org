@@ -832,7 +832,7 @@ Language specific setup
 
 *** Haskell
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @lang_haskell@
 (use-package haskell-mode
   :after eglot
   :mode "\\.hs\\'"
@@ -861,25 +861,18 @@ Language specific setup
 
 Fennel is a nice lispy language, with lua compatibility
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @lang_fennel@
 (use-package fennel-mode
   :after eglot
   :mode "\\.fnl\\'"
   :hook (fennel-mode . eglot-ensure)
   :init
-  (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls")))
-  ;; :init
-  ;; (add-to-list 'lsp-language-id-configuration '(fennel-mode . "fennel"))
-  ;; (lsp-register-client (make-lsp-client
-  ;; 			:new-connection (lsp-stdio-connection "fennel-ls")
-  ;; 			:activation-fn (lsp-activate-on "fennel")
-  ;; 			:server-id 'fennel-ls))
-  )
+  (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
 #+end_src
 
 Org src blocks in fennel
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @lang_fennel@
 (use-package ob-fennel
   :ensure nil ;; part of fennel-mode
   :after org)
