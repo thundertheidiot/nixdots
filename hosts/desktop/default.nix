@@ -50,6 +50,8 @@ in {
       "video=1920x1080-32"
     ];
 
+    virtualisation.docker.enable = true;
+
     services.ollama = {
       acceleration = "rocm";
       environmentVariables = {

@@ -31,8 +31,6 @@ in {
         freetube
       ];
 
-      virtualisation.docker.enable = true;
-
       # vpn
       networking.firewall.checkReversePath = false;
 

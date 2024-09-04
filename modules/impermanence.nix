@@ -29,7 +29,7 @@ in {
 
       mkMount' = {
         path,
-        persistPath ? "${cfg.persist}/${path}",
+        persistPath ? "${cfg.persist}/rootfs/${path}",
         permissions ? "1777",
         user ? "root",
         group ? "root",
@@ -60,6 +60,7 @@ in {
             description = "Bind mount ${path}.";
             wantedBy = ["local-fs.target"];
             before = ["local-fs.target"];
+            after = ["systemd-tmpfiles-setup.service"];
             path = [pkgs.util-linux];
             unitConfig.defaultDependencies = false;
             serviceConfig = {
@@ -84,7 +85,7 @@ in {
     };
 
     environmentEtcSource = loc: {
-      source = "${cfg.persist}/etc/${loc}";
+      source = "${cfg.persist}/rootfs/etc/${loc}";
     };
   in
     (persistMounts (cfg.directories
@@ -97,10 +98,27 @@ in {
         # "/var/lib/nixos"
         "/root/.cache/nix"
         "/etc/NetworkManager/system-connections"
+        {
+          path = "/var/lib/flatpak";
+          persistPath = "${cfg.persist}/flatpak";
+          permissions = "755";
+        }
+        {
+          path = "/var/lib/docker";
+          persistPath = "${cfg.persist}/docker";
+          permissions = "710";
+        }
       ]))
     // {
+      # per service config
+      services.ollama.home = "/persist/ollama";
+
       system.activationScripts = {
-        openssh_dir.text = "mkdir --parents ${cfg.persist}/etc/ssh";
+        openssh_dir.text = "mkdir --parents ${cfg.persist}/rootfs/etc/ssh";
+        persist_rootfs_etc_dir.text = ''
+          mkdir --parents ${cfg.persist}/rootfs/etc
+          touch ${cfg.persist}/rootfs/etc/shadow
+        '';
       };
 
       environment.etc = builtins.listToAttrs (builtins.map (loc: {
