@@ -63,7 +63,7 @@
       };
     };
 
-    users.users.thunder.initialPassword = "password";
+    users.users.thunder.hashedPassword = "$y$j9T$YljUi/byEelSyTzxJc99c/$i0lKshmc.BUMqQn3ZbAqa/uj9jvfJLxc17bUT8jwzv6";
 
     boot.loader.grub.enable = true;
     # boot.loader.grub.device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";

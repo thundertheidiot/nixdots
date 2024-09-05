@@ -128,7 +128,6 @@ in {
 
           qmk
 
-          # (pkgs."2311".blender)
           blender
 
           obs-studio
