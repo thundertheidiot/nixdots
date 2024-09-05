@@ -18,6 +18,10 @@ in {
     };
   };
 
+  imports = [
+    ./mangohud.nix
+  ];
+
   config = lib.mkMerge [
     (lib.mkIf (cfg.enable) {
       environment.systemPackages = let
