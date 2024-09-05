@@ -101,8 +101,7 @@ in
       openssl.dev
       pkg-config
       alejandra
-      agenix.default
-      age
+      sops
       gnupg
     ];
 
