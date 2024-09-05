@@ -7,7 +7,6 @@ let
     (import ./environment/default.nix)
     (import ./theming.nix)
     (import ./laptop.nix)
-    (import ./keyd.nix)
   ];
 in {
   system = {
@@ -129,7 +128,6 @@ in {
 
           qmk
 
-          # (pkgs."2311".blender)
           blender
 
           obs-studio

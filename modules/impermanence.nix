@@ -113,6 +113,8 @@ in {
       # per service config
       services.ollama.home = "/persist/ollama";
 
+      sops.age.keyFile = "/persist/sops-key.txt";
+
       system.activationScripts = {
         openssh_dir.text = "mkdir --parents ${cfg.persist}/rootfs/etc/ssh";
         persist_rootfs_etc_dir.text = ''
@@ -124,6 +126,6 @@ in {
       environment.etc = builtins.listToAttrs (builtins.map (loc: {
         name = loc;
         value = environmentEtcSource loc;
-      }) ["machine-id" "shadow" "ssh/ssh_host_rsa_key" "ssh/ssh_host_rsa_key.pub" "ssh/ssh_host_ed25519_key" "ssh/ssh_host_ed25519_key.pub"]);
+      }) ["machine-id" "ssh/ssh_host_rsa_key" "ssh/ssh_host_rsa_key.pub" "ssh/ssh_host_ed25519_key" "ssh/ssh_host_ed25519_key.pub"]);
     });
 }

@@ -1,0 +1,9 @@
+keys:
+ - &me age1est4jdeu803qv6jng7vrj9x92l3xs0mr6qwv6fpt0p7tdd26xd6s84k2pq
+ - &system age1dlh099k5q7uafl7esvrxtewjmmcw2vedmymfw3l8euckxxrqe9wqnhcus3
+creation_rules:
+ - path_regex: sops/[^/]+$
+   key_groups:
+   - age:
+     - *me
+     - *system
