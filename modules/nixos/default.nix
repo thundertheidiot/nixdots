@@ -60,12 +60,12 @@
       neovim
       wget
       git
-      clang
-      gcc
       cryptsetup
 
       nh
     ];
+
+    services.speechd.enable = lib.mkForce false;
 
     users.users = {
       ${config.username} = {
