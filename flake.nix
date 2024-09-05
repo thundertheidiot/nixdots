@@ -66,14 +66,6 @@
               time.timeZone = config.timeZone;
               networking.hostName = config.hostName;
 
-              # sops.age.keyFile = "/home/thunder/.config/sops/age/keys.txt";
-
-              # sops.secrets."example_key" = {
-              #   sopsFile = ./sops/example.yaml;
-              #   format = "yaml";
-              #   path = "/home/thunder/sopstest";
-              # };
-
               nix.settings = {
                 substituters = [
                   "https://hyprland.cachix.org"
@@ -94,51 +86,7 @@
                   inputs.emacs-overlay.overlay
                   # inputs.hyprland.overlays.default
                   inputs.waybar.overlays.default
-                  (final: prev: rec {
-                    nur = import inputs.nur {
-                      nurpkgs = prev;
-                      pkgs = prev;
-                    };
-                    firefox-addons = nur.repos.rycee.firefox-addons;
-                    ataraxiasjel = nur.repos.ataraxiasjel;
-                    "2405" = import inputs.nixpkgs-24-05 {
-                      system = final.system;
-                      config.allowUnfree = final.config.allowUnfree;
-                    };
-                    "2311" = import inputs.nixpkgs-23-11 {
-                      system = final.system;
-                      config.allowUnfree = final.config.allowUnfree;
-                    };
-                    awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
-
-                    # TODO: remove when works
-                    avrdude = prev.avrdude.overrideAttrs (prev: {
-                      src = prev.src.override {
-                        repo = "avrdude";
-                      };
-                    });
-
-                    vulkan-validation-layers = prev.vulkan-validation-layers.overrideAttrs (oldAttrs: {
-                      buildInputs = oldAttrs.buildInputs ++ [prev.spirv-tools];
-                    });
-
-                    # freetube = prev.freetube.overrideAttrs {
-                    #   version = "0.21.3";
-
-                    #   src = prev.fetchurl {
-                    #     url = "https://github.com/FreeTubeApp/FreeTube/releases/download/v0.21.3-beta/freetube_0.21.3_amd64.AppImage";
-                    #     hash = "sha256-sg/ycFo4roOJ2sW4naRCE6dwGXVQFzF8uwAZQkS2EY4=";
-                    #   };
-                    # };
-
-                    # hyprland = inputs.hyprland.packages.${final.system}.hyprland;
-                    # xdg-desktop-portal-hyprland = inputs.hyprland.packages.${final.system}.xdg-desktop-portal-hyprland;
-                    # hyprland-protocols = inputs.hyprland.packages.${final.system}.hyprland-protocols;
-                    # wlroots-hyprland = inputs.hyprland.packages.${final.system}.wlroots-hyprland;
-
-                    hyprland-split-monitor-workspaces = inputs.split-monitor-workspaces.packages.${final.system}.split-monitor-workspaces;
-                    # udis86 = inputs.hyprland.packages.${final.system}.udis86;
-                  })
+                  (import ./overrides.nix {inherit inputs;})
                 ];
               };
 

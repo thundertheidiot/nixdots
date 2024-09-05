@@ -8,16 +8,58 @@
 in {
   options = {
     meow.fullSetup = mlib.mkEnOpt "Enable all the bells and whistles.";
+    meow.baseSetup = mlib.mkEnOpt "Enable commonly needed things, but leave out some heavier ones.";
   };
 
-  config = lib.mkIf en {
-    meow.emacs.lang = {
-      latex = true;
-      haskell = true;
-      fennel = true;
-      c_cxx = true;
-      bash = true;
-      python = true;
-    };
-  };
+  config = let
+    inherit (lib) listToAttrs mkIf mkMerge;
+    enAll = list:
+      listToAttrs (map (i: {
+          name = i;
+          value = true;
+        })
+        list);
+  in
+    mkMerge [
+      (mkIf config.meow.fullSetup {
+        meow.program = enAll [
+          "element"
+          "signal"
+          "gajim"
+          "mumble"
+          "discord"
+
+          "libreoffice"
+          "speedcrunch"
+
+          "blender"
+          "obs"
+          "kdenlive"
+          "godot"
+          "gimp"
+        ];
+
+        meow.emacs.lang = enAll [
+          "latex"
+          "haskell"
+          "fennel"
+          "c_cxx"
+          "bash"
+          "python"
+        ];
+      })
+      (mkIf config.meow.baseSetup {
+        meow.program = enAll [
+          "gajim"
+          "discord"
+          "gimp"
+        ];
+
+        meow.emacs.lang = enAll [
+          "c_cxx"
+          "bash"
+          "python"
+        ];
+      })
+    ];
 }

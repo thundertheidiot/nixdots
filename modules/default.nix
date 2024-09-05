@@ -7,6 +7,7 @@
   ./keyboard
   ./gaming
   ./firefox.nix
+  ./programs.nix
   ./gpu.nix
   ./vm.nix
   ./impermanence.nix

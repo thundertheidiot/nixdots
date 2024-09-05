@@ -109,17 +109,6 @@ in {
           mpc-cli
           libnotify
 
-          # cinny-desktop
-          element-desktop
-          signal-desktop
-
-          libreoffice
-
-          gimp
-          godot_4
-
-          speedcrunch
-
           yle-dl
           yt-dlp
           python3
@@ -127,31 +116,6 @@ in {
           # ansel
 
           qmk
-
-          blender
-
-          obs-studio
-          kdePackages.kdenlive
-
-          (gajim.overrideAttrs (prev: {
-            nativeBuildInputs = prev.nativeBuildInputs ++ [pkgs.makeWrapper];
-
-            # fix gnome-keyring on kde
-            postInstall =
-              prev.postInstall
-              + ''
-                wrapProgram $out/bin/gajim --set XDG_CURRENT_DESKTOP GNOME
-              '';
-          }))
-
-          (mumble.overrideAttrs (prev: {
-            postFixup =
-              builtins.replaceStrings
-              ["wrapProgram $out/bin/mumble"]
-              ["wrapProgram $out/bin/mumble --set QT_QPA_PLATFORM xcb"] # Run with xwayland to make keybindings work
-              
-              prev.postFixup;
-          }))
         ];
 
         xdg.userDirs = {

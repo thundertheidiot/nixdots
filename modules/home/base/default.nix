@@ -100,7 +100,6 @@ in
       openssl
       openssl.dev
       pkg-config
-      alejandra
       sops
       gnupg
     ];
