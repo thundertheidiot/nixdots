@@ -36,6 +36,8 @@
     system.stateVersion = "24.05";
 
     meow = {
+      fullSetup = true;
+
       gaming.enable = true;
       gaming.emulation = true;
       gaming.games = ["duckgame"];
