@@ -39,7 +39,7 @@ in {
       execWheelOnly = true;
     };
 
-    # TODO: useless
+    # TODO: useless?
     programs.nix-ld = {
       enable = true;
       libraries = with pkgs; [libGL];
