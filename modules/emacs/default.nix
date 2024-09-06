@@ -139,7 +139,8 @@ in {
       };
 
       home.sessionVariables = {
-        EDITOR = "emacsclient -c -a ''";
+        # Somehow, somewhere, this is set to nano. Where? I have no clue.
+        EDITOR = lib.mkForce "emacsclient -c -a ''";
       };
 
       xdg.mimeApps.defaultApplications = builtins.listToAttrs (builtins.map

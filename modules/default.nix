@@ -1,17 +1,28 @@
 [
-  ./home.nix
-  ./monitor.nix
-  ./shell.nix
-  ./config
-  ./keyboard
-  ./gaming
-  ./firefox.nix
-  ./programs
-  ./gpu.nix
-  ./vm.nix
+  # "libraries"
+  # Probably required by the below options, include these
+  ./home.nix # most likely conflicts with your home-manager setup, read flake.nix for some pointers
+  # ./config
+
+  # more abstract configuration
+  # These may be useful
   ./impermanence.nix
+  ./monitor.nix
+  ./gpu.nix
+
+  # specific configuration
+  # These are probably less useful
+  ./base.nix
+  ./shell.nix
   ./ssh.nix
-  ./xorg.nix
+  ./programs
+  ./vm.nix
   ./tv
   ./emacs
+  ./xorg.nix
+  ./firefox.nix
+  ./workstation/new.nix
+  ./cleanup.nix
+  ./keyboard
+  ./gaming
 ]

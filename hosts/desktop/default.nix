@@ -62,6 +62,7 @@ in {
 
     meow = {
       fullSetup = true;
+      workstation.enable = true;
 
       gaming.enable = true;
       gaming.emulation = true;

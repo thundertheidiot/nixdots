@@ -56,15 +56,6 @@
     };
     services.libinput.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      neovim
-      wget
-      git
-      cryptsetup
-
-      nh
-    ];
-
     services.speechd.enable = lib.mkForce false;
 
     users.users = {

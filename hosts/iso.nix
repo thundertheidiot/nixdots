@@ -47,6 +47,8 @@
     services.openssh.settings.PermitRootLogin = lib.mkForce "prohibit-password";
 
     meow = {
+      workstation.enable = true;
+
       firefox.enable = true;
       emacs.enable = true;
       shell.enable = true;

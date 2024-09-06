@@ -36,6 +36,8 @@
     system.stateVersion = "23.05";
 
     meow = {
+      workstation.enable = true;
+
       firefox.enable = true;
       emacs.enable = true;
       shell.enable = true;
