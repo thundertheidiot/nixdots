@@ -9,8 +9,7 @@
   cfg = config.meow.program;
 in {
   options = let
-    inherit (mlib) mkEnOpt mkOpt;
-    inherit (lib.types) bool;
+    inherit (mlib) mkEnOpt;
   in {
     meow.program = {
       # creation
@@ -26,9 +25,6 @@ in {
       gajim = mkEnOpt "Gajim";
       mumble = mkEnOpt "Mumble";
       discord = mkEnOpt "Discord";
-      discordConfig = mkOpt bool true {
-        description = "Discord";
-      };
 
       libreoffice = mkEnOpt "Libreoffice";
       speedcrunch = mkEnOpt "Speedcrunch";
