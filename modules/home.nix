@@ -7,13 +7,16 @@
   ...
 }: let
   inherit (mlib) mkOpt;
-  inherit (lib.types) listOf raw attrs str;
+  inherit (lib) mkIf;
+  inherit (lib.types) bool listOf raw attrs str;
   inherit (lib.options) literalExpression;
 
   cfg = config.meow.home;
 in {
   options = {
     meow.home = {
+      enable = mkOpt bool true {};
+
       extraSpecialArgs = mkOpt attrs {inherit mlib mpkgs;} {
         example = literalExpression "{ inherit inputs; }";
       };
@@ -30,7 +33,7 @@ in {
       dataFile = mkOpt attrs {} {description = "Files to place in $XDG_DATA_HOME";};
     };
   };
-  config = {
+  config = mkIf cfg.enable {
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
