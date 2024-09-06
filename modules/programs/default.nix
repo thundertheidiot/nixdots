@@ -32,7 +32,7 @@ in {
   };
 
   imports = [
-    ./discord.nix
+    ./discord
   ];
 
   config = let
