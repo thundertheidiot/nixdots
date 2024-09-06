@@ -161,8 +161,6 @@
       flake = false;
     };
 
-    nixpkgs-f2k.url = "github:moni-dz/nixpkgs-f2k";
-
     hyprland = {
       # latest before clipboard break
       # url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=4cdddcfe466cb21db81af0ac39e51cc15f574da9";
