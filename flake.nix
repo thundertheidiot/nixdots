@@ -93,10 +93,9 @@
               imports =
                 (import ./modules)
                 ++ [
-                  inputs.lix-module.nixosModules.default # lix
+                  inputs.lix-module.nixosModules.default
                   inputs.cosmic.nixosModules.default
                   inputs.hyprland.nixosModules.default
-                  ./modules/nixos
                 ];
 
               meow.home = {
@@ -105,12 +104,13 @@
                 sharedModules =
                   common
                   ++ [
-                    # cfg.home
                     inputs.plasma-manager.homeManagerModules.plasma-manager
                     inputs.base16.homeManagerModule
                   ];
                 modules = [
-                  ./modules/home
+                  {
+                    scheme = "${inputs.tt-schemes}/base16/catppuccin-mocha.yaml";
+                  }
                 ];
               };
             })

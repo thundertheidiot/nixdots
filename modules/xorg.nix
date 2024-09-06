@@ -1,6 +1,11 @@
 {lib, ...}: let
 in {
   config = {
+    services.xserver = {
+      xkb.layout = "us";
+      xkb.options = "eurosign:e";
+    };
+
     services.xserver.config = lib.mkAfter ''
       Section "InputClass"
         Identifier "libinput pointer catchall"

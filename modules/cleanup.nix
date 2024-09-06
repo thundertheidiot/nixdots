@@ -71,6 +71,8 @@ in {
       QMK_HOME = "${config.meow.home.directory}/.local/src/qmk";
     };
 
+    services.speechd.enable = lib.mkForce false;
+
     meow.home.modules = [
       {
         # notice config is from nixos, not hm

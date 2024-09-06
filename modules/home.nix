@@ -41,7 +41,12 @@ in {
       sharedModules = cfg.sharedModules;
 
       users.${cfg.user} = {
-        home.stateVersion = cfg.stateVersion;
+        home = {
+          username = cfg.user;
+          homeDirectory = cfg.directory;
+          stateVersion = cfg.stateVersion;
+        };
+
         imports = cfg.modules;
 
         home.file = cfg.file;

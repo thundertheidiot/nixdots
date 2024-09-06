@@ -30,6 +30,14 @@ in {
       unrar
     ];
 
+    console = {
+      useXkbConfig = true;
+    };
+
+    networking.networkmanager.enable = true;
+
+    services.libinput.enable = true;
+
     meow.home.modules = [
       ({config, ...}: {
         programs.gpg = {
