@@ -33,6 +33,7 @@ in {
 
   imports = [
     ./discord
+    ./sets.nix
   ];
 
   config = let

@@ -17,6 +17,14 @@ in {
       enable = mkOpt bool true {
         description = "Discord";
       };
+
+      override = {
+        quickCss = mkEnOpt "Override quickcss completely";
+        settings = mkEnOpt "Override settings completely";
+        userSettings = mkEnOpt "Override userSettings completely";
+        plugins = mkEnOpt "Override plugins completely";
+      };
+
       settings = mkOpt attrs {} {
         description = "Vesktop settings.json file";
       };
@@ -27,7 +35,6 @@ in {
         description = "Vesktop plugin configuration";
       };
 
-      overrideQuickCss = mkEnOpt "Override quickcss instead of adding to it.";
       quickCss = mkOpt str "" {
         description = "Additional quickcss";
       };
@@ -91,14 +98,23 @@ in {
 
     defaultPlugins = import ./plugins.nix;
 
-    finalSettings = mergeAttrsList [defaultSettings cfg.settings];
-    finalPlugins = mergeAttrsList [defaultPlugins cfg.plugins];
-    finalUserSettings = mergeAttrsList [defaultUserSettings cfg.userSettings {plugins = finalPlugins;}];
+    finalSettings =
+      if cfg.override.settings
+      then cfg.settings
+      else mergeAttrsList [defaultSettings cfg.settings];
+    finalPlugins =
+      if cfg.override.plugins
+      then cfg.plugins
+      else mergeAttrsList [defaultPlugins cfg.plugins];
+    finalUserSettings =
+      if cfg.override.userSettings
+      then mergeAttrsList [cfg.userSettings {plugins = finalPlugins;}]
+      else mergeAttrsList [defaultUserSettings cfg.userSettings {plugins = finalPlugins;}];
   in {
     meow.home.configFile."vesktop/quickCss.css" = {
       enable = true;
       text =
-        if cfg.overrideQuickCss
+        if cfg.override.quickCss
         then cfg.quickCss
         else defaultQuickCss + cfg.quickCss;
     };

@@ -2,7 +2,6 @@
   ./home.nix
   ./monitor.nix
   ./shell.nix
-  ./full.nix
   ./config
   ./keyboard
   ./gaming
