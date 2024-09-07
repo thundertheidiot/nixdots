@@ -422,7 +422,9 @@ Which key
   "hb" '(describe-bindings t :wk "describe binding")
   "hf" '(describe-function t :wk "describe function")
   "hv" '(describe-variable t :wk "describe variable")
-  "ha" '(apropos :wk "describe variable")
+  "hF" '(describe-face t :wk "describe face")
+  "hk" '(describe-key t :wk "describe key")
+  "ha" '(apropos :wk "describe")
   
   "b" '(:ignore t :wk "buffer")
   "bi" '(ibuffer :wk "ibuffer")
@@ -648,7 +650,7 @@ Show added/deleted/edited parts in the fringe
   (dired-mode . diff-hl-dired-mode)
   (diff-hl-mode . diff-hl-flydiff-mode)
   :general-config
-  (:states '(normal visual motion) :keymaps 'diff-hl-mode-map :prefix "SPC"
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "ga" '(diff-hl-stage-current-hunk :wk "stage hunk")
     "gr" '(diff-hl-revert-hunk :wk "revert hunk")
     "gn" '(diff-hl-next-hunk :wk "next hunk")
