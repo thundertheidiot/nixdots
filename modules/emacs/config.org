@@ -79,6 +79,12 @@ These are used somewhere later, but don't require any configuration.
 (global-visual-line-mode t)
 (savehist-mode 1)
 
+(defun advice!-keyboard-escape-quit-adv (fun)
+  "Around advice for `keyboard-escape-quit' FUN.
+Preserve window configuration when pressing ESC."
+  (let ((buffer-quit-function (or buffer-quit-function #'ignore)))
+    (funcall fun)))
+(advice-add #'keyboard-escape-quit :around #'advice!-keyboard-escape-quit-adv)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
@@ -612,7 +618,7 @@ Faster inserting of templates like the source code blocks here.
     "gd" '(:ignore t :wk "diff")
     "gdu" '(magit-diff-unstaged :wk "diff unstaged")
     "gds" '(magit-diff-staged :wk "diff staged")
-    "gc" '(magit-commit-create :wk "commit")
+    "gc" '(magit-commit :wk "commit")
     "gp" '(magit-push :wk "push")
     "gF" '(magit-pull :wk "push")))
 #+end_src
