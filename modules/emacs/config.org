@@ -333,6 +333,7 @@ Collection of evil-like bindings for other modes.
 			  ibuffer
 			  simple-mpc
 			  magit
+			  diff-hl
 			  vterm)))
 #+end_src
 
@@ -611,38 +612,75 @@ Faster inserting of templates like the source code blocks here.
     "gds" '(magit-diff-staged :wk "diff staged")
     "gc" '(magit-commit-create :wk "commit")
     "gp" '(magit-push :wk "push")
-    "gF" '(magit-pull :wk "push")
-))
+    "gF" '(magit-pull :wk "push")))
 #+end_src
 
 Show added/deleted/edited parts in the fringe
 
 #+begin_src emacs-lisp
-(defun th/configure-git-gutter-mode-faces ()
-  (set-face-background 'git-gutter-fr:added "green")
-  (set-face-background 'git-gutter-fr:modified "purple")
-  (set-face-background 'git-gutter-fr:deleted "red")
-  (set-face-background 'git-gutter:added "green")
-  (set-face-background 'git-gutter:modified "purple")
-  (set-face-background 'git-gutter:deleted "red"))
+;; (defun th/configure-git-gutter-mode-faces ()
+;;   (set-face-background 'git-gutter-fr:added "green")
+;;   (set-face-background 'git-gutter-fr:modified "purple")
+;;   (set-face-background 'git-gutter-fr:deleted "red")
+;;   (set-face-background 'git-gutter:added "green")
+;;   (set-face-background 'git-gutter:modified "purple")
+;;   (set-face-background 'git-gutter:deleted "red"))
 
-(use-package git-gutter-fringe
+;; (use-package git-gutter-fringe
+;;   :demand t
+;;   :commands (git-gutter-mode)
+;;   :diminish git-gutter-mode
+;;   ;; :hook
+;;   ;; (prog-mode . git-gutter-mode)
+;;   ;; (git-gutter-mode . th/configure-git-gutter-mode-faces)
+;;   ;; (olivetti-mode-on . git-gutter+-toggle-fringe)
+;;   :config 
+;;   (global-git-gutter-mode +1)
+;;   :general-config
+;;   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+;;     "gs" '(git-gutter:popup -hunk :wk "show hunk")
+;;     "ga" '(git-gutter:stage-hunk :wk "stage hunk")
+;;     "gr" '(git-gutter:revert-hunk :wk "revert hunk")
+;;     "gn" '(git-gutter:next-hunk :wk "next hunk")
+;;     "gN" '(git-gutter:previous-hunk :wk "previous hunk")))
+#+end_src
+
+#+begin_src
+(defun th/configure-diff-hl-faces ()
+  (mapc (lambda (f) 
+	  (set-face-background f "green")
+	  (set-face-foreground f "green"))
+	'(diff-hl-insert diff-hl-dired-insert diff-hl-margin-insert))
+  (mapc (lambda (f) 
+	  (set-face-background f "purple")
+	  (set-face-foreground f "purple"))
+	'(diff-hl-change diff-hl-dired-change diff-hl-margin-change))
+  (mapc (lambda (f) 
+	  (set-face-background f "red")
+	  (set-face-foreground f "red"))
+	'(diff-hl-delete diff-hl-dired-delete diff-hl-margin-delete)))
+
+(use-package diff-hl
   :demand t
-  :commands (git-gutter-mode)
-  :diminish git-gutter-mode
-  ;; :hook
-  ;; (prog-mode . git-gutter-mode)
-  ;; (git-gutter-mode . th/configure-git-gutter-mode-faces)
-  ;; (olivetti-mode-on . git-gutter+-toggle-fringe)
-  :config 
-  (global-git-gutter-mode +1)
+  :diminish diff-hl-mode
+  :custom
+  (diff-hl-show-staged-changes nil)
+  :config
+  (th/configure-diff-hl-faces)
+  :hook
+  (magit-pre-refresh . diff-hl-magit-pre-refresh)
+  (magit-post-refresh . diff-hl-magit-port-refresh)
+  (prog-mode . diff-hl-mode)
+  (org-mode . diff-hl-mode)
+  (olivetti-mode . diff-hl-margin-mode)
+  (dired-mode . diff-hl-dired-mode)
+  (diff-hl-mode . diff-hl-flydiff-mode)
   :general-config
-  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "gs" '(git-gutter:popup -hunk :wk "show hunk")
-    "ga" '(git-gutter:stage-hunk :wk "stage hunk")
-    "gr" '(git-gutter:revert-hunk :wk "revert hunk")
-    "gn" '(git-gutter:next-hunk :wk "next hunk")
-    "gN" '(git-gutter:previous-hunk :wk "previous hunk")))
+  (:states '(normal visual motion) :keymaps 'diff-hl-mode-map :prefix "SPC"
+    "ga" '(diff-hl-stage-current-hunk :wk "stage hunk")
+    "gr" '(diff-hl-revert-hunk :wk "revert hunk")
+    "gn" '(diff-hl-next-hunk :wk "next hunk")
+    "gN" '(diff-hl-previous-hunk :wk "previous hunk")))
 #+end_src
 
 Git timemachine lets you browse through the history of a file tracked by git
