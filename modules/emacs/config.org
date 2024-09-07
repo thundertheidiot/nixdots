@@ -641,11 +641,10 @@ Show added/deleted/edited parts in the fringe
   (diff-hl-show-staged-changes nil)
   :config
   (th/configure-diff-hl-faces)
+  (global-diff-hl-mode)
   :hook
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
-  (prog-mode . diff-hl-mode)
-  (org-mode . diff-hl-mode)
   (olivetti-mode . diff-hl-margin-mode)
   (dired-mode . diff-hl-dired-mode)
   (diff-hl-mode . diff-hl-flydiff-mode)
