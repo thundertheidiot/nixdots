@@ -52,13 +52,7 @@ in {
     };
   };
 
-  home = {
-    config,
-    pkgs,
-    lib,
-    mlib,
-    ...
-  }: {
+  home = {mlib, ...}: {
     imports = mlib.getHomes modules;
   };
 }
