@@ -669,7 +669,7 @@ Show added/deleted/edited parts in the fringe
   (th/configure-diff-hl-faces)
   :hook
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
-  (magit-post-refresh . diff-hl-magit-port-refresh)
+  (magit-post-refresh . diff-hl-magit-post-refresh)
   (prog-mode . diff-hl-mode)
   (org-mode . diff-hl-mode)
   (olivetti-mode . diff-hl-margin-mode)
