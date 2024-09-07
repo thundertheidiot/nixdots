@@ -7,6 +7,7 @@
 }: let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf mkDefault;
+  inherit (builtins) listToAttrs;
 
   cfg = config.meow.workstation;
 in {
@@ -16,10 +17,17 @@ in {
 
   imports = [
     ./audio.nix
+    ./network.nix
   ];
 
   config = mkIf cfg.enable {
-    meow.workstation.audio = mkDefault true;
+    meow.workstation = listToAttrs (map (n: {
+        name = n;
+        value = mkDefault true;
+      }) [
+        "audio"
+        "network"
+      ]);
 
     environment.systemPackages = with pkgs; [
       pulsemixer

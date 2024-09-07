@@ -14,7 +14,6 @@ in {
     pkgs,
     lib,
     mlib,
-    inputs,
     ...
   }: {
     imports =
@@ -22,12 +21,8 @@ in {
 
     config = lib.mkIf (config.workstation.enable) {
       environment.systemPackages = with pkgs; [
-        wireguard-tools
         distrobox
       ];
-
-      # vpn
-      networking.firewall.checkReversePath = false;
 
       security.polkit.enable = true;
 
@@ -54,8 +49,6 @@ in {
         })
         # TODO nvidia
       ];
-
-      systemd.services."NetworkManager-wait-online".enable = false;
     };
   };
 
