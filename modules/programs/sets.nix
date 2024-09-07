@@ -37,6 +37,8 @@ in {
           "kdenlive"
           "godot"
           "gimp"
+
+          "freetube"
         ];
 
         meow.emacs.lang = enAll [

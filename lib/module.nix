@@ -18,4 +18,10 @@
     };
 
   mkEnOpt = desc: lib.mkEnableOption desc;
+  mkEnOptTrue = desc:
+    lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = desc;
+    };
 }

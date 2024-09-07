@@ -6,7 +6,7 @@
   ...
 }: let
   inherit (mlib) mkEnOpt;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkDefault;
 
   cfg = config.meow.workstation;
 in {
@@ -14,7 +14,13 @@ in {
     meow.workstation.enable = mkEnOpt "Configuration for workstations";
   };
 
+  imports = [
+    ./audio.nix
+  ];
+
   config = mkIf cfg.enable {
+    meow.workstation.audio = mkDefault true;
+
     environment.systemPackages = with pkgs; [
       pulsemixer
       rustup

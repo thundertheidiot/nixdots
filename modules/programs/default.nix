@@ -28,6 +28,8 @@ in {
 
       libreoffice = mkEnOpt "Libreoffice";
       speedcrunch = mkEnOpt "Speedcrunch";
+
+      freetube = mkEnOpt "Youtube client";
     };
   };
 
@@ -56,6 +58,8 @@ in {
 
       (mkIf cfg.libreoffice libreoffice)
       (mkIf cfg.speedcrunch speedcrunch)
+
+      (mkIf cfg.freetube freetube)
     ];
   };
 }

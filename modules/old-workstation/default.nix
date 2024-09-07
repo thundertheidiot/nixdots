@@ -18,52 +18,18 @@ in {
     ...
   }: {
     imports =
-      (mlib.getSystems modules)
-      ++ [
-        inputs.nix-gaming.nixosModules.pipewireLowLatency
-      ];
+      mlib.getSystems modules;
 
     config = lib.mkIf (config.workstation.enable) {
       environment.systemPackages = with pkgs; [
         wireguard-tools
         distrobox
-        freetube
       ];
 
       # vpn
       networking.firewall.checkReversePath = false;
 
       security.polkit.enable = true;
-
-      hardware.bluetooth = {
-        enable = true;
-        powerOnBoot = true;
-        settings = {
-          General.Experimental = true;
-        };
-      };
-
-      # Force disable pulseaudio
-      hardware.pulseaudio.enable = lib.mkForce false;
-
-      security.rtkit.enable = true;
-      services.pipewire = {
-        enable = true;
-        alsa.enable = true;
-        alsa.support32Bit = true;
-        pulse.enable = true;
-        jack.enable = true;
-
-        wireplumber.extraConfig = {
-          "monitor.bluez.properties" = {
-            "bluez5.enable-hw-volume" = false;
-          };
-        };
-
-        lowLatency = {
-          enable = true;
-        };
-      };
 
       # boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
 
