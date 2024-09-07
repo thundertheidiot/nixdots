@@ -123,6 +123,24 @@ in {
                 (dwm-workspaces :fetcher github :repo "doesnt/exist" :files (:defaults "dwm-workspaces.el"))
               '';
             };
+            emsg-blame = final.trivialBuild {
+              pname = "emsg-blame";
+              version = "1.0.0";
+
+              packageRequires = [
+                final.async
+              ];
+
+              src = pkgs.fetchFromGitHub {
+                owner = "ISouthRain";
+                repo = "emsg-blame";
+                rev = "4cbe0584b788dee27dea796fb25fb245bdbedc68";
+                hash = "sha256-FcknxrMPzWyq1DTxPK/IPne5iZyJiBsIY22PFnziwCM=";
+              };
+              recipe = pkgs.writeText "recipe" ''
+                (emsg-blame :fetcher github :repo "ISouthRain/emsg-blame" :files (:defaults "emsg-blame.el"))
+              '';
+            };
             eglot-booster = final.trivialBuild {
               pname = "eglot-booster";
               version = "1.0.0";
