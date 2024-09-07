@@ -14,6 +14,7 @@ in {
     meow.emacs = {
       enable = mkEnOpt "Install and configure emacs.";
       exwm = mkEnOpt "Install and configure EXWM.";
+      llm = mkEnOpt "Install llm interaction tools for emacs.";
 
       lang = {
         latex = mkEnOpt "Latex support";
@@ -24,8 +25,6 @@ in {
         python = mkEnOpt "Python";
       };
     };
-
-    meow.ollama = mkEnOpt "Ollama";
   };
 
   config = mkIf cfg.enable ({
@@ -51,7 +50,7 @@ in {
         wmctrl
       ]);
 
-      services.ollama.enable = config.meow.ollama;
+      services.ollama.enable = lib.mkDefault cfg.llm;
     }
     // homeModule ({config, ...}: {
       home.packages = with pkgs; [
@@ -91,6 +90,7 @@ in {
             src = ./config.org;
 
             exwm_enable = tangle cfg.exwm;
+            llm_enable = tangle cfg.llm;
             lang_latex = tangle cfg.lang.latex;
             lang_haskell = tangle cfg.lang.haskell;
             lang_fennel = tangle cfg.lang.fennel;

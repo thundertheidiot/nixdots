@@ -1212,7 +1212,12 @@ Large language models inside emacs, powered by ollama.
     "curl --silent --show-error http://localhost:11434/api/generate -d '{\"model\": \"%s\", \"keep_alive\":0}'" model)))
 #+end_src
 
-** Elfeed #+begin_src emacs-lisp (use-package elfeed :custom (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory)) (elfeed-enclosure-default-dir user-emacs-directory) (elfeed-feeds '("https://howardism.org/index.xml" "https://xenodium.com/rss.xml" "https://xeiaso.net/blog.rss" "https://jade.fyi/rss.xml"))) #+end_src #+RESULTS:
+** Elfeed
+
+#+begin_src emacs-lisp
+(use-package elfeed :custom (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory)) (elfeed-enclosure-default-dir user-emacs-directory) (elfeed-feeds '("https://howardism.org/index.xml" "https://xenodium.com/rss.xml" "https://xeiaso.net/blog.rss" "https://jade.fyi/rss.xml")))
+#+end_src #+RESULTS:
+
 ** Media playback "inside" emacs
 
 #+begin_src emacs-lisp

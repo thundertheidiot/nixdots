@@ -42,6 +42,8 @@ in {
           # "ansel"
         ];
 
+        # meow.emacs.llm = true;
+
         meow.emacs.lang = enAll [
           "latex"
           "haskell"
