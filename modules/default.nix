@@ -21,12 +21,12 @@
   ./emacs
   ./xorg.nix
   ./firefox.nix
-  ./workstation/new.nix # TODO: new.nix -> default.nix
+  ./workstation
   ./cleanup.nix
   ./keyboard
   ./gaming
 
   # TODO: reorganize modules/workstation
-  (import ./workstation).system
-  ({mlib, ...}: mlib.homeModule (import ./workstation).home)
+  (import ./old-workstation).system
+  ({mlib, ...}: mlib.homeModule (import ./old-workstation).home)
 ]
