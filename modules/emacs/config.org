@@ -609,31 +609,40 @@ Faster inserting of templates like the source code blocks here.
     "gd" '(:ignore t :wk "diff")
     "gdu" '(magit-diff-unstaged :wk "diff unstaged")
     "gds" '(magit-diff-staged :wk "diff staged")
-    "gc" '(magit-commit-create :wk "commit")))
+    "gc" '(magit-commit-create :wk "commit")
+    "gp" '(magit-push :wk "push")
+    "gF" '(magit-pull :wk "push")
+))
 #+end_src
 
 Show added/deleted/edited parts in the fringe
 
 #+begin_src emacs-lisp
 (defun th/configure-git-gutter-mode-faces ()
-  (set-face-background 'git-gutter+-added "green")
-  (set-face-background 'git-gutter+-modified "purple")
-  (set-face-background 'git-gutter+-deleted "red"))
+  (set-face-background 'git-gutter-fr:added "green")
+  (set-face-background 'git-gutter-fr:modified "purple")
+  (set-face-background 'git-gutter-fr:deleted "red")
+  (set-face-background 'git-gutter:added "green")
+  (set-face-background 'git-gutter:modified "purple")
+  (set-face-background 'git-gutter:deleted "red"))
 
-(use-package git-gutter-fringe+
-  :commands (git-gutter+mode)
-  :diminish git-gutter+-mode
-  :hook
-  (prog-mode . git-gutter+-mode)
-  (git-gutter+-mode . th/configure-git-gutter-mode-faces)
-  (olivetti-mode-on . git-gutter+-toggle-fringe)
-  :general
-  (:states '(normal visual motion) :keymaps 'git-gutter+-mode-map :prefix "SPC"
-    "gs" '(git-gutter+-show-hunk :wk "stage hunks")
-    "ga" '(git-gutter+-stage-hunks :wk "stage hunks")
-    "gr" '(git-gutter+-revert-hunks :wk "stage hunks")
-    "gn" '(git-gutter+-next-hunk :wk "next hunk")
-    "gN" '(git-gutter+-previous-hunk :wk "previous hunk")))
+(use-package git-gutter-fringe
+  :demand t
+  :commands (git-gutter-mode)
+  :diminish git-gutter-mode
+  ;; :hook
+  ;; (prog-mode . git-gutter-mode)
+  ;; (git-gutter-mode . th/configure-git-gutter-mode-faces)
+  ;; (olivetti-mode-on . git-gutter+-toggle-fringe)
+  :config 
+  (global-git-gutter-mode +1)
+  :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+    "gs" '(git-gutter:popup -hunk :wk "show hunk")
+    "ga" '(git-gutter:stage-hunk :wk "stage hunk")
+    "gr" '(git-gutter:revert-hunk :wk "revert hunk")
+    "gn" '(git-gutter:next-hunk :wk "next hunk")
+    "gN" '(git-gutter:previous-hunk :wk "previous hunk")))
 #+end_src
 
 Git timemachine lets you browse through the history of a file tracked by git
@@ -837,6 +846,11 @@ Language specific setup
   :after eglot
   :mode "\\.hs\\'"
   :hook (haskell-mode . eglot-ensure))
+;; TODO: try haskell-ts-mode
+;; (use-package haskell-ts-mode
+;;   :after eglot
+;;   :mode "\\.hs\\'"
+;;   :config (haskell-ts-setup-eglot))
 #+end_src
 
 *** Lua
@@ -1181,7 +1195,7 @@ Look into replacing this
 
 Large language models inside emacs, powered by ollama.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @llm_enable@
 (use-package ellama
   :init
   (require 'llm-ollama)

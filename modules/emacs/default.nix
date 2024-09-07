@@ -105,6 +105,8 @@ in {
             with epkgs; [
               use-package
               general
+
+              treesit-grammars.with-all-grammars # TODO: split up
             ];
 
           package = pkgs.emacs-gtk;
