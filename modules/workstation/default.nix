@@ -18,6 +18,7 @@ in {
   imports = [
     ./audio.nix
     ./network.nix
+    ./media.nix
   ];
 
   config = mkIf cfg.enable {
@@ -27,6 +28,7 @@ in {
       }) [
         "audio"
         "network"
+        "media"
       ]);
 
     environment.systemPackages = with pkgs; [
