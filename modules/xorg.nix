@@ -1,6 +1,18 @@
-{lib, ...}: let
+{
+  config,
+  lib,
+  mlib,
+  ...
+}: let
+  inherit (lib) mkIf;
+  inherit (mlib) mkEnOptTrue;
+  cfg = config.meow.x11;
 in {
-  config = {
+  options = {
+    meow.x11 = mkEnOptTrue "xserver configuration";
+  };
+
+  config = mkIf cfg {
     services.xserver = {
       xkb.layout = "us";
       xkb.options = "eurosign:e";
