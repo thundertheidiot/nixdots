@@ -39,6 +39,7 @@ in {
           "gimp"
 
           "freetube"
+          # "ansel"
         ];
 
         meow.emacs.lang = enAll [

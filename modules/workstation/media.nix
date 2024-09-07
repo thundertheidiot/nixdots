@@ -16,6 +16,10 @@ in {
 
   config = mkIf cfg (homeModule
     ({config, ...}: {
+      home.packages = with pkgs; [
+        mpc-cli
+      ];
+
       services.mpd = {
         enable = true;
         musicDirectory = "${config.xdg.userDirs.music}/mpd";

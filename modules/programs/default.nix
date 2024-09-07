@@ -30,6 +30,7 @@ in {
       speedcrunch = mkEnOpt "Speedcrunch";
 
       freetube = mkEnOpt "Youtube client";
+      ansel = mkEnOpt "Ansel";
     };
   };
 
@@ -60,6 +61,7 @@ in {
       (mkIf cfg.speedcrunch speedcrunch)
 
       (mkIf cfg.freetube freetube)
+      (mkIf cfg.ansel ansel)
     ];
   };
 }

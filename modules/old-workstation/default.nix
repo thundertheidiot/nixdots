@@ -60,35 +60,5 @@ in {
     ...
   }: {
     imports = mlib.getHomes modules;
-
-    config =
-      lib.mkIf config.workstation.enable
-      {
-        home.packages = with pkgs; [
-          mpc-cli
-          libnotify
-
-          yle-dl
-          yt-dlp
-          python3
-
-          # ansel
-
-          qmk
-        ];
-
-        xdg.userDirs = {
-          enable = true;
-          createDirectories = true;
-          documents = "${config.home.homeDirectory}/Documents";
-          download = "${config.home.homeDirectory}/Downloads";
-          music = "${config.home.homeDirectory}/Music";
-          pictures = "${config.home.homeDirectory}/Pictures";
-          videos = "${config.home.homeDirectory}/Videos";
-          desktop = "${config.home.homeDirectory}/.local/share/xdg-dirs/desktop";
-          publicShare = "${config.home.homeDirectory}/.local/share/xdg-dirs/publicshare";
-          templates = "${config.home.homeDirectory}/.local/share/xdg-dirs/templates";
-        };
-      };
   };
 }

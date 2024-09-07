@@ -166,6 +166,7 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
+      qmk
       android-tools
       (flashprint.overrideAttrs (prev: rec {
         version = "5.8.6";
