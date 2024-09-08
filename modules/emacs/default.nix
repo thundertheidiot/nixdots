@@ -20,6 +20,7 @@ in {
         latex = mkEnOpt "Latex support";
         haskell = mkEnOpt "Haskell";
         fennel = mkEnOpt "Fennel";
+        janet = mkEnOpt "Janet";
         c_cxx = mkEnOpt "C/C++";
         bash = mkEnOpt "Bash";
         python = mkEnOpt "Python";
@@ -56,6 +57,16 @@ in {
       home.packages = with pkgs; [
         (lib.mkIf cfg.lang.haskell ghc)
         (lib.mkIf cfg.lang.fennel fennel)
+        (lib.mkIf cfg.lang.janet janet)
+        (lib.mkIf cfg.lang.janet (jpm.overrideAttrs (prev: {
+          buildInputs = prev.buildInputs ++ [makeWrapper];
+
+          installPhase =
+            prev.installPhase
+            + ''
+              wrapProgram $out/bin/jpm --add-flags '--tree="$JANET_TREE" --binpath="$XDG_DATA_HOME/janet/bin" --headerpath=${janet}/include --libpath=${janet}/lib --ldflags=-L${pkgs.glibc}/lib'
+            '';
+        })))
 
         # org screenshot, todo make non hyprland specific and good
         grim
@@ -94,6 +105,8 @@ in {
             lang_latex = tangle cfg.lang.latex;
             lang_haskell = tangle cfg.lang.haskell;
             lang_fennel = tangle cfg.lang.fennel;
+            lang_janet = tangle cfg.lang.janet;
+            lang_clojure = tangle cfg.lang.clojure;
             lang_c_cxx = tangle cfg.lang.c_cxx;
             lang_bash = tangle cfg.lang.bash;
             lang_python = tangle cfg.lang.python;

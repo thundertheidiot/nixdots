@@ -48,6 +48,7 @@ in {
           "latex"
           "haskell"
           "fennel"
+          "janet"
           "c_cxx"
           "bash"
           "python"

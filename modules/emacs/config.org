@@ -916,6 +916,14 @@ Org src blocks in fennel
   :after org)
 #+end_src
 
+*** Janet
+
+#+begin_src emacs-lisp :tangle @lang_janet@
+(use-package janet-mode
+  :after eglot
+  :mode "\\.janet\\'")
+#+end_src
+
 *** C#
 
 #+begin_src emacs-lisp

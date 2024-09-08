@@ -38,6 +38,8 @@ in {
 
       nh
 
+      ffmpeg
+
       atool
       zip
       unzip

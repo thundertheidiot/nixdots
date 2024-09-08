@@ -105,6 +105,10 @@ in {
       XMONAD_CONFIG_DIR = "${xdgConfig}/xmonad";
       XMONAD_DATA_DIR = "${xdgConfig}/xmonad";
       QMK_HOME = "${config.meow.home.directory}/.local/src/qmk";
+
+      # fix nixpkgs janet
+      JANET_PATH = "${xdgData}/janet/jpm/lib";
+      JANET_TREE = "${xdgData}/janet/jpm";
     };
 
     programs.bash = {
