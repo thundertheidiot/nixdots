@@ -106,7 +106,6 @@ in {
             lang_haskell = tangle cfg.lang.haskell;
             lang_fennel = tangle cfg.lang.fennel;
             lang_janet = tangle cfg.lang.janet;
-            lang_clojure = tangle cfg.lang.clojure;
             lang_c_cxx = tangle cfg.lang.c_cxx;
             lang_bash = tangle cfg.lang.bash;
             lang_python = tangle cfg.lang.python;

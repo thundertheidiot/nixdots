@@ -640,6 +640,22 @@ Show added/deleted/edited parts in the fringe
 	  (set-face-foreground f "red"))
 	'(diff-hl-delete diff-hl-dired-delete diff-hl-margin-delete)))
 
+(defun th/last-diff-hl-hunk (&optional backward)
+  "Go to the last hunk in the file, first if BACKWARD is t."
+  (while-let ((pos (diff-hl-search-next-hunk backward)))
+    (goto-char (overlay-start pos))))
+
+(defun advice!diff-hl-next-hunk-loop-around (orig-fun &rest args)
+  (let ((backward (if (car args)
+		      nil
+		    t)) ;; flip
+	(return (ignore-errors (funcall orig-fun args)))) 
+    (unless return
+      (th/last-diff-hl-hunk backward)
+      (message "Looped around"))))
+
+(advice-add 'diff-hl-next-hunk :around #'advice!diff-hl-next-hunk-loop-around)
+
 (use-package diff-hl
   :demand t
   :diminish diff-hl-mode
