@@ -49,6 +49,7 @@ in {
           "haskell"
           "fennel"
           "janet"
+          "hylang"
           "c_cxx"
           "bash"
           "python"

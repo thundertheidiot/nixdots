@@ -21,6 +21,7 @@ in {
         haskell = mkEnOpt "Haskell";
         fennel = mkEnOpt "Fennel";
         janet = mkEnOpt "Janet";
+        hylang = mkEnOpt "Hylang";
         c_cxx = mkEnOpt "C/C++";
         bash = mkEnOpt "Bash";
         python = mkEnOpt "Python";
@@ -67,6 +68,7 @@ in {
               wrapProgram $out/bin/jpm --add-flags '--tree="$JANET_TREE" --binpath="$XDG_DATA_HOME/janet/bin" --headerpath=${janet}/include --libpath=${janet}/lib --ldflags=-L${pkgs.glibc}/lib'
             '';
         })))
+        (lib.mkIf cfg.lang.hylang hy)
 
         # org screenshot, todo make non hyprland specific and good
         grim
@@ -106,6 +108,7 @@ in {
             lang_haskell = tangle cfg.lang.haskell;
             lang_fennel = tangle cfg.lang.fennel;
             lang_janet = tangle cfg.lang.janet;
+            lang_hylang = tangle cfg.lang.hylang;
             lang_c_cxx = tangle cfg.lang.c_cxx;
             lang_bash = tangle cfg.lang.bash;
             lang_python = tangle cfg.lang.python;

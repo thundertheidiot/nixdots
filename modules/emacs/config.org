@@ -940,6 +940,11 @@ Org src blocks in fennel
   :mode "\\.janet\\'")
 #+end_src
 
+#+begin_src emacs-lisp :tangle @lang_hylang@
+(use-package hy-mode
+  :mode "\\.hy\\'")
+#+end_src
+
 *** C#
 
 #+begin_src emacs-lisp
