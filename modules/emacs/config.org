@@ -1145,6 +1145,9 @@ For some reason advice-add didn't seem to function, so this just manually replic
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '((lambda () (interactive)
 	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
+    ;; TODO make good
+    "/" '((lambda () (interactive)
+	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
     "sf" '(consult-fd :wk "find")
     "bs" '(consult-buffer :wk "switch")
     "bo" '((lambda () (interactive)
