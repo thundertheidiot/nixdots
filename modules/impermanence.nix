@@ -60,7 +60,7 @@ in {
             description = "Bind mount ${path}.";
             wantedBy = ["local-fs.target"];
             before = ["local-fs.target"];
-            after = ["systemd-tmpfiles-setup.service"];
+            # after = ["systemd-tmpfiles-setup.service"];
             path = [pkgs.util-linux];
             unitConfig.defaultDependencies = false;
             serviceConfig = {
