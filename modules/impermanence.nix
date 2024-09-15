@@ -67,6 +67,9 @@ in {
               Type = "oneshot";
               RemainAfterExit = true;
               ExecStart = pkgs.writeShellScript "mount_${path}" ''
+                mkdir --parents ${path}
+                mkdir --parents ${persistPath}
+
                 mount -o bind,X-fstrim.notrim,x-gvfs-hidden ${persistPath} ${path}
                 chmod ${permissions} ${persistPath}
                 chmod ${permissions} ${path}
@@ -79,9 +82,9 @@ in {
         })
       paths);
 
-      systemd.tmpfiles.rules =
-        (map (p: with p; "d ${path} ${permissions} ${user} ${group} -") paths)
-        ++ (map (p: with p; "d ${persistPath} ${permissions} ${user} ${group} -") paths);
+      # systemd.tmpfiles.rules =
+      #   (map (p: with p; "d ${path} ${permissions} ${user} ${group} -") paths)
+      #   ++ (map (p: with p; "d ${persistPath} ${permissions} ${user} ${group} -") paths);
     };
 
     environmentEtcSource = loc: {
