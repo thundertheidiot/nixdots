@@ -66,6 +66,7 @@ in {
             serviceConfig = {
               Type = "oneshot";
               RemainAfterExit = true;
+              # TODO: doesn't work after one boot??
               ExecStart = pkgs.writeShellScript "mount_${path}" ''
                 mkdir --parents ${path}
                 mkdir --parents ${persistPath}
@@ -119,13 +120,23 @@ in {
       sops.age.keyFile = "/persist/sops-key.txt";
 
       system.activationScripts = {
-        openssh_dir.text = "mkdir --parents ${cfg.persist}/rootfs/etc/ssh";
+        openssh_dir.text = "mkdir --parents ${cfg.persist}/ssh";
         persist_rootfs_etc_dir.text = ''
           mkdir --parents ${cfg.persist}/rootfs/etc
-          touch ${cfg.persist}/rootfs/etc/shadow
         '';
       };
 
+      services.openssh.hostKeys = [
+        {
+          path = "${cfg.persist}/ssh/ssh_host_ed25519_key";
+          type = "ed25519";
+        }
+        {
+          path = "${cfg.persist}/ssh/ssh_host_rsa_key";
+          type = "rsa";
+          bits = 4096;
+        }
+      ];
       environment.etc = builtins.listToAttrs (builtins.map (loc: {
         name = loc;
         value = environmentEtcSource loc;
