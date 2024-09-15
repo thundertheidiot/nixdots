@@ -137,9 +137,10 @@ in {
           bits = 4096;
         }
       ];
+
       environment.etc = builtins.listToAttrs (builtins.map (loc: {
         name = loc;
         value = environmentEtcSource loc;
-      }) ["machine-id" "ssh/ssh_host_rsa_key" "ssh/ssh_host_rsa_key.pub" "ssh/ssh_host_ed25519_key" "ssh/ssh_host_ed25519_key.pub"]);
+      }) ["machine-id"]);
     });
 }
