@@ -58,15 +58,13 @@ in {
           enable = true;
           value = {
             description = "Bind mount ${path}.";
-            wantedBy = ["local-fs.target"];
-            before = ["local-fs.target"];
-            # after = ["systemd-tmpfiles-setup.service"];
+            wantedBy = ["graphical.target"];
+            before = ["graphical.target"];
             path = [pkgs.util-linux];
             unitConfig.defaultDependencies = false;
             serviceConfig = {
               Type = "oneshot";
               RemainAfterExit = true;
-              # TODO: doesn't work after one boot??
               ExecStart = pkgs.writeShellScript "mount_${path}" ''
                 mkdir --parents ${path}
                 mkdir --parents ${persistPath}
@@ -82,10 +80,6 @@ in {
           };
         })
       paths);
-
-      # systemd.tmpfiles.rules =
-      #   (map (p: with p; "d ${path} ${permissions} ${user} ${group} -") paths)
-      #   ++ (map (p: with p; "d ${persistPath} ${permissions} ${user} ${group} -") paths);
     };
 
     environmentEtcSource = loc: {
@@ -121,9 +115,29 @@ in {
 
       system.activationScripts = {
         openssh_dir.text = "mkdir --parents ${cfg.persist}/ssh";
-        persist_rootfs_etc_dir.text = ''
-          mkdir --parents ${cfg.persist}/rootfs/etc
-        '';
+        # persist_rootfs_etc_dir.text = ''
+        #   mkdir --parents ${cfg.persist}/rootfs/etc
+        # '';
+      };
+
+      systemd.services."etc_shadow" = {
+        enable = true;
+        description = "Setup /etc/shadow persistance.";
+        wantedBy = ["getty.target"];
+        before = ["getty.target"];
+        path = [pkgs.util-linux];
+        unitConfig.defaultDependencies = false;
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = pkgs.writeShellScript "setup_etc_shadow" (let
+            etc = "${cfg.persist}/rootfs/etc";
+          in ''
+            [ ! -f ${etc}/shadow ] && { mkdir --parents ${etc}; mv /etc/shadow ${etc}/shadow; }
+            rm /etc/shadow
+            ln -s ${etc}/shadow /etc/shadow
+          '');
+        };
       };
 
       services.openssh.hostKeys = [

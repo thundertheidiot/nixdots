@@ -6,15 +6,6 @@
   firefox-addons = nur.repos.rycee.firefox-addons;
   ataraxiasjel = nur.repos.ataraxiasjel;
   hyprland-split-monitor-workspaces = inputs.split-monitor-workspaces.packages.${final.system}.split-monitor-workspaces;
-  # "2405" = import inputs.nixpkgs-24-05 {
-  #   system = final.system;
-  #   config.allowUnfree = final.config.allowUnfree;
-  # };
-  # "2311" = import inputs.nixpkgs-23-11 {
-  #   system = final.system;
-  #   config.allowUnfree = final.config.allowUnfree;
-  # };
-  # awesome = inputs.nixpkgs-f2k.packages.${final.system}.awesome-git;
 
   # TODO: infinite todo: build fixes
   avrdude = prev.avrdude.overrideAttrs (old: {
