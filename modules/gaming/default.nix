@@ -96,17 +96,17 @@ in {
         #   };
 
         #   postInstall = ''
-        #     mv $out/bin/gamescope $out/bin/gamescope-${version}
-        #   '';
-        # })
-
-        # (pkgs."2405".gamescope.overrideAttrs rec {
-        #   name = "gamescope-24-05";
-
-        #   postInstall = ''
-        #         mv $out/bin/gamescope $out/bin/${name}
+        #         mv $out/bin/gamescope $out/bin/gamescope-${version}
         #     #   '';
         # })
+
+        (pkgs."2405".gamescope.overrideAttrs rec {
+          name = "gamescope-24-05";
+
+          postInstall = ''
+            mv $out/bin/gamescope $out/bin/${name}
+          '';
+        })
       ];
 
       programs.gamescope = {

@@ -7,6 +7,11 @@
   ataraxiasjel = nur.repos.ataraxiasjel;
   hyprland-split-monitor-workspaces = inputs.split-monitor-workspaces.packages.${final.system}.split-monitor-workspaces;
 
+  "2405" = import inputs.nixpkgs-24-05 {
+    system = final.system;
+    config.allowUnfree = final.config.allowUnfree;
+  };
+
   # TODO: infinite todo: build fixes
   avrdude = prev.avrdude.overrideAttrs (old: {
     src = old.src.override {
