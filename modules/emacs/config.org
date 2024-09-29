@@ -1568,8 +1568,8 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 
 #+begin_src emacs-lisp :tangle @exwm_enable@
 (when (getenv "EMACS_ENABLE_EXWM")
-  (setq mouse-autoselect-window t
-	follow-focus-mouse t)
+  ;; (setq mouse-autoselect-window t
+  ;; 	follow-focus-mouse t)
 
   (use-package dmenu
     :demand t)
