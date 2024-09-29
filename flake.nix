@@ -129,7 +129,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
-    nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     naersk.url = "github:nix-community/naersk";
     disko.url = "github:nix-community/disko";
