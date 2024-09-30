@@ -6,6 +6,8 @@
   ...
 }: let
   cfg = config.meow.impermanence;
+
+  inherit (lib) mkIf mkMerge;
 in {
   options = {
     meow.impermanence = let
@@ -23,121 +25,141 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable (let
-    mkMount = path: let
-      inherit (builtins) isString isAttrs;
+  config = mkIf cfg.enable (mkMerge [
+    # Directories
+    (let
+      mkMount = path: let
+        inherit (builtins) isString isAttrs;
 
-      mkMount' = {
-        path,
-        persistPath ? "${cfg.persist}/rootfs/${path}",
-        permissions ? "1777",
-        user ? "root",
-        group ? "root",
-      }: {
-        inherit persistPath path permissions user group;
-      };
-    in
-      if (isString path)
-      then mkMount' {inherit path;}
-      else if (isAttrs path)
-      then mkMount' path
-      else throw "Path provided to impermanence module is not a string or an attrset.";
+        mkMount' = {
+          path,
+          persistPath ? "${cfg.persist}/rootfs/${path}",
+          permissions ? "1777",
+          user ? "root",
+          group ? "root",
+        }: {
+          inherit persistPath path permissions user group;
+        };
+      in
+        if (isString path)
+        then mkMount' {inherit path;}
+        else if (isAttrs path)
+        then mkMount' path
+        else throw "Path provided to impermanence module is not a string or an attrset.";
 
-    persistMounts = paths': let
-      inherit (builtins) listToAttrs;
+      persistMounts = paths': let
+        inherit (builtins) listToAttrs;
 
-      paths = map (p: mkMount p) paths';
-    in {
-      systemd.services = listToAttrs (map (p:
-        with p; {
-          name = let
-            pname =
-              builtins.replaceStrings ["/"] ["_"]
-              path;
-          in "persist-${pname}";
-          enable = true;
-          value = {
-            description = "Bind mount ${path}.";
-            wantedBy = ["graphical.target"];
-            before = ["graphical.target"];
-            path = [pkgs.util-linux];
-            unitConfig.defaultDependencies = false;
-            serviceConfig = {
-              Type = "oneshot";
-              RemainAfterExit = true;
-              ExecStart = pkgs.writeShellScript "mount_${path}" ''
-                mkdir --parents ${path}
-                mkdir --parents ${persistPath}
+        paths = map (p: mkMount p) paths';
+      in
+        listToAttrs (map (p:
+          with p; {
+            name = let
+              pname =
+                builtins.replaceStrings ["/"] ["_"]
+                path;
+            in "persist-${pname}";
+            enable = true;
+            value = {
+              description = "Bind mount ${path}.";
+              wantedBy = ["graphical.target"];
+              before = ["graphical.target"];
+              path = [pkgs.util-linux];
+              unitConfig.defaultDependencies = false;
+              serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+                ExecStart = pkgs.writeShellScript "mount_${path}" ''
+                  mkdir --parents ${path}
+                  mkdir --parents ${persistPath}
 
-                mount -o bind,X-fstrim.notrim,x-gvfs-hidden ${persistPath} ${path}
-                chmod ${permissions} ${persistPath}
-                chmod ${permissions} ${path}
-                chown ${user}:${group} ${persistPath}
-                chown ${user}:${group} ${path}
-              '';
-              ExecStop = "umount ${path} && rm ${path}";
+                  mount -o bind,X-fstrim.notrim,x-gvfs-hidden ${persistPath} ${path}
+                  chmod ${permissions} ${persistPath}
+                  chmod ${permissions} ${path}
+                  chown ${user}:${group} ${persistPath}
+                  chown ${user}:${group} ${path}
+                '';
+                ExecStop = "umount ${path} && rm ${path}";
+              };
             };
-          };
-        })
-      paths);
-    };
+          })
+        paths);
 
-    environmentEtcSource = loc: {
-      source = "${cfg.persist}/rootfs/etc/${loc}";
-    };
-  in
-    (persistMounts (cfg.directories
-      ++ [
-        {
-          path = "/var/log";
-          permissions = "644";
-        }
-        "/var/lib/bluetooth"
-        # "/var/lib/nixos"
-        "/root/.cache/nix"
-        "/etc/NetworkManager/system-connections"
-        {
-          path = "/var/lib/flatpak";
-          persistPath = "${cfg.persist}/flatpak";
-          permissions = "755";
-        }
-        {
-          path = "/var/lib/docker";
-          persistPath = "${cfg.persist}/docker";
-          permissions = "710";
-        }
-      ]))
-    // {
-      # per service config
+      environmentEtcSource = loc: {
+        source = "${cfg.persist}/rootfs/etc/${loc}";
+      };
+    in {
+      systemd.services = persistMounts (cfg.directories
+        ++ [
+          {
+            path = "/var/log";
+            permissions = "644";
+          }
+          "/var/lib/bluetooth"
+          # "/var/lib/nixos"
+          "/root/.cache/nix"
+          "/etc/NetworkManager/system-connections"
+          {
+            path = "/var/lib/flatpak";
+            persistPath = "${cfg.persist}/flatpak";
+            permissions = "755";
+          }
+          {
+            path = "/var/lib/docker";
+            persistPath = "${cfg.persist}/docker";
+            permissions = "710";
+          }
+        ]);
+
+      environment.etc = builtins.listToAttrs (builtins.map (loc: {
+        name = loc;
+        value = environmentEtcSource loc;
+      }) ["machine-id"]);
+    })
+    # /etc/shadow
+    (let
+      pShadow = "${cfg.persist}/rootfs/etc/shadow";
+    in {
+      system.activationScripts = {
+        # The first copy accounts for reactivation after startup, this example scenario should explain that
+        # 1. User starts up their computer
+        # 2. ${pShadow} is copied over /etc/shadow
+        # 3. User changes their password
+        # 4. User updates their system, reactivating the configuration
+        # 5. The old unchanged ${pShadow} is copied over /etc/shadow
+        # 6. User is very confused, as their password has changed back
+        etc_shadow = ''
+          [ -f "/etc/shadow" ] && cp /etc/shadow ${pShadow}
+          [ -f "${pShadow}" ] && cp ${pShadow} /etc/shadow
+        '';
+
+        users.deps = ["etc_shadow"];
+      };
+
+      systemd.services."etc_shadow_persistence" = {
+        enable = true;
+        description = "Persist /etc/shadow on shutdown.";
+        wantedBy = ["multi-user.target"];
+        path = [pkgs.util-linux];
+        unitConfig.defaultDependencies = true;
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          # Service is stopped before shutdown
+          ExecStop = pkgs.writeShellScript "persist_etc_shadow" ''
+            mkdir --parents "${cfg.persist}/rootfs/etc"
+            cp /etc/shadow ${pShadow}
+          '';
+        };
+      };
+    })
+    # Program configuration
+    {
       services.ollama.home = "/persist/ollama";
-
       sops.age.keyFile = "/persist/sops-key.txt";
 
       system.activationScripts = {
         openssh_dir.text = "mkdir --parents ${cfg.persist}/ssh";
-        # persist_rootfs_etc_dir.text = ''
-        #   mkdir --parents ${cfg.persist}/rootfs/etc
-        # '';
-      };
-
-      systemd.services."etc_shadow" = {
-        enable = true;
-        description = "Setup /etc/shadow persistance.";
-        wantedBy = ["getty.target"];
-        before = ["getty.target"];
-        path = [pkgs.util-linux];
-        unitConfig.defaultDependencies = false;
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          ExecStart = pkgs.writeShellScript "setup_etc_shadow" (let
-            etc = "${cfg.persist}/rootfs/etc";
-          in ''
-            [ ! -f ${etc}/shadow ] && { mkdir --parents ${etc}; mv /etc/shadow ${etc}/shadow; }
-            rm /etc/shadow
-            ln -s ${etc}/shadow /etc/shadow
-          '');
-        };
       };
 
       services.openssh.hostKeys = [
@@ -151,10 +173,6 @@ in {
           bits = 4096;
         }
       ];
-
-      environment.etc = builtins.listToAttrs (builtins.map (loc: {
-        name = loc;
-        value = environmentEtcSource loc;
-      }) ["machine-id"]);
-    });
+    }
+  ]);
 }
