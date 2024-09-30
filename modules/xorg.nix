@@ -14,6 +14,7 @@ in {
 
   config = mkIf cfg {
     services.xserver = {
+      # TODO: options for these
       xkb.layout = "us";
       xkb.options = "eurosign:e";
     };

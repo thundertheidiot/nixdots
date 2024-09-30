@@ -5,7 +5,6 @@ let
     (import ./programs/alacritty.nix)
     (import ./programs/gnome-keyring.nix)
     (import ./environment/default.nix)
-    (import ./theming.nix)
     (import ./laptop.nix)
   ];
 in {
@@ -42,9 +41,10 @@ in {
       services.displayManager.sddm = lib.mkMerge [
         (lib.mkIf (config.meow.gpu != "none") {
           enable = true;
+          package = pkgs.kdePackages.sddm;
           wayland = {
             enable = true;
-            compositor = "kwin";
+            # compositor = "kwin";
           };
         })
         # TODO nvidia

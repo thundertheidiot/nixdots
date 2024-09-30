@@ -19,6 +19,7 @@ in {
     ./audio.nix
     ./network.nix
     ./media.nix
+    ./theme
   ];
 
   config = mkIf cfg.enable {
@@ -29,6 +30,7 @@ in {
         "audio"
         "network"
         "media"
+        "theming"
       ]);
 
     environment.systemPackages = with pkgs; [
