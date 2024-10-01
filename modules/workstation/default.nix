@@ -20,6 +20,7 @@ in {
     ./network.nix
     ./media.nix
     ./theme
+    ./environment # de's and wm's
   ];
 
   config = mkIf cfg.enable {

@@ -57,7 +57,6 @@
           ++ [
             cfg.system
             home-manager.nixosModules.home-manager
-            inputs.hyprland.nixosModules.default
             inputs.chaotic.nixosModules.default
             inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default

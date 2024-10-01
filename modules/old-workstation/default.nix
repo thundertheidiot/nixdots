@@ -41,7 +41,7 @@ in {
       services.displayManager.sddm = lib.mkMerge [
         (lib.mkIf (config.meow.gpu != "none") {
           enable = true;
-          package = pkgs.kdePackages.sddm;
+          package = lib.mkForce pkgs.kdePackages.sddm;
           wayland = {
             enable = true;
             # compositor = "kwin";
