@@ -11,27 +11,6 @@
       enable = true;
 
       settings = {
-        font = {
-          normal = {
-            family = "monospace";
-            style = "Regular";
-          };
-          bold = {
-            family = "monospace";
-            style = "Bold";
-          };
-          italic = {
-            family = "monospace";
-            style = "Italic";
-          };
-          bold_italic = {
-            family = "monospace";
-            style = "Bold Italic";
-          };
-
-          size = 9.0;
-        };
-
         cursor = {
           style = {
             shape = "Beam";
@@ -80,31 +59,6 @@
             mods = "Control";
           }
         ];
-
-        colors = with config.scheme; let
-          default = {
-            black = "0x${base00}";
-            white = "0x${base07}";
-            red = "0x${red}";
-            green = "0x${green}";
-            yellow = "0x${yellow}";
-            blue = "0x${blue}";
-            cyan = "0x${cyan}";
-            magenta = "0x${magenta}";
-          };
-        in {
-          primary = {
-            background = "0x${base00}";
-            foreground = "0x${base07}";
-          };
-          cursor = {
-            text = "0x${base02}";
-            cursor = "0x${base07}";
-          };
-          normal = default;
-          bright = default;
-          dim = default;
-        };
       };
     };
   };

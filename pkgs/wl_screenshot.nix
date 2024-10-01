@@ -1,6 +1,6 @@
 {
   writeShellApplication,
-  bemenu,
+  tofi,
   grim,
   slurp,
   swappy,
@@ -15,7 +15,7 @@ writeShellApplication {
   excludeShellChecks = ["SC1091"];
 
   runtimeInputs = [
-    bemenu
+    tofi
     grim
     slurp
     swappy
@@ -38,22 +38,22 @@ writeShellApplication {
 
     [ ! -d "$dir" ] && mkdir --parents "$dir"
 
-    choice=$(printf "region\nregion save\nregion with annotation\noutput\noutput save\noutput with annotation" | bemenu)
+    choice=$(printf "region\nregion save\nregion with annotation\noutput\noutput save\noutput with annotation" | tofi)
 
     [ "$choice" = "region" ] && grim -g "$(slurp)" - | wl-copy -t image/png
     [ "$choice" = "region save" ] && grim -g "$(slurp)" -t png "$dir/$date.png"
     [ "$choice" = "region with annotation" ] && grim -g "$(slurp)" - | swappy -f -
 
     [ "$choice" = "output" ] && {
-      grim -o "$(hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | bemenu)" - | wl-copy -t image/png
+      grim -o "$(hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | tofi)" - | wl-copy -t image/png
     }
 
     [ "$choice" = "output save" ] && {
-      grim -o "$(hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | bemenu)" -t png "$dir/$date.png"
+      grim -o "$(hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | tofi)" -t png "$dir/$date.png"
     }
 
     [ "$choice" = "output with annotation" ] && {
-      grim -o "$(hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | bemenu)" - | swappy -f -
+      grim -o "$(hyprctl monitors -j | jq '.[] | .name' | sed 's/"//g' | tofi)" - | swappy -f -
     }
   '';
 }

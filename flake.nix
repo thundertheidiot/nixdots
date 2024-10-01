@@ -60,6 +60,10 @@
             inputs.chaotic.nixosModules.default
             inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default
+            inputs.lix-module.nixosModules.default
+            inputs.cosmic.nixosModules.default
+            inputs.hyprland.nixosModules.default
+            inputs.stylix.nixosModules.stylix
             ./sops
             ({config, ...}: {
               time.timeZone = config.timeZone;
@@ -89,13 +93,7 @@
                 ];
               };
 
-              imports =
-                (import ./modules)
-                ++ [
-                  inputs.lix-module.nixosModules.default
-                  inputs.cosmic.nixosModules.default
-                  inputs.hyprland.nixosModules.default
-                ];
+              imports = import ./modules;
 
               meow.home = {
                 user = config.username;
@@ -104,13 +102,7 @@
                   common
                   ++ [
                     inputs.plasma-manager.homeManagerModules.plasma-manager
-                    inputs.base16.homeManagerModule
                   ];
-                modules = [
-                  {
-                    scheme = "${inputs.tt-schemes}/base16/catppuccin-mocha.yaml";
-                  }
-                ];
               };
             })
           ];
@@ -153,7 +145,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    base16.url = "github:SenchoPens/base16.nix";
+    stylix.url = "github:danth/stylix";
     tt-schemes = {
       url = "github:tinted-theming/schemes";
       flake = false;

@@ -4,7 +4,7 @@
   mlib,
   ...
 }: let
-  colors = mlib.colors config;
+  colors = config.lib.stylix.colors.withHashtag;
 in {
   config = lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {
     programs.waybar = {
@@ -21,7 +21,7 @@ in {
 
         window#waybar {
             background: @theme_base_color;
-            background-color: ${colors.background};
+            background-color: ${colors.base00};
             border-bottom: 3px solid ${colors.base08};
             color: @theme_text_color;
             transition-property: background-color;
@@ -34,8 +34,8 @@ in {
         }
 
         tooltip {
-          background: ${colors.background};
-          border: 1px solid ${colors.foreground};
+          background: ${colors.base00};
+          border: 1px solid ${colors.base05};
         }
 
         tooltip label {
@@ -54,13 +54,13 @@ in {
         #workspaces button {
             padding: 0 0.7em;
             background-color: transparent;
-            color: ${colors.foreground};
+            color: ${colors.base05};
             box-shadow: inset 0 -3px transparent;
         }
 
         #workspaces button:hover {
             background: rgba(0, 0, 0, 0.2);
-            box-shadow: inset 0 -3px ${colors.foreground};
+            box-shadow: inset 0 -3px ${colors.base05};
         }
 
         #workspaces button.urgent {
@@ -85,8 +85,8 @@ in {
         #mpd {
             padding: 0 10px;
             margin: 6px 3px;
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
         }
 
         #window,
@@ -105,17 +105,17 @@ in {
         }
 
         #clock {
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
         }
 
         #battery {
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
         }
 
         #battery.charging, #battery.plugged {
-            color: ${colors.background};
+            color: ${colors.base00};
             background-color: ${colors.base15};
         }
 
@@ -128,7 +128,7 @@ in {
 
         #battery.critical:not(.charging) {
             background-color: ${colors.base08};
-            color: ${colors.background};
+            color: ${colors.base00};
             animation-name: blink;
             animation-duration: 0.5s;
             animation-timing-function: linear;
@@ -142,12 +142,12 @@ in {
 
         #cpu {
             background-color: ${colors.base03};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #memory {
             background-color: ${colors.base03};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #backlight {
@@ -155,33 +155,33 @@ in {
         }
 
         #network {
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
         }
 
         #network.disconnected {
             background-color: ${colors.base08};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #pulseaudio {
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
         }
 
         #pulseaudio.muted {
             background-color: ${colors.base08};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #temperature {
             background-color: ${colors.base12};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #temperature.critical {
             background-color: ${colors.base04};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #tray {
@@ -198,18 +198,18 @@ in {
         }
 
         #idle_inhibitor {
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
         }
 
         #idle_inhibitor.activated {
             background-color: ${colors.base05};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #mpd {
             background-color: ${colors.base02};
-            color: ${colors.background};
+            color: ${colors.base00};
         }
 
         #mpd.disconnected {
@@ -225,8 +225,8 @@ in {
         }
 
         #language {
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
             padding: 0 5px;
             margin: 6px 3px;
             min-width: 16px;
@@ -234,7 +234,7 @@ in {
 
         #keyboard-state {
             background-color: ${colors.base00};
-            color: ${colors.background};
+            color: ${colors.base00};
             padding: 0 0px;
             margin: 0 5px;
             min-width: 16px;
@@ -249,8 +249,8 @@ in {
         }
 
         #disk {
-            background-color: ${colors.foreground};
-            color: ${colors.background};
+            background-color: ${colors.base05};
+            color: ${colors.base00};
         }
       '';
       settings = [

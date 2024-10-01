@@ -9,39 +9,17 @@
   cfg = config.meow.workstation.theming;
   theme = config.meow.workstation.theme;
 in {
-  config = mkIf (cfg && theme == "catppuccin_mocha") {
+  config = mkIf (cfg && theme == "catppuccin-mocha") {
     environment.variables = {
       QT_QPA_PLATFORMTHEME = "qt5ct";
     };
 
-    boot = {
-      plymouth = {
-        enable = true;
-        theme = "catppuccin-mocha";
-        themePackages = [
-          (pkgs.catppuccin-plymouth.override {
-            variant = "mocha";
-          })
-        ];
-      };
-
-      consoleLogLevel = 0;
-      initrd.verbose = false;
-      kernelParams = [
-        # mocha tty
-        "vt.default_red=30,243,166,249,137,245,148,186,88,243,166,249,137,245,148,166"
-        "vt.default_grn=30,139,227,226,180,194,226,194,91,139,227,226,180,194,226,173"
-        "vt.default_blu=46,168,161,175,250,231,213,222,112,168,161,175,250,231,213,200"
-
-        "quiet"
-        "splash"
-        "boot.shell_on_fail"
-        "loglevel=3"
-        "rd.systemd.show_status=false"
-        "rd.udev.log_level=3"
-        "udev.log_priority=3"
-      ];
-    };
+    boot.kernelParams = [
+      # mocha tty
+      "vt.default_red=30,243,166,249,137,245,148,186,88,243,166,249,137,245,148,166"
+      "vt.default_grn=30,139,227,226,180,194,226,194,91,139,227,226,180,194,226,173"
+      "vt.default_blu=46,168,161,175,250,231,213,222,112,168,161,175,250,231,213,200"
+    ];
 
     environment.systemPackages = [
       (pkgs.catppuccin-sddm.override {
@@ -93,22 +71,12 @@ in {
         iconPackage = pkgs.papirus-icon-theme;
         iconName = "Papirus-Dark";
       in {
-        home.pointerCursor = {
-          package = cursorPackage;
-          name = cursorName;
-          size = 24;
-
-          x11.defaultCursor = "left_ptr";
-          x11.enable = true;
-          gtk.enable = true;
-        };
-
         gtk = {
-          theme = {
+          theme = lib.mkForce {
             package = gtkPackage;
             name = gtkName;
           };
-          iconTheme = {
+          iconTheme = lib.mkForce {
             package = iconPackage;
             name = iconName;
           };
@@ -130,15 +98,16 @@ in {
           recursive = true;
         };
 
-        xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
-          [General]
-          theme=Catppuccin-Mocha-Mauve
-        '';
-
-        xdg.configFile = {
-          "gtk-4.0/assets".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
-          "gtk-4.0/gtk.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
-          "gtk-4.0/gtk-dark.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
+        xdg.configFile = let
+          s = source: lib.mkForce {inherit source;};
+        in {
+          "Kvantum/kvantum.kvconfig".text = ''
+            [General]
+            theme=Catppuccin-Mocha-Mauve
+          '';
+          "gtk-4.0/assets" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
+          "gtk-4.0/gtk.css" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
+          "gtk-4.0/gtk-dark.css" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
         };
       })
       # TODO: move plasma away from old workstation

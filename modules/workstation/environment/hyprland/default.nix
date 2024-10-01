@@ -37,8 +37,6 @@ in {
         hyprlandPackage = config.programs.hyprland.package;
       in
         {config, ...}: let
-          colorsNoHash = mlib.colorsNoHash config;
-
           terminal = "alacritty";
 
           screenshot = pkgs.callPackage mpkgs.wl_screenshot {
@@ -46,10 +44,15 @@ in {
             picturesDir = config.xdg.userDirs.pictures;
           };
         in {
-          home.file.".config/hypr/hyprpaper.conf".text = ''
-            preload = ~/.local/share/bg
-            wallpaper = ,~/.local/share/bg
-            splash = false
+          services.hyprpaper = {
+            enable = true;
+            settings = {
+              preload = "~/.local/share/bg";
+              wallpaper = ",~/.local/share/bg";
+              splash = false;
+            };
+          };
+          xdg.configFile."hypr/hyprpaper.conf".text = ''
           '';
 
           programs.alacritty.enable = lib.mkDefault true;
@@ -144,8 +147,6 @@ in {
                 gaps_in = 5;
                 gaps_out = 20;
                 border_size = 2;
-                "col.active_border" = "rgb(${colorsNoHash.foreground})";
-                "col.inactive_border" = "rgb(${colorsNoHash.background})";
 
                 layout = "master";
 
@@ -164,7 +165,6 @@ in {
                 drop_shadow = true;
                 shadow_range = 4;
                 shadow_render_power = 3;
-                "col.shadow" = "rgba(${colorsNoHash.background}ee)";
               };
 
               animations.enabled = false;
