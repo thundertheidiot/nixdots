@@ -1,6 +1,7 @@
 {
   system = {...}: {};
 
+  # TODO: move under workstation
   home = {
     lib,
     config,

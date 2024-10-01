@@ -1,3 +1,4 @@
+# TODO: move to workstation
 {
   system = {
     lib,
@@ -179,6 +180,8 @@
         }
         (lib.mkIf (config.workstation.plasma.tilingwm) (
           let
+            #TODO: update
+            # TODO: kronkhite or the other extension ?
             polonium = (import ./polonium.nix) pkgs;
           in {
             xdg.dataFile."kwin/scripts/polonium" = {

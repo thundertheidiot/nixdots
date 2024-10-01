@@ -19,10 +19,12 @@ in {
       mlib.getSystems modules;
 
     config = lib.mkIf (config.workstation.enable) {
+      # TODO useless?
       environment.systemPackages = with pkgs; [
         distrobox
       ];
 
+      # TODO: move all this shit
       security.polkit.enable = true;
 
       # boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
@@ -38,6 +40,7 @@ in {
 
       services.flatpak.enable = true;
 
+      # TODO: move sddm
       services.displayManager.sddm = lib.mkMerge [
         (lib.mkIf (config.meow.gpu != "none") {
           enable = true;

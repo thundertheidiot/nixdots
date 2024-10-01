@@ -12,6 +12,7 @@ in {
     };
   };
   imports = [
+    # TODO: plasma cosmic gnome sway
     ./hyprland
   ];
 }
