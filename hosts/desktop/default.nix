@@ -63,6 +63,7 @@ in {
     meow = {
       fullSetup = true;
       workstation.enable = true;
+      workstation.environment = ["hyprland" "plasma"];
 
       gaming.enable = true;
       gaming.emulation = true;

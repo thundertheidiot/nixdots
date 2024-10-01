@@ -39,7 +39,7 @@ in {
         {config, ...}: let
           colorsNoHash = mlib.colorsNoHash config;
 
-          terminal = "${pkgs.alacritty}/bin/alacritty";
+          terminal = "alacritty";
 
           screenshot = pkgs.callPackage mpkgs.wl_screenshot {
             hyprland = hyprlandPackage;
@@ -51,6 +51,8 @@ in {
             wallpaper = ,~/.local/share/bg
             splash = false
           '';
+
+          programs.alacritty.enable = lib.mkDefault true;
 
           wayland.windowManager.hyprland = {
             enable = true;

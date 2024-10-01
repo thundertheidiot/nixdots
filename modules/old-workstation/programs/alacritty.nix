@@ -81,8 +81,6 @@
           }
         ];
 
-        # mouse.hide_while_typing = true;
-
         colors = with config.scheme; let
           default = {
             black = "0x${base00}";
