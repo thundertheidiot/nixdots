@@ -38,19 +38,6 @@ in {
       };
 
       services.flatpak.enable = true;
-
-      # TODO: move sddm
-      services.displayManager.sddm = lib.mkMerge [
-        (lib.mkIf (config.meow.gpu != "none") {
-          enable = true;
-          package = lib.mkForce pkgs.kdePackages.sddm;
-          wayland = {
-            enable = true;
-            # compositor = "kwin";
-          };
-        })
-        # TODO nvidia
-      ];
     };
   };
 
