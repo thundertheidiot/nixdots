@@ -35,6 +35,10 @@
         gnome-keyring
       ];
 
+      home.sessionVariables = {
+        SSH_ASKPASS = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+      };
+
       services.gnome-keyring = {
         enable = true;
         components = ["pkcs11" "secrets" "ssh"];

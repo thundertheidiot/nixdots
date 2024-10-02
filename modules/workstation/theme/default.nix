@@ -48,7 +48,6 @@ in {
       fonts.fontconfig = {
         enable = true;
         includeUserConf = true;
-        inherit defaultFonts;
       };
 
       boot = {
@@ -77,11 +76,11 @@ in {
             kde.enable = false;
             hyprpaper.enable = lib.mkForce false;
             waybar.enable = false;
+            fish.enable = false;
           };
 
           fonts.fontconfig = {
             enable = true;
-            # inherit defaultFonts;
           };
         }
         ({config, ...}: {

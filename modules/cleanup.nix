@@ -29,6 +29,7 @@ in {
             cache=${config.xdg.cacheHome}/npm
             init-module=${config.xdg.configHome}/npm/config/npm-init.js
           '';
+          "python/pythonrc".text = "";
         };
       })
     ];

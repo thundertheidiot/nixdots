@@ -52,8 +52,6 @@ in {
               splash = false;
             };
           };
-          xdg.configFile."hypr/hyprpaper.conf".text = ''
-          '';
 
           programs.alacritty.enable = lib.mkDefault true;
 
