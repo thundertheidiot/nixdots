@@ -21,43 +21,6 @@ in {
       "vt.default_blu=46,168,161,175,250,231,213,222,112,168,161,175,250,231,213,200"
     ];
 
-    environment.systemPackages = [
-      (pkgs.catppuccin-sddm.override {
-        flavor = "mocha";
-        fontSize = "12";
-        font = "Cantarell";
-      })
-      ((pkgs.sddm-astronaut.override {
-          themeConfig = {
-            Font = "Cantarell";
-            FontSize = "12";
-
-            Background = "background.jpg";
-
-            HighlightColor = "#f5e0dc";
-            PlaceholderColor = "#313244";
-            SystemButtonsIconColor = "#b4befe";
-            BackgroundColor = "#1e1e2e";
-            TextColor = "#cdd6f4";
-          };
-        })
-        .overrideAttrs
-        (prev: {
-          installPhase =
-            prev.installPhase
-            + ''
-              cp ${./background.jpg} $out/share/sddm/themes/sddm-astronaut-theme/background.jpg
-            '';
-        }))
-    ];
-
-    services.displayManager.sddm = {
-      theme = "sddm-astronaut-theme";
-      extraPackages = [
-        pkgs.kdePackages.qt5compat
-      ];
-    };
-
     meow.home.modules = [
       ({config, ...}: let
         gtkPackage = pkgs.catppuccin-gtk.override {

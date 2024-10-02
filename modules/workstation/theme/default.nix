@@ -44,7 +44,6 @@ in {
 
   config = mkIf cfg (mkMerge [
     {
-      environment.systemPackages = fontPkgs;
       fonts.fontconfig = {
         enable = true;
         includeUserConf = true;
@@ -64,6 +63,44 @@ in {
           "rd.systemd.show_status=false"
           "rd.udev.log_level=3"
           "udev.log_priority=3"
+        ];
+      };
+
+      environment.systemPackages =
+        fontPkgs
+        ++ [
+          # SDDM theme
+          ((pkgs.sddm-astronaut.override {
+              themeConfig = let
+                colors = config.lib.stylix.colors.withHashtag;
+              in {
+                Font = config.stylix.fonts.serif.name;
+                FontSize = "12";
+
+                Background = "background.jpg";
+
+                HighlightColor = colors.base05;
+                PlaceholderColor = colors.base04;
+                SystemButtonsIconColor = colors.base04;
+                BackgroundColor = colors.base00;
+                TextColor = colors.base01;
+              };
+            })
+            .overrideAttrs
+            (prev: {
+              installPhase =
+                prev.installPhase
+                # TODO: make a system
+                + ''
+                  cp ${./background.jpg} $out/share/sddm/themes/sddm-astronaut-theme/background.jpg
+                '';
+            }))
+        ];
+
+      services.displayManager.sddm = {
+        theme = "sddm-astronaut-theme";
+        extraPackages = [
+          pkgs.kdePackages.qt5compat
         ];
       };
 

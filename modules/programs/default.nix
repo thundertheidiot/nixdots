@@ -36,6 +36,7 @@ in {
 
   imports = [
     ./discord
+    ./alacritty.nix
     ./sets.nix
   ];
 
@@ -49,7 +50,6 @@ in {
       (mkIf cfg.gajim gajim)
       (mkIf cfg.mumble mumble)
       (mkIf cfg.discord vesktop)
-      # (mkIf cfg.discord webcord)
 
       (mkIf cfg.blender blender)
       (mkIf cfg.obs obs-studio)

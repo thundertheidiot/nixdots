@@ -39,12 +39,6 @@ in {
       execWheelOnly = true;
     };
 
-    # TODO: useless?
-    programs.nix-ld = {
-      enable = true;
-      libraries = with pkgs; [libGL];
-    };
-
     i18n.defaultLocale = "en_US.UTF-8";
 
     # TODO: move to workstation?
