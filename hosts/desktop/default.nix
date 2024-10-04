@@ -196,15 +196,81 @@ in {
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    fileSystems."/" = {
-      device = "/dev/disk/by-uuid/1ffc3323-6810-406d-b4f6-15d247602689";
-      fsType = "btrfs";
-      options = ["subvol=@"];
+    meow.impermanence.enable = true;
+    meow.impermanence.persist = "/persist";
+
+    # fileSystems."/" = {
+    #   device = "/dev/disk/by-uuid/1ffc3323-6810-406d-b4f6-15d247602689";
+    #   fsType = "btrfs";
+    #   options = ["subvol=@"];
+    # };
+
+    # fileSystems."/boot" = {
+    #   device = "/dev/disk/by-uuid/F33A-5CD4";
+    #   fsType = "vfat";
+    # };
+
+    disko.devices = {
+      nodev."/" = {
+        fsType = "tmpfs";
+        mountOptions = [
+          "size=10M"
+          "defaults"
+          "mode=755"
+        ];
+      };
+      disk.ssd = {
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              name = "boot";
+              size = "1M";
+              type = "EF02";
+            };
+            efi = {
+              size = "500M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            main = {
+              name = "main";
+              size = "100%";
+              content = {
+                type = "btrfs";
+                subvolumes = {
+                  "/home" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/home";
+                  };
+                  "/persist" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/persist";
+                  };
+                  "/nix" = {
+                    mountOptions = ["compress=zstd" "noatime"];
+                    mountpoint = "/nix";
+                  };
+                  "/tmp" = {
+                    mountpoint = "/tmp";
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
     };
 
-    fileSystems."/boot" = {
-      device = "/dev/disk/by-uuid/F33A-5CD4";
-      fsType = "vfat";
+    fileSystems = {
+      "/nix".neededForBoot = true;
+      "/persist".neededForBoot = true;
+      "/tmp".neededForBoot = true;
     };
 
     fileSystems."/home" = {
