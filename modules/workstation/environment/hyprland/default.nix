@@ -12,6 +12,7 @@
   inherit (lib.types) str;
   inherit (builtins) elem;
 
+  work = config.meow.workstation.enable;
   env = config.meow.workstation.environment;
 in {
   options = {
@@ -22,7 +23,7 @@ in {
     };
   };
 
-  config = mkIf (elem "hyprland" env) {
+  config = mkIf (work && elem "hyprland" env) {
     programs.hyprland.enable = true;
 
     services.displayManager.sessionPackages = with pkgs; let

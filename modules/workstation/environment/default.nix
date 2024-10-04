@@ -13,7 +13,7 @@
   dm = config.meow.workstation.displayManager;
 in {
   options = {
-    meow.workstation.environment = mkOpt (listOf (enum ["hyprland" "plasma" "cosmic"])) ["hyprland"] {
+    meow.workstation.environment = mkOpt (listOf (enum ["hyprland" "gnome" "plasma" "cosmic"])) ["hyprland"] {
       description = "The list of environments to configure and install.";
     };
 
@@ -22,8 +22,9 @@ in {
     };
   };
   imports = [
-    # TODO: plasma cosmic gnome sway
+    # TODO: plasma sway
     ./hyprland
+    ./gnome.nix
   ];
 
   # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?
@@ -39,7 +40,7 @@ in {
       };
     })
     (mkIf (dm == "gdm") {
-      services.displayManager.gdm = {
+      services.xserver.displayManager.gdm = {
         enable = true;
         wayland = true;
       };

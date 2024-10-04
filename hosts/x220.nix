@@ -16,7 +16,7 @@
       workstation.enable = true;
       workstation.laptop = false;
       workstation.utils = "generic/gtk";
-      workstation.environment = ["hyprland"];
+      # workstation.environment = ["hyprland"];
       workstation.plasma.tilingwm = true;
 
       setup.hyprland.extraAutostart = [];
@@ -36,7 +36,10 @@
     system.stateVersion = "23.05";
 
     meow = {
-      workstation.enable = true;
+      workstation = {
+        enable = true;
+        environment = ["hyprland"];
+      };
 
       firefox.enable = true;
       emacs.enable = true;
