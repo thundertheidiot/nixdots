@@ -21,7 +21,7 @@ in {
       workstation.enable = true;
       workstation.utils = "generic/gtk";
       workstation.plasma.tilingwm = true;
-      workstation.environment = ["hyprland" "plasma"];
+      workstation.environment = ["hyprland"];
 
       setup.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
@@ -63,7 +63,7 @@ in {
     meow = {
       fullSetup = true;
       workstation.enable = true;
-      workstation.environment = ["hyprland" "plasma"];
+      workstation.environment = ["hyprland"];
 
       gaming.enable = true;
       gaming.emulation = true;
@@ -221,6 +221,7 @@ in {
       };
       disk.ssd = {
         type = "disk";
+        device = "/dev/disk/by-id/nvme-ADATA_LEGEND_800_2N452L4H5END";
         content = {
           type = "gpt";
           partitions = {
@@ -244,9 +245,9 @@ in {
               content = {
                 type = "btrfs";
                 subvolumes = {
-                  "/home" = {
+                  "/storage" = {
                     mountOptions = ["compress=zstd"];
-                    mountpoint = "/home";
+                    mountpoint = "/mnt/1tb_nvme";
                   };
                   "/persist" = {
                     mountOptions = ["compress=zstd"];
