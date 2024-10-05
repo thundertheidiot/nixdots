@@ -246,7 +246,6 @@ This is bound to =gc= in normal mode
   (let (beg end)
     (if (region-active-p)
 	(setq beg (region-beginning) end (region-end))
-      ;; else
       (setq beg (line-beginning-position) end (line-end-position)))
     (comment-or-uncomment-region beg end)))
 #+end_src
@@ -260,7 +259,6 @@ This is bound to =SPC er=
   (let (beg end)
     (if (region-active-p)
 	(setq beg (region-beginning) end (region-end))
-      ;; else
       (setq beg (line-beginning-position) end (line-end-position)))
     (eval-region beg end)
     (evil-normal-state)))
