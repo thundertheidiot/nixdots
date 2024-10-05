@@ -188,7 +188,7 @@ in {
     ];
 
     programs.adb.enable = true;
-    boot.binfmt.emulatedSystems = ["aarch64-linux"];
+    # boot.binfmt.emulatedSystems = ["aarch64-linux"];
     users.users.${config.username}.extraGroups = ["adbusers"];
 
     hardware.ckb-next.enable = true;
