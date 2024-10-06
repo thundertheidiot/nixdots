@@ -40,6 +40,7 @@ in {
 
   imports = [
     ./catppuccin.nix
+    ./misc.nix
   ];
 
   config = mkIf cfg (mkMerge [

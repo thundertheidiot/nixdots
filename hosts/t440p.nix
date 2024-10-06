@@ -35,6 +35,9 @@
   }: {
     system.stateVersion = "24.05";
 
+    time.timeZone = "Europe/Helsinki";
+    networking.hostName = "t440p";
+
     meow = {
       fullSetup = true;
       workstation.enable = true;

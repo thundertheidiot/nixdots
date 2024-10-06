@@ -51,6 +51,9 @@ in {
 
     virtualisation.docker.enable = true;
 
+    time.timeZone = "Europe/Helsinki";
+    networking.hostName = "desktop";
+
     services.ollama = {
       acceleration = "rocm";
       environmentVariables = {

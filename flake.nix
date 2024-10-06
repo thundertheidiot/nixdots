@@ -66,9 +66,6 @@
             inputs.stylix.nixosModules.stylix
             ./sops
             ({config, ...}: {
-              time.timeZone = config.timeZone;
-              networking.hostName = config.hostName;
-
               nix.settings = {
                 substituters = [
                   "https://hyprland.cachix.org"
