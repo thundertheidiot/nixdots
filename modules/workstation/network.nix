@@ -5,12 +5,12 @@
   mlib,
   ...
 }: let
-  inherit (mlib) mkEnOpt;
+  inherit (mlib) mkEnOptTrue;
   inherit (lib) mkIf;
   cfg = config.meow.workstation.network;
 in {
   options = {
-    meow.workstation.network = mkEnOpt "Enable workstation specific network configuration.";
+    meow.workstation.network = mkEnOptTrue "Enable workstation specific network configuration.";
   };
 
   config = mkIf cfg {

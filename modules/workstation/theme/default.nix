@@ -6,7 +6,7 @@
   inputs,
   ...
 }: let
-  inherit (mlib) mkEnOpt mkOpt;
+  inherit (mlib) mkEnOptTrue mkOpt;
   inherit (lib) mkIf mkMerge;
   inherit (lib.types) str;
 
@@ -32,7 +32,7 @@
   ];
 in {
   options = {
-    meow.workstation.theming = mkEnOpt "Theming";
+    meow.workstation.theming = mkEnOptTrue "Theming";
     meow.workstation.theme = mkOpt str "catppuccin-mocha" {
       description = "Theme to use";
     };

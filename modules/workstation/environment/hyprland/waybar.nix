@@ -32,11 +32,7 @@ in {
         })
         config.fileSystems;
 
-      defFiltera = n: v:
-        if config.meow.impermanence.enable
-        then n != "disk#${diskDevice "/"}" || n != "disk#${diskDevice "/boot"}"
-        else n != "disk#${diskDevice "/boot"}";
-
+      # TODO: make good version, not all machines should exclude /
       diskFilter = name:
         name != "disk#${diskDevice "/"}" && name != "disk#${diskDevice "/boot"}";
 

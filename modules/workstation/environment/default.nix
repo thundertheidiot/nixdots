@@ -31,6 +31,16 @@ in {
 
   # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?
   config = mkIf cfg (mkMerge [
+    {
+      xdg.portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+
+        extraPortals = [pkgs.xdg-desktop-portal-gtk];
+
+        config.common.default = ["gtk"];
+      };
+    }
     (mkIf (dm == "sddm") {
       services.displayManager.sddm = {
         enable = true;

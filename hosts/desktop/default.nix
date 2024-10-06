@@ -70,6 +70,8 @@ in {
       workstation.environment = ["hyprland" "plasma"];
       workstation.plasma.tiling = true;
 
+      workstation.flatpak.graphicalStore = true;
+
       gaming.enable = true;
       gaming.emulation = true;
       gaming.games = ["duckgame" "minecraft"];

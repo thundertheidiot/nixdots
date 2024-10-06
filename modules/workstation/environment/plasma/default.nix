@@ -33,6 +33,19 @@ in {
       environment.plasma6.excludePackages = with pkgs; [
         libsForQt5.elisa
       ];
+
+      # xdg portal configuration
+      # xdg.portal.extraPortals = [
+      #   pkgs.kdePackages.xdg-desktop-portal-kde
+      # ];
+
+      xdg.portal.config = {
+        kde = {
+          default = ["kde"];
+          "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+          "org.freedesktop.impl.portal.Settings" = ["kde" "gtk"];
+        };
+      };
     }
     {
       # Disable kwallet completely, we use gnome-keyring in every environment, to make switching between them not suck.

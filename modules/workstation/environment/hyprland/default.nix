@@ -36,6 +36,17 @@ in {
       hypr.hyprland
     ];
 
+    # xdg.portal.extraPortals = [
+    #   config.programs.hyprland.portalPackage
+    # ];
+
+    xdg.portal.config = {
+      hyprland = {
+        default = ["hyprland" "gtk"];
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+    };
+
     meow.home.modules = [
       (let
         cfg = config.meow.workstation.hyprland;
@@ -55,6 +66,15 @@ in {
               preload = "~/.local/share/bg";
               wallpaper = ",~/.local/share/bg";
               splash = false;
+            };
+          };
+
+          # Don't run hyprpaper in other environments
+          systemd.user.services.hyprpaper = {
+            Install = {WantedBy = lib.mkForce ["hyprland-session.target"];};
+
+            Unit = {
+              PartOf = lib.mkForce ["hyprland-session.target"];
             };
           };
 
