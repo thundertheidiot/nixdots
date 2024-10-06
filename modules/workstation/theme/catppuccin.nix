@@ -73,8 +73,7 @@ in {
           "gtk-4.0/gtk-dark.css" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
         };
       })
-      # TODO: move plasma away from old workstation
-      (mkIf (builtins.elem "plasma" config.workstation.environment) (let
+      (mkIf (builtins.elem "plasma" config.meow.workstation.environment) (let
         qtPackage = pkgs.catppuccin-kde.override {
           accents = ["mauve"];
           flavour = ["mocha"];

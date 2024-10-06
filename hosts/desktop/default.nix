@@ -20,7 +20,6 @@ in {
 
       workstation.enable = true;
       workstation.utils = "generic/gtk";
-      workstation.plasma.tilingwm = true;
       workstation.environment = ["hyprland"];
 
       setup.hyprland.extraAutostart = [
@@ -63,7 +62,10 @@ in {
     meow = {
       fullSetup = true;
       workstation.enable = true;
-      workstation.environment = ["hyprland"];
+      # TODO: enable plasma again once move is done
+
+      workstation.environment = ["hyprland" "plasma"];
+      workstation.plasma.tiling = true;
 
       gaming.enable = true;
       gaming.emulation = true;

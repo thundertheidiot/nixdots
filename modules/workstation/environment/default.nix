@@ -22,9 +22,11 @@ in {
     };
   };
   imports = [
-    # TODO: plasma sway
+    # TODO: sway
     ./hyprland
+    ./plasma
     ./gnome.nix
+    ./cosmic.nix
   ];
 
   # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?
@@ -35,7 +37,7 @@ in {
         package = lib.mkForce pkgs.kdePackages.sddm;
         wayland = {
           enable = true;
-          # compositor = "kwin";
+          # compositor = lib.mkForce "weston";
         };
       };
     })

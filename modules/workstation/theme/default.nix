@@ -113,7 +113,6 @@ in {
             kde.enable = false;
             hyprpaper.enable = lib.mkForce false;
             waybar.enable = false;
-            fish.enable = false;
           };
 
           fonts.fontconfig = {
@@ -127,6 +126,10 @@ in {
           };
         })
       ];
+
+      stylix.targets = {
+        fish.enable = false;
+      };
 
       stylix.enable = true;
       stylix.autoEnable = true;

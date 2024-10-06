@@ -1,7 +1,7 @@
 let
   modules = [
     (import ./wayland)
-    (import ./plasma)
+    # (import ./plasma)
     (import ./cosmic.nix)
     (import ./xdg-desktop-portal.nix)
   ];
