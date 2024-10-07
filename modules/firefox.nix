@@ -54,18 +54,6 @@ in {
             install_url = v;
           })
           cfg.addons;
-
-        # ExtensionSettings = {
-        #   # uBlockOrigin
-        #   "uBlock0@raymondhill.net" = {
-        #     installation_mode = "force_installed";
-        #     install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-11423598-latest.xpi";
-        #   };
-        #   # I still don't care about cookies
-        #   "idcac-pub@guus.ninja" = {
-        #     installation_mode = "force_installed";
-        #     install_url = "https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/addon-17568914-latest.xpi";
-        #   };
       };
 
       profiles."nix-managed" = {
