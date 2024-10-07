@@ -20,6 +20,10 @@ in {
     meow.workstation.displayManager = mkOpt (enum ["sddm" "gdm"]) "sddm" {
       description = "Display manager (login screen) to install.";
     };
+
+    # meow.workstation.xdgPortals = mkOpt (listOf package) [] {
+    #   description = "Do not touch, internal way of passing values.";
+    # };
   };
   imports = [
     # TODO: sway
@@ -36,7 +40,7 @@ in {
         enable = true;
         xdgOpenUsePortal = true;
 
-        extraPortals = [pkgs.xdg-desktop-portal-gtk];
+        extraPortals = lib.mkIf (!builtins.elem "gnome" config.meow.workstation.environment) [pkgs.xdg-desktop-portal-gtk];
 
         config.common.default = ["gtk"];
       };

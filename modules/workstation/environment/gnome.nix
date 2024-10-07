@@ -12,5 +12,12 @@ in {
   config = mkIf (work && elem "gnome" env) {
     services.xserver.desktopManager.gnome.enable = true;
     # services.gnome.gnome-online-accounts.enable = false;
+
+    xdg.portal.config = {
+      gnome = {
+        default = ["gnome" "gtk"];
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+    };
   };
 }

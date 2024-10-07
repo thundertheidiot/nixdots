@@ -5,19 +5,23 @@
   ...
 }: let
   inherit (mlib) homeModule mkOpt;
-  inherit (lib.types) functionTo bool;
+  inherit (lib.types) listOf str;
   inherit (lib.lists) unique;
   inherit (lib.attrsets) mapAttrs' mapAttrsToList filterAttrs;
   inherit (builtins) filter replaceStrings;
 in {
   options = {
-    config.meow.workstation.waybarDiskFilter = mkOpt (functionTo bool) null {};
+    meow.workstation.waybarDiskFilter =
+      mkOpt (listOf str)
+      (["/boot"] ++ lib.lists.optional config.meow.impermanence.enable "/")
+      {
+        description = "Mountpoints to filter out in waybar.";
+      };
   };
 
   config = homeModule {
     programs.waybar.settings = let
       diskName = name: replaceStrings ["/"] ["_"] name;
-      diskDevice = name: diskName config.fileSystems.${name}.device;
 
       disks' =
         mapAttrs' (n: v: {
@@ -32,11 +36,15 @@ in {
         })
         config.fileSystems;
 
-      # TODO: make good version, not all machines should exclude /
-      diskFilter = name:
-        name != "disk#${diskDevice "/"}" && name != "disk#${diskDevice "/boot"}";
+      # FIXME: think about this when you aren't sick
+      filterList =
+        map (mount: "disk#${diskName config.fileSystems.${mount}.device}")
+        config.meow.workstation.waybarDiskFilter;
 
-      disks = filterAttrs (n: _: diskFilter n) disks';
+      filterF = disk:
+        (filter (d: disk == d) filterList) == [];
+
+      disks = filterAttrs (n: _: filterF n) disks';
     in [
       ({
           layer = "top";
@@ -46,7 +54,7 @@ in {
           modules-center = ["clock"];
           modules-right =
             ["hyprland/language" "idle_inhibitor"]
-            ++ filter diskFilter (unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
+            ++ filter filterF (unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
                 config.fileSystems))
             ++ ["network" "pulseaudio" "battery" "tray"];
 
