@@ -47,9 +47,9 @@ in {
         meow.emacs.lang = enAll [
           "latex"
           "haskell"
+          "ocaml"
           "fennel"
           "janet"
-          "hylang"
           "c_cxx"
           "bash"
           "python"

@@ -65,7 +65,6 @@ in {
     meow = {
       fullSetup = true;
       workstation.enable = true;
-      # TODO: enable plasma again once move is done
 
       workstation.environment = ["hyprland" "plasma"];
       workstation.plasma.tiling = true;

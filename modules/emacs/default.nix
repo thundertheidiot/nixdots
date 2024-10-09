@@ -19,9 +19,9 @@ in {
       lang = {
         latex = mkEnOpt "Latex support";
         haskell = mkEnOpt "Haskell";
+        ocaml = mkEnOpt "Ocaml";
         fennel = mkEnOpt "Fennel";
         janet = mkEnOpt "Janet";
-        hylang = mkEnOpt "Hylang";
         c_cxx = mkEnOpt "C/C++";
         bash = mkEnOpt "Bash";
         python = mkEnOpt "Python";
@@ -55,41 +55,63 @@ in {
       services.ollama.enable = lib.mkDefault cfg.llm;
     }
     // homeModule ({config, ...}: {
-      home.packages = with pkgs; [
-        (lib.mkIf cfg.lang.haskell ghc)
-        (lib.mkIf cfg.lang.fennel fennel)
-        (lib.mkIf cfg.lang.janet janet)
-        (lib.mkIf cfg.lang.janet (jpm.overrideAttrs (prev: {
-          buildInputs = prev.buildInputs ++ [makeWrapper];
+      home.packages = with pkgs;
+        lib.mkMerge [
+          [
+            # org screenshot, todo make non hyprland specific and good
+            grim
+            slurp
 
-          installPhase =
-            prev.installPhase
-            + ''
-              wrapProgram $out/bin/jpm --add-flags '--tree="$JANET_TREE" --binpath="$XDG_DATA_HOME/janet/bin" --headerpath=${janet}/include --libpath=${janet}/lib --ldflags=-L${pkgs.glibc}/lib'
-            '';
-        })))
-        (lib.mkIf cfg.lang.hylang hy)
+            emacs-lsp-booster
 
-        # org screenshot, todo make non hyprland specific and good
-        grim
-        slurp
+            # lsp
+            nixd # nix
 
-        # latex
-        (lib.mkIf cfg.lang.latex texlive.combined.scheme-full)
+            # formatters
+            alejandra
+          ]
+          (mkIf cfg.lang.haskell [
+            ghc
+            haskell-language-server
+          ])
+          (mkIf cfg.lang.ocaml [
+            ocaml
+            opam
+            dune_3
+            ocamlPackages.utop
+            ocamlPackages.merlin
+            ocamlPackages.ocaml-lsp
+            ocamlPackages.ocamlformat
+          ])
+          (mkIf cfg.lang.janet [
+            janet
+            (jpm.overrideAttrs (prev: {
+              buildInputs = prev.buildInputs ++ [makeWrapper];
 
-        emacs-lsp-booster
-
-        # lsp
-        nixd # nix
-        (lib.mkIf cfg.lang.c_cxx clang-tools)
-        (lib.mkIf cfg.lang.haskell haskell-language-server)
-        (lib.mkIf cfg.lang.fennel fennel-ls)
-        (lib.mkIf cfg.lang.bash nodePackages.bash-language-server)
-        (lib.mkIf cfg.lang.python pyright)
-
-        # formatters
-        alejandra
-      ];
+              installPhase =
+                prev.installPhase
+                + ''
+                  wrapProgram $out/bin/jpm --add-flags '--tree="$JANET_TREE" --binpath="$XDG_DATA_HOME/janet/bin" --headerpath=${janet}/include --libpath=${janet}/lib --ldflags=-L${pkgs.glibc}/lib'
+                '';
+            }))
+          ])
+          (mkIf cfg.lang.latex [
+            texlive.combined.scheme-full
+          ])
+          (mkIf cfg.lang.c_cxx [
+            clang-tools
+          ])
+          (mkIf cfg.lang.bash [
+            nodePackages.bash-language-server
+          ])
+          (mkIf cfg.lang.fennel [
+            fennel
+            fennel-ls
+          ])
+          (mkIf cfg.lang.python [
+            pyright
+          ])
+        ];
 
       programs.emacs = {
         enable = true;
@@ -106,9 +128,9 @@ in {
             llm_enable = tangle cfg.llm;
             lang_latex = tangle cfg.lang.latex;
             lang_haskell = tangle cfg.lang.haskell;
+            lang_ocaml = tangle cfg.lang.ocaml;
             lang_fennel = tangle cfg.lang.fennel;
             lang_janet = tangle cfg.lang.janet;
-            lang_hylang = tangle cfg.lang.hylang;
             lang_c_cxx = tangle cfg.lang.c_cxx;
             lang_bash = tangle cfg.lang.bash;
             lang_python = tangle cfg.lang.python;
