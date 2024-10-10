@@ -246,7 +246,6 @@ This is bound to =gc= in normal mode
   (let (beg end)
     (if (region-active-p)
 	(setq beg (region-beginning) end (region-end))
-      ;; else
       (setq beg (line-beginning-position) end (line-end-position)))
     (comment-or-uncomment-region beg end)))
 #+end_src
@@ -255,12 +254,11 @@ This is bound to =SPC er=
 
 #+begin_src emacs-lisp
 (defun eval-region-and-go-to-normal-mode ()
-  "Evaluate elisp in the selected region, and go back to normal mode."
+  "Evaluate elisp in the selected region and go back to normal mode."
   (interactive)
   (let (beg end)
     (if (region-active-p)
 	(setq beg (region-beginning) end (region-end))
-      ;; else
       (setq beg (line-beginning-position) end (line-end-position)))
     (eval-region beg end)
     (evil-normal-state)))

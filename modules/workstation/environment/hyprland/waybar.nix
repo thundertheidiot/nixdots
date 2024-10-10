@@ -21,7 +21,10 @@ in {
 
   config = homeModule {
     programs.waybar.settings = let
-      diskName = name: replaceStrings ["/"] ["_"] name;
+      diskName = name:
+        if name == null
+        then "NULL"
+        else replaceStrings ["/"] ["_"] name;
 
       disks' =
         mapAttrs' (n: v: {
@@ -38,7 +41,7 @@ in {
 
       # FIXME: think about this when you aren't sick
       filterList =
-        map (mount: "disk#${diskName config.fileSystems.${mount}.device}")
+        map (mount: "disk#${diskName config.fileSystems.${mount}.device or null}")
         config.meow.workstation.waybarDiskFilter;
 
       filterF = disk:

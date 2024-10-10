@@ -16,9 +16,11 @@ in {
       exwm = mkEnOpt "Install and configure EXWM.";
       llm = mkEnOpt "Install llm interaction tools for emacs.";
 
+      # TODO: move all this shit to modules/langs or something
       lang = {
         latex = mkEnOpt "Latex support";
         haskell = mkEnOpt "Haskell";
+        rust = mkEnOpt "Rust";
         ocaml = mkEnOpt "Ocaml";
         fennel = mkEnOpt "Fennel";
         janet = mkEnOpt "Janet";
@@ -70,6 +72,14 @@ in {
             # formatters
             alejandra
           ]
+          (mkIf cfg.lang.rust [
+            pkgs.rust-bin.stable.default
+            # (pkgs.rust-bin.selectLatestNightlyWith (toolchain:
+            #   toolchain.default.override {
+            #     extensions = ["rust-analyzer"];
+            #     targets = ["x86_64-unknown-linux-gnu"];
+            #   }))
+          ])
           (mkIf cfg.lang.haskell [
             ghc
             haskell-language-server

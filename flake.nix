@@ -70,11 +70,13 @@
                 substituters = [
                   "https://hyprland.cachix.org"
                   "https://cosmic.cachix.org/"
+                  "https://cache.iog.io" # haskell.nix
                   # "https://nix-community.cachix.org"
                 ];
                 trusted-public-keys = [
                   "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
                   "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+                  "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" # haskell.nix
                   # "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
                 ];
               };
@@ -86,6 +88,7 @@
                   inputs.emacs-overlay.overlay
                   # inputs.hyprland.overlays.default
                   inputs.waybar.overlays.default
+                  inputs.rust-overlay.overlays.default
                   (import ./overrides.nix {inherit inputs;})
                 ];
               };
@@ -147,6 +150,8 @@
       url = "github:tinted-theming/schemes";
       flake = false;
     };
+
+    rust-overlay.url = "github:oxalica/rust-overlay";
 
     hyprland = {
       # latest before clipboard break
