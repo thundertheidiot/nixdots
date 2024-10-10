@@ -86,6 +86,7 @@
                   inputs.emacs-overlay.overlay
                   # inputs.hyprland.overlays.default
                   inputs.waybar.overlays.default
+                  inputs.rust-overlay.overlays.default
                   (import ./overrides.nix {inherit inputs;})
                 ];
               };
@@ -147,6 +148,8 @@
       url = "github:tinted-theming/schemes";
       flake = false;
     };
+
+    rust-overlay.url = "github:oxalica/rust-overlay";
 
     hyprland = {
       # latest before clipboard break
