@@ -823,6 +823,8 @@ Index those keywords inside magit.
   :config
   (setf (alist-get 'nixfmt apheleia-formatters)
 	'("alejandra"))
+  ;; (setf (alist-get 'ocamlformat apheleia-formatters)
+  ;; 	'("ocamlformat" "-" "--name" filepath "--enable-outside-detected-project" "--no-break-sequences"))
   (apheleia-global-mode +1))
 #+end_src
 
@@ -948,11 +950,6 @@ Org src blocks in fennel
 (use-package janet-mode
   :after eglot
   :mode "\\.janet\\'")
-#+end_src
-
-#+begin_src emacs-lisp :tangle @lang_hylang@
-(use-package hy-mode
-  :mode "\\.hy\\'")
 #+end_src
 
 *** C#
