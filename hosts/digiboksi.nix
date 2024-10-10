@@ -39,6 +39,9 @@
       '';
     };
 
+    time.timeZone = "Europe/Helsinki";
+    networking.hostName = "digiboksi";
+
     meow = {
       monitors = mlib.mkMonitors [
         {

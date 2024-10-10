@@ -891,6 +891,16 @@ Language specific setup
 ;;   :config (haskell-ts-setup-eglot))
 #+end_src
 
+*** Ocaml
+
+#+begin_src emacs-lisp :tangle @lang_ocaml@
+(use-package tuareg
+  :hook (tuareg-mode . eglot-ensure))
+(use-package merlin
+  :hook (tuareg-mode . merlin-mode))
+(use-package utop)
+#+end_src
+
 *** Lua
 
 #+begin_src emacs-lisp

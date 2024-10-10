@@ -7,7 +7,7 @@
   ...
 }: let
   inherit (mlib) mkOpt;
-  inherit (lib.types) bool;
+  inherit (lib.types) bool str;
   inherit (lib) mkIf;
 
   en = config.meow.base;
@@ -16,6 +16,9 @@ in {
     meow.base = mkOpt bool true {
       description = "Base setup for every machine, including servers.";
     };
+
+    meow.timeZone = mkOpt str "Europe/Helsinki" {};
+    meow.hostName = mkOpt str "meow" {};
   };
 
   config = mkIf en {

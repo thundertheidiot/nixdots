@@ -23,6 +23,10 @@ in {
     };
   };
 
+  imports = [
+    ./waybar.nix
+  ];
+
   config = mkIf (work && elem "hyprland" env) {
     programs.hyprland.enable = true;
 
@@ -31,6 +35,17 @@ in {
     in [
       hypr.hyprland
     ];
+
+    # xdg.portal.extraPortals = [
+    #   config.programs.hyprland.portalPackage
+    # ];
+
+    xdg.portal.config = {
+      hyprland = {
+        default = ["hyprland" "gtk"];
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+    };
 
     meow.home.modules = [
       (let
@@ -54,7 +69,27 @@ in {
             };
           };
 
+          # Don't run hyprpaper in other environments
+          systemd.user.services.hyprpaper = {
+            Install = {WantedBy = lib.mkForce ["hyprland-session.target"];};
+
+            Unit = {
+              PartOf = lib.mkForce ["hyprland-session.target"];
+            };
+          };
+
+          home.packages = [pkgs.swayosd];
+
+          programs.waybar.enable = true;
           programs.alacritty.enable = lib.mkDefault true;
+          programs.tofi.enable = true;
+          services.mako.enable = true;
+
+          home.file.".config/swappy/config".text = ''
+            [Default]
+            save_dir=${config.xdg.userDirs.pictures}/screenshots
+            save_filename_format=annotated-%Y-%m-%d_%H-%M-%S.png
+          '';
 
           wayland.windowManager.hyprland = {
             enable = true;

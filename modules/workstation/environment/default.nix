@@ -20,22 +20,38 @@ in {
     meow.workstation.displayManager = mkOpt (enum ["sddm" "gdm"]) "sddm" {
       description = "Display manager (login screen) to install.";
     };
+
+    # meow.workstation.xdgPortals = mkOpt (listOf package) [] {
+    #   description = "Do not touch, internal way of passing values.";
+    # };
   };
   imports = [
-    # TODO: plasma sway
+    # TODO: sway
     ./hyprland
+    ./plasma
     ./gnome.nix
+    ./cosmic.nix
   ];
 
   # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?
   config = mkIf cfg (mkMerge [
+    {
+      xdg.portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+
+        extraPortals = lib.mkIf (!builtins.elem "gnome" config.meow.workstation.environment) [pkgs.xdg-desktop-portal-gtk];
+
+        config.common.default = ["gtk"];
+      };
+    }
     (mkIf (dm == "sddm") {
       services.displayManager.sddm = {
         enable = true;
         package = lib.mkForce pkgs.kdePackages.sddm;
         wayland = {
           enable = true;
-          # compositor = "kwin";
+          # compositor = lib.mkForce "weston";
         };
       };
     })

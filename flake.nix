@@ -4,15 +4,15 @@
   nixConfig = {
     substituters = [
       "https://hyprland.cachix.org"
-      # "https://cosmic.cachix.org/"
+      "https://cosmic.cachix.org/"
       "https://nyx.chaotic.cx/"
-      # "https://nix-community.cachix.org"
+      "https://nix-community.cachix.org"
     ];
     trusted-public-keys = [
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      # "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+      "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
       "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
-      # "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
@@ -31,9 +31,9 @@
       gen ["desktop" "x220" "t440p" "digiboksi"]
       // {
         local = mkSystem (import ./local.nix) [];
-        iso = mkSystem (import ./hosts/iso.nix) [
-          "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
-        ];
+        # iso = mkSystem (import ./hosts/iso.nix) [
+        #   "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
+        # ];
       };
 
     commonModules = cfg: [
@@ -66,18 +66,15 @@
             inputs.stylix.nixosModules.stylix
             ./sops
             ({config, ...}: {
-              time.timeZone = config.timeZone;
-              networking.hostName = config.hostName;
-
               nix.settings = {
                 substituters = [
                   "https://hyprland.cachix.org"
-                  # "https://cosmic.cachix.org/"
+                  "https://cosmic.cachix.org/"
                   # "https://nix-community.cachix.org"
                 ];
                 trusted-public-keys = [
                   "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-                  # "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+                  "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
                   # "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
                 ];
               };

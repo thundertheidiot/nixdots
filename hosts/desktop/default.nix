@@ -20,7 +20,6 @@ in {
 
       workstation.enable = true;
       workstation.utils = "generic/gtk";
-      workstation.plasma.tilingwm = true;
       workstation.environment = ["hyprland"];
 
       setup.hyprland.extraAutostart = [
@@ -52,6 +51,9 @@ in {
 
     virtualisation.docker.enable = true;
 
+    time.timeZone = "Europe/Helsinki";
+    networking.hostName = "desktop";
+
     services.ollama = {
       acceleration = "rocm";
       environmentVariables = {
@@ -63,7 +65,11 @@ in {
     meow = {
       fullSetup = true;
       workstation.enable = true;
-      workstation.environment = ["hyprland"];
+
+      workstation.environment = ["hyprland" "plasma"];
+      workstation.plasma.tiling = true;
+
+      workstation.flatpak.graphicalStore = true;
 
       gaming.enable = true;
       gaming.emulation = true;
@@ -193,22 +199,18 @@ in {
 
     hardware.ckb-next.enable = true;
 
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
+    boot.loader = {
+      grub = {
+        enable = true;
+        efiSupport = true;
+        devices = ["nodev"];
+      };
+      efi.canTouchEfiVariables = true;
+      efi.efiSysMountPoint = "/boot";
+    };
 
     meow.impermanence.enable = true;
     meow.impermanence.persist = "/persist";
-
-    # fileSystems."/" = {
-    #   device = "/dev/disk/by-uuid/1ffc3323-6810-406d-b4f6-15d247602689";
-    #   fsType = "btrfs";
-    #   options = ["subvol=@"];
-    # };
-
-    # fileSystems."/boot" = {
-    #   device = "/dev/disk/by-uuid/F33A-5CD4";
-    #   fsType = "vfat";
-    # };
 
     disko.devices = {
       nodev."/" = {
@@ -225,11 +227,6 @@ in {
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              name = "boot";
-              size = "1M";
-              type = "EF02";
-            };
             efi = {
               size = "500M";
               type = "EF00";

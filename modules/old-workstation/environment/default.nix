@@ -1,9 +1,7 @@
 let
   modules = [
-    (import ./wayland)
-    (import ./plasma)
     (import ./cosmic.nix)
-    (import ./xdg-desktop-portal.nix)
+    # (import ./xdg-desktop-portal.nix)
   ];
 in {
   system = {mlib, ...}: {

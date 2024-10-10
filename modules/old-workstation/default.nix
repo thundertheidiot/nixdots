@@ -24,20 +24,10 @@ in {
       ];
 
       # TODO: move all this shit
-      security.polkit.enable = true;
 
       # boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
 
       services.cpupower-gui.enable = true;
-
-      xdg.portal = {
-        enable = true;
-        xdgOpenUsePortal = true;
-
-        config.common.default = "";
-      };
-
-      services.flatpak.enable = true;
     };
   };
 

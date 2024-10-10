@@ -35,6 +35,9 @@
   }: {
     system.stateVersion = "23.05";
 
+    time.timeZone = "Europe/Helsinki";
+    networking.hostName = "x220";
+
     meow = {
       workstation = {
         enable = true;

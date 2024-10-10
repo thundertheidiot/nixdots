@@ -19,20 +19,13 @@ in {
     ./audio.nix
     ./network.nix
     ./media.nix
+    ./flatpak.nix
     ./theme
     ./environment # de's and wm's
   ];
 
   config = mkIf cfg.enable {
-    meow.workstation = listToAttrs (map (n: {
-        name = n;
-        value = mkDefault true;
-      }) [
-        "audio"
-        "network"
-        "media"
-        "theming"
-      ]);
+    security.polkit.enable = true;
 
     environment.systemPackages = with pkgs; [
       pulsemixer
@@ -56,6 +49,11 @@ in {
 
       libnotify
     ];
+
+    programs.appimage = {
+      enable = true;
+      binfmt = true;
+    };
 
     services.libinput.enable = true;
     console = {

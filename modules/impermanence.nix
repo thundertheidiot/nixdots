@@ -109,6 +109,12 @@ in {
             persistPath = "${cfg.persist}/docker";
             permissions = "710";
           }
+          {
+            path = "/var/lib/sddm";
+            permissions = "750";
+            user = "sddm";
+            group = "sddm";
+          }
         ]);
 
       environment.etc = builtins.listToAttrs (builtins.map (loc: {

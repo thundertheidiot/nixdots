@@ -6,7 +6,7 @@
   inputs,
   ...
 }: let
-  inherit (mlib) mkEnOpt mkOpt;
+  inherit (mlib) mkEnOptTrue mkOpt;
   inherit (lib) mkIf mkMerge;
   inherit (lib.types) str;
 
@@ -32,7 +32,7 @@
   ];
 in {
   options = {
-    meow.workstation.theming = mkEnOpt "Theming";
+    meow.workstation.theming = mkEnOptTrue "Theming";
     meow.workstation.theme = mkOpt str "catppuccin-mocha" {
       description = "Theme to use";
     };
@@ -40,6 +40,7 @@ in {
 
   imports = [
     ./catppuccin.nix
+    ./misc.nix
   ];
 
   config = mkIf cfg (mkMerge [
@@ -113,7 +114,6 @@ in {
             kde.enable = false;
             hyprpaper.enable = lib.mkForce false;
             waybar.enable = false;
-            fish.enable = false;
           };
 
           fonts.fontconfig = {
@@ -127,6 +127,10 @@ in {
           };
         })
       ];
+
+      stylix.targets = {
+        fish.enable = false;
+      };
 
       stylix.enable = true;
       stylix.autoEnable = true;
