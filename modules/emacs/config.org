@@ -254,7 +254,7 @@ This is bound to =SPC er=
 
 #+begin_src emacs-lisp
 (defun eval-region-and-go-to-normal-mode ()
-  "Evaluate elisp in the selected region, and go back to normal mode."
+  "Evaluate elisp in the selected region and go back to normal mode."
   (interactive)
   (let (beg end)
     (if (region-active-p)
