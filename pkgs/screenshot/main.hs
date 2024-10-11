@@ -16,14 +16,14 @@ xdgConfigHome = do
     Nothing -> do
       home <- lookupEnv "HOME"
       case home of
-        Just homePath -> return (Just (homePath </> "/.config/"))
+        Just homePath -> return (Just (homePath </> "/.config"))
         Nothing -> return Nothing
 
 xdgDirsFile :: IO (Maybe String)
 xdgDirsFile = do
   dotConfig <- xdgConfigHome
   case dotConfig of
-    Just dir -> return (Just (dir </> "/user-dirs.dirs"))
+    Just dir -> return (Just (dir </> "user-dirs.dirs"))
     Nothing -> return Nothing
 
 parseXdgDirs :: IO (Maybe String) -> IO (Maybe [(String, String)])
