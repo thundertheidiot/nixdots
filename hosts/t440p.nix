@@ -46,6 +46,18 @@
       gaming.emulation = true;
       gaming.games = ["duckgame"];
 
+      browser.firefoxConfig = {
+        testfox = {
+          configPath = "browsertest";
+          profiles = {
+            "nix-managed" = {
+              id = 0;
+              default = true;
+            };
+          };
+        };
+      };
+
       firefox.enable = true;
       emacs.enable = true;
       emacs.exwm = true;

@@ -21,6 +21,7 @@
   ./emacs
   ./xorg.nix
   ./firefox.nix
+  ./browser
   ./workstation
   ./cleanup.nix
   ./keyboard
