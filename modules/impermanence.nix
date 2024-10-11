@@ -99,6 +99,7 @@ in {
           # "/var/lib/nixos"
           "/root/.cache/nix"
           "/etc/NetworkManager/system-connections"
+          "/var/lib/systemd/coredump"
           {
             path = "/var/lib/flatpak";
             persistPath = "${cfg.persist}/flatpak";
