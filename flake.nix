@@ -138,6 +138,7 @@
     plasma-manager = {
       url = "github:pjones/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     cosmic = {
@@ -146,6 +147,7 @@
     };
 
     stylix.url = "github:danth/stylix";
+    stylix.inputs.home-manager.follows = "home-manager";
     tt-schemes = {
       url = "github:tinted-theming/schemes";
       flake = false;

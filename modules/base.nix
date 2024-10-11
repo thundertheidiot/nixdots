@@ -25,6 +25,7 @@ in {
     nix.settings = {
       experimental-features = ["nix-command" "flakes"];
       allowed-users = [config.username];
+      trusted-users = [config.username];
       require-sigs = false;
       use-xdg-base-directories = true;
     };
