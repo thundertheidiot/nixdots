@@ -1,6 +1,6 @@
 import Data.List (isPrefixOf, intercalate)
 import Data.Maybe (mapMaybe)
-import System.Process
+import System.Process (readProcess)
 import System.Environment (lookupEnv)
 import System.FilePath ((</>))
 
