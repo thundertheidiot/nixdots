@@ -1,7 +1,5 @@
-{-# LANGUAGE LambdaCase #-}
-
-import Data.List
-import Data.Maybe
+import Data.List (isPrefixOf, intercalate)
+import Data.Maybe (mapMaybe)
 import System.Process
 import System.Environment (lookupEnv)
 import System.FilePath ((</>))
@@ -37,12 +35,21 @@ parseXdgDirs content = do
   where
     parseLine :: String -> Maybe (String, String)
     parseLine line = case break (=='=') line of
-      (key, '=':value) -> Just (key, value)
+      (key, '=':value) -> Just (key, removeQuotes value)
       _ -> Nothing
+
+    removeQuotes :: String -> String
+    removeQuotes str
+      | isPrefixOf "\"" str && isPrefixOf "\"" (reverse str) = init (tail str)
+      | otherwise = str
 
 main :: IO ()
 main = do
-  callTofi ["amo", "gus"] >>= putStrLn
+  file <- xdgDirsFile
+  case file of
+    Just f -> putStrLn f
+    Nothing -> putStrLn "ligm"
+  -- callTofi ["amo", "gus"] >>= putStrLn
 
 -- main :: IO ()
 -- main = do
