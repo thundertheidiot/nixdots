@@ -155,6 +155,8 @@
 
     rust-overlay.url = "github:oxalica/rust-overlay";
 
+    screenshot.url = "./pkgs/screenshot";
+
     hyprland = {
       # latest before clipboard break
       # url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=4cdddcfe466cb21db81af0ac39e51cc15f574da9";

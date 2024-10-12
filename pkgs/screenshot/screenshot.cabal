@@ -1,0 +1,26 @@
+
+-- Instructions on how to write this file are in the Cabal
+-- documentation, which can be found here:
+--   http://haskell.org/cabal/release/cabal-latest/doc/users-guide/
+
+name: screenshot
+version: 1.0.0.2
+stability: stable
+synopsis: Screenshot tool for hyprland environments
+cabal-version: >= 1.6
+build-type: Simple
+
+flag threaded
+  default: False
+
+executable screenshot
+  hs-source-dirs: src
+  main-is: Screenshot.hs
+  build-depends: base >= 4.2 && < 5
+               , process
+               , filepath
+               , time
+               , bytestring
+
+  if flag(threaded)
+     ghc-options: -threaded

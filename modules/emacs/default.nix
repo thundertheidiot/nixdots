@@ -81,7 +81,7 @@ in {
             #   }))
           ])
           (mkIf cfg.lang.haskell [
-            ghc
+            (haskellPackages.ghcWithPackages (pkgs: with pkgs; [stack]))
             haskell-language-server
           ])
           (mkIf cfg.lang.ocaml [

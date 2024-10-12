@@ -1,12 +1,10 @@
+{-# LANGUAGE LambdaCase #-}
+module GetDir where
+
 import Data.List (isPrefixOf, intercalate)
 import Data.Maybe (mapMaybe)
-import System.Process (readProcess)
 import System.Environment (lookupEnv)
 import System.FilePath ((</>))
-
-callTofi :: [String] -> IO String
-callTofi args =
-  readProcess "tofi" [] (intercalate "\n" args)
 
 xdgConfigHome :: IO (Maybe String)
 xdgConfigHome = do
@@ -16,7 +14,7 @@ xdgConfigHome = do
     Nothing -> do
       home <- lookupEnv "HOME"
       case home of
-        Just homePath -> return (Just (homePath </> "/.config"))
+        Just homePath -> return (Just (homePath </> "/.config/"))
         Nothing -> return Nothing
 
 xdgDirsFile :: IO (Maybe String)
@@ -26,12 +24,9 @@ xdgDirsFile = do
     Just dir -> return (Just (dir </> "user-dirs.dirs"))
     Nothing -> return Nothing
 
-parseXdgDirs :: IO (Maybe String) -> IO (Maybe [(String, String)])
-parseXdgDirs content = do
-  cont <- content
-  case cont of
-    Just c -> return (Just (mapMaybe parseLine (lines c)))
-    Nothing -> return Nothing
+parseXdgDirs :: String -> [(String, String)]
+parseXdgDirs content =
+  mapMaybe parseLine (lines content)
   where
     parseLine :: String -> Maybe (String, String)
     parseLine line = case break (=='=') line of
@@ -43,17 +38,25 @@ parseXdgDirs content = do
       | isPrefixOf "\"" str && isPrefixOf "\"" (reverse str) = init (tail str)
       | otherwise = str
 
-main :: IO ()
-main = do
-  file <- xdgDirsFile
-  case file of
-    Just f -> putStrLn f
-    Nothing -> putStrLn "ligm"
-  -- callTofi ["amo", "gus"] >>= putStrLn
+getPicturesDir :: IO (Maybe String)
+getPicturesDir =
+  xdgDirsFile >>= \case
+    Just f -> do
+      cont <- readFile f
+      let pictures = lookup "XDG_PICTURES_DIR" $ parseXdgDirs cont
+        in case pictures of
+             Just dir -> return (Just dir)
+             Nothing -> assumedPicturesDir
+    Nothing -> assumedPicturesDir
+  where
+    assumedPicturesDir :: IO (Maybe String)
+    assumedPicturesDir =
+      lookupEnv "HOME" >>= \case
+      Just env -> return (Just (env </> "Pictures/"))
+      Nothing -> return Nothing
 
--- main :: IO ()
--- main = do
---     maybeValue <- lookupEnv "MY_ENV_VAR"  -- unwrap the IO (Maybe String)
---     case maybeValue of
---         Just value -> putStrLn $ "The environment variable is: " ++ value
---         Nothing    -> putStrLn "The environment variable is not set."
+dir :: IO (Maybe String)
+dir =
+  getPicturesDir >>= \case
+  Just dir -> return (Just (dir </> "screenshots/"))
+  Nothing -> return Nothing

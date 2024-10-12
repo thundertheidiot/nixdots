@@ -55,10 +55,11 @@ in {
         {config, ...}: let
           terminal = "alacritty";
 
-          screenshot = pkgs.callPackage mpkgs.wl_screenshot {
-            hyprland = hyprlandPackage;
-            picturesDir = config.xdg.userDirs.pictures;
-          };
+          # screenshot = pkgs.callPackage mpkgs.wl_screenshot {
+          #   hyprland = hyprlandPackage;
+          #   picturesDir = config.xdg.userDirs.pictures;
+          # };
+          screenshot = inputs.screenshot.packages.${pkgs.system}.default;
         in {
           services.hyprpaper = {
             enable = true;
@@ -246,8 +247,8 @@ in {
 
                 "$shiftmod, return, layoutmsg, swapwithmaster master"
 
-                ",Print, exec, ${screenshot}/bin/wl_screenshot region"
-                "SHIFT, Print, exec, ${screenshot}/bin/wl_screenshot"
+                ",Print, exec, ${screenshot}/bin/screenshot -c"
+                "SHIFT, Print, exec, ${screenshot}/bin/screenshot"
 
                 ",End, pass, ^(info\.mumble\.Mumble)$"
                 ",End, pass, ^(Mumble)$"
