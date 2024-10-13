@@ -3,4 +3,9 @@
     sopsFile = ./youtube;
     format = "binary";
   };
+
+  sops.secrets."rathole" = {
+    sopsFile = ./rathole.toml;
+    format = "binary";
+  };
 }

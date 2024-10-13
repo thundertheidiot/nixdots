@@ -12,14 +12,14 @@ in {
   options = {
     meow.impermanence = let
       inherit (mlib) mkOpt mkEnOpt;
-      inherit (lib.types) listOf str;
+      inherit (lib.types) listOf str attrs;
     in {
       enable = mkEnOpt "This impermanence module serves as a helper to using a tmpfs as your rootfs.";
       persist = mkOpt str "" {
         description = "Directory to use for persistance.";
       };
 
-      directories = mkOpt (listOf str) [] {
+      directories = mkOpt (listOf attrs) [] {
         description = "Extra directories to persist.";
       };
     };
@@ -62,10 +62,16 @@ in {
             enable = true;
             value = {
               description = "Bind mount ${path}.";
-              wantedBy = ["graphical.target"];
-              before = ["graphical.target"];
+              wantedBy =
+                if config.meow.workstation.enable
+                then ["graphical.target"]
+                else ["multi-user.target"];
+              before =
+                if config.meow.workstation.enable
+                then ["graphical.target"]
+                else ["multi-user.target"];
               path = [pkgs.util-linux];
-              unitConfig.defaultDependencies = false;
+              unitConfig.DefaultDependencies = false;
               serviceConfig = {
                 Type = "oneshot";
                 RemainAfterExit = true;

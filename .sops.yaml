@@ -1,6 +1,7 @@
 keys:
  - &me age1est4jdeu803qv6jng7vrj9x92l3xs0mr6qwv6fpt0p7tdd26xd6s84k2pq
  - &system age1dlh099k5q7uafl7esvrxtewjmmcw2vedmymfw3l8euckxxrqe9wqnhcus3
+ - &server age1w785k56chrrsc29jgkjzyvxfj3lx5sx56cm5fg6ldvychdga9umspddsfg
  - &t440p age196cqwq7cfr20zhlxwdnjrtlnn4w3ay5q52wxec5pyk2ksvq3s9ms0qjzyr
 creation_rules:
  - path_regex: sops/[^/]+$
@@ -8,4 +9,5 @@ creation_rules:
    - age:
      - *me
      - *system
+     - *server
      - *t440p

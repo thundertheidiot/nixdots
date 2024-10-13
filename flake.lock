@@ -1817,11 +1817,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-ehJR5TVUWIDQprIdEZ1wrDW37pnv7lbPH+ojevfwu2U=",
-        "path": "/nix/store/whr2wd85wg8p36z47lg9mi2ahlhvh5ml-source/pkgs/screenshot",
+        "path": "/nix/store/yv4106a4f0pch15xh4a8bwln5gni5bzh-source/pkgs/screenshot",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/whr2wd85wg8p36z47lg9mi2ahlhvh5ml-source/pkgs/screenshot",
+        "path": "/nix/store/yv4106a4f0pch15xh4a8bwln5gni5bzh-source/pkgs/screenshot",
         "type": "path"
       }
     },
