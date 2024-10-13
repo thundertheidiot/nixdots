@@ -18,11 +18,7 @@
     ];
   };
 
-  outputs = {
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: let
+  outputs = {nixpkgs, ...} @ inputs: let
     lib = nixpkgs.lib;
     mlib = (import ./lib) {inherit lib;};
     mpkgs = import ./pkgs;
@@ -58,7 +54,7 @@
           ++ extramodules
           ++ [
             cfg.system
-            home-manager.nixosModules.home-manager
+            inputs.home-manager.nixosModules.home-manager
             inputs.chaotic.nixosModules.default
             inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default

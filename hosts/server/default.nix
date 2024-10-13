@@ -3,6 +3,12 @@
   username = "thunder";
   homeDirectory = "/home/thunder";
 
+  options = {
+    workstation.enable = false;
+    workstation.utils = "none";
+    workstation.environment = [];
+  };
+
   system = {
     config,
     lib,
@@ -19,6 +25,8 @@
     meow = {
       workstation.enable = false;
       shell.enable = true;
+
+      ssh.rootKey = true;
 
       gpu = "intel";
 
@@ -50,7 +58,7 @@
         ];
       };
       disk.ssd = {
-        device = "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_250GB_S3YJNF0K236870M";
+        device = "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_250GB_S21PNXAG912243J";
         type = "disk";
         content = {
           type = "gpt";

@@ -56,7 +56,7 @@
     workstation.laptop = lib.mkEnableOption "Power management.";
 
     workstation.utils = lib.mkOption {
-      type = lib.types.enum ["generic/gtk" "kde"];
+      type = lib.types.enum ["generic/gtk" "kde" "none"];
       default = "generic/gtk";
       example = "kde";
       description = "The \"family of programs\" to use for utilities like ssh askpass or polkit.";

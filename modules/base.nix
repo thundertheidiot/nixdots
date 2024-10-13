@@ -33,6 +33,8 @@ in {
     boot.tmp.cleanOnBoot = true;
     hardware.enableRedistributableFirmware = true;
 
+    networking.networkmanager.enable = true;
+
     systemd.extraConfig = ''
       DefaultTimeoutStopSec=3s
     '';
