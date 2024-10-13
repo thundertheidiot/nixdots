@@ -6,11 +6,11 @@
   inputs,
   ...
 }: let
-  inherit (mlib) mkEnOptTrue mkOpt;
+  inherit (mlib) mkEnOpt mkOpt;
   inherit (lib) mkIf mkMerge;
   inherit (lib.types) str;
 
-  cfg = config.meow.workstation.theming;
+  cfg = config.meow.workstation.theming.enable;
 
   defaultFonts = {
     serif = ["Cantarell"];
@@ -32,7 +32,7 @@
   ];
 in {
   options = {
-    meow.workstation.theming = mkEnOptTrue "Theming";
+    meow.workstation.theming.enable = mkEnOpt "Theming";
     meow.workstation.theme = mkOpt str "catppuccin-mocha" {
       description = "Theme to use";
     };

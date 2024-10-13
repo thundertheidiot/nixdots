@@ -5,12 +5,12 @@
   inputs,
   ...
 }: let
-  inherit (mlib) mkEnOptTrue;
+  inherit (mlib) mkEnOpt;
   inherit (lib) mkIf mkForce;
-  cfg = config.meow.workstation.audio;
+  cfg = config.meow.workstation.audio.enable;
 in {
   options = {
-    meow.workstation.audio = mkEnOptTrue "Enable audio configuration.";
+    meow.workstation.audio.enable = mkEnOpt "Enable audio configuration.";
   };
 
   imports = [

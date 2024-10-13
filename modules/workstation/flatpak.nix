@@ -11,8 +11,8 @@
   cfg = config.meow.workstation.flatpak;
 in {
   options = {
-    meow.workstation.flatpak.enable = mkEnOptTrue "Enable flatpaks";
-    meow.workstation.flatpak.graphicalStore = mkEnOpt "Enable flatpaks";
+    meow.workstation.flatpak.enable = mkEnOpt "Enable flatpaks";
+    meow.workstation.flatpak.graphicalStore = mkEnOpt "Enable store for flatpaks";
   };
 
   # FIXME search broken, install broken

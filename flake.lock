@@ -1739,11 +1739,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-ehJR5TVUWIDQprIdEZ1wrDW37pnv7lbPH+ojevfwu2U=",
-        "path": "/nix/store/jgg9pr448rb7l7j9yh2jd87m6mmd1dl4-source/pkgs/screenshot",
+        "path": "/nix/store/r1knakrbnj0wfyvls25z22mw69gqwki0-source/pkgs/screenshot",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/jgg9pr448rb7l7j9yh2jd87m6mmd1dl4-source/pkgs/screenshot",
+        "path": "/nix/store/r1knakrbnj0wfyvls25z22mw69gqwki0-source/pkgs/screenshot",
         "type": "path"
       }
     },

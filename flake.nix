@@ -28,7 +28,7 @@
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
     nixosConfigurations =
-      gen ["desktop" "x220" "t440p" "digiboksi"]
+      gen ["desktop" "server" "x220" "t440p" "digiboksi"]
       // {
         local = mkSystem (import ./local.nix) [];
         # iso = mkSystem (import ./hosts/iso.nix) [
@@ -38,7 +38,7 @@
 
     commonModules = cfg: [
       ./options.nix
-      cfg.options
+      (cfg.options or {})
     ];
 
     nixosModules.default = {...}: {

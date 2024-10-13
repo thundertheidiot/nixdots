@@ -6,7 +6,7 @@
 }: let
   inherit (lib) mkIf;
 
-  cfg = config.meow.workstation.theming;
+  cfg = config.meow.workstation.theming.enable;
   theme = config.meow.workstation.theme;
 in {
   config = mkIf (cfg && theme == "catppuccin-mocha") {

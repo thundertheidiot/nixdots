@@ -6,12 +6,12 @@
   lib,
   ...
 }: let
-  inherit (mlib) mkEnOptTrue homeModule;
+  inherit (mlib) mkEnOpt homeModule;
   inherit (lib) mkIf;
-  cfg = config.meow.workstation.media;
+  cfg = config.meow.workstation.media.enable;
 in {
   options = {
-    meow.workstation.media = mkEnOptTrue "Media players.";
+    meow.workstation.media.enable = mkEnOpt "Media players.";
   };
 
   config = mkIf cfg (homeModule

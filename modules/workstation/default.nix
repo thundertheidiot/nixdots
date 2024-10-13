@@ -25,6 +25,17 @@ in {
   ];
 
   config = mkIf cfg.enable {
+    meow.workstation = listToAttrs (map (n: {
+        name = n;
+        value = {enable = mkDefault true;};
+      }) [
+        "audio"
+        "network"
+        "media"
+        "theming"
+        "flatpak"
+      ]);
+
     security.polkit.enable = true;
 
     environment.systemPackages = with pkgs; [
