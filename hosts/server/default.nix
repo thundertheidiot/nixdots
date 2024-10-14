@@ -16,11 +16,23 @@
     pkgs,
     modulesPath,
     ...
-  }: {
+  }: let
+    inherit (mlib) mkOpt;
+    inherit (lib.types) str;
+
+    cfg = config.server;
+  in {
     imports = [
+      ./dns.nix
+      ./webserver.nix
       ./jellyfin.nix
       ./rathole.nix
     ];
+
+    options = {
+      # here for easier changing in case of router change etc.
+      server.addr = mkOpt str "192.168.101.101" {};
+    };
 
     config = {
       system.stateVersion = "24.05";

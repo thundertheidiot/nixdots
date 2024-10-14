@@ -14,14 +14,8 @@
   inherit (builtins) mapAttrs concatStringsSep;
   inherit (lib.attrsets) mapAttrs' mapAttrsToList;
 
-  mkSubMod = options:
-    types.attrsOf (types.submodule ({
-      config,
-      name,
-      ...
-    }: {
-      inherit options;
-    }));
+  mkSubMod = module:
+    types.attrsOf (types.submodule module);
 
   mkSubMod' = module:
     types.attrsOf (types.submodule module);
@@ -36,65 +30,67 @@
 in {
   options = {
     meow.browser.firefoxConfig =
-      subModOpt {
-        configPath = mkOpt types.str ".mozilla/firefox" {
-          description = "Path to configuration directory, relative to home directory.";
-        };
-
-        profilesPath = mkOpt types.str config.configPath {};
-
-        startWithLastProfile = mkOpt types.bool true {};
-
-        profiles =
-          mkOpt (mkSubMod' ({
-            config,
-            name,
-            ...
-          }: {
-            options = {
-              name = mkOpt (types.str) name {
-                description = "Profile name.";
-              };
-              id = mkOpt (types.ints.unsigned) 0 {
-                description = "Profile id, set to unique number.";
-              };
-              path = mkOpt (types.str) config.name {
-                description = "Profile path, relative to config dir.";
-              };
-              default = mkOpt (types.bool) true {
-                description = "Set as default profile.";
-              };
-
-              userPref = mkOpt (types.attrsOf (pkgs.formats.json {}).type) {} {
-                description = "Attrset of Firefox preferences. Json format.";
-              };
-              extraUserJs = mkOpt (types.str) "" {
-                description = "Extra user.js config to be placed at the end.";
-              };
-
-              search = {
-                force = mkOpt (types.bool) true {
-                  description = "Forcefully replace existing search configuration.";
-                };
-                default = mkOpt (types.str) "DuckDuckGo" {
-                  description = "Default search engine.";
-                };
-                privateDefault = mkOpt (types.str) "DuckDuckGo" {
-                  description = "Default search engine for private browsing mode.";
-                };
-
-                engines = mkOpt (types.attrsOf (types.attrsOf (pkgs.formats.json {}).type)) {} {
-                  description = ''
-                    Search engine configuration
-                  '';
-                  # https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177
-                };
-              };
-            };
-          })) {} {
-            description = "Attribute set of profile configurations.";
+      subModOpt ({config, ...}: {
+        options = {
+          configPath = mkOpt types.str ".mozilla/firefox" {
+            description = "Path to configuration directory, relative to home directory.";
           };
-      } {
+
+          profilesPath = mkOpt types.str config.configPath {};
+
+          startWithLastProfile = mkOpt types.bool true {};
+
+          profiles =
+            mkOpt (mkSubMod' ({
+              config,
+              name,
+              ...
+            }: {
+              options = {
+                name = mkOpt (types.str) name {
+                  description = "Profile name.";
+                };
+                id = mkOpt (types.ints.unsigned) 0 {
+                  description = "Profile id, set to unique number.";
+                };
+                path = mkOpt (types.str) config.name {
+                  description = "Profile path, relative to config dir.";
+                };
+                default = mkOpt (types.bool) true {
+                  description = "Set as default profile.";
+                };
+
+                userPref = mkOpt (types.attrsOf (pkgs.formats.json {}).type) {} {
+                  description = "Attrset of Firefox preferences. Json format.";
+                };
+                extraUserJs = mkOpt (types.str) "" {
+                  description = "Extra user.js config to be placed at the end.";
+                };
+
+                search = {
+                  force = mkOpt (types.bool) true {
+                    description = "Forcefully replace existing search configuration.";
+                  };
+                  default = mkOpt (types.str) "DuckDuckGo" {
+                    description = "Default search engine.";
+                  };
+                  privateDefault = mkOpt (types.str) "DuckDuckGo" {
+                    description = "Default search engine for private browsing mode.";
+                  };
+
+                  engines = mkOpt (types.attrsOf (types.attrsOf (pkgs.formats.json {}).type)) {} {
+                    description = ''
+                      Search engine configuration
+                    '';
+                    # https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177
+                  };
+                };
+              };
+            })) {} {
+              description = "Attribute set of profile configurations.";
+            };
+        };
+      }) {
         description = "Attrs of config per (fork of) firefox.";
         default = {};
       };

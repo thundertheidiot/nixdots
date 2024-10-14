@@ -50,7 +50,7 @@ in {
       persistMounts = paths': let
         inherit (builtins) listToAttrs;
 
-        paths = map (p: mkMount p) paths';
+        paths = map (p: mkMount p) (builtins.filter (i: i != null) paths');
       in
         listToAttrs (map (p:
           with p; {
@@ -116,12 +116,16 @@ in {
             persistPath = "${cfg.persist}/docker";
             permissions = "710";
           }
-          {
-            path = "/var/lib/sddm";
-            permissions = "750";
-            user = "sddm";
-            group = "sddm";
-          }
+          (
+            if config.services.displayManager.sddm.enable
+            then {
+              path = "/var/lib/sddm";
+              permissions = "750";
+              user = "sddm";
+              group = "sddm";
+            }
+            else null
+          )
         ]);
 
       environment.etc = builtins.listToAttrs (builtins.map (loc: {

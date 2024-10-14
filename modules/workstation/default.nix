@@ -3,6 +3,7 @@
   pkgs,
   mlib,
   lib,
+  inputs,
   ...
 }: let
   inherit (mlib) mkEnOpt;
@@ -59,6 +60,8 @@ in {
       # python3
 
       libnotify
+
+      inputs.deploy-rs.packages."${pkgs.system}".default
     ];
 
     programs.appimage = {

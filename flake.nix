@@ -18,17 +18,33 @@
     ];
   };
 
-  outputs = {nixpkgs, ...} @ inputs: let
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  } @ inputs: let
     lib = nixpkgs.lib;
     mlib = (import ./lib) {inherit lib;};
     mpkgs = import ./pkgs;
   in rec {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
+    deploy.nodes.server = {
+      hostname = "192.168.101.101";
+      profiles.system = {
+        user = "root";
+        sshUser = "root";
+        path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
+      };
+    };
+
+    # runs check for every host, shitty
+    # checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
+
     nixosConfigurations =
       gen ["desktop" "server" "x220" "t440p" "digiboksi"]
       // {
-        local = mkSystem (import ./local.nix) [];
+        # local = mkSystem (import ./local.nix) [];
         # iso = mkSystem (import ./hosts/iso.nix) [
         #   "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
         # ];
@@ -122,6 +138,8 @@
     naersk.url = "github:nix-community/naersk";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    deploy-rs.url = "github:serokell/deploy-rs";
 
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.0.tar.gz";
