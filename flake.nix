@@ -38,8 +38,7 @@
       };
     };
 
-    # runs check for every host, shitty
-    # checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
+    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
 
     nixosConfigurations =
       gen ["desktop" "server" "x220" "t440p" "digiboksi"]
