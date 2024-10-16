@@ -219,6 +219,34 @@ in {
           source = "${krohnkite}/share/kwin/scripts/krohnkite";
           recursive = true;
         };
+
+        programs.plasma.configFile."kwinrc" = {
+          "Plugins"."krohnkiteEnabled" = V true;
+          "Script-krohnkite" = {
+            "enableSpiralLayout" = V false;
+            "enableColumnsLayout" = V false;
+            "enableSpreadLayout" = V false;
+            "enableStairLayout" = V false;
+
+            "monocleMaximize" = V false;
+
+            "screenGapBottom" = V 5;
+            "screenGapLeft" = V 5;
+            "screenGapRight" = V 5;
+            "screenGapTop" = V 5;
+            "tileLayoutGap" = V 5;
+
+            "directionalKeyDwm" = V true;
+            "directionalKeyFocus" = V false;
+
+            # New window = top of stack
+            "newWindowPosition" = V 1;
+          };
+
+          # programs.plasma.configFile."kglobalshortcutsrc".kwin = {
+          #   # "Krohnkite"
+          # };
+        };
       })
     ]))))
   ]);
