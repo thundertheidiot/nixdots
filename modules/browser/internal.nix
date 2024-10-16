@@ -11,13 +11,10 @@
   # Easier to deal with than my abstraction for this scale
   inherit (lib.options) mkOption;
 
-  inherit (builtins) mapAttrs concatStringsSep;
+  inherit (builtins) concatStringsSep;
   inherit (lib.attrsets) mapAttrs' mapAttrsToList;
 
   mkSubMod = module:
-    types.attrsOf (types.submodule module);
-
-  mkSubMod' = module:
     types.attrsOf (types.submodule module);
 
   subModOpt = options: attrs:
@@ -41,7 +38,7 @@ in {
           startWithLastProfile = mkOpt types.bool true {};
 
           profiles =
-            mkOpt (mkSubMod' ({
+            subModOpt ({
               config,
               name,
               ...
@@ -84,9 +81,12 @@ in {
                     '';
                     # https://searchfox.org/mozilla-central/rev/669329e284f8e8e2bb28090617192ca9b4ef3380/toolkit/components/search/SearchEngine.jsm#1138-1177
                   };
+                  order =
+                    mkOpt (types.uniq (types.listOf types.str)) [] {
+                    };
                 };
               };
-            })) {} {
+            }) {
               description = "Attribute set of profile configurations.";
             };
         };
@@ -151,30 +151,19 @@ in {
                   };
                 })
                 ffc.profiles)
-            # TODO: search engines
-            # https://github.com/nix-community/home-manager/blob/2f23fa308a7c067e52dfcc30a0758f47043ec176/modules/programs/firefox.nix#L786
-            # // (mapAttrs' (n: v: {
-            #     name = "${ffc.profilesPath}/${v.path}/user.js";
-            #     value = {
-            #       force = true;
-            #       source = let
-            #         settings = {
-            #           version = 6;
-            #         };
-            #         # This is some stupid firefox thing taken from home-manager
-            #         disclaimer = appName:
-            #           "By modifying this file, I agree that I am doing so "
-            #           + "only within ${appName} itself, using official, user-driven search "
-            #           + "engine selection processes, and in a way which does not circumvent "
-            #           + "user consent. I acknowledge that any attempt to change this file "
-            #           + "from outside of ${appName} is a malicious act, and will be responded "
-            #           + "to accordingly.";
-            #         a = "a";
-            #       in
-            #         a;
-            #     };
-            #   })
-            # ffc.profiles)
+              // (mapAttrs' (n: v: {
+                  name = "${ffc.profilesPath}/${v.path}/search.json.mozlz4";
+                  value = {
+                    force = v.search.force;
+                    source = pkgs.callPackage ./engines.nix {
+                      path = "${ffc.profilesPath}/${v.path}";
+                      inherit (v) name;
+                      inherit (v.search) engines default privateDefault order;
+                    };
+                  };
+                })
+                ffc.profiles)
+            # TODO: rest of hm functionality
           )
           ff);
     });

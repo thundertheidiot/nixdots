@@ -5,15 +5,16 @@
   mlib,
   ...
 }: let
-  inherit (mlib) homeModule mkOpt mkEnOpt;
-  inherit (lib) mkIf;
+  inherit (mlib) mkOpt;
+  inherit (lib) mkIf mkMerge mkDefault;
   inherit (lib.types) listOf enum;
+  inherit (builtins) elem;
 
   cfg = config.meow.browser;
 in {
   options = {
     meow.browser = {
-      enable = mkOpt (listOf (enum ["firefox" "firedragon"])) ["firedragon"] {
+      enable = mkOpt (listOf (enum ["firefox" "firedragon"])) [] {
         description = "Browsers to install and configure";
       };
     };
@@ -21,5 +22,22 @@ in {
 
   imports = [
     ./internal.nix
+  ];
+
+  config = mkMerge [
+    (mkIf (elem "firefox" cfg.enable) {
+      environment.systemPackages = [pkgs.firefox];
+
+      meow.browser.firefoxConfig.firefox = {
+        configPath = ".mozilla/firefox";
+      };
+    })
+    (mkIf (elem "firedragon" cfg.enable) {
+      environment.systemPackages = [pkgs.firedragon];
+
+      meow.browser.firefoxConfig.firedragon = {
+        configPath = ".firedragon";
+      };
+    })
   ];
 }
