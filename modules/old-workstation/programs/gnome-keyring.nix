@@ -20,6 +20,5 @@
         seahorse
         gnome-keyring
       ];
-
     };
 }

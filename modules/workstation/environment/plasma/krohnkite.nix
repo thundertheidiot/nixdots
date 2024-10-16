@@ -11,11 +11,11 @@ buildNpmPackage {
   src = fetchFromGitHub {
     owner = "anametologin";
     repo = "krohnkite";
-    rev = "f25caab97f979975e696912cdd65bd83d3f58b6a";
-    hash = "sha256-MLVyTVdSgqvSbVtuySr90L0a5hyFKuMhJmnpfI80Hog=";
+    rev = "5b1446dd0201e34eccc4cb931b80960daefccb7a";
+    hash = "sha256-Cy+T2t+e015Y4J42sns4xzltiILErTL4PvcAeF3AJHE=";
   };
 
-  npmDepsHash = "sha256-BShnkTKfTa3AYZH6L3mbku6W5sZl0gOj7XhIJ8EDhu0=";
+  npmDepsHash = "sha256-lsABgLU8B2AIGMvn6nvAFcliVQL8tYYnAxOVh1aTto0=";
 
   dontConfigure = true;
 
