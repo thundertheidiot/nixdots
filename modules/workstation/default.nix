@@ -21,6 +21,7 @@ in {
     ./network.nix
     ./media.nix
     ./flatpak.nix
+    ./keyring.nix
     ./theme
     ./environment # de's and wm's
   ];
@@ -35,6 +36,7 @@ in {
         "media"
         "theming"
         "flatpak"
+        "gnomeKeyring"
       ]);
 
     security.polkit.enable = true;

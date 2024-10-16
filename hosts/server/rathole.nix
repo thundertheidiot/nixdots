@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   config = {
-    sops.secrets."rathole" = {
+    meow.sops.enableSecrets = ["rathole"];
+    meow.sops.secrets."rathole" = {
       path = "/etc/rathole.toml";
       mode = "0644";
     };

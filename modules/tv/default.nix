@@ -58,7 +58,8 @@ in {
       recursive = true;
     };
 
-    sops.secrets."youtube_api_keys" = {
+    meow.sops.enableSecrets = ["youtube_api_keys"];
+    meow.sops.secrets."youtube_api_keys" = {
       path = "${config.meow.home.directory}/.local/share/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
       mode = "0644";
       owner = config.meow.home.user;

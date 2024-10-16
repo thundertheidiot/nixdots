@@ -29,12 +29,22 @@
   in rec {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
-    deploy.nodes.server = {
-      hostname = "192.168.101.101";
-      profiles.system = {
-        user = "root";
-        sshUser = "root";
-        path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
+    deploy.nodes = {
+      x220 = {
+        hostname = "192.168.101.111";
+        profiles.system = {
+          user = "root";
+          sshUser = "root";
+          path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.x220;
+        };
+      };
+      server = {
+        hostname = "192.168.101.101";
+        profiles.system = {
+          user = "root";
+          sshUser = "root";
+          path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
+        };
       };
     };
 

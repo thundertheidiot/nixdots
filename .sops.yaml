@@ -1,13 +1,18 @@
 keys:
- - &me age1est4jdeu803qv6jng7vrj9x92l3xs0mr6qwv6fpt0p7tdd26xd6s84k2pq
- - &system age1dlh099k5q7uafl7esvrxtewjmmcw2vedmymfw3l8euckxxrqe9wqnhcus3
+ - &desk age1est4jdeu803qv6jng7vrj9x92l3xs0mr6qwv6fpt0p7tdd26xd6s84k2pq
+ - &digiboksi age1dlh099k5q7uafl7esvrxtewjmmcw2vedmymfw3l8euckxxrqe9wqnhcus3
  - &server age1w785k56chrrsc29jgkjzyvxfj3lx5sx56cm5fg6ldvychdga9umspddsfg
  - &t440p age196cqwq7cfr20zhlxwdnjrtlnn4w3ay5q52wxec5pyk2ksvq3s9ms0qjzyr
 creation_rules:
- - path_regex: sops/[^/]+$
+ - path_regex: sops/digiboksi/[^/]+$
    key_groups:
    - age:
-     - *me
-     - *system
-     - *server
+     - *desk
      - *t440p
+     - *digiboksi
+ - path_regex: sops/server/[^/]+$
+   key_groups:
+   - age:
+     - *desk
+     - *t440p
+     - *server

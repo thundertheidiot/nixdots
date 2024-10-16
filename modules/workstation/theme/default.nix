@@ -125,6 +125,39 @@ in {
             enable = true;
             gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
           };
+
+          xdg.configFile."qt5ct/qt5ct.conf".text = lib.generators.toINI {} {
+            Appearance = {
+              standard_dialogs = "default";
+              style = "kvantum";
+              icon_theme = "Papirus-Dark";
+            };
+            Fonts = {
+              #        name,   size, ?,?, ?,?,?,?,?,?
+              fixed = "Monospace,10,-1,5,50,0,0,0,0,0";
+              general = "Sans Serif,12,-1,5,50,0,0,0,0,0";
+            };
+            Interface = {
+              activate_item_on_single_click = 0;
+            };
+          };
+
+          # TODO: qt6 titlebars broken, test
+          xdg.configFile."qt6ct/qt6ct.conf".text = lib.generators.toINI {} {
+            Appearance = {
+              standard_dialogs = "default";
+              style = "kvantum";
+              icon_theme = "Papirus-Dark";
+            };
+            Fonts = {
+              #        name,   size, ?,?, ?,?,?,?,?,?
+              fixed = "Monospace,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+              general = "Sans Serif,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+            };
+            Interface = {
+              activate_item_on_single_click = 0;
+            };
+          };
         })
       ];
 
