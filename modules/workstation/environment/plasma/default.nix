@@ -242,18 +242,18 @@ in {
             # New window = top of stack
             "newWindowPosition" = V 1;
           };
+        };
 
-          programs.plasma.configFile."kglobalshortcutsrc".kwin = {
-            "KrohnkiteMonocleLayout" = V "Meta+F";
-            "KrohnkiteTileLayout" = V "Meta+T";
-            "KrohnkiteToggleFloat" = V "Meta+Shift+Space";
-            "KrohnkiteSetMaster" = V "Meta+Shift+Return";
+        programs.plasma.configFile."kglobalshortcutsrc".kwin = {
+          "KrohnkiteMonocleLayout" = V "Meta+F";
+          "KrohnkiteTileLayout" = V "Meta+T";
+          "KrohnkiteToggleFloat" = V "Meta+Shift+Space";
+          "KrohnkiteSetMaster" = V "Meta+Shift+Return";
 
-            "KrohnkiteShrinkWidth" = V "Meta+H";
-            "KrohnkiteFocusPrev" = V "Meta+J";
-            "KrohnkiteFocusNext" = V "Meta+K";
-            "KrohnkitegrowWidth" = V "Meta+L"; # typo in krohnkite
-          };
+          "KrohnkiteShrinkWidth" = V "Meta+H";
+          "KrohnkiteFocusPrev" = V "Meta+J";
+          "KrohnkiteFocusNext" = V "Meta+K";
+          "KrohnkitegrowWidth" = V "Meta+L"; # typo in krohnkite
         };
       })
     ]))))
