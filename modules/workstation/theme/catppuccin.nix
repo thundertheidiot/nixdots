@@ -10,10 +10,6 @@
   theme = config.meow.workstation.theme;
 in {
   config = mkIf (cfg && theme == "catppuccin-mocha") {
-    environment.variables = {
-      QT_QPA_PLATFORMTHEME = "qt5ct";
-    };
-
     boot.kernelParams = [
       # mocha tty
       "vt.default_red=30,243,166,249,137,245,148,186,88,243,166,249,137,245,148,166"

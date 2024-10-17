@@ -8,9 +8,9 @@
 }: let
   inherit (mlib) mkEnOpt mkOpt;
   inherit (lib) mkIf mkMerge;
-  inherit (lib.types) str;
+  inherit (lib.types) str anything;
 
-  cfg = config.meow.workstation.theming.enable;
+  cfg = config.meow.workstation.theming;
 
   defaultFonts = {
     serif = ["Cantarell"];
@@ -36,6 +36,12 @@ in {
     meow.workstation.theme = mkOpt str "catppuccin-mocha" {
       description = "Theme to use";
     };
+    meow.workstation.theming.iconTheme = {
+      package = mkOpt anything pkgs.papirus-icon-theme {
+        description = "Icon theme package";
+      };
+      name = mkOpt str "Papirus-Dark" {};
+    };
   };
 
   imports = [
@@ -43,7 +49,7 @@ in {
     ./misc.nix
   ];
 
-  config = mkIf cfg (mkMerge [
+  config = mkIf cfg.enable (mkMerge [
     {
       fonts.fontconfig = {
         enable = true;
@@ -107,7 +113,7 @@ in {
 
       meow.home.modules = [
         {
-          home.packages = fontPkgs;
+          home.packages = fontPkgs ++ [cfg.iconTheme.package];
 
           stylix.targets = {
             emacs.enable = false;
@@ -130,7 +136,7 @@ in {
             Appearance = {
               standard_dialogs = "default";
               style = "kvantum";
-              icon_theme = "Papirus-Dark";
+              icon_theme = cfg.iconTheme.name;
             };
             Fonts = {
               #        name,   size, ?,?, ?,?,?,?,?,?
@@ -147,7 +153,7 @@ in {
             Appearance = {
               standard_dialogs = "default";
               style = "kvantum";
-              icon_theme = "Papirus-Dark";
+              icon_theme = cfg.iconTheme.name;
             };
             Fonts = {
               #        name,   size, ?,?, ?,?,?,?,?,?
