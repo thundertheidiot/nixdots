@@ -9,7 +9,7 @@
 }: let
   inherit (lib) mkIf;
   inherit (mlib) mkOpt;
-  inherit (lib.types) str;
+  inherit (lib.types) listOf str;
   inherit (builtins) elem;
 
   work = config.meow.workstation.enable;
@@ -19,6 +19,9 @@ in {
     meow.workstation.hyprland = {
       extraConfig = mkOpt str "" {
         description = "Extra configuration to add to the hyprland config file.";
+      };
+      extraAutostart = mkOpt (listOf str) [] {
+        description = "Extra entries to exec-once.";
       };
     };
   };
@@ -110,9 +113,11 @@ in {
                 "XDG_SESSION_TYPE,wayland"
                 "XDG_SESSION_DESKTOP,Hyprland"
 
-                "EDITOR,emacsclient -c -a ''"
+                # "EDITOR,emacsclient -c -a ''"
 
-                "WLR_DRM_NO_ATOMIC,1"
+                "QT_QPA_PLATFORMTHEME,qt5ct"
+
+                # "WLR_DRM_NO_ATOMIC,1"
               ];
 
               exec-once =
@@ -122,7 +127,7 @@ in {
                   "${pkgs.waybar}/bin/waybar"
                   "${pkgs.swayosd}/bin/swayosd-server"
                 ]
-                ++ config.setup.hyprland.extraAutostart;
+                ++ cfg.extraAutostart;
 
               input = {
                 kb_layout = "us,fi";

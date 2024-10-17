@@ -54,6 +54,15 @@ in {
           # compositor = lib.mkForce "weston";
         };
       };
+
+      meow.impermanence.directories = [
+        {
+          path = "/var/lib/sddm";
+          permissions = "750";
+          user = "sddm";
+          group = "sddm";
+        }
+      ];
     })
     (mkIf (dm == "gdm") {
       services.xserver.displayManager.gdm = {

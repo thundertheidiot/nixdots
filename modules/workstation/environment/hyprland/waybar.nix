@@ -13,7 +13,7 @@ in {
   options = {
     meow.workstation.waybarDiskFilter =
       mkOpt (listOf str)
-      (["/boot"] ++ lib.lists.optional config.meow.impermanence.enable "/")
+      []
       {
         description = "Mountpoints to filter out in waybar.";
       };
@@ -26,7 +26,13 @@ in {
         then "NULL"
         else replaceStrings ["/"] ["_"] name;
 
-      disks' =
+      filterList =
+        ["/boot"] ++ lib.lists.optional config.meow.impermanence.enable "/" ++ config.meow.workstation.waybarDiskFilter;
+
+      filterF = disk:
+        (filter (d: disk == d) filterList) == [];
+
+      disks =
         mapAttrs' (n: v: {
           name = "disk#${diskName v.device}";
           value = {
@@ -37,17 +43,8 @@ in {
             critical = 90;
           };
         })
-        config.fileSystems;
-
-      # FIXME: think about this when you aren't sick
-      filterList =
-        map (mount: "disk#${diskName config.fileSystems.${mount}.device or null}")
-        config.meow.workstation.waybarDiskFilter;
-
-      filterF = disk:
-        (filter (d: disk == d) filterList) == [];
-
-      disks = filterAttrs (n: _: filterF n) disks';
+        (filterAttrs (_: d: filterF d.device) config.fileSystems);
+      # disks = filterAttrs (n: _: filterF n) disks';
     in [
       ({
           layer = "top";

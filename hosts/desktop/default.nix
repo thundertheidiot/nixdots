@@ -22,9 +22,6 @@ in {
       workstation.utils = "generic/gtk";
       workstation.environment = ["hyprland"];
 
-      setup.hyprland.extraAutostart = [
-        "${pkgs.ckb-next}/bin/ckb-next -b"
-      ];
       setup.gaming.enable = true;
       setup.tv.enable = false;
 
@@ -68,6 +65,9 @@ in {
 
       workstation.environment = ["hyprland" "plasma"];
       workstation.plasma.tiling = true;
+      workstation.hyprland.extraAutostart = [
+        "${pkgs.ckb-next}/bin/ckb-next -b"
+      ];
 
       workstation.flatpak.graphicalStore = true;
 
@@ -323,6 +323,9 @@ in {
                   };
                   "/tmp" = {
                     mountpoint = "/tmp";
+                  };
+                  "/var_tmp" = {
+                    mountpoint = "/var/tmp";
                   };
                 };
               };
