@@ -43,7 +43,7 @@ in {
         kde = {
           default = ["kde"];
           "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
-          "org.freedesktop.impl.portal.Settings" = ["kde" "gtk"];
+          "org.freedesktop.impl.portal.Settings" = ["kde"];
         };
       };
     }
@@ -243,9 +243,17 @@ in {
             "newWindowPosition" = V 1;
           };
 
-          # programs.plasma.configFile."kglobalshortcutsrc".kwin = {
-          #   # "Krohnkite"
-          # };
+          programs.plasma.configFile."kglobalshortcutsrc".kwin = {
+            "KrohnkiteMonocleLayout" = V "Meta+F";
+            "KrohnkiteTileLayout" = V "Meta+T";
+            "KrohnkiteToggleFloat" = V "Meta+Shift+Space";
+            "KrohnkiteSetMaster" = V "Meta+Shift+Return";
+
+            "KrohnkiteShrinkWidth" = V "Meta+H";
+            "KrohnkiteFocusPrev" = V "Meta+J";
+            "KrohnkiteFocusNext" = V "Meta+K";
+            "KrohnkitegrowWidth" = V "Meta+L"; # typo in krohnkite
+          };
         };
       })
     ]))))
