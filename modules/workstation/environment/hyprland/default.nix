@@ -36,9 +36,9 @@ in {
       hypr.hyprland
     ];
 
-    # xdg.portal.extraPortals = [
-    #   config.programs.hyprland.portalPackage
-    # ];
+    xdg.portal.extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
 
     xdg.portal.config = {
       hyprland = {
@@ -61,23 +61,11 @@ in {
           # };
           screenshot = inputs.screenshot.packages.${pkgs.system}.default;
         in {
-          services.hyprpaper = {
-            enable = true;
-            settings = {
-              preload = "~/.local/share/bg";
-              wallpaper = ",~/.local/share/bg";
-              splash = false;
-            };
-          };
-
-          # Don't run hyprpaper in other environments
-          systemd.user.services.hyprpaper = {
-            Install = {WantedBy = lib.mkForce ["hyprland-session.target"];};
-
-            Unit = {
-              PartOf = lib.mkForce ["hyprland-session.target"];
-            };
-          };
+          xdg.configFile."hypr/hyprpaper.conf".text = ''
+            preload = ~/.local/share/bg
+            wallpaper = ,~/.local/share/bg
+            splash = false
+          '';
 
           home.packages = [pkgs.swayosd];
 
@@ -86,7 +74,7 @@ in {
           programs.tofi.enable = true;
           services.mako.enable = true;
 
-          home.file.".config/swappy/config".text = ''
+          xdg.configFile."swappy/config".text = ''
             [Default]
             save_dir=${config.xdg.userDirs.pictures}/screenshots
             save_filename_format=annotated-%Y-%m-%d_%H-%M-%S.png

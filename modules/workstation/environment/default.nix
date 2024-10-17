@@ -33,18 +33,18 @@ in {
     ./cosmic.nix
   ];
 
-  # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?
   config = mkIf cfg (mkMerge [
     {
       xdg.portal = {
         enable = true;
         xdgOpenUsePortal = true;
 
-        extraPortals = lib.mkIf (!builtins.elem "gnome" config.meow.workstation.environment) [pkgs.xdg-desktop-portal-gtk];
+        # extraPortals = lib.mkIf (!builtins.elem "gnome" config.meow.workstation.environment) [pkgs.xdg-desktop-portal-gtk];
 
-        config.common.default = ["gtk"];
+        config.common.default = lib.mkForce [];
       };
     }
+    # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?
     (mkIf (dm == "sddm") {
       services.displayManager.sddm = {
         enable = true;
