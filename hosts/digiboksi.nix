@@ -43,7 +43,7 @@
     networking.hostName = "digiboksi";
 
     meow = {
-      monitors = mlib.mkMonitors [
+      monitors = [
         {
           name = "HDMI-A-1";
           width = 1360;

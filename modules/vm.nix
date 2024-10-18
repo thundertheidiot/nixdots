@@ -22,6 +22,14 @@ in {
 
     users.users.${config.username}.extraGroups = ["libvirtd"];
 
+    meow.impermanence.directories = [
+      {
+        path = "/var/lib/libvirt";
+        persistPath = "${config.meow.impermanence.persist}/libvirt";
+        permissions = "750";
+      }
+    ];
+
     systemd.services."virsh-net" = {
       enable = true;
       description = "Start virbr0 network bridge on boot.";
