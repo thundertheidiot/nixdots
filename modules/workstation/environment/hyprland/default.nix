@@ -123,6 +123,7 @@ in {
               exec-once =
                 [
                   "${pkgs.mako}/bin/mako"
+                  # "${pkgs.swaynotificationcenter}/bin/swaync"
                   "${pkgs.hyprpaper}/bin/hyprpaper"
                   "${pkgs.waybar}/bin/waybar"
                   "${pkgs.swayosd}/bin/swayosd-server"

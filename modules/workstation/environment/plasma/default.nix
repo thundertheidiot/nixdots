@@ -15,8 +15,8 @@
 in {
   options = {
     meow.workstation.plasma = {
-      vanilla = mkEnOpt "Don't configure plasma at all.";
-      # TODO: kronkhite https://github.com/anametologin/krohnkite
+      basicConfig = mkEnOpt "Configure basic plasma settings.";
+      opinionatedConfig = mkEnOpt "Configure more opinionated settings.";
       tiling = mkEnOpt "Configure plasma into a tiling environment.";
     };
   };
@@ -28,6 +28,8 @@ in {
         enable = true;
         enableQt5Integration = true;
       };
+
+      meow.workstation.plasma.basicConfig = lib.mkDefault true;
 
       # Package excludes
       environment.plasma6.excludePackages = with pkgs; [
@@ -69,6 +71,14 @@ in {
     in (lib.mkMerge [
       {
         programs.plasma.enable = true;
+
+        # Gnome keyring is used instead
+        programs.plasma.configFile."kwalletrc" = {
+          Wallet.Enabled = V false;
+          "org.freedesktop.secrets"."apiEnabled" = V false;
+        };
+      }
+      (mkIf cfg.opinionatedConfig {
         # FIXME: wrangle emacs keybind
         # xdg.dataFile."applications/emacsclient-plasma.desktop" = {
         #   text = ''
@@ -89,8 +99,8 @@ in {
         #     "services/emacsclient-plasma.desktop"."_launch" = V "Meta+E";
         #   };
         # };
-      }
-      {
+      })
+      (mkIf cfg.basicConfig {
         home.activation.plasmaPowerdevilSettings = ''
           run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/powerdevilrc --group AC --group Display --key DimDisplayWhenIdle false
           run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/powerdevilrc --group AC --group Display --key TurnOffDisplayWhenIdle false
@@ -101,8 +111,38 @@ in {
 
           run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/powerdevilrc --group Battery --group Performance --key PowerProfile power-saver
         '';
-      }
-      {
+
+        programs.plasma = {
+          shortcuts = {
+            "kwin"."Overview" = "Meta";
+            "kwin"."Show Desktop" = [];
+            "services/org.kde.kscreen.desktop".ShowOSD = "Display";
+
+            kwin = {
+              "Window Quick Tile Top" = [];
+              "Window Maximize" = "Meta+Up";
+            };
+
+            "KDE Keyboard Layout Switcher"."Switch to Next Keyboard Layout" = "Meta+Space";
+          };
+
+          configFile = {
+            "kdeglobals"."KDE"."SingleClick" = V false;
+            "kwinrc"."Xwayland"."XwaylandEavesdrops".value = "modifiers";
+            "kwinrc"."Windows" = {
+              "DelayFocusInterval" = V 0;
+              "FocusPolicy" = V "FocusFollowsMouse";
+              "NextFocusPrefersMouse" = V true;
+            };
+
+            "kwinrc"."org.kde.kdecoration2" = {
+              "ButtonsOnLeft" = V "S";
+              "ButtonsOnRight" = V "IAX";
+            };
+          };
+        };
+      })
+      (mkIf cfg.opinionatedConfig {
         # Keybinds
         programs.plasma = {
           hotkeys.commands = {
@@ -128,12 +168,20 @@ in {
             };
           };
 
+          configFile = {
+            "kcminputrc"."Keyboard" = {
+              "RepeatDelay" = V 300;
+              "RepeatRate" = V 50;
+            };
+
+            "kwinrc"."Desktops"."Number" = V 9;
+            "kwinrc"."Desktops"."Rows" = V 1;
+            # Activities
+            # "kwinrc"."ModifierOnlyShortcuts"."Meta" = V "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
+          };
+
           shortcuts = {
             # Removing conflicting defaults
-            "kwin"."Overview" = "Meta";
-            "kwin"."Show Desktop" = [];
-            "services/org.kde.kscreen.desktop".ShowOSD = "Display";
-
             plasmashell = {
               "manage activities" = [];
               "activate task manager entry 1" = [];
@@ -170,48 +218,12 @@ in {
               "Window to Desktop 9" = "Meta+(";
 
               "Window Fullscreen" = "Meta+Shift+F";
-              "Window Quick Tile Top" = [];
-              "Window Maximize" = "Meta+Up";
             };
 
             "services/org.kde.krunner.desktop"._launch = "Meta+D";
-
-            "KDE Keyboard Layout Switcher"."Switch to Next Keyboard Layout" = "Meta+Space";
           };
         };
-      }
-      {
-        # Config
-        programs.plasma.configFile = {
-          "kcminputrc"."Keyboard" = {
-            "RepeatDelay" = V 300;
-            "RepeatRate" = V 50;
-          };
-
-          # Gnome keyring is used instead
-          "kwalletrc" = {
-            Wallet.Enabled = V false;
-            "org.freedesktop.secrets"."apiEnabled" = V false;
-          };
-
-          "kdeglobals"."KDE"."SingleClick" = V false;
-          "kwinrc"."Xwayland"."XwaylandEavesdrops".value = "modifiers";
-          "kwinrc"."Windows" = {
-            "DelayFocusInterval" = V 0;
-            "FocusPolicy" = V "FocusFollowsMouse";
-            "NextFocusPrefersMouse" = V true;
-          };
-          "kwinrc"."Desktops"."Number" = V 9;
-          "kwinrc"."Desktops"."Rows" = V 1;
-          # Activities
-          # "kwinrc"."ModifierOnlyShortcuts"."Meta" = V "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
-
-          "kwinrc"."org.kde.kdecoration2" = {
-            "ButtonsOnLeft" = V "S";
-            "ButtonsOnRight" = V "IAX";
-          };
-        };
-      }
+      })
       (mkIf cfg.tiling {
         xdg.dataFile."kwin/scripts/krohnkite" = let
           krohnkite = pkgs.callPackage ./krohnkite.nix {};

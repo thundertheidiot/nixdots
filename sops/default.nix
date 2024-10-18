@@ -8,7 +8,7 @@
   inherit (lib.types) listOf str attrsOf anything;
   inherit (lib) mkMerge;
   inherit (lib.attrsets) filterAttrs;
-  inherit (lib.lists) foldl;
+  inherit (lib.lists) elem;
 in {
   options = {
     meow.sops = {
@@ -37,12 +37,7 @@ in {
     {
       sops.secrets =
         filterAttrs (
-          name: _: (foldl (bool: elem:
-              if bool || name == elem
-              then true
-              else false)
-            false
-            config.meow.sops.enableSecrets)
+          name: _: elem name config.meow.sops.enableSecrets
         )
         config.meow.sops.secrets;
     }

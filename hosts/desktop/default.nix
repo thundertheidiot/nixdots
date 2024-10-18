@@ -64,6 +64,7 @@ in {
       workstation.enable = true;
 
       workstation.environment = ["hyprland" "plasma"];
+      workstation.plasma.opinionatedConfig = true;
       workstation.plasma.tiling = true;
       workstation.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
