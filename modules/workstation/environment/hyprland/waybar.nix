@@ -6,9 +6,9 @@
 }: let
   inherit (mlib) homeModule mkOpt;
   inherit (lib.types) listOf str;
-  inherit (lib.lists) unique;
+  inherit (lib.lists) unique elem;
   inherit (lib.attrsets) mapAttrs' mapAttrsToList filterAttrs;
-  inherit (builtins) filter replaceStrings;
+  inherit (builtins) replaceStrings;
 in {
   options = {
     meow.workstation.waybarDiskFilter =
@@ -29,8 +29,9 @@ in {
       filterList =
         ["/boot"] ++ lib.lists.optional config.meow.impermanence.enable "/" ++ config.meow.workstation.waybarDiskFilter;
 
-      filterF = disk:
-        (filter (d: disk == d) filterList) == [];
+      fileSystems =
+        filterAttrs (_: d: !elem d.mountPoint filterList)
+        config.fileSystems;
 
       disks =
         mapAttrs' (n: v: {
@@ -43,8 +44,7 @@ in {
             critical = 90;
           };
         })
-        (filterAttrs (_: d: filterF d.device) config.fileSystems);
-      # disks = filterAttrs (n: _: filterF n) disks';
+        fileSystems;
     in [
       ({
           layer = "top";
@@ -54,8 +54,8 @@ in {
           modules-center = ["clock"];
           modules-right =
             ["hyprland/language" "idle_inhibitor"]
-            ++ filter filterF (unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
-                config.fileSystems))
+            ++ unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
+              fileSystems)
             ++ ["network" "pulseaudio" "battery" "tray"];
 
           "hyprland/workspaces" = {

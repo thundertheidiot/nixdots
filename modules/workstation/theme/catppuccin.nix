@@ -6,10 +6,10 @@
 }: let
   inherit (lib) mkIf;
 
-  cfg = config.meow.workstation.theming.enable;
+  cfg = config.meow.workstation.theming;
   theme = config.meow.workstation.theme;
 in {
-  config = mkIf (cfg && theme == "catppuccin-mocha") {
+  config = mkIf (cfg.enable && theme == "catppuccin-mocha") {
     boot.kernelParams = [
       # mocha tty
       "vt.default_red=30,243,166,249,137,245,148,186,88,243,166,249,137,245,148,166"
@@ -25,10 +25,6 @@ in {
           variant = "mocha";
         };
         gtkName = "catppuccin-mocha-mauve-compact";
-        cursorPackage = pkgs.catppuccin-cursors.mochaLavender;
-        cursorName = "Catppuccin-Mocha-Lavender-Cursors";
-        iconPackage = pkgs.papirus-icon-theme;
-        iconName = "Papirus-Dark";
       in {
         gtk = {
           theme = lib.mkForce {
@@ -36,8 +32,7 @@ in {
             name = gtkName;
           };
           iconTheme = lib.mkForce {
-            package = iconPackage;
-            name = iconName;
+            inherit (cfg.iconTheme) package name;
           };
         };
 
@@ -77,7 +72,7 @@ in {
       in {
         home.packages = with pkgs; [
           qtPackage
-          papirus-icon-theme
+          cfg.iconTheme.package
         ];
 
         programs.plasma = let
@@ -89,8 +84,8 @@ in {
           configFile = {
             "auroraerc"."CatppuccinMocha-Modern"."ButtonSize" = V 0;
             "kdeglobals"."KDE"."LookAndFeelPackage" = V "Catppuccin-Mocha-Mauve";
-            "kdeglobals"."Icons"."Theme" = V "Papirus-Dark";
-            "kdedefaults/kdeglobals"."Icons"."Theme" = V "Papirus-Dark";
+            "kdeglobals"."Icons"."Theme" = V cfg.iconTheme.name;
+            "kdedefaults/kdeglobals"."Icons"."Theme" = V cfg.iconTheme.name;
             "kdedefaults/kdeglobals"."General"."ColorScheme" = V "CatppuccinMochaMauve";
           };
         };

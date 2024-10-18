@@ -106,26 +106,26 @@ in {
           "/root/.cache/nix"
           "/etc/NetworkManager/system-connections"
           "/var/lib/systemd/coredump"
-          {
-            path = "/var/lib/flatpak";
-            persistPath = "${cfg.persist}/flatpak";
-            permissions = "755";
-          }
+          # {
+          #   path = "/var/lib/flatpak";
+          #   persistPath = "${cfg.persist}/flatpak";
+          #   permissions = "755";
+          # }
           {
             path = "/var/lib/docker";
             persistPath = "${cfg.persist}/docker";
             permissions = "710";
           }
-          (
-            if config.services.displayManager.sddm.enable
-            then {
-              path = "/var/lib/sddm";
-              permissions = "750";
-              user = "sddm";
-              group = "sddm";
-            }
-            else null
-          )
+          # (
+          #   if config.services.displayManager.sddm.enable
+          #   then {
+          #     path = "/var/lib/sddm";
+          #     permissions = "750";
+          #     user = "sddm";
+          #     group = "sddm";
+          #   }
+          #   else null
+          # )
         ]);
 
       environment.etc = builtins.listToAttrs (builtins.map (loc: {
