@@ -6,7 +6,7 @@
   mpkgs,
   ...
 }: let
-  mons = config.meow.monitors;
+  mons = mlib.mkMonitors config.meow.monitors;
 
   inherit (lib) mkIf mkMerge;
   inherit (mlib) homeModule;

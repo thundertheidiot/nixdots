@@ -125,7 +125,7 @@
       impermanence.enable = true;
       impermanence.persist = "/persist";
 
-      monitors = mlib.mkMonitors [
+      monitors = [
         {
           name = "LVDS-1";
           width = 1366;

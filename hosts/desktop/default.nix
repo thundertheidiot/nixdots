@@ -157,7 +157,7 @@ in {
       keyboard.enable = false;
       keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];
 
-      monitors = mlib.mkMonitors [
+      monitors = [
         {
           name = "DP-3";
           width = 2560;

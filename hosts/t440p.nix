@@ -70,7 +70,7 @@
         devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
       };
 
-      monitors = mlib.mkMonitors [
+      monitors = [
         {
           name = "eDP-1";
           width = "1920";
