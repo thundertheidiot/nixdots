@@ -1,6 +1,6 @@
 #+TITLE: GNU/Emacs
 #+STARTUP: overview
-#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+PROPERTY: header-args:emacs-lisp :tangle yes :results none
 
 Setup use-package
 
@@ -308,6 +308,7 @@ Vi(m) bindings in emacs
   (evil-want-keybinding nil)
   (evil-vsplit-window-right t)
   (evil-split-window-below t)
+  (evil-want-minibuffer t)
   (evil-undo-system 'undo-tree)
   :config
   (evil-set-undo-system evil-undo-system)
@@ -457,6 +458,7 @@ Which key
 (general-define-key
  "C-=" 'text-scale-increase
  "C--" 'text-scale-decrease
+ "C-j" nil
  "<escape>" #'keyboard-quit
  "<escape>" #'keyboard-escape-quit
  "ESC" #'keyboard-quit
@@ -465,8 +467,29 @@ Which key
  "<C-wheel-down>" 'text-scale-decrease)
 #+end_src
 
-#+RESULTS:
+WIP window navigation mode
 
+#+begin_src emacs-lisp :tangle no
+(defvar window-navigation-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "h") 'windmove-left)
+    (define-key map (kbd "j") 'windmove-down)
+    (define-key map (kbd "k") 'windmove-up)
+    (define-key map (kbd "l") 'windmove-right)
+    (define-key map (kbd "<escape>") 'window-navigation-mode)
+    map)
+  "Keymap for `my-windmove-mode'.")
+
+(evil-make-overriding-map window-navigation-mode-map 'normal)
+(evil-make-overriding-map window-navigation-mode-map)
+
+(define-minor-mode window-navigation-mode
+  "A minor mode for using hjkl to move between windows."
+  :global t
+  :lighter " WindMove"
+  :keymap window-navigation-mode-map)
+
+#+end_src
 
 * Org mode
 
@@ -500,6 +523,8 @@ Which key
   (add-hook 'org-mode-hook #'org-indent-mode)
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
   :general-config
+  (:keymaps 'org-mode-map
+	    "C-j" nil)
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "oa" '(org-agenda :wk "org agenda"))
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
@@ -1158,15 +1183,14 @@ For some reason advice-add didn't seem to function, so this just manually replic
   :config
   (setq consult-preview-excluded-buffers '(major-mode . exwm-mode))
   :general-config
-  (:states '(normal visual)
-	   "/" #'consult-line)
+  ;; (:states '(normal visual)
+  ;; 	   "/" #'consult-line)
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '((lambda () (interactive)
 	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
-    ;; TODO make good
-    "/" '((lambda () (interactive)
-	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
+    "/" '(consult-line :wk "search")
     "sf" '(consult-fd :wk "find")
+    "si" '(consult-imenu :wk "imenu")
     "bs" '(consult-buffer :wk "switch")
     "bo" '((lambda () (interactive)
 	     (select-window (th/intelligent-split))
@@ -1212,7 +1236,12 @@ Save grep search into evil search history.
 #+end_src
 
 #+begin_src emacs-lisp
+(use-package wgrep)
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package embark
+  ;; :after wgrep
   :ensure t
   :general-config
   (
@@ -1873,4 +1902,5 @@ button event."
 
 # Local Variables:
 # olivetti-body-width: 120
+# org-confirm-babel-evaluate: nil
 # End:
