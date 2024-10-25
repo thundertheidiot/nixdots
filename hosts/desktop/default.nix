@@ -52,6 +52,7 @@ in {
     networking.hostName = "desktop";
 
     services.ollama = {
+      enable = true;
       acceleration = "rocm";
       environmentVariables = {
         HCC_AMDGPU_TARGET = "gfx1031";

@@ -1133,12 +1133,22 @@ For some reason advice-add didn't seem to function, so this just manually replic
 (use-package vertico
   :init
   (setq vertico-resize t)
+  :general-config
+  ;; evil-want-minibuffer t
+  (:keymaps 'vertico-map :states '(normal visual)
+	    "j" #'vertico-next
+	    "k" #'vertico-previous
+	    "gg" #'vertico-first
+	    "G" #'vertico-last)
+  (:keymaps 'vertico-map :states '(normal visual insert)
+	    "RET" #'vertico-exit
+	    "C-u" #'vertico-quick-exit
+	    "C-j" #'vertico-next
+	    "C-k" #'vertico-previous)
+  (:keymaps 'vertico-map :states '(insert)
+	    "<backspace>" #'vertico-directory-delete-char
+	    "DEL" #'vertico-directory-delete-char)
   :config
-  (make-mode-keymap vertico-map '(("C-j" . vertico-next)
-				  ("C-k" . vertico-previous)
-				  ("C-u" . vertico-quick-exit)
-				  ("<backspace>" . vertico-directory-delete-char)
-				  ("DEL" . vertico-directory-delete-char)))
   (vertico-mode))
 #+end_src
 
@@ -1148,6 +1158,8 @@ For some reason advice-add didn't seem to function, so this just manually replic
   :config
   (setq consult-preview-excluded-buffers '(major-mode . exwm-mode))
   :general-config
+  (:states '(normal visual)
+	   "/" #'consult-line)
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '((lambda () (interactive)
 	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
@@ -1186,9 +1198,32 @@ Save grep search into evil search history.
       (setq evil-ex-search-direction 'forward))
     ret))
 (advice-add 'consult--grep :filter-return #'advice!-consult-grep-evil-search-history)
+
+(defun advice!-consult-line-evil-search-history (ret)
+  "Add the selected item to the evil search history."
+  (when ret ;; return value is nil if you quit early
+    (let ((search (car consult--line-history)))
+      (add-to-history 'regexp-search-ring search)
+      (add-to-history 'evil-ex-search-history search)
+      (setq evil-ex-search-pattern (list search t t))
+      (setq evil-ex-search-direction 'forward))
+    ret))
+(advice-add 'consult-line :filter-return #'advice!-consult-line-evil-search-history)
 #+end_src
 
-#+RESULTS:
+#+begin_src emacs-lisp
+(use-package embark
+  :ensure t
+  :general-config
+  (
+   "C-;" #'embark-act
+   "C-a" #'embark-dwim))
+
+(use-package embark-consult
+  :after embark
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
 
 #+begin_src emacs-lisp
 (use-package orderless
