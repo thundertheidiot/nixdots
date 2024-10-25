@@ -1830,11 +1830,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-ehJR5TVUWIDQprIdEZ1wrDW37pnv7lbPH+ojevfwu2U=",
-        "path": "/nix/store/d8vn9an6y84dna30cja8dcnakb3px046-source/pkgs/screenshot",
+        "path": "/nix/store/m1h01gs74zzis7iyrw80p0b6nsd4v7as-source/pkgs/screenshot",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/d8vn9an6y84dna30cja8dcnakb3px046-source/pkgs/screenshot",
+        "path": "/nix/store/m1h01gs74zzis7iyrw80p0b6nsd4v7as-source/pkgs/screenshot",
         "type": "path"
       }
     },
