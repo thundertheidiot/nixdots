@@ -112,7 +112,8 @@
                   # inputs.hyprland.overlays.default
                   inputs.waybar.overlays.default
                   inputs.rust-overlay.overlays.default
-                  (import ./overrides.nix {inherit inputs;})
+                  inputs.nixpkgs-xr.overlays.default
+                  (import ./overrides.nix {inherit lib inputs;})
                 ];
               };
 
@@ -177,6 +178,8 @@
       url = "github:tinted-theming/schemes";
       flake = false;
     };
+
+    nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
 
     rust-overlay.url = "github:oxalica/rust-overlay";
 
