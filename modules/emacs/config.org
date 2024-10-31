@@ -650,20 +650,6 @@ Faster inserting of templates like the source code blocks here.
 Show added/deleted/edited parts in the fringe
 
 #+begin_src emacs-lisp
-(defun th/configure-diff-hl-faces ()
-  (mapc (lambda (f) 
-	  (set-face-background f "green")
-	  (set-face-foreground f "green"))
-	'(diff-hl-insert diff-hl-dired-insert diff-hl-margin-insert))
-  (mapc (lambda (f) 
-	  (set-face-background f "purple")
-	  (set-face-foreground f "purple"))
-	'(diff-hl-change diff-hl-dired-change diff-hl-margin-change))
-  (mapc (lambda (f) 
-	  (set-face-background f "red")
-	  (set-face-foreground f "red"))
-	'(diff-hl-delete diff-hl-dired-delete diff-hl-margin-delete)))
-
 (defun th/last-diff-hl-hunk (&optional backward)
   "Go to the last hunk in the file, first if BACKWARD is t."
   (while-let ((pos (diff-hl-search-next-hunk backward)))
@@ -687,7 +673,18 @@ Show added/deleted/edited parts in the fringe
   (diff-hl-show-staged-changes nil)
   :config
   (global-diff-hl-mode +1)
-  (th/configure-diff-hl-faces)
+  (mapc (lambda (f) 
+	  (set-face-background f "green")
+	  (set-face-foreground f "green"))
+	'(diff-hl-insert diff-hl-dired-insert diff-hl-margin-insert))
+  (mapc (lambda (f) 
+	  (set-face-background f "purple")
+	  (set-face-foreground f "purple"))
+	'(diff-hl-change diff-hl-dired-change diff-hl-margin-change))
+  (mapc (lambda (f) 
+	  (set-face-background f "red")
+	  (set-face-foreground f "red"))
+	'(diff-hl-delete diff-hl-dired-delete diff-hl-margin-delete))
   :hook
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
@@ -1158,7 +1155,8 @@ For some reason advice-add didn't seem to function, so this just manually replic
 #+begin_src emacs-lisp
 (use-package vertico
   :init
-  (setq vertico-resize t)
+  (setq vertico-resize t
+	vertico-cycle t)
   :general-config
   ;; evil-want-minibuffer t
   (:keymaps 'vertico-map :states '(normal visual)
@@ -1183,9 +1181,11 @@ For some reason advice-add didn't seem to function, so this just manually replic
   :demand t
   :config
   (setq consult-preview-excluded-buffers '(major-mode . exwm-mode))
+  :custom
+  (consult-line-start-from-top nil)
   :general-config
-  ;; (:states '(normal visual)
-  ;; 	   "/" #'consult-line)
+  (:states '(normal visual)
+	   "/" #'consult-line)
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '((lambda () (interactive)
 	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
