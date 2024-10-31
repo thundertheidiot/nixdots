@@ -781,6 +781,7 @@ Highlight the following keywords in code
   :custom
   (hl-todo-keyword-faces '(("TODO" . "#cc9393")
 			   ("HACK" . "#d0bf8f")
+			   ("NOTE" . "#cc9393")
 			   ("FIXME" . "#cc9393")))
   :config
   (global-hl-todo-mode 1))
@@ -1370,6 +1371,8 @@ For whatever reason you can sign up to https://together.xyz with a github accoun
   "API Token")
 
 (cl-defun together-image (&optional &key prompt token model steps number height width)
+  "Get an image from together.xyz."
+  (interactive)
   (let ((prompt (or prompt (completing-read "Prompt: " nil nil nil nil 'together-prompt-history)))
 	(token (or token together-token)) (model (or model "black-forest-labs/FLUX.1-schnell-Free"))
 	(steps (or steps 4))
