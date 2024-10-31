@@ -1157,7 +1157,8 @@ For some reason advice-add didn't seem to function, so this just manually replic
 #+begin_src emacs-lisp
 (use-package vertico
   :init
-  (setq vertico-resize t)
+  (setq vertico-resize t
+	vertico-cycle t)
   :general-config
   ;; evil-want-minibuffer t
   (:keymaps 'vertico-map :states '(normal visual)
@@ -1182,9 +1183,11 @@ For some reason advice-add didn't seem to function, so this just manually replic
   :demand t
   :config
   (setq consult-preview-excluded-buffers '(major-mode . exwm-mode))
+  :custom
+  (consult-line-start-from-top nil)
   :general-config
-  ;; (:states '(normal visual)
-  ;; 	   "/" #'consult-line)
+  (:states '(normal visual)
+	   "/" #'consult-line)
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '((lambda () (interactive)
 	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
