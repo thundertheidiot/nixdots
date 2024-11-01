@@ -285,16 +285,16 @@ Undo system for evil mode, i don't really have a point for using undo-tree speci
 
 #+begin_src emacs-lisp
 (use-package undo-tree
-  :demand t
   :diminish undo-tree-mode
   :diminish global-undo-tree-mode
-  :custom
-  (undo-tree-auto-save-history t)
-  (undo-tree-history-directory-alist `((,(rx (* nonl)) . ,(expand-file-name "undo-tree/" user-emacs-directory))))
   :config
   (global-undo-tree-mode)
-  (unless (file-directory-p (expand-file-name "undo-tree/" user-emacs-directory))
-    (make-directory (expand-file-name "undo-tree/" user-emacs-directory))))
+  (defvar th/undo-tree-dir (expand-file-name "undo-tree/" user-emacs-directory))
+  (unless (file-directory-p th/undo-tree-dir)
+    (make-directory th/undo-tree-dir))
+  (defadvice undo-tree-make-history-save-file-name
+      (after undo-tree activate)
+    (setq ad-return-value (concat th/undo-tree-dir ad-return-value))))
 #+end_src
 
 Vi(m) bindings in emacs
@@ -308,7 +308,7 @@ Vi(m) bindings in emacs
   (evil-want-keybinding nil)
   (evil-vsplit-window-right t)
   (evil-split-window-below t)
-  (evil-want-minibuffer t) ;; we're going extra evil
+  (evil-want-minibuffer t)
   (evil-undo-system 'undo-tree)
   :config
   (evil-set-undo-system evil-undo-system)
@@ -512,23 +512,21 @@ WIP window navigation mode
 
 #+begin_src emacs-lisp
 (use-package org
-  :defer t
+  :demand t
   :mode ("\\.org\\'" . org-mode)
   :diminish org-indent-mode
   :custom
   (org-src-preserve-indentation t)
   (org-src-tab-acts-natively t)
   (org-startup-with-inline-images t)
-  (calendar-week-start-day 1)
   :init
   (add-hook 'org-mode-hook #'org-indent-mode)
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
-  :general
-  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-	   "oa" '(org-agenda :wk "org agenda"))
   :general-config
   (:keymaps 'org-mode-map
 	    "C-j" nil)
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+	   "oa" '(org-agenda :wk "org agenda"))
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
     "l" '(:ignore t :wk "org link")
     "li" '(org-insert-link :wk "insert org link")
@@ -541,21 +539,26 @@ WIP window navigation mode
 		      (evil-ret)))))
 #+end_src
 
+#+begin_src emacs-lisp
+(setq calendar-week-start-day 1)
+#+end_src
+
 ** Org roam
 
 Note taking
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :defer t
-  :custom
-  (org-roam-directory (file-truename "~/Documents/org/roam"))
-  (org-agenda-files (org-roam-list-files))
-  :config
+  :after org
+  :demand t
+  :init
+  (setq org-roam-directory (file-truename "~/Documents/org/roam"))
   (unless (file-directory-p org-roam-directory)
     (make-directory org-roam-directory))
+  :config
   (org-roam-db-autosync-mode)
   (org-roam-setup)
+  (setq org-agenda-files (org-roam-list-files))
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "r" '(:ignore t :wk "roam")
@@ -571,7 +574,8 @@ Allow easily inserting images
 
 #+begin_src emacs-lisp
 (use-package org-download
-  :defer t
+  :after org
+  :demand t
   :hook (dired-mode . org-download-enable)
   :custom (org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s")
   :general
@@ -586,18 +590,18 @@ Faster inserting of templates like the source code blocks here.
 
 #+begin_src emacs-lisp
 (use-package org-tempo
-  :demand t
   :ensure nil ;; included with org
   :after org
-  :custom
-  (org-structure-template-alist '(("el" . "src emacs-lisp"))))
+  :demand t
+  :config
+  (setq org-structure-template-alist (cons '("el" . "src emacs-lisp") org-structure-template-alist))
+  (setq org-structure-template-alist (cons '("fnl" . "src fennel") org-structure-template-alist)))
 #+end_src
 
 ** Org bullets
 
 #+begin_src emacs-lisp
 (use-package org-bullets
-  :defer t
   :diminish org-bullets-mode
   :hook (org-mode . org-bullets-mode))
 #+end_src
@@ -606,13 +610,12 @@ Faster inserting of templates like the source code blocks here.
 
 #+begin_src emacs-lisp
 (use-package olivetti
-  :defer t
+  :after org
   :diminish olivetti-mode
-  :custom 
-  (olivetti-min-body-width 50)
-  (olivetti-body-width 80)
-  (olivetti-style 'fancy)
-  (olivetti-margin-width 12)
+  :init (setq olivetti-min-body-width 50
+	      olivetti-body-width 80
+	      olivetti-style 'fancy
+	      olivetti-margin-width 12)
   :config
   (set-face-attribute 'olivetti-fringe nil :background "#313244")
   :hook
@@ -629,10 +632,9 @@ Faster inserting of templates like the source code blocks here.
 
 #+begin_src emacs-lisp
 (use-package magit
-  :defer t
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  (magit-auto-revert-mode nil)
+  :init
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
+	magit-auto-revert-mode nil)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "g" '(:ignore t :wk "git")
@@ -662,13 +664,14 @@ Show added/deleted/edited parts in the fringe
       (th/last-diff-hl-hunk backward)
       (message "Looped around"))))
 
+(advice-add 'diff-hl-next-hunk :around #'advice!diff-hl-next-hunk-loop-around)
+
 (use-package diff-hl
   :demand t
   :diminish diff-hl-mode
   :custom
   (diff-hl-show-staged-changes nil)
   :config
-  (advice-add 'diff-hl-next-hunk :around #'advice!diff-hl-next-hunk-loop-around)
   (global-diff-hl-mode +1)
   (mapc (lambda (f) 
 	  (set-face-background f "green")
@@ -700,7 +703,6 @@ Git timemachine lets you browse through the history of a file tracked by git
 
 #+begin_src emacs-lisp
 (use-package git-timemachine
-  :defer t
   :general-config
   (general-define-key
    :states 'normal
@@ -731,9 +733,8 @@ Projectile is a project management tool for emacs
 
 #+begin_src emacs-lisp
 (use-package projectile
-  :defer t
   :diminish projectile-mode
-  :commands (projectile-run-eshell projectile-run-vterm)
+  :defer t
   :custom
   (projectile-switch-project-action #'projectile-dired)
   :config
@@ -754,10 +755,11 @@ Sort ibuffer by project
 
 #+begin_src emacs-lisp
 (use-package ibuffer-projectile
-  :hook
-  (ibuffer-mode . (lambda () (ibuffer-projectile-set-filter-groups)
-		    (unless (eq ibuffer-sorting-mode 'alphabetic)
-		      (ibuffer-do-sort-by-alphabetic)))))
+  :config
+  (add-hook 'ibuffer-hook (lambda ()
+			    (ibuffer-projectile-set-filter-groups)
+			    (unless (eq ibuffer-sorting-mode 'alphabetic
+					(ibuffer-do-sort-by-alphabetic))))))
 #+end_src
 
 *** TODO
@@ -795,15 +797,14 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package eglot
-  :defer t
-  :commands eglot-ensure
+  :demand t
   :custom
   (eglot-autoshutdown t)
-  (eglot-events-buffer-size 0)
-  (eglot-sync-connect nil)
-  (eglot-connect-timeout nil)
   :config
   (fset #'jsonrpc--log-event #'ignore)
+  (setq eglot-events-buffer-size 0
+	eglot-sync-connect nil
+	eglot-connect-timeout nil)
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "c" '(:ignore t :wk "code")
@@ -813,21 +814,15 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package eglot-booster
-  :demand t
   :after eglot
   :config (eglot-booster-mode))
 #+end_src
 
-** Errors
-
 #+begin_src emacs-lisp
 (use-package flycheck
-  :defer t
-  :hook
-  (prog-mode . flycheck-mode)
-  (eglot-managed-mode . flycheck-mode)
-  ;; :config 
-  ;; (global-flycheck-mode)
+  :demand t
+  :config 
+  (global-flycheck-mode)
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "cn" '(flycheck-next-error :wk "next error")
@@ -836,7 +831,6 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package flycheck-eglot
-  :demand t
   :after (flycheck eglot)
   :config
   (global-flycheck-eglot-mode 1))
@@ -857,6 +851,8 @@ Index those keywords inside magit.
 #+end_src
 
 ** Completion
+
+Corfu wip
 
 #+begin_src emacs-lisp
 (use-package corfu
@@ -888,7 +884,7 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package rustic
-  :defer t
+  :after eglot
   :diminish rustic-mode
   :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . eglot-ensure)
@@ -902,7 +898,7 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package nix-mode
-  :defer t
+  :after eglot
   :mode "\\.nix\\'"
   :hook (nix-mode . eglot-ensure))
 #+end_src
@@ -911,11 +907,12 @@ Language specific setup
 
 #+begin_src emacs-lisp :tangle @lang_haskell@
 (use-package haskell-mode
-  :defer t
+  :after eglot
   :mode "\\.hs\\'"
   :hook (haskell-mode . eglot-ensure))
 ;; TODO: try haskell-ts-mode
 ;; (use-package haskell-ts-mode
+;;   :after eglot
 ;;   :mode "\\.hs\\'"
 ;;   :config (haskell-ts-setup-eglot))
 #+end_src
@@ -924,11 +921,8 @@ Language specific setup
 
 #+begin_src emacs-lisp :tangle @lang_ocaml@
 (use-package tuareg
-  :defer t
-  :mode "\\.ml\\'"
   :hook (tuareg-mode . eglot-ensure))
 (use-package merlin
-  :defer t
   :hook (tuareg-mode . merlin-mode))
 (use-package utop)
 #+end_src
@@ -937,7 +931,7 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package lua-mode
-  :defer t
+  :after eglot
   :mode "\\.lua\\'"
   :hook (lua-mode . eglot-ensure))
 #+end_src
@@ -946,7 +940,7 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package gdscript-mode
-  :defer t
+  :after eglot
   :mode "\\.gdscript\\'"
   :hook (gdscript-mode . eglot-ensure))
 #+end_src
@@ -957,10 +951,10 @@ Fennel is a nice lispy language, with lua compatibility
 
 #+begin_src emacs-lisp :tangle @lang_fennel@
 (use-package fennel-mode
-  :defer t
+  :after eglot
   :mode "\\.fnl\\'"
   :hook (fennel-mode . eglot-ensure)
-  :config
+  :init
   (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
 #+end_src
 
@@ -968,7 +962,6 @@ Org src blocks in fennel
 
 #+begin_src emacs-lisp :tangle @lang_fennel@
 (use-package ob-fennel
-  :defer t
   :ensure nil ;; part of fennel-mode
   :after org)
 #+end_src
@@ -977,7 +970,7 @@ Org src blocks in fennel
 
 #+begin_src emacs-lisp :tangle @lang_janet@
 (use-package janet-mode
-  :defer t
+  :after eglot
   :mode "\\.janet\\'")
 #+end_src
 
@@ -985,8 +978,7 @@ Org src blocks in fennel
 
 #+begin_src emacs-lisp
 (use-package csharp-mode
-  :defer t
-  :require nil ;; comes with emacs
+  :after eglot
   :mode "\\.cs\\'"
   :hook
   (csharp-mode . eglot-ensure)
@@ -1015,7 +1007,6 @@ Rainbow delimiters gives colors to delimiters like parenthesis, which helps with
 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :defer t
   :diminish rainbow-delimiters-mode
   :hook
   (prog-mode . rainbow-delimiters-mode)
@@ -1026,7 +1017,6 @@ Buffer-env
 
 #+begin_src emacs-lisp
 (use-package envrc
-  :demand t
   :hook (after-init . envrc-global-mode))
 
 ;; (use-package inheritenv
@@ -1051,7 +1041,6 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
   (evil-append-line 1))
 
 (use-package vterm
-  :defer t
   :hook (vterm-mode . th/turn-off-line-numbers)
   :commands (vterm)
   :general
@@ -1101,17 +1090,17 @@ Eshell itself
   (eshell-mode . smartparens-mode)
   (eshell-mode . fish-completion-mode)
   :general-config
-  (:states '(normal visual) :keymaps 'eshell-mode-map
+  (general-def :states '(normal visual) :keymaps 'eshell-mode-map
 	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
-  (:states '(normal visual insert) :keymaps 'eshell-mode-map
+  (general-def :states '(normal visual insert) :keymaps 'eshell-mode-map
     "C->" (lambda () (interactive) 
 	    (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
-  (:keymaps 'eshell-mode-map :states '(normal visual motion)
+  :general
+  (general-def :keymaps 'eshell-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (browse-url))
 		      (evil-ret))))
-  :general
-  (:states '(normal visual insert emacs motion) :prefix "SPC" :keymaps 'override :global-prefix "C-SPC"
+  (general-def :states '(normal visual insert emacs motion) :prefix "SPC" :keymaps 'override :global-prefix "C-SPC"
     "oe" '((lambda () (interactive) 
 	     (select-window (th/intelligent-split)) 
 	     (th/eshell)) :wk "eshell")'
@@ -1165,10 +1154,9 @@ For some reason advice-add didn't seem to function, so this just manually replic
 
 #+begin_src emacs-lisp
 (use-package vertico
-  :demand t
-  :custom
-  (vertico-resize t)
-  (vertico-cycle t)
+  :init
+  (setq vertico-resize t
+	vertico-cycle t)
   :general-config
   ;; evil-want-minibuffer t
   (:keymaps 'vertico-map :states '(normal visual)
@@ -1191,8 +1179,9 @@ For some reason advice-add didn't seem to function, so this just manually replic
 #+begin_src emacs-lisp
 (use-package consult
   :demand t
+  :config
+  (setq consult-preview-excluded-buffers '(major-mode . exwm-mode))
   :custom
-  (consult-preview-excluded-buffers '(major-mode . exwm-mode))
   (consult-line-start-from-top nil)
   :general-config
   (:states '(normal visual)
@@ -1254,7 +1243,7 @@ Save grep search into evil search history.
 #+begin_src emacs-lisp
 (use-package embark
   ;; :after wgrep
-  :demand t
+  :ensure t
   :general-config
   (
    "C-;" #'embark-act
@@ -1268,17 +1257,15 @@ Save grep search into evil search history.
 
 #+begin_src emacs-lisp
 (use-package orderless
-  :demand t
   :after (vertico consult)
-  :custom
-  (completion-styles '(orderless basic))
-	(completion-category-defaults nil)
-	(completion-category-overrides '((file (styles partial-completion)))))
+  :init
+  (setq completion-styles '(orderless basic)
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package marginalia
-  :demand t
   :config
   (marginalia-mode))
 #+end_src
@@ -1298,6 +1285,37 @@ Save grep search into evil search history.
       enable-recursive-minibuffers t)
 
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+#+end_src
+
+** Popups with popper
+
+Look into replacing this
+
+#+begin_src emacs-lisp :tangle no
+(use-package popper
+  :demand t
+  :init
+  (setq popper-reference-buffers
+	'("^\\*vterm.*\\*$" vterm-mode
+	  "\\*eldoc\\*" vterm-mode
+	  ("\\*elpaca-log\\*" . hide)
+	  ("\\*rustic.*\\*" . hide)
+	  ("\\*rustfmt\\*" . hide)
+	  ("\\*rust-analyzer.*\\*" . hide)
+	  ("\\*scratch\\*" . hide)
+	  ("\\*Warnings\\*" . hide)
+	  (compilation-mode . hide))
+	popper-group-function #'popper-group-by-projectile
+	popper-window-height 20)
+  :config
+  (popper-mode 1)
+  (popper-echo-mode 1)
+  :general-config
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+    "op" '(:ignore t :wk "popper")
+    "opt" '(popper-toggle :wk "popper toggle")
+    "opm" '(popper-toggle-type :wk "popper toggle type")
+    "opc" '(popper-cycle :wk "popper cycle")))
 #+end_src
 
 ** LLM
@@ -1338,15 +1356,8 @@ Large language models inside emacs, powered by ollama.
 ** Elfeed
 
 #+begin_src emacs-lisp
-(use-package elfeed 
-  :commands elfeed
-  :custom 
-  (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory)) (elfeed-enclosure-default-dir user-emacs-directory) 
-  (elfeed-feeds '("https://howardism.org/index.xml"
-		  "https://xenodium.com/rss.xml"
-		  "https://xeiaso.net/blog.rss"
-		  "https://jade.fyi/rss.xml")))
-#+end_src
+(use-package elfeed :custom (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory)) (elfeed-enclosure-default-dir user-emacs-directory) (elfeed-feeds '("https://howardism.org/index.xml" "https://xenodium.com/rss.xml" "https://xeiaso.net/blog.rss" "https://jade.fyi/rss.xml")))
+#+end_src #+RESULTS:
 
 ** Image generation
 
@@ -1427,7 +1438,6 @@ Control an mpv instance inside emacs
 
 #+begin_src emacs-lisp
 (use-package empv
-  :demand t
   :init 
   (setq empv-invidious-instance "https://iv.nowhere.moe/api/v1")
   (setq empv-volume-step 3)
