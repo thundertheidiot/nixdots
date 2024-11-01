@@ -63,6 +63,8 @@
       emacs.exwm = true;
       shell.enable = true;
 
+      ssh.rootKey = true;
+
       gpu = "intel";
 
       keyboard = {
