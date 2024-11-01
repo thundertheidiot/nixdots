@@ -61,6 +61,7 @@ These are used somewhere later, but don't require any configuration.
       c-basic-offset 'tab-width
       tab-width 4
       gc-cons-threshold (* 8 1024 1024)
+      read-process-output-max (* 1024 1024)
 
       ring-bell-function 'ignore ;; i hate that stupid bell
 
@@ -816,6 +817,22 @@ Index those keywords inside magit.
   :demand t
   :after eglot
   :config (eglot-booster-mode))
+#+end_src
+
+** Debug
+
+#+begin_src emacs-lisp :tangle no
+(use-package dape
+  :defer t
+  :hook
+  (eglot-managed-mode . dape-modesave)
+  (kill-emacs . dape-breakpoint-save)
+  (after-init . dape-breakpoint-load)
+  :custom
+  (dape-inlay-hints t)
+  ;; :config
+  ;; (dape-breakpoint-global-mode)
+  )
 #+end_src
 
 ** Errors
