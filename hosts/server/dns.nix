@@ -9,7 +9,6 @@
     networking.firewall.allowedUDPPorts = [53];
     networking.firewall.allowedTCPPorts = [53];
 
-    # TODO: dnsmasq incredibly slow startup?
     services.dnsmasq = {
       enable = true;
       resolveLocalQueries = true;

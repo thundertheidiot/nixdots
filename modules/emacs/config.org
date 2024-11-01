@@ -513,7 +513,7 @@ WIP window navigation mode
 
 #+begin_src emacs-lisp
 (use-package org
-  :defer t
+  :demand t
   :mode ("\\.org\\'" . org-mode)
   :diminish org-indent-mode
   :custom
@@ -548,7 +548,6 @@ Note taking
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :defer t
   :custom
   (org-roam-directory (file-truename "~/Documents/org/roam"))
   (org-agenda-files (org-roam-list-files))
@@ -572,7 +571,6 @@ Allow easily inserting images
 
 #+begin_src emacs-lisp
 (use-package org-download
-  :defer t
   :hook (dired-mode . org-download-enable)
   :custom (org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s")
   :general
@@ -598,7 +596,6 @@ Faster inserting of templates like the source code blocks here.
 
 #+begin_src emacs-lisp
 (use-package org-bullets
-  :defer t
   :diminish org-bullets-mode
   :hook (org-mode . org-bullets-mode))
 #+end_src
@@ -607,7 +604,6 @@ Faster inserting of templates like the source code blocks here.
 
 #+begin_src emacs-lisp
 (use-package olivetti
-  :defer t
   :diminish olivetti-mode
   :custom 
   (olivetti-min-body-width 50)
@@ -630,7 +626,6 @@ Faster inserting of templates like the source code blocks here.
 
 #+begin_src emacs-lisp
 (use-package magit
-  :defer t
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (magit-auto-revert-mode nil)
@@ -701,7 +696,6 @@ Git timemachine lets you browse through the history of a file tracked by git
 
 #+begin_src emacs-lisp
 (use-package git-timemachine
-  :defer t
   :general-config
   (general-define-key
    :states 'normal
@@ -732,7 +726,6 @@ Projectile is a project management tool for emacs
 
 #+begin_src emacs-lisp
 (use-package projectile
-  :defer t
   :diminish projectile-mode
   :commands (projectile-run-eshell projectile-run-vterm)
   :custom
@@ -796,7 +789,6 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package eglot
-  :defer t
   :commands eglot-ensure
   :custom
   (eglot-autoshutdown t)
@@ -839,7 +831,6 @@ Index those keywords inside magit.
 
 #+begin_src emacs-lisp
 (use-package flycheck
-  :defer t
   :hook
   (prog-mode . flycheck-mode)
   (eglot-managed-mode . flycheck-mode)
@@ -905,7 +896,6 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package rustic
-  :defer t
   :diminish rustic-mode
   :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . eglot-ensure)
@@ -919,7 +909,6 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package nix-mode
-  :defer t
   :mode "\\.nix\\'"
   :hook (nix-mode . eglot-ensure))
 #+end_src
@@ -928,7 +917,6 @@ Language specific setup
 
 #+begin_src emacs-lisp :tangle @lang_haskell@
 (use-package haskell-mode
-  :defer t
   :mode "\\.hs\\'"
   :hook (haskell-mode . eglot-ensure))
 ;; TODO: try haskell-ts-mode
@@ -941,11 +929,9 @@ Language specific setup
 
 #+begin_src emacs-lisp :tangle @lang_ocaml@
 (use-package tuareg
-  :defer t
   :mode "\\.ml\\'"
   :hook (tuareg-mode . eglot-ensure))
 (use-package merlin
-  :defer t
   :hook (tuareg-mode . merlin-mode))
 (use-package utop)
 #+end_src
@@ -954,7 +940,6 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package lua-mode
-  :defer t
   :mode "\\.lua\\'"
   :hook (lua-mode . eglot-ensure))
 #+end_src
@@ -963,7 +948,6 @@ Language specific setup
 
 #+begin_src emacs-lisp
 (use-package gdscript-mode
-  :defer t
   :mode "\\.gdscript\\'"
   :hook (gdscript-mode . eglot-ensure))
 #+end_src
@@ -974,7 +958,6 @@ Fennel is a nice lispy language, with lua compatibility
 
 #+begin_src emacs-lisp :tangle @lang_fennel@
 (use-package fennel-mode
-  :defer t
   :mode "\\.fnl\\'"
   :hook (fennel-mode . eglot-ensure)
   :config
@@ -985,16 +968,7 @@ Org src blocks in fennel
 
 #+begin_src emacs-lisp :tangle @lang_fennel@
 (use-package ob-fennel
-  :defer t
-  :ensure nil ;; part of fennel-mode
-  :after org)
-#+end_src
-
-*** Janet
-
-#+begin_src emacs-lisp :tangle @lang_janet@
-(use-package janet-mode
-  :defer t
+  :ensure nil
   :mode "\\.janet\\'")
 #+end_src
 
@@ -1002,7 +976,6 @@ Org src blocks in fennel
 
 #+begin_src emacs-lisp
 (use-package csharp-mode
-  :defer t
   :require nil ;; comes with emacs
   :mode "\\.cs\\'"
   :hook
@@ -1032,7 +1005,6 @@ Rainbow delimiters gives colors to delimiters like parenthesis, which helps with
 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :defer t
   :diminish rainbow-delimiters-mode
   :hook
   (prog-mode . rainbow-delimiters-mode)
@@ -1068,7 +1040,6 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
   (evil-append-line 1))
 
 (use-package vterm
-  :defer t
   :hook (vterm-mode . th/turn-off-line-numbers)
   :commands (vterm)
   :general
