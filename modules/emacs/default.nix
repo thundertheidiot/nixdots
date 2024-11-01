@@ -74,7 +74,7 @@ in {
             alejandra
           ]
           (mkIf cfg.lang.rust [
-            pkgs.rust-bin.stable.default
+            # pkgs.rust-bin.stable.default
             # (pkgs.rust-bin.selectLatestNightlyWith (toolchain:
             #   toolchain.default.override {
             #     extensions = ["rust-analyzer"];
