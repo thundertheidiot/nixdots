@@ -16,3 +16,7 @@ creation_rules:
      - *desk
      - *t440p
      - *server
+ - path_regex: sops/desk/[^/]+$
+   key_groups:
+   - age:
+     - *desk

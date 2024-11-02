@@ -33,6 +33,11 @@ in {
         sopsFile = ./server/rathole.toml;
         format = "binary";
       };
+
+      meow.sops.secrets."desk_rathole" = {
+        sopsFile = ./desk/rathole.toml;
+        format = "binary";
+      };
     }
     {
       sops.secrets =

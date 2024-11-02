@@ -64,6 +64,9 @@ in {
           # };
           screenshot = inputs.screenshot.packages.${pkgs.system}.default;
         in {
+          # Conflicts on other environments, so it's launched manually instead
+          services.hyprpaper.enable = lib.mkForce false;
+
           xdg.configFile."hypr/hyprpaper.conf".text = ''
             preload = ~/.local/share/bg
             wallpaper = ,~/.local/share/bg
