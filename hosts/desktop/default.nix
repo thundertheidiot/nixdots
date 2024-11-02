@@ -38,6 +38,7 @@ in {
   }: {
     imports = [
       ./vr.nix
+      ./rathole.nix
     ];
 
     system.stateVersion = "24.05";
