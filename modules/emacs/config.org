@@ -390,58 +390,58 @@ Which key
 
 (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
   "w" '(:ignore t :wk "window")
-  "wh" '(windmove-left :wk "move left")
-  "wj" '(windmove-down :wk "move down")
-  "wk" '(windmove-up :wk "move up")
-  "wl" '(windmove-right :wk "move right")
-  "<left>" '(windmove-left :wk "move left")
-  "<down>" '(windmove-down :wk "move down")
-  "<up>" '(windmove-up :wk "move up")
-  "<right>" '(windmove-right :wk "move right")
-  "wq" '(evil-quit :wk "close")
-  "ww" '(evil-quit :wk "close")
-  "ws" '((lambda () (interactive) (th/intelligent-split t)) :wk "horizontal split")
+  "wh" '("move left" . windmove-left)
+  "wj" '("move down" . windmove-down)
+  "wk" '("move up" . windmove-up)
+  "wl" '("move right" . windmove-right)
+  "<left>" '("move left" . windmove-left)
+  "<down>" '("move down" . windmove-down)
+  "<up>" '("move up" . windmove-up)
+  "<right>" '("move right" . windmove-right)
+  "wq" '("close" . evil-quit)
+  "ww" '("close" . evil-quit)
+  "ws" '("horizontal split" . (lambda () (interactive) (th/intelligent-split t)))
 
   "wc" '(:ignore t :wk "window configurations")
-  "wcl" '(load-a-saved-window-configuration :wk "load")
-  "wcs" '(save-current-window-configuration :wk "save")
-  "wcn" '(new-window-configuration :wk "new")
+  "wcl" '("load" . load-a-saved-window-configuration)
+  "wcs" '("save" . save-current-window-configuration)
+  "wcn" '("new" . new-window-configuration)
   
-  "H" '((lambda () (interactive) (evil-window-increase-width 2)) :wk "increase window width")
-  "J" '((lambda () (interactive) (evil-window-increase-height 2)) :wk "increase window height")
+  "H" '("increase window width" . (lambda () (interactive) (evil-window-increase-width 2)))
+  "J" '("increase window height" . (lambda () (interactive) (evil-window-increase-height 2)))
   
   "l" '(:ignore t :wk "local (mode specific)")
   "s" '(:ignore t :wk "search")
 
-  "d" '((lambda () (interactive)
-	  (when default-directory
-	    (select-window (th/intelligent-split))
-	    (dired default-directory))) :wk "dired")
+  "d" '("dired" . (lambda () (interactive)
+                    (when default-directory
+                      (select-window (th/intelligent-split t))
+                      (dired default-directory))))
 
   "o" '(:ignore t :wk "open")
 
-  ":" '(execute-extended-command :wk "M-x")
-  ";" '(execute-extended-command :wk "M-x")
-  "." '(find-file :wk "find file")
-  ">" '((lambda () (interactive) (find-file nil (getenv "HOME"))) :wk "find file from ~/")
+  ":" '("M-x" . execute-extended-command)
+  ";" '("M-x" . execute-extended-command)
+  "." '("find file" . find-file)
+  ">" '("find file from ~/" . (lambda () (interactive) (find-file (getenv "HOME"))))
   
   "h" '(:ignore t :wk "help")
-  "hb" '(describe-bindings t :wk "describe binding")
-  "hf" '(describe-function t :wk "describe function")
-  "hv" '(describe-variable t :wk "describe variable")
-  "hF" '(describe-face t :wk "describe face")
-  "hk" '(describe-key t :wk "describe key")
-  "ha" '(apropos :wk "describe")
+  "hb" '("describe binding" . describe-bindings)
+  "hf" '("describe function" . describe-function)
+  "hv" '("describe variable" . describe-variable)
+  "hF" '("describe face" . describe-face)
+  "hk" '("describe key" . describe-key)
+  "ha" '("describe" . apropos)
   
   "b" '(:ignore t :wk "buffer")
-  "bi" '(ibuffer :wk "ibuffer")
-  "bK" '(kill-buffer :wk "kill buffer")
-  "bk" '(kill-current-buffer :wk "kill this buffer")
+  "bi" '("ibuffer" . ibuffer)
+  "bK" '("kill buffer" . kill-buffer)
+  "bk" '("kill this buffer" . kill-current-buffer)
 
   "e" '(:ignore t :wk "emacs")
-  "er" '(eval-region-and-go-to-normal-mode :wk "eval region or line")
-  "eb" '(eval-buffer :wk "eval buffer")
-  "ee" '(eval-expression :wk "eval expression"))
+  "er" '("eval region or line" . eval-region-and-go-to-normal-mode)
+  "eb" '("eval buffer" . eval-buffer)
+  "ee" '("eval expression" . eval-expression))
 
 (general-define-key
  :states '(normal visual)
@@ -526,16 +526,16 @@ WIP window navigation mode
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-	   "oa" '(org-agenda :wk "org agenda"))
+	   "oa" '("org agenda" . org-agenda))
   :general-config
   (:keymaps 'org-mode-map
 	    "C-j" nil)
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
     "l" '(:ignore t :wk "org link")
-    "li" '(org-insert-link :wk "insert org link")
-    "lo" '(org-open-at-point :wk "open org link")
-    "le" '(org-edit-special :wk "open org link")
-    "lt" '(org-toggle-link-display :wk "toggle link display"))
+    "li" '("insert org link" . org-insert-link)
+    "lo" '("open org link" . org-open-at-point)
+    "le" '("open org link" . org-edit-special)
+    "lt" '("toggle link display" . org-toggle-link-display))
   (:keymaps 'org-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (org-open-at-point))
@@ -559,10 +559,10 @@ Note taking
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "r" '(:ignore t :wk "roam")
-    "rb" '(org-roam-buffer-toggle :wk "buffer")
-    "rf" '(org-roam-node-find :wk "find node")
-    "rI" '(org-id-get-create :wk "create id")
-    "ri" '(org-roam-node-insert :wk "insert node")))
+    "rb" '("buffer" . org-roam-buffer-toggle)
+    "rf" '("find node" . org-roam-node-find)
+    "rI" '("create id" . org-id-get-create)
+    "ri" '("insert node" . org-roam-node-insert)))
 #+end_src
 
 ** Org download
@@ -575,8 +575,8 @@ Allow easily inserting images
   :custom (org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s")
   :general
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
-    "s" '(org-download-screenshot :wk "screenshot")
-    "c" '(org-download-clipboard :wk "image from clipboard")))
+    "s" '("screenshot" . org-download-screenshot)
+    "c" '("image from clipboard" . org-download-clipboard)))
 #+end_src
 
 ** Org tempo
@@ -632,13 +632,13 @@ Faster inserting of templates like the source code blocks here.
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "g" '(:ignore t :wk "git")
-    "gg" '(magit-status :wk "open magit")
+    "gg" '("open magit" . magit-status)
     "gd" '(:ignore t :wk "diff")
-    "gdu" '(magit-diff-unstaged :wk "diff unstaged")
-    "gds" '(magit-diff-staged :wk "diff staged")
-    "gc" '(magit-commit :wk "commit")
-    "gp" '(magit-push :wk "push")
-    "gF" '(magit-pull :wk "push")))
+    "gdu" '("diff unstaged" . magit-diff-unstaged)
+    "gds" '("diff staged" . magit-diff-staged)
+    "gc" '("commit" . magit-commit)
+    "gp" '("push" . magit-push)
+    "gF" '("push" . magit-pull)))
 #+end_src
 
 Show added/deleted/edited parts in the fringe
@@ -686,10 +686,10 @@ Show added/deleted/edited parts in the fringe
   (diff-hl-mode . diff-hl-flydiff-mode)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "ga" '(diff-hl-stage-current-hunk :wk "stage hunk")
-    "gr" '(diff-hl-revert-hunk :wk "revert hunk")
-    "gn" '(diff-hl-next-hunk :wk "next hunk")
-    "gN" '(diff-hl-previous-hunk :wk "previous hunk")))
+    "ga" '("stage hunk" . diff-hl-stage-current-hunk)
+    "gr" '("revert hunk" . diff-hl-revert-hunk)
+    "gn" '("next hunk" . diff-hl-next-hunk)
+    "gN" '("previous hunk" . diff-hl-previous-hunk)))
 #+end_src
 
 Git timemachine lets you browse through the history of a file tracked by git
@@ -697,9 +697,7 @@ Git timemachine lets you browse through the history of a file tracked by git
 #+begin_src emacs-lisp
 (use-package git-timemachine
   :general-config
-  (general-define-key
-   :states 'normal
-   :keymaps 'git-timemachine-mode-map
+  (:states 'normal :keymaps 'git-timemachine-mode-map
    "<" 'git-timemachine-show-previous-revision
    "J" 'git-timemachine-show-previous-revision
    ">" 'git-timemachine-show-next-revision
@@ -710,7 +708,7 @@ Git timemachine lets you browse through the history of a file tracked by git
    "C-c" 'git-timemachine-show-current-revision)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "gt" '(git-timemachine-toggle :wk "timemachine")))
+    "gt" '("timemachine" . git-timemachine-toggle)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -736,12 +734,12 @@ Projectile is a project management tool for emacs
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "P" '(:keymap projectile-command-map :package projectile)
     "p" '(:ignore t :package projectile :wk "project")
-    "pp" '(projectile-switch-project :wk "switch project")
-    "ps" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "search project")
-    "p." '(projectile-find-file :wk "find project file")
+    "pp" '("switch project" . projectile-switch-project)
+    "ps" '("search project" . (lambda () (interactive) (consult-ripgrep (projectile-project-root))))
+    "p." '("find project file" . projectile-find-file)
     "po" '(:ignore t :wk "open")
-    "pog" '(projectile-vc :wk "project version control (git)")
-    "pb" '(projectile-switch-to-buffer :wk "switch buffer in project")))
+    "pog" '("project version control (git)" . projectile-vc)
+    "pb" '("switch buffer in project" . projectile-switch-to-buffer)))
 #+end_src
 
 Sort ibuffer by project
@@ -838,8 +836,8 @@ Index those keywords inside magit.
   ;; (global-flycheck-mode)
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "cn" '(flycheck-next-error :wk "next error")
-    "cN" '(flycheck-previous-error :wk "previous error")))
+    "cn" '("next error" . flycheck-next-error)
+    "cN" '("previous error" . flycheck-previous-error)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -969,6 +967,13 @@ Org src blocks in fennel
 #+begin_src emacs-lisp :tangle @lang_fennel@
 (use-package ob-fennel
   :ensure nil
+  :after org)
+#+end_src
+
+*** Janet
+
+#+begin_src emacs-lisp :tangle @lang_janet@
+(use-package janet-mode
   :mode "\\.janet\\'")
 #+end_src
 
@@ -1045,12 +1050,12 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "ov" '((lambda () (interactive)
-	     (select-window (th/intelligent-split))
+	     (select-window (th/intelligent-split t))
 	     (th/vterm)) :wk "vterm")
     "oV" '((lambda () (interactive)
 	     (th/vterm)) :wk "vterm in this window")
     "pov" '((lambda () (interactive)
-	     (select-window (th/intelligent-split))
+	     (select-window (th/intelligent-split t))
 	     (th/vterm t)) :wk "vterm")
     "poV" '((lambda () (interactive)
 	     (th/vterm t)) :wk "vterm in this window")))
@@ -1100,14 +1105,14 @@ Eshell itself
 		      (evil-ret))))
   :general
   (:states '(normal visual insert emacs motion) :prefix "SPC" :keymaps 'override :global-prefix "C-SPC"
-    "oe" '((lambda () (interactive) 
-	     (select-window (th/intelligent-split)) 
-	     (th/eshell)) :wk "eshell")'
-    "oE" '((lambda () (interactive) (th/eshell)) :wk "eshell in this window")
-    "poe" '((lambda () (interactive) 
-	      (select-window (th/intelligent-split))
-	      (th/eshell t)) :wk "eshell")'
-    "poE" '((lambda () (interactive) (th/eshell t)) :wk "eshell in new window")))
+    "oe" '("eshell" . (lambda () (interactive) 
+	     (select-window (th/intelligent-split t)) 
+	     (th/eshell)))
+    "oE" '("eshell in this window" . (lambda () (interactive) (th/eshell)))
+    "poe" '("eshell" . (lambda () (interactive) 
+	      (select-window (th/intelligent-split t))
+	      (th/eshell t)))
+    "poE" '("eshell in new window" . (lambda () (interactive) (th/eshell t)))))
 #+end_src
 
 #+RESULTS:
@@ -1116,7 +1121,7 @@ Aliases and functions
 
 #+begin_src emacs-lisp
 (defun eshell/v (&rest args)
-  (select-window (th/intelligent-split))
+  (select-window (th/intelligent-split t))
   (apply 'eshell-exec-visual args))
 
 (defalias 'eshell/V 'eshell-exec-visual)
@@ -1186,15 +1191,15 @@ For some reason advice-add didn't seem to function, so this just manually replic
   (:states '(normal visual)
 	   "/" #'consult-line)
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "sg" '((lambda () (interactive)
-	     (consult-ripgrep (expand-file-name ""))) :wk "grep")
-    "/" '(consult-line :wk "search")
-    "sf" '(consult-fd :wk "find")
-    "si" '(consult-imenu :wk "imenu")
-    "bs" '(consult-buffer :wk "switch")
-    "bo" '((lambda () (interactive)
-	     (select-window (th/intelligent-split))
-	     (consult-buffer)) :wk "open buffer in new window")
+    "sg" '("grep" . (lambda () (interactive)
+	     (consult-ripgrep (expand-file-name ""))))
+    "/" '("search" . consult-line)
+    "sf" '("find" . consult-fd)
+    "si" '("imenu" . consult-imenu)
+    "bs" '("switch" . consult-buffer)
+    "bo" '("open buffer in new window" (lambda () (interactive)
+	     (select-window (th/intelligent-split t))
+	     (consult-buffer)))
     ))
 
 (defun advice!-consult-exwm-preview-fix (&rest _args)
@@ -1400,14 +1405,14 @@ Control mpd from emacs
   ;; :general
   ;; (:states '(normal visual motion) :keymaps 'override :prefix "SPC" 
   ;;   "m" '(:ignore t :wk "media")
-  ;;   "mm" '(simple-mpc :wk "open simple-mpc")
-  ;;   "ms" '(simple-mpc-query :wk "search")
-  ;;   "mp" '(simple-mpc-toggle :wk "play/pause")
-  ;;   "mC" '(simple-mpc-clear-current-playlist :wk "clear")
-  ;;   "mP" '(simple-mpc-view-current-playlist :wk "playlist")
-  ;;   "ma" '(simple-mpc-load-playlist :wk "load playlist")
-  ;;   "mh" '(simple-mpc-prev :wk "prev")
-  ;;   "ml" '(simple-mpc-next :wk "next")))
+  ;;   "mm" '("open simple-mpc" . simple-mpc)
+  ;;   "ms" '("search" . simple-mpc-query)
+  ;;   "mp" '("play/pause" . simple-mpc-toggle)
+  ;;   "mC" '("clear" . simple-mpc-clear-current-playlist)
+  ;;   "mP" '("playlist" . simple-mpc-view-current-playlist)
+  ;;   "ma" '("load playlist" . simple-mpc-load-playlist)
+  ;;   "mh" '("prev" . simple-mpc-prev)
+  ;;   "ml" '("next" . simple-mpc-next)))
   )
 #+end_src
 
@@ -1469,7 +1474,7 @@ Custom menus with transient
     ("l" "Load playlist" simple-mpc-load-playlist :transient t)
     ("s" "Search" simple-mpc-query)
     
-    ("c" "View playlist" simple-mpc-view-current-playlist :transient t)
+    ("c" "View playlist" simple-mpc-view-current-playlist)
     ("C" "Clear playlist" simple-mpc-clear-current-playlist :transient t)]
    ["Settings"
     ("y" "Toggle Single" (lambda () (interactive)
@@ -1555,7 +1560,7 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
     "q" 'evil-quit
     "<backspace>" 'dired-up-directory)
   (:keymaps 'dired-mode-map :states '(normal visual motion) :prefix "SPC"
-    "oe" '((lambda () (interactive) (th/eshell)) :wk "eshell in this window"))
+    "oe" '("eshell in this window" . (lambda () (interactive) (th/eshell))))
   :config
   (unless (display-graphic-p)
     (general-def dired-mode-map "DEL" 'dired-up-directory)))
@@ -1826,8 +1831,8 @@ button event."
 	    ;; remap SPC bs to the exwm switch buffer function
 	    ;; "bs" '(exwm-workspace-switch-to-buffer :wk "switch buffer")
 	    "y" '(:ignore t :wk "exwm")
-	    "yd" '(dmenu :wk "dmenu")
-	    "yf" '(exwm-floating-toggle-floating :wk "toggle floating"))
+	    "yd" '("dmenu" . dmenu)
+	    "yf" '("toggle floating" . exwm-floating-toggle-floating))
 
 	  (general-define-key 
 	   :states '(normal visual visual replace motion emacs operator-pending)
