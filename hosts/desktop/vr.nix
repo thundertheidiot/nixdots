@@ -105,6 +105,12 @@ in {
         WMR_HANDTRACKING = "0";
       };
     }
+    # wlx-overlay-s
+    {
+      environment.systemPackages = with pkgs; [
+        wlx-overlay-s
+      ];
+    }
     {
       environment.systemPackages = [
         (pkgs.writeShellApplication {
