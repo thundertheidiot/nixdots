@@ -286,6 +286,15 @@ in {
     meow.impermanence.enable = true;
     meow.impermanence.persist = "/persist";
 
+    zramSwap = {
+      enable = true;
+      algorithm = "zstd";
+      priority = 100;
+      memoryPercent = 50;
+    };
+
+    boot.kernel.sysctl."vm.swappiness" = 180;
+
     disko.devices = {
       nodev."/" = {
         fsType = "tmpfs";
