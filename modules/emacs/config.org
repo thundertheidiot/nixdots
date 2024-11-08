@@ -1575,18 +1575,17 @@ Casual dired has magit-like menus for dired commands
 	    "C-o" 'casual-dired-tmenu))
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (use-package openwith
   :custom
-  (openwith-associations '((rx nonl
-			       (or ".mkv"
-				   ".mp4"
-				   ".webm"
-				   ".mp3"
-				   ".opus"
-				   ".ogg"
-				   ".flac"))
-			   "mpv" (file))))
+  (openwith-associations `((,(rx nonl (or ".mkv"
+					  ".mp4"
+					  ".mov"
+					  ".webm"))
+			    . ("mpv" (file)))
+			   ))
+  :config
+  (openwith-mode))
 #+end_src
 
 * Theming
