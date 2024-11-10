@@ -34,7 +34,7 @@ in {
   config = mkIf cfg.enable ({
       environment.variables = lib.mkIf cfg.exwm {
         EMACS_ENABLE_EXWM = "1"; # used inside emacs
-        EDITOR = "emacsclient -c -a ''";
+        # EDITOR = "emacsclient -c -a ''";
       };
 
       services.xserver.displayManager.session = lib.mkIf cfg.exwm [
@@ -124,8 +124,16 @@ in {
           ])
         ];
 
+      services.emacs = {
+        enable = true;
+        defaultEditor = true;
+        # client.enable = true;
+        startWithUserSession = "graphical";
+      };
+
       programs.emacs = {
         enable = true;
+
         package = pkgs.emacsWithPackagesFromUsePackage {
           config = pkgs.substituteAll (let
             tangle = cfg:
@@ -208,7 +216,7 @@ in {
 
       home.sessionVariables = {
         # Somehow, somewhere, this is set to nano. Where? I have no clue.
-        EDITOR = lib.mkForce "emacsclient -c -a ''";
+        # EDITOR = lib.mkForce "emacsclient -c -a ''";
       };
 
       xdg.mimeApps.defaultApplications = builtins.listToAttrs (builtins.map

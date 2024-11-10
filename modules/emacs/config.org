@@ -1421,6 +1421,9 @@ Control an mpv instance inside emacs
 #+begin_src emacs-lisp
 (use-package empv
   :demand t
+  :general-config
+  (:keymaps 'empv-youtube-results-mode :states '(normal visual insert)
+	    "RET" 'empv-youtube-results-play-current)
   :init 
   (setq empv-invidious-instance "https://iv.nowhere.moe/api/v1")
   (setq empv-volume-step 3)
@@ -1437,6 +1440,11 @@ Custom menus with transient
 
 #+begin_src emacs-lisp
 (use-package transient)
+
+;; (defun media-menu--empv-remove-playlist-item ()
+;;   (interactive)
+;;   (empv--playlist-select-item-and
+;;    (empv-playlist-remove item)))
 
 (transient-define-prefix empv-menu ()
   "Transient menu for empv."
@@ -1755,15 +1763,6 @@ button event."
 		  (,(kbd "s-,") . dwm-workspaces--select-previous-monitor)
 		  (,(kbd "s-.") . dwm-workspaces--select-next-monitor)
 
-		  (,(kbd "s-1") . (lambda () (interactive) (dwm-workspaces--switch-by-index 1)))
-		  (,(kbd "s-2") . (lambda () (interactive) (dwm-workspaces--switch-by-index 2)))
-		  (,(kbd "s-3") . (lambda () (interactive) (dwm-workspaces--switch-by-index 3)))
-		  (,(kbd "s-4") . (lambda () (interactive) (dwm-workspaces--switch-by-index 4)))
-		  (,(kbd "s-5") . (lambda () (interactive) (dwm-workspaces--switch-by-index 5)))
-		  (,(kbd "s-6") . (lambda () (interactive) (dwm-workspaces--switch-by-index 6)))
-		  (,(kbd "s-7") . (lambda () (interactive) (dwm-workspaces--switch-by-index 7)))
-		  (,(kbd "s-8") . (lambda () (interactive) (dwm-workspaces--switch-by-index 8)))
-		  (,(kbd "s-9") . (lambda () (interactive) (dwm-workspaces--switch-by-index 9)))
 		  (,(kbd "s-1") . (lambda () (interactive) (dwm-workspaces--switch-by-index 1)))
 		  (,(kbd "s-2") . (lambda () (interactive) (dwm-workspaces--switch-by-index 2)))
 		  (,(kbd "s-3") . (lambda () (interactive) (dwm-workspaces--switch-by-index 3)))
