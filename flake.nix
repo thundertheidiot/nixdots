@@ -6,7 +6,7 @@
       "https://cache.nixos.org"
       "https://hyprland.cachix.org"
       "https://cosmic.cachix.org/"
-      "https://nyx.chaotic.cx/"
+      "https://chaotic-nyx.cachix.org/"
       "https://nix-community.cachix.org"
     ];
     trusted-public-keys = [
