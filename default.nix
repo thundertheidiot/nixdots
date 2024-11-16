@@ -1,12 +1,12 @@
 let
-  pins = import ./npins;
+  npins = import ./npins/wrapper.nix;
 
-  flake = import pins.flake-compat;
+  flake = import npins.flake-compat;
 
   inputs' = flake {src = ./.;};
-  inputs = inputs'.defaultNix.inputs;
+  inputs = inputs'.defaultNix.inputs // npins;
 
-  pkgs = import pins.nixpkgs {};
+  pkgs = import inputs.nixpkgs {};
   lib = pkgs.lib;
 
   mlib = import ./lib {inherit lib;};
@@ -18,8 +18,13 @@ in
     name = s;
     value = mkSystem {
       nixosSystem = import "${inputs.nixpkgs}/nixos/lib/eval-config.nix";
-      # inputs = pins;
       inherit inputs mlib mpkgs;
       config = mlib.getHostConfig s;
+
+      extraModules = [
+        {
+          nixpkgs.flake.source = inputs.nixpkgs;
+        }
+      ];
     };
   }) ["desktop" "server" "x220" "t440p" "digiboksi"])

@@ -15,6 +15,18 @@
       "url": "https://api.github.com/repos/edolstra/flake-compat/tarball/v1.0.1",
       "hash": "0m9grvfsbwmvgwaxvdzv6cmyvjnlww004gfxjvcl806ndqaxzy4j"
     },
+    "naersk": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "naersk"
+      },
+      "branch": "master",
+      "revision": "3fb418eaf352498f6b6c30592e3beb63df42ef11",
+      "url": "https://github.com/nix-community/naersk/archive/3fb418eaf352498f6b6c30592e3beb63df42ef11.tar.gz",
+      "hash": "0v6ncaqm8q2mdv1jhkjjwi1sx4firlhjxpw4wachkwkriyjnkz5g"
+    },
     "nixpkgs": {
       "type": "Git",
       "repository": {
@@ -23,9 +35,9 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-unstable",
-      "revision": "a3c0b3b21515f74fd2665903d4ce6bc4dc81c77c",
-      "url": "https://github.com/NixOS/nixpkgs/archive/76612b17c0ce71689921ca12d9ffdc9c23ce40b2.tar.gz",
-      "hash": "03pmy2dv212mmxgcvwxinf3xy6m6zzr8ri71pda1lqggmll2na12"
+      "revision": "dc460ec76cbff0e66e269457d7b728432263166c",
+      "url": "https://github.com/NixOS/nixpkgs/archive/dc460ec76cbff0e66e269457d7b728432263166c.tar.gz",
+      "hash": "0hmq3f1a5sf2cmx9zz9y0vav48g61b2kjyhsgi662vb7if7h3c1x"
     }
   },
   "version": 3

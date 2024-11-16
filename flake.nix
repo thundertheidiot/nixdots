@@ -18,16 +18,15 @@
     ];
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    ...
-  } @ inputs: let
-    lib = nixpkgs.lib;
+  outputs = {self, ...} @ inputs: let
+    # hybrid flake + npins
+    # npins = import ./npins/wrapper.nix;
+    # inputs = inputs' // npins;
+    lib = inputs.nixpkgs.lib;
     mlib = (import ./lib) {inherit lib;};
     mpkgs = import ./pkgs;
   in rec {
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
+    formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
     deploy.nodes = {
       x220 = {
