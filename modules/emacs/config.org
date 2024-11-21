@@ -439,6 +439,7 @@ Which key
   "bk" '("kill this buffer" . kill-current-buffer)
 
   "e" '(:ignore t :wk "emacs")
+  "ec" '("async shell command" . async-shell-command)
   "er" '("eval region or line" . eval-region-and-go-to-normal-mode)
   "eb" '("eval buffer" . eval-buffer)
   "ee" '("eval expression" . eval-expression))
@@ -1193,7 +1194,7 @@ For some reason advice-add didn't seem to function, so this just manually replic
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '("grep" . (lambda () (interactive)
 	     (consult-ripgrep (expand-file-name ""))))
-    "/" '("search" . consult-line)
+    ;; "/" '("search" . consult-line)
     "sf" '("find" . consult-fd)
     "si" '("imenu" . consult-imenu)
     "bs" '("switch" . consult-buffer)

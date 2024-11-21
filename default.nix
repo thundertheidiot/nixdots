@@ -1,10 +1,11 @@
-let
-  npins = import ./npins/wrapper.nix;
+# flakeless build support
+# provides almost zero benefits for now, eval might be slightly faster, not sure
+# nix-build --argstr HOSTNAME desktop --attr config.system.build.toplevel
+{host}: let
+  flake-compat = import (builtins.fetchTarball "https://github.com/edolstra/flake-compat/archive/refs/tags/v1.0.1.tar.gz");
 
-  flake = import npins.flake-compat;
-
-  inputs' = flake {src = ./.;};
-  inputs = inputs'.defaultNix.inputs // npins;
+  inputs' = flake-compat {src = ./.;};
+  inputs = inputs'.defaultNix.inputs;
 
   pkgs = import inputs.nixpkgs {};
   lib = pkgs.lib;
@@ -14,17 +15,14 @@ let
 
   inherit (mlib) mkSystem;
 in
-  builtins.listToAttrs (builtins.map (s: {
-    name = s;
-    value = mkSystem {
-      nixosSystem = import "${inputs.nixpkgs}/nixos/lib/eval-config.nix";
-      inherit inputs mlib mpkgs;
-      config = mlib.getHostConfig s;
+  mkSystem {
+    nixosSystem = import "${inputs.nixpkgs}/nixos/lib/eval-config.nix";
+    inherit inputs mlib mpkgs;
+    config = mlib.getHostConfig host;
 
-      extraModules = [
-        {
-          nixpkgs.flake.source = inputs.nixpkgs;
-        }
-      ];
-    };
-  }) ["desktop" "server" "x220" "t440p" "digiboksi"])
+    extraModules = [
+      {
+        nixpkgs.flake.source = inputs.nixpkgs;
+      }
+    ];
+  }
