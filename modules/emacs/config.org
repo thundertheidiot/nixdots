@@ -1017,7 +1017,7 @@ Rainbow delimiters gives colors to delimiters like parenthesis, which helps with
   (org-mode . rainbow-delimiters-mode))
 #+end_src
 
-Buffer-env
+Envrc loads environment variables from direnv for use in any buffer. This combined with nix-direnv allows you to automatically enter a nix-shell by just being in the correct directory, which is incredibly useful for developement on nixos.
 
 #+begin_src emacs-lisp
 (use-package envrc
@@ -1190,7 +1190,10 @@ For some reason advice-add didn't seem to function, so this just manually replic
   (consult-line-start-from-top nil)
   :general-config
   (:states '(normal visual)
-	   "/" #'consult-line)
+	   "/" #'consult-line
+	   "?" nil
+	   "C-/" #'evil-search-forward
+	   "C-?" #'evil-search-backward)
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
     "sg" '("grep" . (lambda () (interactive)
 	     (consult-ripgrep (expand-file-name ""))))
