@@ -116,6 +116,11 @@ in {
             persistPath = "${cfg.persist}/docker";
             permissions = "710";
           }
+          {
+            path = "/var/lib/containers";
+            persistPath = "${cfg.persist}/containers";
+            permissions = "710";
+          }
           # (
           #   if config.services.displayManager.sddm.enable
           #   then {

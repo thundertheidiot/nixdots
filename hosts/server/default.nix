@@ -27,6 +27,7 @@
       ./webserver.nix
       ./jellyfin.nix
       ./rathole.nix
+      ./torrent
     ];
 
     options = {
