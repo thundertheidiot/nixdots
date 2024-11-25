@@ -105,7 +105,7 @@ in {
                 "workspace 7 silent,class:(gajim)"
                 "workspace 6 silent,class:(easyeffects)"
 
-                "fullscreen,class:(cs2)"
+                # "fullscreen,class:(cs2)"
                 "immediate,class:(.gamescope-wrapped)"
                 "stayfocused, title:^()$,class:^(steam)$"
               ];

@@ -34,6 +34,11 @@ in {
         format = "binary";
       };
 
+      meow.sops.secrets."server_torrent_stack_env" = {
+        sopsFile = ./server/torrent_stack_env;
+        format = "binary";
+      };
+
       meow.sops.secrets."desk_rathole" = {
         sopsFile = ./desk/rathole.toml;
         format = "binary";

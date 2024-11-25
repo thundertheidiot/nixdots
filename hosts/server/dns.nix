@@ -24,6 +24,12 @@
         address =
           (map (d: "/${d}/${config.server.addr}") [
             "jellyfin.box"
+            "firefox.box"
+            "torrent.box"
+            "soulseek.box"
+            "radarr.box"
+            "sonarr.box"
+            "prowlarr.box"
           ])
           ++ [
             "/pc.desktop/192.168.101.100"

@@ -293,6 +293,9 @@ Undo system for evil mode, i don't really have a point for using undo-tree speci
   (undo-tree-auto-save-history t)
   (undo-tree-history-directory-alist `((,(rx (* nonl)) . ,(expand-file-name "undo-tree/" user-emacs-directory))))
   :config
+  ;; redefine this so i can override the default undo binding
+  (defun undo-tree-overridden-undo-bindings-p () 
+    nil)
   (global-undo-tree-mode)
   (unless (file-directory-p (expand-file-name "undo-tree/" user-emacs-directory))
     (make-directory (expand-file-name "undo-tree/" user-emacs-directory))))

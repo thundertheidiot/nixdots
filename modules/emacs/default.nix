@@ -34,7 +34,7 @@ in {
   config = mkIf cfg.enable ({
       environment.variables = lib.mkIf cfg.exwm {
         EMACS_ENABLE_EXWM = "1"; # used inside emacs
-        # EDITOR = "emacsclient -c -a ''";
+        EDITOR = "emacsclient -c -a ''";
       };
 
       services.xserver.displayManager.session = lib.mkIf cfg.exwm [
