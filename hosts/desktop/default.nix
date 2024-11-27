@@ -151,6 +151,7 @@ in {
 
       firefox.enable = true;
       emacs.enable = true;
+      emacs.llm = true;
       emacs.exwm = true;
       shell.enable = true;
 

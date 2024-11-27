@@ -1316,6 +1316,18 @@ Large language models inside emacs, powered by ollama.
   (setopt ellama-providers '(("llama3.1" . (make-llm-ollama
 					    :chat-model "llama3.1:8b"
 					    :embedding-model "nomic-embed-text"))
+			     ("llama3.2" . (make-llm-ollama
+					  :chat-model "llama3.2:3b"
+					  :embedding-model "nomic-embed-text"))
+			     ("qwen2.5" . (make-llm-ollama
+					  :chat-model "qwen2.5-coder:14b"
+					  :embedding-model "nomic-embed-text"))
+			     ("qwen2.5:7b" . (make-llm-ollama
+					  :chat-model "qwen2.5-coder:7b"
+					  :embedding-model "nomic-embed-text"))
+			     ("qwen2.5:3b" . (make-llm-ollama
+					  :chat-model "qwen2.5-coder:3b"
+					  :embedding-model "nomic-embed-text"))
 			     ("gemma2" . (make-llm-ollama
 					  :chat-model "gemma2:9b"
 					  :embedding-model "nomic-embed-text"))
@@ -1333,6 +1345,21 @@ Large language models inside emacs, powered by ollama.
   (call-process-shell-command 
    (format 
     "curl --silent --show-error http://localhost:11434/api/generate -d '{\"model\": \"%s\", \"keep_alive\":0}'" model)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle @llm_enable@
+(use-package elisa
+  :custom
+  (elisa-limit 5)
+  (elisa-prompt-rewriting-enabled nil)
+  (elisa-chat-provider 
+   (make-llm-ollama
+    :chat-model "qwen2.5-coder:7b")
+   :embedding-model "nomic-embed-text"
+   :default-chat-non-standard-params '(("num_ctx" . 8192)))
+  (elisa-sqlite-vss-path "@sqlite_vss@")
+  :init
+  (require 'llm-ollama))
 #+end_src
 
 ** Elfeed
@@ -1638,6 +1665,17 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		  (when (display-graphic-p) (solaire-global-mode +1))))
   (server-after-make-frame . (lambda ()
 			       (when (display-graphic-p) (solaire-global-mode +1)))))
+#+end_src
+
+** Nyan mode
+
+#+begin_src emacs-lisp
+;; (use-package nyan-mode
+;;   :custom
+;;   (nyan-animate-nyancat t)
+;;   (nyan-wavy-trail t)
+;;   :config
+;;   (nyan-mode))
 #+end_src
 
 ** All the icons

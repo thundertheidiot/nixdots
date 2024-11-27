@@ -145,6 +145,7 @@ in {
 
             exwm_enable = tangle cfg.exwm;
             llm_enable = tangle cfg.llm;
+            sqlite_vss = "${pkgs."2405".sqlite-vss}/lib/vss0.so";
             lang_latex = tangle cfg.lang.latex;
             lang_haskell = tangle cfg.lang.haskell;
             lang_ocaml = tangle cfg.lang.ocaml;
