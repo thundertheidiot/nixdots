@@ -332,6 +332,7 @@ Collection of evil-like bindings for other modes.
   (evil-collection-init '(dashboard
 			  woman
 			  pdf
+			  debug
 			  org
 			  dired
 			  elfeed
@@ -1154,7 +1155,13 @@ For some reason advice-add didn't seem to function, so this just manually replic
   (eshell-vterm-mode))
 #+end_src
 
+* Polymode
 
+#+begin_src emacs-lisp
+;; (use-package polymode
+;;   :hook
+;;   (org-mode . poly-org-mode))
+#+end_src
 
 * Misc stuff
 
