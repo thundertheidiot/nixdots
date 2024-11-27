@@ -332,6 +332,7 @@ Collection of evil-like bindings for other modes.
   (evil-collection-init '(dashboard
 			  woman
 			  pdf
+			  debug
 			  org
 			  dired
 			  elfeed
