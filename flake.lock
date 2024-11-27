@@ -1902,11 +1902,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-ehJR5TVUWIDQprIdEZ1wrDW37pnv7lbPH+ojevfwu2U=",
-        "path": "/nix/store/5pr2wn01zdvzbdyvglfcv8yw1ghzsh7a-source/pkgs/screenshot",
+        "path": "/nix/store/kqdxvmjd17cr8fba1h2nzvrdk933j37j-source/pkgs/screenshot",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/5pr2wn01zdvzbdyvglfcv8yw1ghzsh7a-source/pkgs/screenshot",
+        "path": "/nix/store/kqdxvmjd17cr8fba1h2nzvrdk933j37j-source/pkgs/screenshot",
         "type": "path"
       }
     },

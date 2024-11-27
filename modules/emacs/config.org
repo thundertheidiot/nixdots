@@ -456,10 +456,10 @@ Which key
  "<right>" 'enlarge-window-horizontally
  "<down>" 'shrink-window
  ";" 'evil-ex
- "C-k" 'enlarge-window
- "C-h" 'shrink-window-horizontally
- "C-l" 'enlarge-window-horizontally
- "C-j" 'shrink-window)
+ "M-k" 'enlarge-window
+ "M-h" 'shrink-window-horizontally
+ "M-l" 'enlarge-window-horizontally
+ "M-j" 'shrink-window)
 
 (general-define-key
  "C-=" 'text-scale-increase
@@ -1008,7 +1008,14 @@ Smartparens-mode allows you to use parenthesis and some other characters more ea
   :demand t
   :diminish smartparens-mode
   :config
-  (smartparens-global-mode))
+  (smartparens-global-mode)
+  :general-config
+  (:states '(normal visual) :keymaps 'override
+	   "C-k" #'sp-up-sexp
+	   "C-j" #'sp-down-sexp))
+
+(use-package evil-smartparens
+  :hook (smartparens-enabled . evil-smartparens-mode))
 #+end_src
 
 Rainbow delimiters gives colors to delimiters like parenthesis, which helps with seeing where you are at, especially in lisp land.
