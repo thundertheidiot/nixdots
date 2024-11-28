@@ -1011,8 +1011,11 @@ Smartparens-mode allows you to use parenthesis and some other characters more ea
   (smartparens-global-mode)
   :general-config
   (:states '(normal visual) :keymaps 'override
+	   "C-h" #'sp-backward-sexp
 	   "C-k" #'sp-up-sexp
-	   "C-j" #'sp-down-sexp))
+	   "C-j" #'sp-down-sexp
+	   "C-l" #'sp-next-sexp
+	   "C-y" #'sp-copy-sexp))
 
 (use-package evil-smartparens
   :hook (smartparens-enabled . evil-smartparens-mode))
