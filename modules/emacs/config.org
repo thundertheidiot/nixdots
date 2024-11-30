@@ -2,6 +2,8 @@
 #+STARTUP: overview
 #+PROPERTY: header-args:emacs-lisp :tangle yes :results none
 
+https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration/
+
 Setup use-package
 
 #+begin_src emacs-lisp
@@ -1168,9 +1170,10 @@ For some reason advice-add didn't seem to function, so this just manually replic
 * Polymode
 
 #+begin_src emacs-lisp
-;; (use-package polymode
-;;   :hook
-;;   (org-mode . poly-org-mode))
+;; (use-package polymode)
+;; (use-package poly-org
+;;   :hook (org-mode . poly-org-mode))
+
 #+end_src
 
 * Misc stuff
@@ -1613,6 +1616,7 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
   :ensure nil
   :demand t
   :init (setq dired-listing-switches "-alh")
+  :hook (dired-mode . hl-line-mode)
   :general-config
   (:keymaps 'dired-mode-map :states '(normal insert visual motion)
     "SPC" nil
@@ -1701,6 +1705,15 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 (use-package all-the-icons)
 #+end_src
 
+https://github.com/jdtsmith/kind-icon
+
+#+begin_src emacs-lisp
+(use-package kind-icon
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+#+end_src
+
 *** Dired
 
 #+begin_src emacs-lisp
@@ -1711,10 +1724,9 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 (use-package all-the-icons-dired
   :after all-the-icons
   :diminish all-the-icons-dired-mode
-  :hook
-  (after-init . (lambda ()
-		  (when (display-graphic-p) (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))))
-  (server-after-make-frame . th--ati-dired))
+  :hook (dired-mode . (lambda ()
+			(when (display-graphic-p)
+			  (all-the-icons-dired-mode)))))
 #+end_src
 
 *** Ibuffer
@@ -1727,10 +1739,9 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 (use-package all-the-icons-ibuffer
   :after all-the-icons
   :diminish all-the-icons-ibuffer-mode
-  :hook
-  (after-init . (lambda ()
-		  (when (display-graphic-p) (add-hook 'ibuffer-mode-hook #'all-the-icons-ibuffer-mode))))
-  (server-after-make-frame . th--ati-ibuffer))
+  :hook (ibuffer-mode . (lambda ()
+			(when (display-graphic-p)
+			  (all-the-icons-ibuffer-mode)))))
 #+end_src
 
 * EXWM
