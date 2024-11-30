@@ -22,25 +22,11 @@ in {
     virtualisation.oci-containers.backend = "docker";
 
     services.nginx.virtualHosts =
-      (mapAttrs (_: port: {
-          root = "/fake";
-          locations = {
-            "/" = {
-              proxyPass = "http://127.0.0.1:${toString port}";
-            };
-          };
-        }) {
-          "soulseek.box" = 5030;
-          "radarr.box" = 7878;
-          "sonarr.box" = 8989;
-          "prowlarr.box" = 9696;
-          "firefox.box" = 3000;
-        })
-      // {
-        "torrent.box" = {
-          root = "/fake";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:8080/";
+      mapAttrs (_: port: {
+        root = "/fake";
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:${toString port}";
             extraConfig = ''
               proxy_http_version 1.1;
               proxy_set_header Host $proxy_host;
@@ -50,7 +36,30 @@ in {
             '';
           };
         };
-      };
+      }) {
+        "torrent.box" = 8080;
+        "soulseek.box" = 5030;
+        "radarr.box" = 7878;
+        "sonarr.box" = 8989;
+        "prowlarr.box" = 9696;
+        "firefox.box" = 3000;
+      }
+      # // {
+      #   "torrent.box" = {
+      #     root = "/fake";
+      #     locations."/" = {
+      #       proxyPass = "http://127.0.0.1:8080/";
+      #       extraConfig = ''
+      #         proxy_http_version 1.1;
+      #         proxy_set_header Host $proxy_host;
+      #         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      #         proxy_set_header X-Forwarded-Host $http_host;
+      #         proxy_set_header X-Forwarded-Proto $scheme;
+      #       '';
+      #     };
+      #   };
+      # }
+      ;
 
     # Containers
     virtualisation.oci-containers.containers."gluetun" = {
@@ -288,6 +297,7 @@ in {
       log-driver = "journald";
       extraOptions = [
         "--network=container:gluetun"
+        "--device=/dev/dri:/dev/dri"
       ];
     };
     systemd.services."docker-torrent-firefox" = {
