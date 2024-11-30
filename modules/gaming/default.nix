@@ -44,13 +44,14 @@ in {
     })
     (lib.mkIf (cfg.enable && cfg.emulation) {
       environment.systemPackages = with pkgs; [
-        (retroarch.override {
-          cores = with libretro; [
-            snes9x
-            bsnes
-            parallel-n64
-          ];
-        })
+        retroarchFull
+        # (callPackage retroarch {
+        #   cores = with libretro; [
+        #     snes9x
+        #     bsnes
+        #     parallel-n64
+        #   ];
+        # })
       ];
     })
     (lib.mkIf (cfg.enable) {

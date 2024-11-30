@@ -46,8 +46,8 @@ in {
 
         xdg.dataFile."Kvantum/Catppuccin-Mocha-Mauve" = {
           source = "${(pkgs.catppuccin-kvantum.override {
-            accent = "Mauve";
-            variant = "Mocha";
+            accent = "mauve";
+            variant = "mocha";
           })}/share/Kvantum/Catppuccin-Mocha-Mauve";
           recursive = true;
         };
