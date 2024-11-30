@@ -33,6 +33,9 @@ in {
     boot.tmp.cleanOnBoot = true;
     hardware.enableRedistributableFirmware = true;
 
+    # doesn't work on lix, doesn't work with flakes anyway?
+    system.tools.nixos-option.enable = false;
+
     networking.networkmanager.enable = true;
 
     systemd.extraConfig = ''
