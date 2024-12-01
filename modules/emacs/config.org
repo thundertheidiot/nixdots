@@ -75,6 +75,7 @@ These are used somewhere later, but don't require any configuration.
       backward-delete-char-untabify-method nil)
 
 (electric-indent-mode)
+(electric-pair-mode)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -461,7 +462,12 @@ Which key
  "M-k" 'enlarge-window
  "M-h" 'shrink-window-horizontally
  "M-l" 'enlarge-window-horizontally
- "M-j" 'shrink-window)
+ "M-j" 'shrink-window
+
+ "C-j" #'backward-sexp
+ "C-k" #'forward-sexp
+ "C-d" #'kill-sexp
+ )
 
 (general-define-key
  "C-=" 'text-scale-increase
@@ -1003,24 +1009,39 @@ Org src blocks in fennel
 
 ** Misc nice things
 
-Smartparens-mode allows you to use parenthesis and some other characters more easily.
+*** Puni
 
 #+begin_src emacs-lisp
-(use-package smartparens
-  :demand t
-  :diminish smartparens-mode
+(use-package puni
   :config
-  (smartparens-global-mode)
+  (puni-global-mode)
   :general-config
-  (:states '(normal visual) :keymaps 'override
-	   "C-h" #'sp-backward-sexp
-	   "C-k" #'sp-up-sexp
-	   "C-j" #'sp-down-sexp
-	   "C-l" #'sp-next-sexp
-	   "C-y" #'sp-copy-sexp))
+  (:states '(normal visual) :keymaps 'override))
+#+end_src
 
-(use-package evil-smartparens
-  :hook (smartparens-enabled . evil-smartparens-mode))
+*** Smartparens
+
+Smartparens-mode allows you to use parenthesis and some other characters more easily.
+??
+
+#+begin_src emacs-lisp
+;; (use-package smartparens
+;;   :demand t
+;;   :diminish smartparens-mode
+;;   :config
+;;   (smartparens-global-mode)
+;;   :general-config
+;;   (:states '(normal visual) :keymaps 'override
+;; 	   "C-h" #'sp-backward-sexp
+;; 	   "C-k" #'sp-up-sexp
+;; 	   "C-j" #'sp-down-sexp
+;; 	   "C-l" #'sp-next-sexp
+;; 	   "C-y" #'sp-copy-sexp
+;; 	   )
+;;   )
+
+;; (use-package evil-smartparens
+;;   :hook (smartparens-enabled . evil-smartparens-mode))
 #+end_src
 
 Rainbow delimiters gives colors to delimiters like parenthesis, which helps with seeing where you are at, especially in lisp land.
