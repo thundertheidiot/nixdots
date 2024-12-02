@@ -24,6 +24,7 @@ in {
         ocaml = mkEnOpt "Ocaml";
         fennel = mkEnOpt "Fennel";
         janet = mkEnOpt "Janet";
+        lisp = mkEnOpt "Lisp";
         c_cxx = mkEnOpt "C/C++";
         bash = mkEnOpt "Bash";
         python = mkEnOpt "Python";
@@ -106,6 +107,9 @@ in {
                 '';
             }))
           ])
+          (mkIf cfg.lang.lisp [
+            sbcl
+          ])
           (mkIf cfg.lang.latex [
             texlive.combined.scheme-full
           ])
@@ -151,6 +155,7 @@ in {
             lang_ocaml = tangle cfg.lang.ocaml;
             lang_fennel = tangle cfg.lang.fennel;
             lang_janet = tangle cfg.lang.janet;
+            lang_lisp = tangle cfg.lang.lisp;
             lang_c_cxx = tangle cfg.lang.c_cxx;
             lang_bash = tangle cfg.lang.bash;
             lang_python = tangle cfg.lang.python;
