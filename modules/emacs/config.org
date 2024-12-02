@@ -1044,6 +1044,8 @@ Smartparens-mode allows you to use parenthesis and some other characters more ea
 ;;   :hook (smartparens-enabled . evil-smartparens-mode))
 #+end_src
 
+*** Rainbow delimeters
+
 Rainbow delimiters gives colors to delimiters like parenthesis, which helps with seeing where you are at, especially in lisp land.
 
 #+begin_src emacs-lisp
@@ -1123,13 +1125,12 @@ Eshell itself
 
 (use-package eshell
   :ensure nil
-  :after (fish-completion smartparens)
+  :after (fish-completion)
   :commands (eshell projectile-run-eshell)
   :init
   (setq eshell-history-size 100000)
   :hook
   (eshell-mode . th/turn-off-line-numbers)
-  (eshell-mode . smartparens-mode)
   (eshell-mode . fish-completion-mode)
   :general-config
   (:states '(normal visual) :keymaps 'eshell-mode-map
