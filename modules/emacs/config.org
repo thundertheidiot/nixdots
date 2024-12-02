@@ -990,6 +990,14 @@ Org src blocks in fennel
   :mode "\\.janet\\'")
 #+end_src
 
+*** Common lisp
+
+#+begin_src emacs-lisp :tangle @lang_lisp@
+(use-package slime
+  :custom
+  (inferior-lisp-program "sbcl"))
+#+end_src
+
 *** C#
 
 #+begin_src emacs-lisp

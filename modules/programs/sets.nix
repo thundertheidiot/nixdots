@@ -50,6 +50,7 @@ in {
           "ocaml"
           "fennel"
           "janet"
+          "lisp"
           "c_cxx"
           "bash"
           "python"
