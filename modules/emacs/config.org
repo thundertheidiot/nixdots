@@ -993,7 +993,7 @@ Org src blocks in fennel
 *** Common lisp
 
 #+begin_src emacs-lisp :tangle @lang_lisp@
-(use-package slime
+(use-package sly
   :custom
   (inferior-lisp-program "sbcl"))
 #+end_src
