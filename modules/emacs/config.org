@@ -995,7 +995,8 @@ Org src blocks in fennel
 #+begin_src emacs-lisp :tangle @lang_lisp@
 (use-package sly
   :custom
-  (inferior-lisp-program "sbcl"))
+  (inferior-lisp-program "sbcl")
+  (sly-symbol-completion-mode nil))
 #+end_src
 
 *** C#
