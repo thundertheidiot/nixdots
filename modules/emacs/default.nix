@@ -33,8 +33,8 @@ in {
   };
 
   config = mkIf cfg.enable ({
-      environment.variables = lib.mkIf cfg.exwm {
-        EMACS_ENABLE_EXWM = "1"; # used inside emacs
+      environment.variables = lib.mkIf cfg.enable {
+        # EMACS_ENABLE_EXWM = "1"; # used inside emacs
         EDITOR = "emacsclient -c -a ''";
       };
 
@@ -43,6 +43,8 @@ in {
           manage = "desktop";
           name = "EXWM";
           start = ''
+            export EMACS_ENABLE_EXWM=1
+            export _JAVA_AWT_WM_NONREPARENTING=1
             exec ${pkgs.dbus}/bin/dbus-launch --exit-with-session emacs -mm &
             waitPID=$!
           '';
