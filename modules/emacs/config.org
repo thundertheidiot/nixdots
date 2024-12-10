@@ -1162,6 +1162,14 @@ Eshell itself
   :config
   (add-to-list 'eshell-modules-list 'eshell-elecslash)
   (add-to-list 'eshell-modules-list 'eshell-tramp)
+
+  (setq eshell-visual-commands (append eshell-visual-commands
+				       '("nix"
+					 "nix-build"
+					 "nixos-rebuild"
+					 "nh"
+					 "deploy"
+					 )))
   :hook
   (eshell-mode . th/turn-off-line-numbers)
   (eshell-mode . fish-completion-mode)
@@ -1197,6 +1205,14 @@ Aliases and functions
   (apply 'eshell-exec-visual args))
 
 (defalias 'eshell/V 'eshell-exec-visual)
+
+(defun eshell/nix-shell (&rest args)
+  "Calling nix-shell without explicitly running a shell breaks when entering a new terminal.
+This alias fixes the issue."
+  (let ((args (if (or (not args) (member "--run" args))
+		  args
+		(append args '("--run" "fish")))))
+    (apply #'eshell-exec-visual "nix-shell" args)))
 
 (defmacro re (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
   "Convert rx expression RX-SEXP to pcre compatible regexp."
