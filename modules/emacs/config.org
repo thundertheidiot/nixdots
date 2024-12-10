@@ -886,9 +886,21 @@ Index those keywords inside magit.
   (corfu-cycle t)
   :hook
   (after-init . global-corfu-mode)
+  :general-config
+  (:states '(normal visual insert) :keymaps 'corfu-mode-map
+	   "C-j" nil
+	   "C-k" nil)
+  (:states '(normal visual insert) :keymaps 'corfu-map
+	   "RET" nil
+	   "<up>" nil
+	   "<down>" nil
+	   "C-j" #'corfu-next
+	   "C-k" #'corfu-previous
+	   "S-RET" #'corfu-complete
+	   "S-<return>" #'corfu-complete)
   :config
-  (make-mode-keymap corfu-mode-map '(("C-j" . nil)
-				     ("C-k" . nil)))
+  ;; (make-mode-keymap corfu-mode-map '(("C-j" . nil)
+  ;; 				     ("C-k" . nil)))
   
   (make-mode-keymap corfu-map '(("RET" . nil)
 				("<up>" . nil)
