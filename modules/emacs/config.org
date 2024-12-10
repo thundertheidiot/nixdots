@@ -1379,33 +1379,28 @@ Large language models inside emacs, powered by ollama.
            :chat-model "gemma2:9b"
            :embedding-model "nomic-embed-text"))
 
-  (setopt ellama-providers '(("llama3.1" . (make-llm-ollama
-					    :chat-model "llama3.1:8b"
-					    :embedding-model "nomic-embed-text"))
+  (setopt ellama-providers '(
 			     ("llama3.2" . (make-llm-ollama
 					  :chat-model "llama3.2:3b"
 					  :embedding-model "nomic-embed-text"))
-			     ("qwen2.5" . (make-llm-ollama
+			     ("qwen2.5-coder:14b" . (make-llm-ollama
 					  :chat-model "qwen2.5-coder:14b"
 					  :embedding-model "nomic-embed-text"))
-			     ("qwen2.5:7b" . (make-llm-ollama
+			     ("qwen2.5-coder:7b" . (make-llm-ollama
 					  :chat-model "qwen2.5-coder:7b"
 					  :embedding-model "nomic-embed-text"))
-			     ("qwen2.5:3b" . (make-llm-ollama
+			     ("qwen2.5-coder:3b" . (make-llm-ollama
 					  :chat-model "qwen2.5-coder:3b"
 					  :embedding-model "nomic-embed-text"))
-			     ("gemma2" . (make-llm-ollama
-					  :chat-model "gemma2:9b"
-					  :embedding-model "nomic-embed-text"))
-			     ("gemma2_2b" . (make-llm-ollama
-					     :chat-model "gemma2:2b"
-					     :embedding-model "nomic-embed-text"))
-			     ("mistral-nemo" . (make-llm-ollama
-						:chat-model "mistral-nemo:12b"
-						:embedding-model "nomic-embed-text"))
-			     ("deepseek-coder-v2" . (make-llm-ollama 
-						     :chat-model "deepseek-coder-v2:16b"
-						     :embedding-model "nomic-embed-text")))))
+			     ("exaone3.5:2.4b" . (make-llm-ollama
+					    :chat-model "exaone3.5:2.4b"
+					    :embedding-model "nomic-embed-text"))
+			     ("exaone3.5:7.8b" . (make-llm-ollama
+					    :chat-model "exaone3.5:7.8b"
+					    :embedding-model "nomic-embed-text"))
+			     ("exaone3.5:32b" . (make-llm-ollama
+					    :chat-model "exaone3.5:32b"
+					    :embedding-model "nomic-embed-text")))))
 
 (defun eshell/ollama-unload (model)
   (call-process-shell-command 

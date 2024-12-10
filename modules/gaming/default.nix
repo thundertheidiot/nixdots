@@ -69,6 +69,9 @@ in {
               libcef
               openvr
               gperftools # steamvr home symlink libtcmalloc_minimal.so.0
+
+              # far cry mod installer
+              xorg.libSM
             ];
 
           extraLibraries = pkgs:

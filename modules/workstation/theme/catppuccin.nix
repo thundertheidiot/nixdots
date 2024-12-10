@@ -44,11 +44,11 @@ in {
           };
         };
 
-        xdg.dataFile."Kvantum/Catppuccin-Mocha-Mauve" = {
+        xdg.dataFile."Kvantum/catppuccin-mocha-mauve" = {
           source = "${(pkgs.catppuccin-kvantum.override {
             accent = "mauve";
             variant = "mocha";
-          })}/share/Kvantum/Catppuccin-Mocha-Mauve";
+          })}/share/Kvantum/catppuccin-mocha-mauve";
           recursive = true;
         };
 
@@ -57,7 +57,7 @@ in {
         in {
           "Kvantum/kvantum.kvconfig".text = ''
             [General]
-            theme=Catppuccin-Mocha-Mauve
+            theme=catppuccin-mocha-mauve
           '';
           "gtk-4.0/assets" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
           "gtk-4.0/gtk.css" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
