@@ -332,21 +332,30 @@ Collection of evil-like bindings for other modes.
   :after evil
   :diminish evil-collection-unimpaired-mode
   :config
-  (evil-collection-init '(dashboard
+  (evil-collection-init '(apropos
+			  calc
+			  compile
+			  comint
+			  dashboard
+			  debug
+			  ediff
+			  emoji
+			  eshell
 			  woman
 			  pdf
-			  debug
 			  org
+			  proced
 			  dired
 			  elfeed
-			  ediff
-			  eshell
 			  wdired
-			  emoji
 			  image
 			  ibuffer
 			  simple-mpc
 			  magit
+			  magit-todos
+			  vdiff
+			  wgrep
+			  yaml-mode
 			  diff-hl
 			  vterm)))
 #+end_src
