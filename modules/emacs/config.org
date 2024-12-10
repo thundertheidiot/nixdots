@@ -1151,8 +1151,8 @@ Eshell itself
   :custom
   (eshell-history-size 10000000)
   :config
-  (push 'eshell-modules-list 'eshell-elecslash)
-  (push 'eshell-modules-list 'eshell-tramp)
+  (add-to-list 'eshell-modules-list 'eshell-elecslash)
+  (add-to-list 'eshell-modules-list 'eshell-tramp)
   :hook
   (eshell-mode . th/turn-off-line-numbers)
   (eshell-mode . fish-completion-mode)
