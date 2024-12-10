@@ -1136,8 +1136,10 @@ Eshell itself
   :ensure nil
   :after (fish-completion)
   :commands (eshell projectile-run-eshell)
-  :init
-  (setq eshell-history-size 100000)
+  :custom
+  (eshell-history-size 10000000)
+  :config
+  (add-to-list 'eshell-modules-list 'eshell-elecslash)
   :hook
   (eshell-mode . th/turn-off-line-numbers)
   (eshell-mode . fish-completion-mode)
