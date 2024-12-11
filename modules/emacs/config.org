@@ -1274,7 +1274,7 @@ For some reason advice-add didn't seem to function, so this just manually replic
 	    "<backspace>" #'vertico-directory-delete-char
 	    "DEL" #'vertico-directory-delete-char)
   (:keymaps 'override :states '(normal visual insert)
-	    "C-c b" #'vertico-buffer-mode)
+	    "C-c c" #'vertico-buffer-mode)
   :config
   (vertico-mode))
 #+end_src
