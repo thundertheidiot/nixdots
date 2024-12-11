@@ -1163,13 +1163,13 @@ Eshell itself
   (add-to-list 'eshell-modules-list 'eshell-elecslash)
   (add-to-list 'eshell-modules-list 'eshell-tramp)
 
-  (setq eshell-visual-commands (append eshell-visual-commands
-				       '("nix"
-					 "nix-build"
-					 "nixos-rebuild"
-					 "nh"
-					 "deploy"
-					 )))
+  (setq eshell-visual-commands '("nix"
+				 "nix-build"
+				 "nixos-rebuild"
+				 "nh"
+				 "deploy"
+				 "btop"
+				 "htop"))
   :hook
   (eshell-mode . th/turn-off-line-numbers)
   (eshell-mode . fish-completion-mode)
@@ -1349,7 +1349,7 @@ Save grep search into evil search history.
   :general-config
   (
    "C-;" #'embark-act
-   "C-a" #'embark-dwim))
+   "C-a" #'embark-select))
 
 (use-package embark-consult
   :after embark
@@ -1687,7 +1687,8 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
   (:keymaps 'dired-mode-map :states '(normal insert visual motion)
     "SPC" nil
     "q" 'evil-quit
-    "<backspace>" 'dired-up-directory)
+    "<backspace>" 'dired-up-directory
+    "C-m" (lambda () (interactive) (empv-play (dired-get-filename))))
   (:keymaps 'dired-mode-map :states '(normal visual motion) :prefix "SPC"
     "oe" '("eshell in this window" . (lambda () (interactive) (th/eshell))))
   :config
