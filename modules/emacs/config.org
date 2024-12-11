@@ -1268,10 +1268,13 @@ For some reason advice-add didn't seem to function, so this just manually replic
 	    "RET" #'vertico-exit
 	    "C-u" #'vertico-quick-exit
 	    "C-j" #'vertico-next
-	    "C-k" #'vertico-previous)
+	    "C-k" #'vertico-previous
+	    "C-l" #'vertico-quick-jump)
   (:keymaps 'vertico-map :states '(insert)
 	    "<backspace>" #'vertico-directory-delete-char
 	    "DEL" #'vertico-directory-delete-char)
+  (:keymaps 'override :states '(normal visual insert)
+	    "C-c b" #'vertico-buffer-mode)
   :config
   (vertico-mode))
 #+end_src
@@ -1384,8 +1387,7 @@ Save grep search into evil search history.
 	(cdr args)))
 (advice-add #'completing-read-multiple :filter-args #'advice!-crm-indicator)
 
-(setq minibuffer-prompt-properties
-      '(read-only t cursor-intangible-mode t face minibuffer-prompt)
+(setq minibuffer-prompt-properties '(read-only t cursor-intangible-mode t face minibuffer-prompt)
       enable-recursive-minibuffers t)
 
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
