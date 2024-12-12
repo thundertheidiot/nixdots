@@ -1206,13 +1206,59 @@ Aliases and functions
 
 (defalias 'eshell/V 'eshell-exec-visual)
 
+(defun eshell/c ()
+  (eshell/cd
+   (read-file-name "Change directory: ")))
+
+(defvar eshell-nix-shell-active nil
+  "Show <nix-shell> in the eshell prompt.")
+
+(defun th/eshell-prompt ()
+  (concat
+   (if eshell-nix-shell-active
+       (propertize "<nix-shell> " 'face '(:foreground "green"))
+     "")
+   (abbreviate-file-name (eshell/pwd))
+   (propertize " λ" 'face
+	       (if (string-match (rx
+				  "/sudo:root"
+				  (* nonl))
+				 (eshell/pwd))
+		   '(:foreground "red")
+		 '(:foreground "purple")))
+   (propertize " " 'face
+	       'default)))
+
+(setq eshell-prompt-function #'th/eshell-prompt)
+(setq eshell-prompt-regexp
+      (rx line-start
+	  (*?
+	   nonl)
+	  "λ "))
+
+;; (setq eshell-prompt-function
+;;       (lambda ()
+;; 	(concat
+;; 	 (if eshell-nix-shell-active "<nix-shell> " "")
+;; 	 (abbreviate-file-name (eshell/pwd))
+;; 	 (if (= (user-uid) 0) " # " " $ "))))
+
 (defun eshell/nix-shell (&rest args)
-  "Calling nix-shell without explicitly running a shell breaks when entering a new terminal.
-This alias fixes the issue."
-  (let ((args (if (or (not args) (member "--run" args))
-		  args
-		(append args '("--run" "fish")))))
-    (apply #'eshell-exec-visual "nix-shell" args)))
+  (if (member "--run" args)
+      (eshell-command-result
+       (concat "*nix-shell " (mapconcat 'identity args " ")))
+    (let* ((output (shell-command-to-string
+		    (format "nix-shell %s --run \"env\""
+			    (mapconcat 'identity args " "))))
+	   (lines (split-string output "\n" t))
+	   (environment (mapcar (lambda (line)
+				  (s-split-up-to "=" line 1))
+				lines)))
+      (dolist (env environment)
+	(when (= 2 (length env))
+	  (ignore-errors
+	    (eshell-set-variable (car env) (cadr env)))
+	  (setq-local eshell-nix-shell-active t))))))
 
 (defmacro re (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
   "Convert rx expression RX-SEXP to pcre compatible regexp."
@@ -1403,7 +1449,7 @@ Large language models inside emacs, powered by ollama.
   (require 'llm-ollama)
   (setopt ellama-provider
           (make-llm-ollama
-           :chat-model "gemma2:9b"
+           :chat-model "llama3.2:3b"
            :embedding-model "nomic-embed-text"))
 
   (setopt ellama-providers '(
