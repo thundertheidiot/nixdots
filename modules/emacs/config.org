@@ -1690,7 +1690,7 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
     "SPC" nil
     "q" 'evil-quit
     "<backspace>" 'dired-up-directory
-    "C-m" (lambda () (interactive) (empv-play (dired-get-filename))))
+    "C-<return>" (lambda () (interactive) (empv-play (dired-get-filename))))
   (:keymaps 'dired-mode-map :states '(normal visual motion) :prefix "SPC"
     "oe" '("eshell in this window" . (lambda () (interactive) (th/eshell))))
   :config
