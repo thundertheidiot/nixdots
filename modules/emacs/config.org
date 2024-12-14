@@ -354,6 +354,7 @@ Collection of evil-like bindings for other modes.
 			  magit
 			  magit-todos
 			  vdiff
+			  sly
 			  wgrep
 			  yaml-mode
 			  diff-hl
@@ -1178,7 +1179,9 @@ Eshell itself
 	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
   (:states '(normal visual insert) :keymaps 'eshell-mode-map
     "C->" (lambda () (interactive) 
-	    (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
+	    (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")))
+    "C-p" (lambda () (interactive)
+	    (insert (read-file-name "Insert path: "))))
   (:keymaps 'eshell-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (browse-url))
@@ -1219,6 +1222,11 @@ Aliases and functions
        (propertize "<nix-shell> " 'face '(:foreground "green"))
      "")
    (abbreviate-file-name (eshell/pwd))
+  
+   (if (magit-toplevel)
+       (propertize (format "  %s" (magit-get-current-branch)) 'face '(:foreground "#cba6f7"))
+     "")
+
    (propertize " λ" 'face
 	       (if (string-match (rx
 				  "/sudo:root"
