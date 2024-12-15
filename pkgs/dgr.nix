@@ -25,7 +25,7 @@ stdenv.mkDerivation {
           glibc.bin
           mono
           SDL2
-          gnome2.gtk
+          gtk2
         ];
     };
   in ''

@@ -8,7 +8,7 @@
   };
   firefox-addons = nur.repos.rycee.firefox-addons;
   ataraxiasjel = nur.repos.ataraxiasjel;
-  hyprland-split-monitor-workspaces = inputs.split-monitor-workspaces.packages.${final.system}.split-monitor-workspaces;
+  hyprsplit = inputs.hyprsplit.packages.${final.system}.default;
 
   "2405" = import inputs.nixpkgs-24-05 {
     system = final.system;
