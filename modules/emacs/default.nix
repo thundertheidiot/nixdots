@@ -38,6 +38,9 @@ in {
         EDITOR = "emacsclient -c -a ''";
       };
 
+      # Emacs requires man caches
+      documentation.man.generateCaches = true;
+
       services.xserver.displayManager.session = lib.mkIf cfg.exwm [
         {
           manage = "desktop";
@@ -129,6 +132,9 @@ in {
             pyright
           ])
         ];
+
+      # Emacs requires man caches
+      programs.man.generateCaches = true;
 
       services.emacs = {
         enable = true;
