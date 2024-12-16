@@ -1496,9 +1496,9 @@ Large language models inside emacs, powered by ollama.
   (elisa-prompt-rewriting-enabled nil)
   (elisa-chat-provider 
    (make-llm-ollama
-    :chat-model "qwen2.5-coder:7b")
+    :chat-model "qwen2.5-coder:14b"
    :embedding-model "nomic-embed-text"
-   :default-chat-non-standard-params '(("num_ctx" . 8192)))
+   :default-chat-non-standard-params '(("num_ctx" . 8192))))
   (elisa-sqlite-vss-path "@sqlite_vss@")
   :init
   (require 'llm-ollama))
