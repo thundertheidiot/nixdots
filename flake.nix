@@ -203,10 +203,8 @@
 
     waybar.url = "github:Alexays/Waybar";
 
-    split-monitor-workspaces = {
-      # for the ref above
-      # url = "github:thundertheidiot/split-monitor-workspaces?ref=d6efa8bd7254f40a2009d406934059fda539811d";
-      url = "github:thundertheidiot/split-monitor-workspaces";
+    hyprsplit = {
+      url = "github:shezdy/hyprsplit";
       inputs.hyprland.follows = "hyprland";
     };
 

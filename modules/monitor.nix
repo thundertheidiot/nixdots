@@ -110,11 +110,11 @@ in {
             splitMonitorWorkspaces = config.setup.hyprland.forceMultiMonitor || (builtins.length mons) > 1;
             hyprWorkspace =
               if splitMonitorWorkspaces
-              then "split-workspace"
+              then "split:workspace"
               else "workspace";
             hyprMoveToWorkspaceSilent =
               if splitMonitorWorkspaces
-              then "split-movetoworkspacesilent"
+              then "split:movetoworkspacesilent"
               else "movetoworkspacesilent";
 
             inherit (builtins) filter isList length;
@@ -154,7 +154,7 @@ in {
                 '');
           in {
             wayland.windowManager.hyprland = {
-              plugins = lib.mkIf splitMonitorWorkspaces [pkgs.hyprland-split-monitor-workspaces];
+              plugins = lib.mkIf splitMonitorWorkspaces [pkgs.hyprsplit];
 
               settings = {
                 plugin.split-monitor-workspaces = {
