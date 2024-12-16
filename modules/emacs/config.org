@@ -1493,7 +1493,7 @@ Large language models inside emacs, powered by ollama.
 (use-package elisa
   :custom
   (elisa-limit 5)
-  (elisa-prompt-rewriting-enabled t)
+  (elisa-prompt-rewriting-enabled nil)
   (elisa-chat-provider 
    (make-llm-ollama
     :chat-model "qwen2.5-coder:7b"
