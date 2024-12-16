@@ -354,6 +354,7 @@ Collection of evil-like bindings for other modes.
 			  magit
 			  magit-todos
 			  vdiff
+			  sly
 			  wgrep
 			  yaml-mode
 			  diff-hl
@@ -1178,7 +1179,9 @@ Eshell itself
 	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
   (:states '(normal visual insert) :keymaps 'eshell-mode-map
     "C->" (lambda () (interactive) 
-	    (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")) ))
+	    (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")))
+    "C-p" (lambda () (interactive)
+	    (insert (read-file-name "Insert path: "))))
   (:keymaps 'eshell-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (browse-url))
@@ -1206,13 +1209,64 @@ Aliases and functions
 
 (defalias 'eshell/V 'eshell-exec-visual)
 
+(defun eshell/c ()
+  (eshell/cd
+   (read-file-name "Change directory: ")))
+
+(defvar eshell-nix-shell-active nil
+  "Show <nix-shell> in the eshell prompt.")
+
+(defun th/eshell-prompt ()
+  (concat
+   (if eshell-nix-shell-active
+       (propertize "<nix-shell> " 'face '(:foreground "green"))
+     "")
+   (abbreviate-file-name (eshell/pwd))
+  
+   (if (magit-toplevel)
+       (propertize (format "  %s" (magit-get-current-branch)) 'face '(:foreground "#cba6f7"))
+     "")
+
+   (propertize " λ" 'face
+	       (if (string-match (rx
+				  "/sudo:root"
+				  (* nonl))
+				 (eshell/pwd))
+		   '(:foreground "red")
+		 '(:foreground "purple")))
+   (propertize " " 'face
+	       'default)))
+
+(setq eshell-prompt-function #'th/eshell-prompt)
+(setq eshell-prompt-regexp
+      (rx line-start
+	  (*?
+	   nonl)
+	  "λ "))
+
+;; (setq eshell-prompt-function
+;;       (lambda ()
+;; 	(concat
+;; 	 (if eshell-nix-shell-active "<nix-shell> " "")
+;; 	 (abbreviate-file-name (eshell/pwd))
+;; 	 (if (= (user-uid) 0) " # " " $ "))))
+
 (defun eshell/nix-shell (&rest args)
-  "Calling nix-shell without explicitly running a shell breaks when entering a new terminal.
-This alias fixes the issue."
-  (let ((args (if (or (not args) (member "--run" args))
-		  args
-		(append args '("--run" "fish")))))
-    (apply #'eshell-exec-visual "nix-shell" args)))
+  (if (member "--run" args)
+      (eshell-command-result
+       (concat "*nix-shell " (mapconcat 'identity args " ")))
+    (let* ((output (shell-command-to-string
+		    (format "nix-shell %s --run \"env\""
+			    (mapconcat 'identity args " "))))
+	   (lines (split-string output "\n" t))
+	   (environment (mapcar (lambda (line)
+				  (s-split-up-to "=" line 1))
+				lines)))
+      (dolist (env environment)
+	(when (= 2 (length env))
+	  (ignore-errors
+	    (eshell-set-variable (car env) (cadr env)))
+	  (setq-local eshell-nix-shell-active t))))))
 
 (defmacro re (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
   "Convert rx expression RX-SEXP to pcre compatible regexp."
@@ -1403,7 +1457,7 @@ Large language models inside emacs, powered by ollama.
   (require 'llm-ollama)
   (setopt ellama-provider
           (make-llm-ollama
-           :chat-model "gemma2:9b"
+           :chat-model "llama3.2:3b"
            :embedding-model "nomic-embed-text"))
 
   (setopt ellama-providers '(
@@ -1442,9 +1496,9 @@ Large language models inside emacs, powered by ollama.
   (elisa-prompt-rewriting-enabled nil)
   (elisa-chat-provider 
    (make-llm-ollama
-    :chat-model "qwen2.5-coder:7b")
-   :embedding-model "nomic-embed-text"
-   :default-chat-non-standard-params '(("num_ctx" . 8192)))
+    :chat-model "qwen2.5-coder:7b"
+   :embedding-model "chatfire/bge-m3:q8_0"
+   :default-chat-non-standard-params '(("num_ctx" . 8192))))
   (elisa-sqlite-vss-path "@sqlite_vss@")
   :init
   (require 'llm-ollama))
@@ -1547,7 +1601,7 @@ Control an mpv instance inside emacs
   (:keymaps 'empv-youtube-results-mode :states '(normal visual insert)
 	    "RET" 'empv-youtube-results-play-current)
   :init 
-  (setq empv-invidious-instance "https://iv.nowhere.moe/api/v1")
+  (setq empv-invidious-instance "https://invidious.nerdvpn.de/api/v1")
   (setq empv-volume-step 3)
   (setq empv-radio-channels '(("nowhere.moe Cyberia" . "https://radio.nowhere.moe/radio/cyberia.mp3")
 			      ("nowhere.moe Focus" . "https://radio.nowhere.moe/radio/focus.mp3")
@@ -1696,6 +1750,10 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
   :config
   (unless (display-graphic-p)
     (general-def dired-mode-map "DEL" 'dired-up-directory)))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package dired-du)
 #+end_src
 
 Casual dired has magit-like menus for dired commands
