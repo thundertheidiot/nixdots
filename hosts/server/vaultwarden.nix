@@ -17,7 +17,7 @@
     services.vaultwarden = {
       enable = true;
       dbBackend = "sqlite";
-      backupDir = "/persist/vaultwarden/backup";
+      backupDir = "/persist/vaultwarden_backup";
 
       environmentFile = "/var/run/secrets/server_vaultwarden_env";
 

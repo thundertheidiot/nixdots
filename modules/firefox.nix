@@ -62,52 +62,52 @@ in {
           "browser.contentblocking.category" = "strict";
         };
 
-        search = {
-          force = true;
-          default = "DuckDuckGo";
-          privateDefault = "DuckDuckGo";
-          engines = {
-            "Kagi" = {
-              urls = [
-                {
-                  template = "https://kagi.com/";
-                  params = [
-                    {
-                      name = "q";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-            "DuckDuckGo" = {
-              urls = [
-                {
-                  template = "https://duckduckgo.com/";
-                  params = [
-                    {
-                      name = "q";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-            "Nix Packages" = {
-              urls = [
-                {
-                  template = "https://search.nixos.org/packages";
-                  params = [
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-          };
-        };
+        # search = {
+        #   force = true;
+        #   default = "DuckDuckGo";
+        #   privateDefault = "DuckDuckGo";
+        #   engines = {
+        #     "Kagi" = {
+        #       urls = [
+        #         {
+        #           template = "https://kagi.com/";
+        #           params = [
+        #             {
+        #               name = "q";
+        #               value = "{searchTerms}";
+        #             }
+        #           ];
+        #         }
+        #       ];
+        #     };
+        #     "DuckDuckGo" = {
+        #       urls = [
+        #         {
+        #           template = "https://duckduckgo.com/";
+        #           params = [
+        #             {
+        #               name = "q";
+        #               value = "{searchTerms}";
+        #             }
+        #           ];
+        #         }
+        #       ];
+        #     };
+        #     "Nix Packages" = {
+        #       urls = [
+        #         {
+        #           template = "https://search.nixos.org/packages";
+        #           params = [
+        #             {
+        #               name = "query";
+        #               value = "{searchTerms}";
+        #             }
+        #           ];
+        #         }
+        #       ];
+        #     };
+        #   };
+        # };
       };
     };
   });
