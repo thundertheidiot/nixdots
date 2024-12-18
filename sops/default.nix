@@ -39,6 +39,11 @@ in {
         format = "binary";
       };
 
+      meow.sops.secrets."server_vaultwarden_env" = {
+        sopsFile = ./server/vaultwarden.env;
+        format = "dotenv";
+      };
+
       meow.sops.secrets."desk_rathole" = {
         sopsFile = ./desk/rathole.toml;
         format = "binary";

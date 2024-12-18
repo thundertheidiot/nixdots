@@ -1989,11 +1989,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-ehJR5TVUWIDQprIdEZ1wrDW37pnv7lbPH+ojevfwu2U=",
-        "path": "/nix/store/aqhn9if4f9blq1lna2d0w0ab364wb5yb-source/pkgs/screenshot",
+        "path": "/nix/store/hmnbkkynx7nipp249bgq61clivrp6znx-source/pkgs/screenshot",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/aqhn9if4f9blq1lna2d0w0ab364wb5yb-source/pkgs/screenshot",
+        "path": "/nix/store/hmnbkkynx7nipp249bgq61clivrp6znx-source/pkgs/screenshot",
         "type": "path"
       }
     },
