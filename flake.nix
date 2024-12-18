@@ -63,7 +63,6 @@
       common = commonModules cfg;
     in
       lib.nixosSystem {
-        system = cfg.systemArch;
         specialArgs = {inherit inputs mlib mpkgs;};
         modules =
           common
@@ -96,7 +95,6 @@
               };
 
               nixpkgs = {
-                system = config.systemArch;
                 config.allowUnfree = true;
                 overlays = [
                   inputs.emacs-overlay.overlay
