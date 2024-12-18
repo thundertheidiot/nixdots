@@ -16,14 +16,14 @@ in {
       # This patch allows any application to use the privileges granted by CAP_SYS_NICE
       # Could potentially lead to system lockups
       boot.kernelPatches = [
-        {
-          name = "amdgpu-ignore-ctx-privileges";
-          patch = pkgs.fetchpatch {
-            name = "cap_sys_nice_begone.patch";
-            url = "https://github.com/Frogging-Family/community-patches/raw/master/linux61-tkg/cap_sys_nice_begone.mypatch";
-            hash = "sha256-Y3a0+x2xvHsfLax/uwycdJf3xLxvVfkfDVqjkxNaYEo=";
-          };
-        }
+        # {
+        #   name = "amdgpu-ignore-ctx-privileges";
+        #   patch = pkgs.fetchpatch {
+        #     name = "cap_sys_nice_begone.patch";
+        #     url = "https://github.com/Frogging-Family/community-patches/raw/master/linux61-tkg/cap_sys_nice_begone.mypatch";
+        #     hash = "sha256-Y3a0+x2xvHsfLax/uwycdJf3xLxvVfkfDVqjkxNaYEo=";
+        #   };
+        # }
       ];
 
       # systemd.services."steamvr-setcap" = {
@@ -83,9 +83,9 @@ in {
     {
       programs.envision.enable = true;
 
-      # environment.systemPackages = with pkgs; [
-      #   envision
-      # ];
+      environment.systemPackages = with pkgs; [
+        envision
+      ];
     }
     # Monado
     {
