@@ -29,22 +29,6 @@
     formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
     deploy.nodes = {
-      x220 = {
-        hostname = "192.168.101.111";
-        profiles.system = {
-          user = "root";
-          sshUser = "root";
-          path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.x220;
-        };
-      };
-      t440p = {
-        hostname = "192.168.101.103";
-        profiles.system = {
-          user = "root";
-          sshUser = "root";
-          path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.t440p;
-        };
-      };
       server = {
         hostname = "192.168.101.101";
         profiles.system = {
@@ -60,7 +44,7 @@
     nixosConfigurations =
       gen ["desktop" "server" "x220" "t440p" "digiboksi"]
       // {
-        iso = (import ./iso) {inherit lib inputs;};
+        # iso = (import ./iso) {inherit lib inputs;};
         # iso = mkSystem (import ./hosts/iso.nix) [
         #   "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
         # ];
