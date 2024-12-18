@@ -54,6 +54,7 @@ in {
           "c_cxx"
           "bash"
           "python"
+          "javascript"
         ];
       })
       (mkIf config.meow.baseSetup {

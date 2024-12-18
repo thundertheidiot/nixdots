@@ -28,6 +28,7 @@ in {
         c_cxx = mkEnOpt "C/C++";
         bash = mkEnOpt "Bash";
         python = mkEnOpt "Python";
+        javascript = mkEnOpt "Javascript";
       };
     };
   };
@@ -130,6 +131,11 @@ in {
           ])
           (mkIf cfg.lang.python [
             pyright
+          ])
+          (mkIf cfg.lang.javascript [
+            nodejs
+            typescript-language-server
+            nodePackages.prettier
           ])
         ];
 
