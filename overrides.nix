@@ -15,6 +15,11 @@
     config.allowUnfree = final.config.allowUnfree;
   };
 
+  "2411" = import inputs.nixpkgs-24-11 {
+    system = final.system;
+    config.allowUnfree = final.config.allowUnfree;
+  };
+
   avrdude = prev.avrdude.overrideAttrs (old: {
     src = old.src.override {
       repo = "avrdude";
