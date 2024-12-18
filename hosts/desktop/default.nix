@@ -51,6 +51,11 @@ in {
       "video=1920x1080-32"
     ];
 
+    boot.supportedFilesystems = [
+      "ntfs"
+      "e2fs"
+    ];
+
     virtualisation.docker.enable = true;
 
     time.timeZone = "Europe/Helsinki";

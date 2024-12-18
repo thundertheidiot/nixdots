@@ -19,7 +19,7 @@
       # workstation.environment = ["hyprland"];
       workstation.plasma.tilingwm = true;
 
-      setup.hyprland.extraAutostart = [];
+      # setup.hyprland.extraAutostart = [];
       # setup.gaming.enable = false;
       # setup.tv.enable = true;
     };
@@ -41,84 +41,85 @@
     meow = {
       workstation = {
         enable = true;
-        environment = ["gnome"];
+        environment = [];
         # displayManager = "gdm";
       };
 
       workstation.flatpak.graphicalStore = true;
 
-      # firefox.enable = true;
+      firefox.enable = true;
       emacs.enable = true;
+      emacs.exwm = true;
       shell.enable = true;
 
       ssh.rootKey = true;
 
-      browser.enable = ["firedragon"];
+      # browser.enable = ["firedragon"];
 
-      browser.firefoxConfig.firedragon.profiles."nix-managed" = {
-        id = 0;
-        default = true;
+      # browser.firefoxConfig.firedragon.profiles."nix-managed" = {
+      #   id = 0;
+      #   default = true;
 
-        search = {
-          force = true;
-          default = "DuckDuckGo";
-          privateDefault = "DuckDuckGo";
-          engines = {
-            "DuckDuckGo" = {
-              urls = [
-                {
-                  template = "https://duckduckgo.com/";
-                  params = [
-                    {
-                      name = "q";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-            "Nix Packages" = {
-              urls = [
-                {
-                  template = "https://search.nixos.org/packages";
-                  params = [
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-            "Nix Options" = {
-              urls = [
-                {
-                  template = "https://search.nixos.org/options";
-                  params = [
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-            "Home Manager Options" = {
-              urls = [
-                {
-                  template = "https://home-manager-options.extranix.com/";
-                  params = [
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-          };
-        };
-      };
+      #   search = {
+      #     force = true;
+      #     default = "DuckDuckGo";
+      #     privateDefault = "DuckDuckGo";
+      #     engines = {
+      #       "DuckDuckGo" = {
+      #         urls = [
+      #           {
+      #             template = "https://duckduckgo.com/";
+      #             params = [
+      #               {
+      #                 name = "q";
+      #                 value = "{searchTerms}";
+      #               }
+      #             ];
+      #           }
+      #         ];
+      #       };
+      #       "Nix Packages" = {
+      #         urls = [
+      #           {
+      #             template = "https://search.nixos.org/packages";
+      #             params = [
+      #               {
+      #                 name = "query";
+      #                 value = "{searchTerms}";
+      #               }
+      #             ];
+      #           }
+      #         ];
+      #       };
+      #       "Nix Options" = {
+      #         urls = [
+      #           {
+      #             template = "https://search.nixos.org/options";
+      #             params = [
+      #               {
+      #                 name = "query";
+      #                 value = "{searchTerms}";
+      #               }
+      #             ];
+      #           }
+      #         ];
+      #       };
+      #       "Home Manager Options" = {
+      #         urls = [
+      #           {
+      #             template = "https://home-manager-options.extranix.com/";
+      #             params = [
+      #               {
+      #                 name = "query";
+      #                 value = "{searchTerms}";
+      #               }
+      #             ];
+      #           }
+      #         ];
+      #       };
+      #     };
+      #   };
+      # };
 
       gpu = "intel";
 
