@@ -29,7 +29,7 @@ in {
         format = "binary";
       };
 
-      meow.sops.secrets."rathole" = {
+      meow.sops.secrets."server_rathole" = {
         sopsFile = ./server/rathole.toml;
         format = "binary";
       };

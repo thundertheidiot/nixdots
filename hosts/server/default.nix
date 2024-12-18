@@ -23,6 +23,8 @@
     cfg = config.server;
   in {
     imports = [
+      ./options.nix
+
       ./dns.nix
       ./webserver.nix
       ./jellyfin.nix
@@ -55,6 +57,12 @@
         home = {
           stateVersion = "24.05";
         };
+      };
+
+      nix.gc = {
+        automatic = true;
+        dates = "daily";
+        options = "--delete-older-than 7d";
       };
 
       users.users.thunder.initialPassword = "password";

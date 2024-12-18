@@ -1,18 +1,24 @@
 {pkgs, ...}: {
   config = {
-    meow.sops.enableSecrets = ["rathole"];
-    meow.sops.secrets."rathole" = {
-      path = "/etc/rathole.toml";
+    meow.sops.enableSecrets = ["server_rathole"];
+    meow.sops.secrets."server_rathole" = {
       mode = "0644";
     };
 
-    systemd.services.rathole = {
-      description = "Rathole";
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {
-        ExecStart = pkgs.writeShellScript "rathole" ''
-          ${pkgs.rathole}/bin/rathole /etc/rathole.toml
-        '';
+    services.rathole = {
+      enable = true;
+      role = "client";
+      # credentials from sops above
+      credentialsFile = "/var/run/secrets/server_rathole";
+      settings = {
+        client = {
+          remote_addr = "gooptyland.xyz:2333";
+          transport.type = "noise";
+
+          services = {
+            jellyfin.local_addr = "127.0.0.1:8096";
+          };
+        };
       };
     };
   };
