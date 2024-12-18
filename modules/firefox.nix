@@ -67,6 +67,19 @@ in {
           default = "DuckDuckGo";
           privateDefault = "DuckDuckGo";
           engines = {
+            "Kagi" = {
+              urls = [
+                {
+                  template = "https://kagi.com/";
+                  params = [
+                    {
+                      name = "q";
+                      value = "{searchTerms}";
+                    }
+                  ];
+                }
+              ];
+            };
             "DuckDuckGo" = {
               urls = [
                 {
