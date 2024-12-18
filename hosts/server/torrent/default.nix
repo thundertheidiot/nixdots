@@ -33,6 +33,7 @@ in {
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Host $http_host;
               proxy_set_header X-Forwarded-Proto $scheme;
+
             '';
           };
         };
@@ -44,22 +45,31 @@ in {
         "prowlarr.box" = 9696;
         "firefox.box" = 3000;
       }
-      # // {
-      #   "torrent.box" = {
-      #     root = "/fake";
-      #     locations."/" = {
-      #       proxyPass = "http://127.0.0.1:8080/";
-      #       extraConfig = ''
-      #         proxy_http_version 1.1;
-      #         proxy_set_header Host $proxy_host;
-      #         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      #         proxy_set_header X-Forwarded-Host $http_host;
-      #         proxy_set_header X-Forwarded-Proto $scheme;
-      #       '';
-      #     };
-      #   };
-      # }
-      ;
+      // {
+        "firefox.box" = {
+          root = "/fake";
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:3000/";
+            extraConfig = ''
+              proxy_http_version 1.1;
+              proxy_set_header Host $proxy_host;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+
+              proxy_set_header        X-Real-IP $remote_addr;
+              proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header        X-Forwarded-Proto $scheme;
+
+              proxy_read_timeout      1800s;
+              proxy_send_timeout      1800s;
+              proxy_connect_timeout   1800s;
+              proxy_buffering         off;
+
+              client_max_body_size 10M;
+            '';
+          };
+        };
+      };
 
     # Containers
     virtualisation.oci-containers.containers."gluetun" = {
@@ -76,7 +86,7 @@ in {
       ports = [
         "127.0.0.1:8080:8080/tcp"
         "127.0.0.1:5030:5030/tcp"
-        "127.0.0.1:3001:3001/tcp"
+        "127.0.0.1:3000:3000/tcp"
         "127.0.0.1:7878:7878/tcp"
         "127.0.0.1:8989:8989/tcp"
         "127.0.0.1:9696:9696/tcp"

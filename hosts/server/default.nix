@@ -29,6 +29,7 @@
       ./webserver.nix
       ./jellyfin.nix
       ./rathole.nix
+      ./vaultwarden.nix
       ./torrent
     ];
 
