@@ -21,6 +21,15 @@ in {
     };
     virtualisation.oci-containers.backend = "docker";
 
+    server.domains = [
+      "firefox.box"
+      "torrent.box"
+      "soulseek.box"
+      "radarr.box"
+      "sonarr.box"
+      "prowlarr.box"
+    ];
+
     services.nginx.virtualHosts =
       mapAttrs (_: port: {
         root = "/fake";
@@ -33,7 +42,6 @@ in {
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Host $http_host;
               proxy_set_header X-Forwarded-Proto $scheme;
-
             '';
           };
         };

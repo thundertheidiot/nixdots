@@ -44,6 +44,11 @@ in {
         format = "dotenv";
       };
 
+      meow.sops.secrets."server_homepage_env" = {
+        sopsFile = ./server/homepage.env;
+        format = "dotenv";
+      };
+
       meow.sops.secrets."desk_rathole" = {
         sopsFile = ./desk/rathole.toml;
         format = "binary";
