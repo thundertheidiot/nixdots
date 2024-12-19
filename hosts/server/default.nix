@@ -3,6 +3,8 @@
   username = "thunder";
   homeDirectory = "/home/thunder";
 
+  # old cruft
+  # TODO clean all this shit
   options = {
     workstation.enable = false;
     workstation.utils = "none";
@@ -27,9 +29,11 @@
 
       ./dns.nix
       ./webserver.nix
-      ./jellyfin.nix
       ./rathole.nix
+
+      ./jellyfin.nix
       ./vaultwarden.nix
+      ./homepage.nix
       ./torrent
     ];
 

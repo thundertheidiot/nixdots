@@ -4,7 +4,15 @@
   mlib,
   pkgs,
   ...
-}: {
+}: let
+  inherit (mlib) mkOpt;
+  inherit (lib.types) listOf str;
+in {
+  options = {
+    # Why not write abstractions here too :clueless:
+    server.domains = mkOpt (listOf str) [] {};
+  };
+
   config = {
     networking.firewall.allowedUDPPorts = [53];
     networking.firewall.allowedTCPPorts = [53];
@@ -22,15 +30,7 @@
         in "${conf}";
         cache-size = 1000;
         address =
-          (map (d: "/${d}/${config.server.addr}") [
-            "jellyfin.box"
-            "firefox.box"
-            "torrent.box"
-            "soulseek.box"
-            "radarr.box"
-            "sonarr.box"
-            "prowlarr.box"
-          ])
+          (map (d: "/${d}/${config.server.addr}") config.server.domains)
           ++ [
             "/pc.desktop/192.168.101.100"
           ];

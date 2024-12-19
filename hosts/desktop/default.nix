@@ -246,6 +246,7 @@ in {
           ({...}: {
             gtk.gtk3.bookmarks = [
               "file:///mnt/4tb"
+              "file:///mnt/1tb_nvme"
             ];
           })
         ];
