@@ -27,6 +27,8 @@
     imports = [
       ./options.nix
 
+      ./new-torrent
+
       ./dns.nix
       ./webserver.nix
       ./rathole.nix
@@ -34,7 +36,7 @@
       ./jellyfin.nix
       ./vaultwarden.nix
       ./homepage.nix
-      ./torrent
+      # ./torrent
     ];
 
     options = {

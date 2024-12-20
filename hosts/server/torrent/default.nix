@@ -90,6 +90,7 @@ in {
         "TZ" = "Europe/Helsinki";
         "VPN_SERVICE_PROVIDER" = "airvpn";
         "VPN_TYPE" = "wireguard";
+        "FIREWALL_VPN_INPUT_PORTS" = "49948";
       };
       ports = [
         "127.0.0.1:8080:8080/tcp"
