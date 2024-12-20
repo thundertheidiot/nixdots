@@ -22,12 +22,12 @@ in {
     virtualisation.oci-containers.backend = "docker";
 
     server.domains = [
-      "firefox.box"
-      "torrent.box"
-      "soulseek.box"
-      "radarr.box"
-      "sonarr.box"
-      "prowlarr.box"
+      "firefox.local"
+      "torrent.local"
+      "soulseek.local"
+      "radarr.local"
+      "sonarr.local"
+      "prowlarr.local"
     ];
 
     services.nginx.virtualHosts =
@@ -46,15 +46,14 @@ in {
           };
         };
       }) {
-        "torrent.box" = 8080;
-        "soulseek.box" = 5030;
-        "radarr.box" = 7878;
-        "sonarr.box" = 8989;
-        "prowlarr.box" = 9696;
-        "firefox.box" = 3000;
+        "torrent.local" = 8080;
+        "soulseek.local" = 5030;
+        "radarr.local" = 7878;
+        "sonarr.local" = 8989;
+        "prowlarr.local" = 9696;
       }
       // {
-        "firefox.box" = {
+        "firefox.local" = {
           root = "/fake";
           locations."/" = {
             proxyPass = "http://127.0.0.1:3000/";
