@@ -6,11 +6,11 @@
 }: {
   config = {
     server.domains = [
-      "homepage.box"
+      "homepage.local"
     ];
 
     services.nginx.virtualHosts = {
-      "homepage.box" = {
+      "homepage.local" = {
         root = "/fake";
         locations = {
           "/" = {
@@ -69,7 +69,7 @@
             {
               "Jellyfin" = {
                 icon = "jellyfin.svg";
-                href = "http://jellyfin.box";
+                href = "http://jellyfin.local";
                 widget = {
                   type = "jellyfin";
                   url = "http://127.0.0.1:8096";
@@ -82,7 +82,7 @@
             {
               "Radarr" = {
                 icon = "radarr.svg";
-                href = "http://radarr.box";
+                href = "http://radarr.local";
                 widget = {
                   type = "radarr";
                   url = "http://127.0.0.1:7878";
@@ -94,7 +94,7 @@
             {
               "Sonarr" = {
                 icon = "sonarr.svg";
-                href = "http://sonarr.box";
+                href = "http://sonarr.local";
                 widget = {
                   type = "sonarr";
                   url = "http://127.0.0.1:8989";
@@ -106,7 +106,7 @@
             {
               "Soulseek" = {
                 icon = "slskd.svg";
-                href = "http://soulseek.box";
+                href = "http://soulseek.local";
               };
             }
           ];
@@ -116,7 +116,7 @@
             {
               "qBittorrent" = {
                 icon = "qbittorrent.svg";
-                href = "http://torrent.box";
+                href = "http://torrent.local";
                 widget = {
                   type = "qbittorrent";
                   url = "http://127.0.0.1:8080";
@@ -128,7 +128,7 @@
             {
               "Prowlarr" = {
                 icon = "prowlarr.svg";
-                href = "http://prowlarr.box";
+                href = "http://prowlarr.local";
                 widget = {
                   type = "prowlarr";
                   url = "http://127.0.0.1:9696";
@@ -140,7 +140,7 @@
               "Firefox" = {
                 description = "Firefox container permanently connected to a VPN";
                 icon = "firefox.svg";
-                href = "http://firefox.box";
+                href = "http://firefox.local";
               };
             }
           ];

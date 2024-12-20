@@ -16,10 +16,10 @@
     ];
 
     server.domains = [
-      "jellyfin.box"
+      "jellyfin.local"
     ];
 
-    services.nginx.virtualHosts."jellyfin.box" = {
+    services.nginx.virtualHosts."jellyfin.local" = {
       root = "/fake";
 
       locations = {
