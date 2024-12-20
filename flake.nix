@@ -102,6 +102,7 @@
                   inputs.waybar.overlays.default
                   inputs.rust-overlay.overlays.default
                   inputs.nixpkgs-xr.overlays.default
+                  # inputs.haskell-nix.overlay
                   (import ./overrides.nix {inherit lib inputs;})
                 ];
               };
@@ -135,7 +136,6 @@
     nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
 
-    naersk.url = "github:nix-community/naersk";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -173,7 +173,10 @@
 
     rust-overlay.url = "github:oxalica/rust-overlay";
 
-    screenshot.url = "./pkgs/screenshot";
+    # screenshot.url = "./pkgs/screenshot";
+
+    naersk.url = "github:nix-community/naersk";
+    # haskell-nix.url = "github:input-output-hk/haskell.nix";
 
     hyprland = {
       # latest before clipboard break
