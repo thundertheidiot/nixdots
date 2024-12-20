@@ -49,6 +49,18 @@ in {
         format = "dotenv";
       };
 
+      meow.sops.secrets."server_airvpn_private" = {
+        sopsFile = ./server/airvpn_sweden.yaml;
+        format = "yaml";
+        key = "private_key";
+      };
+
+      meow.sops.secrets."server_airvpn_preshared" = {
+        sopsFile = ./server/airvpn_sweden.yaml;
+        format = "yaml";
+        key = "preshared_key";
+      };
+
       meow.sops.secrets."desk_rathole" = {
         sopsFile = ./desk/rathole.toml;
         format = "binary";
