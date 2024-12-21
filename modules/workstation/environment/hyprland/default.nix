@@ -39,6 +39,17 @@ in {
       hypr.hyprland
     ];
 
+    # services.xserver.displayManager.session = [
+    #   {
+    #     manage = "desktop";
+    #     name = "Hyprland";
+    #     start = ''
+    #       exec ${pkgs.dbus}/bin/dbus-run-session Hyprland &
+    #       waitPID=$!
+    #     '';
+    #   }
+    # ];
+
     xdg.portal.extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
     ];
@@ -62,7 +73,8 @@ in {
           #   hyprland = hyprlandPackage;
           #   picturesDir = config.xdg.userDirs.pictures;
           # };
-          screenshot = inputs.screenshot.packages.${pkgs.system}.default;
+          # screenshot = inputs.screenshot.packages.${pkgs.system}.default;
+          screenshot = pkgs.callPackage mpkgs.screenshot {};
         in {
           # Conflicts on other environments, so it's launched manually instead
           services.hyprpaper.enable = lib.mkForce false;
