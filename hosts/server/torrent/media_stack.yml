@@ -1,0 +1,142 @@
+---
+name: "media"
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 127.0.0.1:8080:8080 # qbittorrent
+      - 127.0.0.1:5030:5030 # slskd
+      - 127.0.0.1:7878:7878 # radarr
+      - 127.0.0.1:8989:8989 # sonarr
+      - 127.0.0.1:8686:8686 # lidarr
+      - 127.0.0.1:6767:6767 # bazarr
+      - 127.0.0.1:9696:9696 # prowlarr
+      - 127.0.0.1:3000:3000 # firefox
+    env_file:
+      - /run/torrent_stack.env
+    environment:
+      - VPN_SERVICE_PROVIDER=airvpn
+      - VPN_TYPE=wireguard
+      - SERVER_COUNTRIES=Sweden
+      - TZ=Europe/Helsinki
+      - FIREWALL_VPN_INPUT_PORTS=49948,33493 # torrent, soulseek
+    restart: unless-stopped
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    volumes:
+      - /persist/torrent_stack/config/qbittorrent:/config
+      - /persist/media/downloads/torrents:/downloads
+    environment:
+      - TZ=Europe/Helsinki
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=49948
+    restart: unless-stopped
+
+  slskd:
+    image: slskd/slskd
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+    volumes:
+      - /persist/torrent_stack/config/slskd:/app
+      - /persist/media/downloads/soulseek/incomplete:/app/incomplete
+      - /persist/media/downloads/soulseek:/app/downloads
+    restart: unless-stopped
+
+  firefox:
+    image: lscr.io/linuxserver/firefox:latest
+    network_mode: "service:gluetun"
+    volumes:
+      - /persist/torrent_stack/config/firefox:/config
+    environment:
+      - PASSWORD=
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+    volumes:
+      - /persist/torrent_stack/config/radarr:/config
+      - /persist/media/downloads/torrents:/downloads
+      - /persist/media:/media
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+    volumes:
+      - /persist/torrent_stack/config/sonarr:/config
+      - /persist/media/downloads/torrents:/downloads
+      - /persist/media:/media
+    restart: unless-stopped
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+    volumes:
+      - /persist/torrent_stack/config/lidarr:/config
+      - /persist/media/downloads/torrents:/downloads
+      - /persist/media:/media
+    restart: unless-stopped
+
+  soularr:
+    image: mrusse08/soularr:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+      - SCRIPT_INTERVAL=60
+    volumes:
+      - /persist/torrent_stack/config/soularr:/data
+      - /persist/media/downloads/soulseek:/downloads
+      - /persist/media/downloads/soulseek:/persist/media/downloads/soulseek
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+    volumes:
+      - /persist/torrent_stack/config/bazarr:/config
+      - /persist/media/downloads/torrents:/downloads
+      - /persist/media:/media
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+    volumes:
+      - /persist/torrent_stack/config/prowlarr:/config
+      - /persist/media/downloads/torrents:/downloads
+      - /persist/media:/media
+    restart: unless-stopped

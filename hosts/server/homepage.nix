@@ -4,8 +4,8 @@
   config,
   ...
 }: let
-  vpnAddress = config.vpnNamespaces."airvpn".namespaceAddress;
-  # vpnAddress = "http://127.0.0.1";
+  # vpnAddress = config.vpnNamespaces."airvpn".namespaceAddress;
+  vpnAddress = "127.0.0.1";
 in {
   config = {
     server.domains = [
@@ -124,7 +124,7 @@ in {
                 href = "http://bazarr.local";
                 widget = {
                   type = "bazarr";
-                  url = "http://${vpnAddress}:7676";
+                  url = "http://${vpnAddress}:6767";
                   key = "{{HOMEPAGE_VAR_BAZARR_API}}";
                   enableQueue = true;
                 };
