@@ -80,6 +80,9 @@
       boot.initrd.kernelModules = [];
       boot.kernelModules = ["kvm-intel"];
       boot.extraModulePackages = [];
+      boot.kernel.sysctl = {
+        "fs.inotify.max_user_watches" = "1048576";
+      };
 
       disko.devices = {
         nodev."/" = {
