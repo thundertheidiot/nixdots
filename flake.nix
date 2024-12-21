@@ -77,7 +77,6 @@
             inputs.cosmic.nixosModules.default
             inputs.hyprland.nixosModules.default
             inputs.stylix.nixosModules.stylix
-            inputs.vpn-confinement.nixosModules.default
             ./sops
             ({config, ...}: {
               nix.settings = {
@@ -139,8 +138,6 @@
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-
-    vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
 
     deploy-rs.url = "github:serokell/deploy-rs";
 
