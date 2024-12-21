@@ -9,10 +9,13 @@
       {
         path = "/var/lib/bitwarden_rs";
         persistPath = "${config.meow.impermanence.persist}/vaultwarden";
-        user = "vaultwarden";
-        group = "vaultwarden";
+        user = toString config.users.users.vaultwarden.uid;
+        group = toString config.users.groups.vaultwarden.gid;
       }
     ];
+
+    users.users.vaultwarden.uid = 3000;
+    users.groups.vaultwarden.gid = 3000;
 
     services.vaultwarden = {
       enable = true;

@@ -3,7 +3,10 @@
   lib,
   config,
   ...
-}: {
+}: let
+  vpnAddress = config.vpnNamespaces."airvpn".namespaceAddress;
+  # vpnAddress = "http://127.0.0.1";
+in {
   config = {
     server.domains = [
       "homepage.local"
@@ -51,7 +54,7 @@
         }
         {
           openmeteo = {
-            # Don't want to dox myself ;)
+            # Don't want to dox myself :)
             latitude = "{{HOMEPAGE_VAR_LAT}}";
             longitude = "{{HOMEPAGE_VAR_LONG}}";
 
@@ -85,7 +88,7 @@
                 href = "http://radarr.local";
                 widget = {
                   type = "radarr";
-                  url = "http://127.0.0.1:7878";
+                  url = "http://${vpnAddress}:7878";
                   key = "{{HOMEPAGE_VAR_RADARR_API}}";
                   enableQueue = true;
                 };
@@ -97,8 +100,32 @@
                 href = "http://sonarr.local";
                 widget = {
                   type = "sonarr";
-                  url = "http://127.0.0.1:8989";
+                  url = "http://${vpnAddress}:8989";
                   key = "{{HOMEPAGE_VAR_SONARR_API}}";
+                  enableQueue = true;
+                };
+              };
+            }
+            {
+              "Lidarr" = {
+                icon = "lidarr.svg";
+                href = "http://lidarr.local";
+                widget = {
+                  type = "lidarr";
+                  url = "http://${vpnAddress}:8686";
+                  key = "{{HOMEPAGE_VAR_LIDARR_API}}";
+                  enableQueue = true;
+                };
+              };
+            }
+            {
+              "Bazarr" = {
+                icon = "bazarr.svg";
+                href = "http://bazarr.local";
+                widget = {
+                  type = "bazarr";
+                  url = "http://${vpnAddress}:7676";
+                  key = "{{HOMEPAGE_VAR_BAZARR_API}}";
                   enableQueue = true;
                 };
               };
@@ -119,7 +146,7 @@
                 href = "http://torrent.local";
                 widget = {
                   type = "qbittorrent";
-                  url = "http://127.0.0.1:8080";
+                  url = "http://${vpnAddress}:8080";
                   username = "admin";
                   password = "adminadmin";
                 };
@@ -131,7 +158,7 @@
                 href = "http://prowlarr.local";
                 widget = {
                   type = "prowlarr";
-                  url = "http://127.0.0.1:9696";
+                  url = "http://${vpnAddress}:9696";
                   key = "{{HOMEPAGE_VAR_PROWLARR_API}}";
                 };
               };

@@ -22,10 +22,26 @@ in {
       directories = mkOpt (listOf attrs) [] {
         description = "Extra directories to persist.";
       };
+
+      ensureDirectories = mkOpt (listOf str) [] {
+        description = "Directories to ensure creation of.";
+      };
     };
   };
 
   config = mkIf cfg.enable (mkMerge [
+    # Ensure directory creation
+    {
+      system.activationScripts = let
+        inherit (builtins) concatStringsSep;
+      in {
+        ensure_directories = concatStringsSep "\n" (
+          map
+          (dir: "mkdir --parents \"${dir}\"")
+          cfg.ensureDirectories
+        );
+      };
+    }
     # Directories
     (let
       mkMount = path: let

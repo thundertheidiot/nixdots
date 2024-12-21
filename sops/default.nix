@@ -49,6 +49,11 @@ in {
         format = "dotenv";
       };
 
+      meow.sops.secrets."server_wireguard" = {
+        sopsFile = ./server/wg.conf;
+        format = "binary";
+      };
+
       meow.sops.secrets."server_airvpn_private" = {
         sopsFile = ./server/airvpn_sweden.yaml;
         format = "yaml";
@@ -59,6 +64,11 @@ in {
         sopsFile = ./server/airvpn_sweden.yaml;
         format = "yaml";
         key = "preshared_key";
+      };
+
+      meow.sops.secrets."server_slskd_env" = {
+        sopsFile = ./server/slskd.env;
+        format = "dotenv";
       };
 
       meow.sops.secrets."desk_rathole" = {
