@@ -366,7 +366,10 @@
     volumes = [
       "/var/run/docker.sock:/var/run/docker.sock:rw"
     ];
-    cmd = [ "--interval" "480" "--no-restart" ];
+    ports = [
+      "8081:8080/tcp"
+    ];
+    cmd = [ "--interval" "480" "--no-restart" "--http-api-metrics" "--http-api-token" "token" ];
     log-driver = "journald";
     extraOptions = [
       "--network-alias=watchtower"

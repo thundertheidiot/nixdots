@@ -31,6 +31,8 @@
       ./webserver.nix
       ./rathole.nix
 
+      # ./grafana
+
       ./jellyfin.nix
       ./vaultwarden.nix
       ./homepage.nix

@@ -49,6 +49,12 @@ in {
         format = "dotenv";
       };
 
+      meow.sops.secrets."server_grafana_radarr_api" = {
+        sopsFile = ./server/grafana.yaml;
+        format = "yaml";
+        key = "radarr_api";
+      };
+
       meow.sops.secrets."server_wireguard" = {
         sopsFile = ./server/wg.conf;
         format = "binary";
