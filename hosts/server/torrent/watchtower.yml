@@ -1,0 +1,11 @@
+---
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Helsinki
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 480 --no-restart

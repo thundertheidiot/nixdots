@@ -333,7 +333,7 @@
   virtualisation.oci-containers.containers."media-soularr" = {
     image = "mrusse08/soularr:latest";
     environment = {
-      "SCRIPT_INTERVAL" = "; exit";
+      "SCRIPT_INTERVAL" = "1; exit";
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
@@ -357,6 +357,41 @@
     serviceConfig = {
       Restart = lib.mkOverride 90 "no";
     };
+  };
+  virtualisation.oci-containers.containers."watchtower" = {
+    image = "containrrr/watchtower:latest";
+    environment = {
+      "TZ" = "Europe/Helsinki";
+    };
+    volumes = [
+      "/var/run/docker.sock:/var/run/docker.sock:rw"
+    ];
+    cmd = [ "--interval" "480" "--no-restart" ];
+    log-driver = "journald";
+    extraOptions = [
+      "--network-alias=watchtower"
+      "--network=media_default"
+    ];
+  };
+  systemd.services."docker-watchtower" = {
+    serviceConfig = {
+      Restart = lib.mkOverride 90 "always";
+      RestartMaxDelaySec = lib.mkOverride 90 "1m";
+      RestartSec = lib.mkOverride 90 "100ms";
+      RestartSteps = lib.mkOverride 90 9;
+    };
+    after = [
+      "docker-network-media_default.service"
+    ];
+    requires = [
+      "docker-network-media_default.service"
+    ];
+    partOf = [
+      "docker-compose-media-root.target"
+    ];
+    wantedBy = [
+      "docker-compose-media-root.target"
+    ];
   };
 
   # Networks
