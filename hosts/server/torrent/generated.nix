@@ -13,7 +13,7 @@
   virtualisation.oci-containers.containers."gluetun" = {
     image = "qmcgaw/gluetun";
     environment = {
-      "FIREWALL_VPN_INPUT_PORTS" = "49948,33493";
+      "FIREWALL_VPN_INPUT_PORTS" = "49948";
       "SERVER_COUNTRIES" = "Sweden";
       "TZ" = "Europe/Helsinki";
       "VPN_SERVICE_PROVIDER" = "airvpn";
@@ -63,6 +63,8 @@
   virtualisation.oci-containers.containers."media-bazarr" = {
     image = "lscr.io/linuxserver/bazarr:latest";
     environment = {
+      "PGID" = "1000";
+      "PUID" = "1000";
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
@@ -125,6 +127,8 @@
   virtualisation.oci-containers.containers."media-lidarr" = {
     image = "lscr.io/linuxserver/lidarr:latest";
     environment = {
+      "PGID" = "1000";
+      "PUID" = "1000";
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
@@ -157,6 +161,8 @@
   virtualisation.oci-containers.containers."media-prowlarr" = {
     image = "lscr.io/linuxserver/prowlarr:latest";
     environment = {
+      "PGID" = "1000";
+      "PUID" = "1000";
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
@@ -189,6 +195,8 @@
   virtualisation.oci-containers.containers."media-qbittorrent" = {
     image = "lscr.io/linuxserver/qbittorrent:latest";
     environment = {
+      "PGID" = "1000";
+      "PUID" = "1000";
       "TORRENTING_PORT" = "49948";
       "TZ" = "Europe/Helsinki";
       "WEBUI_PORT" = "8080";
@@ -222,6 +230,8 @@
   virtualisation.oci-containers.containers."media-radarr" = {
     image = "lscr.io/linuxserver/radarr:latest";
     environment = {
+      "PGID" = "1000";
+      "PUID" = "1000";
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
@@ -254,9 +264,12 @@
   virtualisation.oci-containers.containers."media-slskd" = {
     image = "slskd/slskd";
     environment = {
+      "GID" = "1000";
       "SLSKD_REMOTE_CONFIGURATION" = "true";
+      "UID" = "1000";
     };
     volumes = [
+      "/persist/media:/media:rw"
       "/persist/media/downloads/soulseek:/app/downloads:rw"
       "/persist/media/downloads/soulseek/incomplete:/app/incomplete:rw"
       "/persist/torrent_stack/config/slskd:/app:rw"
@@ -286,6 +299,8 @@
   virtualisation.oci-containers.containers."media-sonarr" = {
     image = "lscr.io/linuxserver/sonarr:latest";
     environment = {
+      "PGID" = "1000";
+      "PUID" = "1000";
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
@@ -318,17 +333,22 @@
   virtualisation.oci-containers.containers."media-soularr" = {
     image = "mrusse08/soularr:latest";
     environment = {
-      "SCRIPT_INTERVAL" = "60";
+      "SCRIPT_INTERVAL" = "; exit";
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
       "/persist/media/downloads/soulseek:/persist/media/downloads/soulseek:rw"
       "/persist/torrent_stack/config/soularr:/data:rw"
     ];
+    labels = {
+      "compose2nix.settings.autoStart" = "false";
+    };
     dependsOn = [
       "gluetun"
     ];
+    user = "1000:1000";
     log-driver = "journald";
+    autoStart = false;
     extraOptions = [
       "--network=container:gluetun"
     ];
@@ -337,12 +357,6 @@
     serviceConfig = {
       Restart = lib.mkOverride 90 "no";
     };
-    partOf = [
-      "docker-compose-media-root.target"
-    ];
-    wantedBy = [
-      "docker-compose-media-root.target"
-    ];
   };
 
   # Networks
