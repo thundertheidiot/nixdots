@@ -82,6 +82,10 @@ in {
                 };
               };
             }
+          ];
+        }
+        {
+          "Downloads" = [
             {
               "Radarr" = {
                 icon = "radarr.svg";
@@ -130,12 +134,6 @@ in {
                 };
               };
             }
-            {
-              "Soulseek" = {
-                icon = "slskd.svg";
-                href = "http://soulseek.local";
-              };
-            }
           ];
         }
         {
@@ -168,6 +166,12 @@ in {
                 description = "Firefox container permanently connected to a VPN";
                 icon = "firefox.svg";
                 href = "http://firefox.local";
+              };
+            }
+            {
+              "Soulseek" = {
+                icon = "slskd.svg";
+                href = "http://soulseek.local";
               };
             }
           ];
