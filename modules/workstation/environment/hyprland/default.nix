@@ -187,6 +187,10 @@ in {
                 vrr = 0;
               };
 
+              render = {
+                direct_scanout = true;
+              };
+
               general = {
                 gaps_in = 5;
                 gaps_out = 20;
@@ -261,9 +265,9 @@ in {
                 ",Print, exec, ${screenshot}/bin/screenshot -c"
                 "SHIFT, Print, exec, ${screenshot}/bin/screenshot"
 
-                ",End, pass, ^(info\.mumble\.Mumble)$"
-                ",End, pass, ^(Mumble)$"
-                ",End, pass, ^(discord)$"
+                # ",End, pass, ^(info\.mumble\.Mumble)$"
+                # ",End, pass, ^(Mumble)$"
+                # ",End, pass, ^(discord)$"
 
                 "$mod, Q, killactive"
                 "$shiftmod, Q, exit"
