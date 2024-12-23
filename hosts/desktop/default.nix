@@ -248,6 +248,11 @@ in {
               "file:///mnt/4tb"
               "file:///mnt/1tb_nvme"
             ];
+
+            wayland.windowManager.hyprland.settings.render = {
+              explicit_sync = 1;
+              explicit_sync_kms = 1;
+            };
           })
         ];
       };
