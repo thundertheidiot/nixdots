@@ -68,9 +68,9 @@
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
-      "/persist/media:/media:rw"
-      "/persist/media/downloads/torrents:/downloads:rw"
-      "/persist/torrent_stack/config/bazarr:/config:rw"
+      "/nix/persist/media:/media:rw"
+      "/nix/persist/media/downloads/torrents:/downloads:rw"
+      "/nix/persist/torrent_stack/config/bazarr:/config:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -100,7 +100,7 @@
       "PASSWORD" = "";
     };
     volumes = [
-      "/persist/torrent_stack/config/firefox:/config:rw"
+      "/nix/persist/torrent_stack/config/firefox:/config:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -132,9 +132,9 @@
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
-      "/persist/media:/media:rw"
-      "/persist/media/downloads/torrents:/downloads:rw"
-      "/persist/torrent_stack/config/lidarr:/config:rw"
+      "/nix/persist/media:/media:rw"
+      "/nix/persist/media/downloads/torrents:/downloads:rw"
+      "/nix/persist/torrent_stack/config/lidarr:/config:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -166,9 +166,9 @@
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
-      "/persist/media:/media:rw"
-      "/persist/media/downloads/torrents:/downloads:rw"
-      "/persist/torrent_stack/config/prowlarr:/config:rw"
+      "/nix/persist/media:/media:rw"
+      "/nix/persist/media/downloads/torrents:/downloads:rw"
+      "/nix/persist/torrent_stack/config/prowlarr:/config:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -202,8 +202,8 @@
       "WEBUI_PORT" = "8080";
     };
     volumes = [
-      "/persist/media/downloads/torrents:/downloads:rw"
-      "/persist/torrent_stack/config/qbittorrent:/config:rw"
+      "/nix/persist/media/downloads/torrents:/downloads:rw"
+      "/nix/persist/torrent_stack/config/qbittorrent:/config:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -235,9 +235,9 @@
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
-      "/persist/media:/media:rw"
-      "/persist/media/downloads/torrents:/downloads:rw"
-      "/persist/torrent_stack/config/radarr:/config:rw"
+      "/nix/persist/media:/media:rw"
+      "/nix/persist/media/downloads/torrents:/downloads:rw"
+      "/nix/persist/torrent_stack/config/radarr:/config:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -269,10 +269,10 @@
       "UID" = "1000";
     };
     volumes = [
-      "/persist/media:/media:rw"
-      "/persist/media/downloads/soulseek:/app/downloads:rw"
-      "/persist/media/downloads/soulseek/incomplete:/app/incomplete:rw"
-      "/persist/torrent_stack/config/slskd:/app:rw"
+      "/nix/persist/media:/media:rw"
+      "/nix/persist/media/downloads/soulseek:/app/downloads:rw"
+      "/nix/persist/media/downloads/soulseek/incomplete:/app/incomplete:rw"
+      "/nix/persist/torrent_stack/config/slskd:/app:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -304,9 +304,9 @@
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
-      "/persist/media:/media:rw"
-      "/persist/media/downloads/torrents:/downloads:rw"
-      "/persist/torrent_stack/config/sonarr:/config:rw"
+      "/nix/persist/media:/media:rw"
+      "/nix/persist/media/downloads/torrents:/downloads:rw"
+      "/nix/persist/torrent_stack/config/sonarr:/config:rw"
     ];
     dependsOn = [
       "gluetun"
@@ -337,8 +337,8 @@
       "TZ" = "Europe/Helsinki";
     };
     volumes = [
-      "/persist/media/downloads/soulseek:/persist/media/downloads/soulseek:rw"
-      "/persist/torrent_stack/config/soularr:/data:rw"
+      "/nix/persist/media/downloads/soulseek:/nix/persist/media/downloads/soulseek:rw"
+      "/nix/persist/torrent_stack/config/soularr:/data:rw"
     ];
     labels = {
       "compose2nix.settings.autoStart" = "false";

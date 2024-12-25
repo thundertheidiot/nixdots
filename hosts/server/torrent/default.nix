@@ -28,6 +28,7 @@ in {
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:${toString port}";
+          # recommendedProxySettings = true;
           extraConfig = ''
             proxy_http_version 1.1;
             proxy_set_header Host $proxy_host;
