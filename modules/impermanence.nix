@@ -193,8 +193,8 @@ in {
     })
     # Program configuration
     {
-      services.ollama.home = "/persist/ollama";
-      sops.age.keyFile = "/persist/sops-key.txt";
+      services.ollama.home = "${cfg.persist}/ollama";
+      sops.age.keyFile = "${cfg.persist}/sops-key.txt";
 
       system.activationScripts = {
         openssh_dir.text = "mkdir --parents ${cfg.persist}/ssh";

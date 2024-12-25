@@ -33,8 +33,8 @@ services:
     depends_on:
       - gluetun
     volumes:
-      - /persist/torrent_stack/config/qbittorrent:/config
-      - /persist/media/downloads/torrents:/downloads
+      - /nix/persist/torrent_stack/config/qbittorrent:/config
+      - /nix/persist/media/downloads/torrents:/downloads
     environment:
       - TZ=Europe/Helsinki
       - WEBUI_PORT=8080
@@ -53,17 +53,17 @@ services:
       - UID=1000
       - GID=1000
     volumes:
-      - /persist/torrent_stack/config/slskd:/app
-      - /persist/media/downloads/soulseek/incomplete:/app/incomplete
-      - /persist/media/downloads/soulseek:/app/downloads
-      - /persist/media:/media
+      - /nix/persist/torrent_stack/config/slskd:/app
+      - /nix/persist/media/downloads/soulseek/incomplete:/app/incomplete
+      - /nix/persist/media/downloads/soulseek:/app/downloads
+      - /nix/persist/media:/media
     restart: unless-stopped
 
   firefox:
     image: lscr.io/linuxserver/firefox:latest
     network_mode: "service:gluetun"
     volumes:
-      - /persist/torrent_stack/config/firefox:/config
+      - /nix/persist/torrent_stack/config/firefox:/config
     environment:
       - PASSWORD=
     restart: unless-stopped
@@ -78,9 +78,9 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /persist/torrent_stack/config/radarr:/config
-      - /persist/media/downloads/torrents:/downloads
-      - /persist/media:/media
+      - /nix/persist/torrent_stack/config/radarr:/config
+      - /nix/persist/media/downloads/torrents:/downloads
+      - /nix/persist/media:/media
     restart: unless-stopped
 
   sonarr:
@@ -93,9 +93,9 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /persist/torrent_stack/config/sonarr:/config
-      - /persist/media/downloads/torrents:/downloads
-      - /persist/media:/media
+      - /nix/persist/torrent_stack/config/sonarr:/config
+      - /nix/persist/media/downloads/torrents:/downloads
+      - /nix/persist/media:/media
     restart: unless-stopped
 
   lidarr:
@@ -108,9 +108,9 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /persist/torrent_stack/config/lidarr:/config
-      - /persist/media/downloads/torrents:/downloads
-      - /persist/media:/media
+      - /nix/persist/torrent_stack/config/lidarr:/config
+      - /nix/persist/media/downloads/torrents:/downloads
+      - /nix/persist/media:/media
     restart: unless-stopped
 
   soularr:
@@ -125,9 +125,9 @@ services:
       - TZ=Europe/Helsinki
       - SCRIPT_INTERVAL=1; exit
     volumes:
-      - /persist/torrent_stack/config/soularr:/data
-      - /persist/media/downloads/soulseek:/downloads
-      - /persist/media/downloads/soulseek:/persist/media/downloads/soulseek
+      - /nix/persist/torrent_stack/config/soularr:/data
+      - /nix/persist/media/downloads/soulseek:/downloads
+      - /nix/persist/media/downloads/soulseek:/nix/persist/media/downloads/soulseek
 
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -139,9 +139,9 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /persist/torrent_stack/config/bazarr:/config
-      - /persist/media/downloads/torrents:/downloads
-      - /persist/media:/media
+      - /nix/persist/torrent_stack/config/bazarr:/config
+      - /nix/persist/media/downloads/torrents:/downloads
+      - /nix/persist/media:/media
     restart: unless-stopped
 
   prowlarr:
@@ -154,7 +154,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /persist/torrent_stack/config/prowlarr:/config
-      - /persist/media/downloads/torrents:/downloads
-      - /persist/media:/media
+      - /nix/persist/torrent_stack/config/prowlarr:/config
+      - /nix/persist/media/downloads/torrents:/downloads
+      - /nix/persist/media:/media
     restart: unless-stopped
