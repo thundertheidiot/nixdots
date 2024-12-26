@@ -18,7 +18,9 @@ services:
       - 127.0.0.1:9696:9696 # prowlarr
       - 127.0.0.1:3000:3000 # firefox
     env_file:
-      - /run/torrent_stack.env
+      - path: /run/torrent_stack.env
+        # This file is actually a requirement, but compose2nix checks that the docker config is functional'
+        required: false
     environment:
       - VPN_SERVICE_PROVIDER=airvpn
       - VPN_TYPE=wireguard
@@ -30,6 +32,7 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     network_mode: "service:gluetun"
+    container_name: qbittorrent
     depends_on:
       - gluetun
     volumes:
@@ -46,6 +49,7 @@ services:
   slskd:
     image: slskd/slskd
     network_mode: "service:gluetun"
+    container_name: slskd
     depends_on:
       - gluetun
     environment:
@@ -62,6 +66,7 @@ services:
   firefox:
     image: lscr.io/linuxserver/firefox:latest
     network_mode: "service:gluetun"
+    container_name: firefox
     volumes:
       - /nix/persist/torrent_stack/config/firefox:/config
     environment:
@@ -71,6 +76,7 @@ services:
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     network_mode: "service:gluetun"
+    container_name: radarr
     depends_on:
       - gluetun
     environment:
@@ -86,6 +92,7 @@ services:
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     network_mode: "service:gluetun"
+    container_name: sonarr
     depends_on:
       - gluetun
     environment:
@@ -101,6 +108,7 @@ services:
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     network_mode: "service:gluetun"
+    container_name: lidarr
     depends_on:
       - gluetun
     environment:
@@ -116,6 +124,7 @@ services:
   soularr:
     image: mrusse08/soularr:latest
     network_mode: "service:gluetun"
+    container_name: soularr
     depends_on:
       - gluetun
     labels:
@@ -132,6 +141,7 @@ services:
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     network_mode: "service:gluetun"
+    container_name: bazarr
     depends_on:
       - gluetun
     environment:
@@ -147,6 +157,7 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     network_mode: "service:gluetun"
+    container_name: prowlarr
     depends_on:
       - gluetun
     environment:
