@@ -1,11 +1,8 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash compose2nix
-# Create secret file
-sudo touch /run/torrent_stack.env
 
 files="$(echo ./*.yml | sed 's/ /,/g')"
-compose2nix --inputs=$files \
-	    --output=generated.nix \
+compose2nix --output=generated.nix \
 	    --runtime=docker \
 	    --include_env_files=true
 	    
