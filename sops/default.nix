@@ -49,6 +49,11 @@ in {
         format = "dotenv";
       };
 
+      meow.sops.secrets."server_immich_env" = {
+        sopsFile = ./server/immich.env;
+        format = "dotenv";
+      };
+
       meow.sops.secrets."server_grafana_radarr_api" = {
         sopsFile = ./server/grafana.yaml;
         format = "yaml";

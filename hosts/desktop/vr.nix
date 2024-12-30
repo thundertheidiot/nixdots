@@ -35,6 +35,9 @@ in {
       #   };
       #   wantedBy = ["multi-user.target"];
       # };
+
+      programs.corectrl.enable = true;
+      # programs.corectrl.gpuOverclock.enable = true;
     }
     # funy
     {
@@ -82,10 +85,6 @@ in {
     # Envision
     {
       programs.envision.enable = true;
-
-      environment.systemPackages = with pkgs; [
-        envision
-      ];
     }
     # Monado
     {
@@ -96,7 +95,7 @@ in {
 
       systemd.user.services.monado.environment = {
         HOME = config.stubbornHomeDirectory;
-        XRT_COMPOSITOR_SCALE_PERCENTAGE = "140";
+        XRT_COMPOSITOR_SCALE_PERCENTAGE = "100";
         XRT_COMPOSITOR_COMPUTE = "1";
         U_PACING_COMP_MIN_TIME_MS = "5";
         STEAMVR_LH_ENABLE = "1";
@@ -150,7 +149,8 @@ in {
 
                 exec env PRESSURE_VESSEL_FILESYSTEMS_RW="$XDG_RUNTIME_DIR/monado_comp_ipc" \
                          U_PACING_APP_USE_MIN_FRAME_PERIOD=1 \
-                         U_PACING_COMP_MIN_TIME_MS=5 \
+                         U_PACING_COMP_MIN_TIME_MS=4 \
+                         XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
                          "$@"
                 ;;
               steam)
@@ -169,9 +169,9 @@ in {
 
                 # steam is placed in stubbornHome, this needs to be set so monado can find the steamvr stuff
                 env HOME=${config.stubbornHomeDirectory} \
-                    XRT_COMPOSITOR_SCALE_PERCENTAGE=140 \
-                    XRT_COMPOSITOR_COMPUTE=1 \
-                    U_PACING_COMP_MIN_TIME_MS=5 \
+                    XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
+                    XRT_COMPOSITOR_COMPUTE=0 \
+                    U_PACING_COMP_MIN_TIME_MS=4 \
                     STEAMVR_LH_ENABLE=1 \
                     LH_DRIVER=steamvr \
                     U_PACING_APP_USE_MIN_FRAME_PERIOD=1 \

@@ -24,10 +24,12 @@
     imports = [
       ./disko.nix
       ./dns.nix
+      ./docker
       ./homepage.nix
+      ./immich.nix
       ./jellyfin.nix
       ./rathole.nix
-      ./torrent
+      # ./torrent
       ./vaultwarden.nix
       ./webserver.nix
     ];
@@ -35,7 +37,7 @@
     config = {
       system.stateVersion = "24.11";
       time.timeZone = "Europe/Helsinki";
-      networking.hostName = "server2";
+      networking.hostName = "uwu";
 
       nix.gc = {
         automatic = true;
