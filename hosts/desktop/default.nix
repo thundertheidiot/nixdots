@@ -302,10 +302,10 @@ in {
       enable = true;
       algorithm = "zstd";
       priority = 100;
-      memoryPercent = 50;
+      memoryPercent = 75;
     };
 
-    boot.kernel.sysctl."vm.swappiness" = 180;
+    boot.kernel.sysctl."vm.swappiness" = 50;
 
     disko.devices = {
       nodev."/" = {
@@ -369,6 +369,13 @@ in {
       "/tmp".neededForBoot = true;
     };
 
+    swapDevices = [
+      {
+        device = "/mnt/1tb_nvme/swapfile";
+        priority = -2;
+      }
+    ];
+
     fileSystems."/home" = {
       device = "/dev/disk/by-uuid/8e5420d3-a33b-4de5-a06f-267202f1b3ee";
       fsType = "btrfs";
@@ -380,8 +387,6 @@ in {
       fsType = "btrfs";
       options = ["compress=zstd"];
     };
-
-    swapDevices = [];
 
     networking.useDHCP = lib.mkDefault true;
 
