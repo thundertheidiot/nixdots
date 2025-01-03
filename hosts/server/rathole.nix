@@ -17,10 +17,8 @@
 
           services = {
             jellyfin.local_addr = "127.0.0.1:8096";
-          };
-
-          services = {
             bitwarden.local_addr = "127.0.0.1:8222";
+            immich.local_addr = "localhost:2283";
           };
         };
       };

@@ -26,10 +26,8 @@
       ./dns.nix
       ./docker
       ./homepage.nix
-      ./immich.nix
       ./jellyfin.nix
       ./rathole.nix
-      # ./torrent
       ./vaultwarden.nix
       ./webserver.nix
     ];
