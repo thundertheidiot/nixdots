@@ -20,6 +20,7 @@ in {
     "lidarr.local"
     "bazarr.local"
     "prowlarr.local"
+    "immich.local"
   ];
 
   services.nginx.virtualHosts =
@@ -28,14 +29,7 @@ in {
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:${toString port}";
-          # recommendedProxySettings = true;
-          extraConfig = ''
-            proxy_http_version 1.1;
-            proxy_set_header Host $proxy_host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
+          recommendedProxySettings = true;
         };
       };
     }) {
@@ -48,6 +42,24 @@ in {
       "prowlarr.local" = 9696;
     }
     // {
+      "immich.local" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:2283";
+          recommendedProxySettings = true;
+          extraConfig = ''
+            client_max_body_size 50000M;
+
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_redirect off;
+
+            proxy_read_timeout 600s;
+            proxy_send_timeout 600s;
+            send_timeout 600s;
+          '';
+        };
+      };
+
       "firefox.local" = {
         root = "/fake";
         locations."/" = {

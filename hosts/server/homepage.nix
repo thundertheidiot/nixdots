@@ -82,6 +82,18 @@ in {
                 };
               };
             }
+            {
+              "Immich" = {
+                icon = "immich.svg";
+                href = "http://immich.local";
+                widget = {
+                  type = "immich";
+                  url = "http://127.0.0.1:2283";
+                  key = "{{HOMEPAGE_VAR_IMMICH_API}}";
+                  version = 2;
+                };
+              };
+            }
           ];
         }
         {
