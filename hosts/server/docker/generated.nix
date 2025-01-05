@@ -166,7 +166,7 @@
       "POSTGRES_USER" = "postgres";
     };
     volumes = [
-      "/nix/persist/immich/database:/var/lib/postgresql/data:rw"
+      "/mnt/storage/immich/database:/var/lib/postgresql/data:rw"
     ];
     cmd = [ "postgres" "-c" "shared_preload_libraries=vectors.so" "-c" "search_path=\"$user\", public, vectors" "-c" "logging_collector=on" "-c" "max_wal_size=2GB" "-c" "shared_buffers=512MB" "-c" "wal_compression=on" ];
     log-driver = "journald";
@@ -238,7 +238,7 @@
     };
     volumes = [
       "/etc/localtime:/etc/localtime:ro"
-      "/nix/persist/immich/images:/usr/src/app/upload:rw"
+      "/mnt/storage/immich/images:/usr/src/app/upload:rw"
     ];
     ports = [
       "2283:2283/tcp"
