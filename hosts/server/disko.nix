@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";
@@ -84,9 +84,25 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [mergerfs];
+
   fileSystems = {
     "/nix".neededForBoot = true;
     "/nix/persist".neededForBoot = true;
     "/tmp".neededForBoot = true;
+
+    "/mnt/storage" = {
+      fsType = "fuse.mergerfs";
+      device = "/mnt/1tb:/mnt/msata";
+      depends = [
+        "/mnt/1tb"
+        "/mnt/msata"
+      ];
+      options = [
+        "cache.files=auto-full"
+        "dropcacheonclose=true"
+        "category.create=mfs"
+      ];
+    };
   };
 }
