@@ -998,6 +998,9 @@ Language specific setup
 (use-package gdscript-mode
   :mode "\\.gdscript\\'"
   :hook (gdscript-mode . eglot-ensure))
+
+(use-package glsl-mode)
+(use-package gdshader-mode)
 #+end_src
 
 *** Fennel
