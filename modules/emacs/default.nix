@@ -217,6 +217,24 @@ in {
                 (emsg-blame :fetcher github :repo "ISouthRain/emsg-blame" :files (:defaults "emsg-blame.el"))
               '';
             };
+            gdshader-mode = final.trivialBuild {
+              pname = "gdshader-mode";
+              version = "1.0.0";
+
+              packageRequires = [
+                final.glsl-mode
+              ];
+
+              src = pkgs.fetchFromGitHub {
+                owner = "bbbscarter";
+                repo = "gdshader-mode";
+                rev = "55aac0cbb47c3a1ede39103d949946f1a6c10ace";
+                hash = "sha256-Ll8QksMeLnVEkUeEOv8UryYCzXEs5kzPk+WJGBhIPA4=";
+              };
+              recipe = pkgs.writeText "recipe" ''
+                (gdshader-mode :type git :host github :repo "bbbscarter/gdshader-mode" :files (:defaults "emsg-blame.el"))
+              '';
+            };
             eglot-booster = final.trivialBuild {
               pname = "eglot-booster";
               version = "1.0.0";
