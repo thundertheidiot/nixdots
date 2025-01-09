@@ -235,6 +235,20 @@ in {
                 (gdshader-mode :type git :host github :repo "bbbscarter/gdshader-mode" :files (:defaults "emsg-blame.el"))
               '';
             };
+            ultra-scroll = final.trivialBuild {
+              pname = "ultra-scroll";
+              version = "1.0.0";
+
+              src = pkgs.fetchFromGitHub {
+                owner = "jdtsmith";
+                repo = "ultra-scroll";
+                rev = "78ab497c6568e4a99f34a84b4c9bfe87d1a71d8c";
+                hash = "sha256-q/LGP69GRtEEbSpXi9JUoZjr/UV1QMVjQw96M6qxsZU=";
+              };
+              recipe = pkgs.writeText "recipe" ''
+                (ultra-scroll :type git :host github :repo "jdtsmith/ultra-mode" :files (:defaults "ultra-scroll.el"))
+              '';
+            };
             eglot-booster = final.trivialBuild {
               pname = "eglot-booster";
               version = "1.0.0";
