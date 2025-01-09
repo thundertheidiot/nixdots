@@ -1735,6 +1735,17 @@ Separedit allows you to edit a part of a buffer in another buffer, and use anoth
 (use-package separedit)
 #+end_src
 
+** Ultra scroll
+
+#+begin_src emacs-lisp
+(use-package ultra-scroll
+  :init
+  (setq scroll-conservatively 101 ; important!
+        scroll-margin 0) 
+  :config
+  (ultra-scroll-mode 1))
+#+end_src
+
 ** Fix/improve some emacs stuff
 
 *** Tramp
