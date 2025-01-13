@@ -83,9 +83,9 @@ in {
       ];
     }
     # Envision
-    {
-      programs.envision.enable = true;
-    }
+    # {
+    #   programs.envision.enable = true;
+    # }
     # Monado
     {
       services.monado = {
