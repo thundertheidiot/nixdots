@@ -607,10 +607,18 @@ Allow easily inserting images
 Faster inserting of templates like the source code blocks here.
 
 #+begin_src emacs-lisp
+(defun th/org-tempo-electric-pair-fix ()
+  (setq-local electric-pair-inhibit-predicate
+	      `(lambda (c)
+		 (if (char-equal c ?<)
+		     t
+		   (,electric-pair-inhibit-predicate c)))))
+
 (use-package org-tempo
   :demand t
   :ensure nil ;; included with org
   :after org
+  :hook (org-mode . th/org-tempo-electric-pair-fix)
   :custom
   (org-structure-template-alist '(("el" . "src emacs-lisp"))))
 #+end_src
@@ -639,7 +647,6 @@ Faster inserting of templates like the source code blocks here.
   (olivetti-mode-on . (lambda () (olivetti-set-width olivetti-body-width)))
   (org-mode . olivetti-mode))
 #+end_src
-
 
 * IDE
 
@@ -1148,6 +1155,41 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
 	     (th/vterm t)) :wk "vterm")
     "poV" '((lambda () (interactive)
 	     (th/vterm t)) :wk "vterm in this window")))
+#+end_src
+
+A fun hack to fix vterm evil-mode interactions from [[https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-738842507][this issue comment]].
+
+#+begin_src emacs-lisp
+(defun vterm-evil-insert ()
+  (interactive)
+  (vterm-goto-char (point))
+  (call-interactively #'evil-insert))
+
+(defun vterm-evil-append ()
+  (interactive)
+  (vterm-goto-char (1+ (point)))
+  (call-interactively #'evil-append))
+
+(defun vterm-evil-delete ()
+  "Provide similar behavior as `evil-delete'."
+  (interactive)
+  (let ((inhibit-read-only t)
+        )
+    (cl-letf (((symbol-function #'delete-region) #'vterm-delete-region))
+      (call-interactively 'evil-delete))))
+
+(defun vterm-evil-change ()
+  "Provide similar behavior as `evil-change'."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (cl-letf (((symbol-function #'delete-region) #'vterm-delete-region))
+      (call-interactively 'evil-change))))
+
+(general-def :states '(normal) :keymaps 'vterm-mode-map
+  "a" 'vterm-evil-append
+  "d" 'vterm-evil-delete
+  "i" 'vterm-evil-insert
+  "c" 'vterm-evil-change)
 #+end_src
 
 #+begin_src emacs-lisp
