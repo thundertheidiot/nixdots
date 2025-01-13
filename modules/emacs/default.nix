@@ -179,9 +179,6 @@ in {
 
           extraEmacsPackages = epkgs:
             with epkgs; [
-              use-package
-              general
-
               treesit-grammars.with-all-grammars # TODO: split up
             ];
 
