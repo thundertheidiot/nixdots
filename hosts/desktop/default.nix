@@ -49,6 +49,9 @@ in {
 
     boot.kernelParams = [
       "video=1920x1080-32"
+      "video=DP-3:D"
+      "video=DP-1:D"
+      "video=HDMI-A-1:D"
     ];
 
     boot.supportedFilesystems = [
@@ -76,7 +79,7 @@ in {
 
       workstation.environment = ["hyprland" "plasma"];
       workstation.plasma.opinionatedConfig = true;
-      workstation.plasma.tiling = true;
+      # workstation.plasma.tiling = true;
       workstation.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"
       ];
