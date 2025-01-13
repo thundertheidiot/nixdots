@@ -1150,7 +1150,13 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
 	     (th/vterm t)) :wk "vterm in this window")))
 #+end_src
 
-#+RESULTS:
+#+begin_src emacs-lisp
+(use-package eshell-vterm
+  :demand t
+  :after eshell
+  :config 
+  (eshell-vterm-mode))
+#+end_src
 
 ** Eshell
 
@@ -1300,14 +1306,6 @@ For some reason advice-add didn't seem to function, so this just manually replic
   (evil-quit)
   (throw 'eshell-terminal t))
 (defalias 'eshell/e 'eshell/exit)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package eshell-vterm
-  :demand t
-  :after eshell
-  :config 
-  (eshell-vterm-mode))
 #+end_src
 
 * Polymode
