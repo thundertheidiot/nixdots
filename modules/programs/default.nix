@@ -51,7 +51,7 @@ in {
       (mkIf cfg.mumble mumble)
       (mkIf cfg.discord vesktop)
 
-      (mkIf cfg.blender blender)
+      (mkIf cfg.blender pkgs."2411".blender)
       (mkIf cfg.obs obs-studio)
       (mkIf cfg.kdenlive kdePackages.kdenlive)
       (mkIf cfg.godot godot_4)

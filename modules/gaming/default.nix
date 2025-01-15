@@ -43,8 +43,8 @@ in {
       services.joycond.enable = true;
     })
     (lib.mkIf (cfg.enable && cfg.emulation) {
-      environment.systemPackages = with pkgs; [
-        retroarchFull
+      environment.systemPackages = [
+        pkgs."2411".retroarchFull
         # (callPackage retroarch {
         #   cores = with libretro; [
         #     snes9x
