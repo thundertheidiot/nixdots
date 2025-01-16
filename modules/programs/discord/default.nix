@@ -76,8 +76,11 @@ in {
       autoUpdateNotification = true;
       useQuickCss = true;
       disableMinSize = true;
-      themeLinks = [
-        "https://catppuccin.github.io/discord/dist/catppuccin-mocha.theme.css"
+      # themeLinks = [
+      #   "https://catppuccin.github.io/discord/dist/catppuccin-mocha.theme.css"
+      # ];
+      enabledThemes = [
+        "stylix.theme.css"
       ];
     };
 
