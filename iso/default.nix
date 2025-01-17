@@ -4,15 +4,6 @@
   ...
 }: let
   mlib = (import ../lib) {inherit lib;};
-
-  # TODO: make removable
-  sharedStupid = {
-    username = "nixos";
-    hostName = "iso";
-
-    workstation.enable = true;
-    workstation.utils = "generic/gtk";
-  };
 in
   lib.nixosSystem rec {
     system = "x86_64-linux";
@@ -30,10 +21,6 @@ in
       inputs.hyprland.nixosModules.default
       inputs.stylix.nixosModules.stylix
       ../sops
-      # ../modules
-      # TODO: remove
-      sharedStupid
-      ../options.nix
       {
         imports = import ../modules;
 
@@ -92,9 +79,6 @@ in
           extraSpecialArgs = {inherit inputs mlib;};
           stateVersion = "24.11";
           sharedModules = [
-            # TODO: remove
-            sharedStupid
-            ../options.nix
             inputs.plasma-manager.homeManagerModules.plasma-manager
           ];
         };
