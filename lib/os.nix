@@ -25,7 +25,6 @@ in {
         (config.options or {})
       ];
     in {
-      system = builtins.currentSystem;
       specialArgs = {inherit inputs mlib mpkgs;};
       modules =
         extraModules
@@ -68,7 +67,6 @@ in {
               config.allowUnfree = true;
               overlays = [
                 inputs.emacs-overlay.overlay
-                # inputs.hyprland.overlays.default
                 inputs.waybar.overlays.default
                 inputs.rust-overlay.overlays.default
                 inputs.nixpkgs-xr.overlays.default
