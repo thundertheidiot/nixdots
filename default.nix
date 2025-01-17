@@ -11,13 +11,12 @@
   lib = pkgs.lib;
 
   mlib = import ./lib {inherit lib;};
-  mpkgs = import ./pkgs;
 
   inherit (mlib) mkSystem;
 in
   mkSystem {
     nixosSystem = import "${inputs.nixpkgs}/nixos/lib/eval-config.nix";
-    inherit inputs mlib mpkgs;
+    inherit inputs mlib;
     config = mlib.getHostConfig host;
 
     extraModules = [

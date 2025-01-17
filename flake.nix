@@ -68,7 +68,7 @@
           # lib/os.nix
           value = mlib.mkSystem {
             nixosSystem = lib.nixosSystem;
-            inherit inputs mlib mpkgs;
+            inherit inputs mlib;
             config = mlib.getHostConfig s;
           };
         })

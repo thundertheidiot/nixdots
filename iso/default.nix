@@ -4,7 +4,6 @@
   ...
 }: let
   mlib = (import ../lib) {inherit lib;};
-  mpkgs = ../pkgs;
 
   # TODO: make removable
   sharedStupid = {
@@ -17,7 +16,7 @@
 in
   lib.nixosSystem rec {
     system = "x86_64-linux";
-    specialArgs = {inherit inputs mlib mpkgs;};
+    specialArgs = {inherit inputs mlib;};
 
     modules = [
       "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-base.nix"
@@ -90,7 +89,7 @@ in
 
         meow.home = {
           user = "nixos";
-          extraSpecialArgs = {inherit inputs mlib mpkgs;};
+          extraSpecialArgs = {inherit inputs mlib;};
           stateVersion = "24.11";
           sharedModules = [
             # TODO: remove

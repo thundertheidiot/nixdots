@@ -3,7 +3,6 @@
   mlib,
   lib,
   pkgs,
-  mpkgs,
   ...
 }: let
   mons = mlib.mkMonitors config.meow.monitors;
@@ -62,7 +61,7 @@ in {
           edids;
 
         environment.systemPackages = [
-          (pkgs.callPackage mpkgs.cru {})
+          pkgs.mpkgs.cru
         ];
       })
       {

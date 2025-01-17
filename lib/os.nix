@@ -19,7 +19,6 @@ in {
     nixosSystem,
     inputs,
     mlib,
-    mpkgs,
     config,
     extraModules ? [],
   }:
@@ -29,7 +28,7 @@ in {
         (config.options or {})
       ];
     in {
-      specialArgs = {inherit inputs mlib mpkgs;};
+      specialArgs = {inherit inputs mlib;};
       modules =
         extraModules
         ++ common
@@ -65,7 +64,7 @@ in {
 
             meow.home = {
               user = config.username;
-              extraSpecialArgs = {inherit inputs mlib mpkgs;};
+              extraSpecialArgs = {inherit inputs mlib;};
               sharedModules =
                 common
                 ++ [
