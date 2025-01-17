@@ -3,28 +3,6 @@
   username = "thunder";
   homeDirectory = "/home/thunder";
 
-  options = {
-    config,
-    pkgs,
-    mlib,
-    ...
-  }: {
-    config = {
-      username = "thunder";
-      hostName = "t440p";
-      timeZone = "Europe/Helsinki";
-
-      workstation.enable = true;
-      workstation.utils = "generic/gtk";
-      workstation.environment = ["hyprland"];
-
-      setup.hyprland.extraAutostart = [];
-      setup.gaming.enable = true;
-      setup.tv.enable = false;
-      setup.laptop.enable = true;
-    };
-  };
-
   system = {
     config,
     lib,
@@ -41,6 +19,8 @@
     meow = {
       fullSetup = true;
       workstation.enable = true;
+
+      users = "thunder";
 
       gaming.enable = true;
       gaming.emulation = true;
@@ -85,11 +65,31 @@
       };
     };
 
-    # environment.systemPackages = with pkgs; [
-    #   (nyxt.override {
-    #     sbclPackages = sbcl_2_4_6.pkgs;
-    #   })
-    # ];
+    services.tlp = {
+      enable = true;
+      settings = {
+        CPU_SCALING_GOVERNOR_ON_AC = "performance";
+        CPU_SCALING_GOVERNOR_ON_BAT = "ondemand";
+
+        CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+        CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
+
+        CPU_MIN_PERF_ON_AC = 0;
+        CPU_MAX_PERF_ON_AC = 100;
+        CPU_MIN_PERF_ON_BAT = 0;
+        CPU_MAX_PERF_ON_BAT = 70;
+
+        CPU_BOOST_ON_AC = 1;
+        CPU_BOOST_ON_BAT = 0;
+
+        CPU_HWP_DYN_BOOST_ON_AC = 1;
+        CPU_HWP_DYN_BOOST_ON_BAT = 0;
+
+        START_CHARGE_THRESH_BAT0 = 80;
+        STOP_CHARGE_THRESH_BAT0 = 85;
+        RESTORE_THRESHOLDS_ON_BAT = 1;
+      };
+    };
 
     boot.loader.grub.enable = true;
     boot.loader.grub.device = "/dev/disk/by-id/ata-TOSHIBA_MQ01ABD100_97DOPOT9T";
@@ -99,8 +99,6 @@
     boot.initrd.kernelModules = [];
     boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
-
-    # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/85995899-d984-4241-87b4-2fc77e05f66f";

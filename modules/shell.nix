@@ -46,7 +46,7 @@ in {
       XDG_CACHE_HOME = "${xdgCache}";
       XDG_STATE_HOME = "${xdgState}";
 
-      STUBBORN_HOME = "${config.stubbornHomeDirectory}";
+      STUBBORN_HOME = "${config.meow.stubbornHomeDirectory}";
       PATH = "$PATH:$CARGO_HOME/bin";
 
       # TODO figure out how to move this shit into cleanup.nix, lib.mkAfter or lib.mkBefore don't work

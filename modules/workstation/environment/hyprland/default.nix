@@ -27,6 +27,7 @@ in {
 
   imports = [
     ./waybar.nix
+    ./nsxiv.nix
   ];
 
   config = mkIf (work && elem "hyprland" env) {
@@ -37,17 +38,6 @@ in {
     in [
       hypr.hyprland
     ];
-
-    # services.xserver.displayManager.session = [
-    #   {
-    #     manage = "desktop";
-    #     name = "Hyprland";
-    #     start = ''
-    #       exec ${pkgs.dbus}/bin/dbus-run-session Hyprland &
-    #       waitPID=$!
-    #     '';
-    #   }
-    # ];
 
     xdg.portal.extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
@@ -79,7 +69,16 @@ in {
             splash = false
           '';
 
-          home.packages = [pkgs.swayosd];
+          home.packages = with pkgs; [
+            swayosd
+
+            gparted
+            blueberry
+            (pkgs.nemo-with-extensions.overrideAttrs (final: prev: {
+              extensions = with pkgs; [nemo-fileroller];
+            }))
+            file-roller
+          ];
 
           programs.waybar.enable = true;
           programs.alacritty.enable = lib.mkDefault true;

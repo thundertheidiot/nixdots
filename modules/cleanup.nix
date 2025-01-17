@@ -6,10 +6,11 @@
 }: let
   inherit (mlib) mkOpt;
   inherit (lib) mkIf;
-  inherit (lib.types) bool;
+  inherit (lib.types) bool str;
 in {
   options = {
     meow.cleanup = mkOpt bool true {};
+    meow.stubbornHomeDirectory = mkOpt str "${config.meow.home.directory}/.local/state/home" {};
   };
 
   config = mkIf config.meow.cleanup {

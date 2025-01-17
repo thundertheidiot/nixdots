@@ -22,16 +22,10 @@ in {
     config,
     extraModules ? [],
   }:
-    nixosSystem (let
-      common = [
-        ../options.nix
-        (config.options or {})
-      ];
-    in {
+    nixosSystem {
       specialArgs = {inherit inputs mlib;};
       modules =
         extraModules
-        ++ common
         ++ [
           config.system
           ../sops
@@ -63,15 +57,12 @@ in {
             imports = import ../modules;
 
             meow.home = {
-              user = config.username;
               extraSpecialArgs = {inherit inputs mlib;};
-              sharedModules =
-                common
-                ++ [
-                  inputs.plasma-manager.homeManagerModules.plasma-manager
-                ];
+              sharedModules = [
+                inputs.plasma-manager.homeManagerModules.plasma-manager
+              ];
             };
           })
         ];
-    });
+    };
 }

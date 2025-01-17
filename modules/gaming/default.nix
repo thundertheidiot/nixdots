@@ -79,7 +79,7 @@ in {
             ];
 
           extraEnv = {
-            HOME = config.stubbornHomeDirectory; # send steam to jail
+            HOME = "${config.meow.stubbornHomeDirectory}"; # send steam to jail
           };
         };
       };

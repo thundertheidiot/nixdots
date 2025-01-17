@@ -3,25 +3,6 @@
   username = "tv";
   homeDirectory = "/home/tv";
 
-  options = {
-    config,
-    pkgs,
-    ...
-  }: {
-    config = {
-      username = "tv";
-      hostName = "digiboksi";
-      timeZone = "Europe/Helsinki";
-
-      workstation.enable = true;
-      workstation.utils = "generic/gtk";
-      workstation.environment = ["hyprland"];
-
-      setup.gaming.enable = false;
-      # setup.tv.enable = true;
-    };
-  };
-
   system = {
     lib,
     pkgs,
@@ -43,6 +24,8 @@
     networking.hostName = "digiboksi";
 
     meow = {
+      user = "tv";
+
       monitors = [
         {
           name = "HDMI-A-1";

@@ -52,11 +52,6 @@
         # ];
       };
 
-    commonModules = cfg: [
-      ./options.nix
-      (cfg.options or {})
-    ];
-
     nixosModules.default = {...}: {
       imports = ./modules;
     };

@@ -1,11 +1,4 @@
 {
-  # TODO cleanup cruft
-  options = {
-    workstation.enable = false;
-    workstation.utils = "none";
-    workstation.environment = [];
-  };
-
   system = {
     config,
     lib,

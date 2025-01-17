@@ -1,4 +1,6 @@
 [
+  ./user.nix
+
   # "libraries"
   # Probably required by the below options, include these
   ./home.nix # most likely conflicts with your home-manager setup, read flake.nix for some pointers
@@ -26,8 +28,4 @@
   ./cleanup.nix
   ./keyboard
   ./gaming
-
-  # TODO: reorganize modules/workstation
-  (import ./old-workstation).system
-  ({mlib, ...}: mlib.homeModule (import ./old-workstation).home)
 ]

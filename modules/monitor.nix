@@ -95,7 +95,7 @@ in {
         mons;
       }
       (
-        mkIf (elem "hyprland" config.workstation.environment)
+        mkIf (elem "hyprland" config.meow.workstation.environment)
         (
           homeModule
           ({
@@ -106,7 +106,8 @@ in {
             mlib,
             ...
           }: let
-            splitMonitorWorkspaces = config.setup.hyprland.forceMultiMonitor || (builtins.length mons) > 1;
+            # splitMonitorWorkspaces = (builtins.length mons) > 1;
+            splitMonitorWorkspaces = true; # TODO remove balls
             hyprWorkspace =
               if splitMonitorWorkspaces
               then "split:workspace"
