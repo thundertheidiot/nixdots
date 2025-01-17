@@ -29,7 +29,7 @@ in {
       settings = {
         Autologin = {
           Session = "hyprland.desktop";
-          User = "${config.username}";
+          User = builtins.head config.meow.users;
         };
       };
     };
@@ -67,7 +67,7 @@ in {
     meow.home.modules = let
       kodiLauncher = pkgs.writeShellScriptBin "kodi" ''
         ${kodiSettings}/bin/create_kodi_settings
-        export HOME=${config.stubbornHomeDirectory} # hide log files
+        export HOME=${config.meow.stubbornHomeDirectory} # hide log files
         export KODI_DATA=${kodiHome}
         exec "${kodiExecutable}" --audio-backend=pulseaudio "$@" # using pulseaudio fixes some weird pipewire issues
       '';

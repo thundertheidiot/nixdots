@@ -66,6 +66,8 @@ in {
       inputs.deploy-rs.packages."${pkgs.system}".default
     ];
 
+    services.cpupower-gui.enable = true;
+
     programs.appimage = {
       enable = true;
       binfmt = true;

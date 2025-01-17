@@ -94,7 +94,7 @@ in {
       };
 
       systemd.user.services.monado.environment = {
-        HOME = config.stubbornHomeDirectory;
+        HOME = config.meow.stubbornHomeDirectory;
         XRT_COMPOSITOR_SCALE_PERCENTAGE = "100";
         XRT_COMPOSITOR_COMPUTE = "1";
         U_PACING_COMP_MIN_TIME_MS = "5";
@@ -168,7 +168,7 @@ in {
                 { sleep 3; pkexec renice -20 -p $(pgrep monado); } &
 
                 # steam is placed in stubbornHome, this needs to be set so monado can find the steamvr stuff
-                env HOME=${config.stubbornHomeDirectory} \
+                env HOME=${config.meow.stubbornHomeDirectory} \
                     XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
                     XRT_COMPOSITOR_COMPUTE=0 \
                     U_PACING_COMP_MIN_TIME_MS=4 \

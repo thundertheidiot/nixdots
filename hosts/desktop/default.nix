@@ -5,30 +5,6 @@ let
 in {
   inherit systemArch username homeDirectory;
 
-  options = {
-    config,
-    pkgs,
-    mlib,
-    ...
-  }: {
-    config = {
-      username = username;
-      hostName = "desktop";
-      timeZone = "Europe/Helsinki";
-
-      # tv.enable = true;
-
-      workstation.enable = true;
-      workstation.utils = "generic/gtk";
-      workstation.environment = ["hyprland"];
-
-      setup.gaming.enable = true;
-      setup.tv.enable = false;
-
-      setup.desktop.enable = true;
-    };
-  };
-
   system = {
     lib,
     config,
@@ -76,6 +52,8 @@ in {
     meow = {
       fullSetup = true;
       workstation.enable = true;
+
+      user = "thunder";
 
       workstation.environment = ["hyprland" "plasma"];
       workstation.plasma.opinionatedConfig = true;
@@ -278,14 +256,14 @@ in {
         installPhase =
           builtins.replaceStrings
           ["runHook postInstall"]
-          ["wrapProgram $out/bin/flashprint --set HOME ${config.stubbornHomeDirectory}\nrunHook postInstall"]
+          ["wrapProgram $out/bin/flashprint --set HOME ${config.meow.stubbornHomeDirectory}\nrunHook postInstall"]
           prev.installPhase;
       }))
     ];
 
     programs.adb.enable = true;
     # boot.binfmt.emulatedSystems = ["aarch64-linux"];
-    users.users.${config.username}.extraGroups = ["adbusers"];
+    users.users."${config.meow.user}".extraGroups = ["adbusers"];
 
     hardware.ckb-next.enable = true;
 

@@ -10,6 +10,7 @@
   inherit (lib) mkIf mkMerge;
 
   cfg = config.meow.workstation.enable;
+  envir = config.meow.workstation.environment;
   dm = config.meow.workstation.displayManager;
 in {
   options = {
@@ -70,5 +71,33 @@ in {
         wayland = true;
       };
     })
+    (mkIf (builtins.elem "hyprland" envir) {
+      services.gvfs.enable = true;
+
+      systemd.user.services.polkit-gnome-authentication-agent-1 = {
+        description = "polkit-gnome-authentication-agent-1";
+        wantedBy = ["graphical-session.target"];
+        wants = ["graphical-session.target"];
+        after = ["graphical-session.target"];
+        serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+        };
+      };
+    })
+    {
+      services.cpupower-gui.enable = true;
+
+      meow.home.modules = [
+        ({config, ...}: {
+          xresources = {
+            path = "${config.xdg.configHome}/xresources";
+          };
+        })
+      ];
+    }
   ]);
 }

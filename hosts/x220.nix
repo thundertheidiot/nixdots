@@ -3,28 +3,6 @@
   username = "thunder";
   homeDirectory = "/home/thunder";
 
-  options = {
-    config,
-    pkgs,
-    ...
-  }: {
-    config = {
-      username = "thunder";
-      hostName = "x220";
-      timeZone = "Europe/Helsinki";
-
-      workstation.enable = true;
-      workstation.laptop = false;
-      workstation.utils = "generic/gtk";
-      # workstation.environment = ["hyprland"];
-      workstation.plasma.tilingwm = true;
-
-      # setup.hyprland.extraAutostart = [];
-      # setup.gaming.enable = false;
-      # setup.tv.enable = true;
-    };
-  };
-
   system = {
     config,
     lib,
@@ -44,6 +22,8 @@
         environment = [];
         # displayManager = "gdm";
       };
+
+      users = "thunder";
 
       workstation.flatpak.graphicalStore = true;
 
