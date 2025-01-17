@@ -37,8 +37,6 @@
         options = "--delete-older-than 7d";
       };
 
-      users.users.thunder.initialPassword = "password";
-
       # networking.firewall.allowedTCPPorts = [
       #   6443
       # ];
@@ -56,6 +54,7 @@
         workstation.enable = false;
         shell.enable = true;
 
+        ssh.key = false; # no user to give to
         ssh.rootKey = true;
 
         gpu = "intel";
@@ -68,9 +67,7 @@
           }
         ];
 
-        home = {
-          stateVersion = "24.05";
-        };
+        home.enable = false;
       };
 
       boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];

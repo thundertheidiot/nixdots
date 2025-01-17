@@ -26,8 +26,6 @@ in {
     nix.settings =
       {
         experimental-features = ["nix-command" "flakes"];
-        allowed-users = [config.meow.user];
-        trusted-users = [config.meow.user];
         use-xdg-base-directories = true;
       }
       # Is this stupid? Yes, unfortunately flakes are stupid too, and the attributes cannot be computed, but i also want a single source of truth for these
@@ -54,13 +52,6 @@ in {
     };
 
     i18n.defaultLocale = "en_US.UTF-8";
-
-    # TODO: move to workstation?
-
-    users.users."${config.meow.user}" = {
-      extraGroups = ["wheel" "networkmanager" "docker"];
-      isNormalUser = true;
-    };
 
     environment.systemPackages = with pkgs; [
       git

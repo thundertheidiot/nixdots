@@ -41,6 +41,16 @@ in {
 
     security.polkit.enable = true;
 
+    users.users."${config.meow.user}" = {
+      extraGroups = ["wheel" "networkmanager" "docker"];
+      isNormalUser = true;
+    };
+
+    nix.settings = {
+      allowed-users = [config.meow.user];
+      trusted-users = [config.meow.user];
+    };
+
     environment.systemPackages = with pkgs; [
       pulsemixer
       rustup

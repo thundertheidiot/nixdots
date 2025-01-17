@@ -1,12 +1,6 @@
 {lib, ...}: rec {
   inherit (builtins) hasAttr;
 
-  # TODO: remove when workstation rework is done
-  getSystem = m: m.system or {};
-  getHome = m: m.home or {};
-  getSystems = list: map (m: getSystem m) list;
-  getHomes = list: map (m: getHome m) list;
-
   mkOpt = type: default: {
     example ? "",
     description ? "",
