@@ -22,13 +22,17 @@ in {
   };
 
   config = mkIf en {
-    nix.settings = {
-      experimental-features = ["nix-command" "flakes"];
-      allowed-users = [config.username];
-      trusted-users = [config.username];
-      require-sigs = false;
-      use-xdg-base-directories = true;
-    };
+    nix.settings =
+      {
+        experimental-features = ["nix-command" "flakes"];
+        allowed-users = [config.username];
+        trusted-users = [config.username];
+        use-xdg-base-directories = true;
+      }
+      # Is this stupid? Yes, unfortunately flakes are stupid too, and the attributes cannot be computed, but i also want a single source of truth for these
+      # https://github.com/NixOS/nix/issues/4945
+      # TODO the real question here is if this is ever needed in practice
+      // (import ../flake.nix).nixConfig;
 
     boot.tmp.cleanOnBoot = true;
     hardware.enableRedistributableFirmware = true;
