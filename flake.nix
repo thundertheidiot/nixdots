@@ -118,12 +118,8 @@
     # haskell-nix.url = "github:input-output-hk/haskell.nix";
 
     hyprland = {
-      # latest before clipboard break
-      # url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=4cdddcfe466cb21db81af0ac39e51cc15f574da9";
-      # url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
-      # url = "git+https://github.com/hyprwm/Hyprland?submodules=1&rev=9a09eac79b85c846e3a865a9078a3f8ff65a9259";
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+      url = "github:hyprwm/Hyprland/v0.46.2";
     };
 
     waybar.url = "github:Alexays/Waybar";
