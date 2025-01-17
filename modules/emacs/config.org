@@ -1310,13 +1310,6 @@ Aliases and functions
 	   nonl)
 	  "λ "))
 
-;; (setq eshell-prompt-function
-;;       (lambda ()
-;; 	(concat
-;; 	 (if eshell-nix-shell-active "<nix-shell> " "")
-;; 	 (abbreviate-file-name (eshell/pwd))
-;; 	 (if (= (user-uid) 0) " # " " $ "))))
-
 (defun eshell/nix-shell (&rest args)
   (if (member "--run" args)
       (eshell-command-result
@@ -1330,8 +1323,11 @@ Aliases and functions
 				lines)))
       (dolist (env environment)
 	(when (= 2 (length env))
-	  (ignore-errors
-	    (eshell-set-variable (car env) (cadr env)))
+	  (if (string= (car env) "PATH")
+	      (eshell-set-path (cadr env))
+	    (ignore-errors
+	      (eshell-set-variable (car env) (cadr env))))
+	  
 	  (setq-local eshell-nix-shell-active t))))))
 
 (defmacro re (&rest rx-sexp) ;; Stolen from https://youtube.com/watch?v=9xLeqwl_7n0
