@@ -4,7 +4,6 @@
   inputs,
   lib,
   mlib,
-  mpkgs,
   ...
 }: let
   cfg = config.meow.tv;
@@ -17,7 +16,7 @@ in {
   config = lib.mkIf cfg.enable (let
     inherit (pkgs) callPackage;
 
-    kodiPackage = callPackage mpkgs.kodi {};
+    kodiPackage = pkgs.mpkgs.kodi;
     kodiHome = "${config.meow.home.directory}/.local/share/kodi";
     kodiExecutable = "${kodiPackage}/bin/kodi_with_addons";
 

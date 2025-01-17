@@ -3,7 +3,6 @@
   pkgs,
   lib,
   mlib,
-  mpkgs,
   ...
 }: let
   inherit (mlib) mkOpt mkEnOpt;
@@ -36,7 +35,7 @@ in {
           proton-ge
 
           (lib.mkIf (elem "minecraft" cfg.games) prismlauncher)
-          (lib.mkIf (elem "duckgame" cfg.games) (pkgs.callPackage mpkgs.dgr {homeDirectory = config.stubbornHomeDirectory;}))
+          (lib.mkIf (elem "duckgame" cfg.games) (mpkgs.dgr))
         ];
 
       programs.gamemode.enable = true;

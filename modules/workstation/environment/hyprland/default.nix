@@ -3,7 +3,6 @@
   lib,
   pkgs,
   mlib,
-  mpkgs,
   inputs,
   ...
 }: let
@@ -69,12 +68,7 @@ in {
         {config, ...}: let
           terminal = "alacritty";
 
-          # screenshot = pkgs.callPackage mpkgs.wl_screenshot {
-          #   hyprland = hyprlandPackage;
-          #   picturesDir = config.xdg.userDirs.pictures;
-          # };
-          # screenshot = inputs.screenshot.packages.${pkgs.system}.default;
-          screenshot = pkgs.callPackage mpkgs.screenshot {};
+          screenshot = pkgs.mpkgs.screenshot;
         in {
           # Conflicts on other environments, so it's launched manually instead
           services.hyprpaper.enable = lib.mkForce false;

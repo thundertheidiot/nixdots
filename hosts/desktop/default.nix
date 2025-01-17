@@ -33,7 +33,6 @@ in {
     lib,
     config,
     mlib,
-    mpkgs,
     pkgs,
     ...
   }: {
@@ -265,7 +264,7 @@ in {
     environment.systemPackages = with pkgs; [
       qmk
       android-tools
-      (callPackage mpkgs.bambustudio {})
+      mpkgs.bambustudio
       (flashprint.overrideAttrs (prev: rec {
         version = "5.8.6";
 

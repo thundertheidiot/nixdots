@@ -3,7 +3,6 @@
   pkgs,
   config,
   mlib,
-  mpkgs,
   ...
 }: let
   inherit (mlib) mkOpt;
@@ -17,7 +16,7 @@ in {
     meow.home = {
       enable = mkOpt bool true {};
 
-      extraSpecialArgs = mkOpt attrs {inherit mlib mpkgs;} {
+      extraSpecialArgs = mkOpt attrs {inherit mlib;} {
         example = literalExpression "{ inherit inputs; }";
       };
 

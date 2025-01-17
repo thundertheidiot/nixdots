@@ -20,6 +20,8 @@
     config.allowUnfree = final.config.allowUnfree;
   };
 
+  mpkgs = (import ./pkgs) {pkgs = final;};
+
   avrdude = prev.avrdude.overrideAttrs (old: {
     src = old.src.override {
       repo = "avrdude";

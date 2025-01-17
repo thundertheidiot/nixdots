@@ -4,7 +4,6 @@
   fetchzip,
   gnused,
   buildFHSEnv,
-  homeDirectory ? null, # DGR Creates a useless $HOME/DuckGame
 }:
 stdenv.mkDerivation {
   name = "duck_game_rebuilt";
@@ -36,12 +35,7 @@ stdenv.mkDerivation {
     # script
     echo "#!/bin/sh
     cd $out/DuckGameRebuilt
-    export HOME=$STUBBORN_HOME
-    ${
-      if builtins.isString homeDirectory
-      then "export HOME=${homeDirectory}"
-      else ""
-    }
+    [ ! -z $STUBBORN_HOME ] && export HOME=$STUBBORN_HOME
     ${fhs}/bin/dgr_fhs ./DuckGame.sh \$@" > $out/bin/duck_game_rebuilt
     chmod +x $out/bin/duck_game_rebuilt
   '';
