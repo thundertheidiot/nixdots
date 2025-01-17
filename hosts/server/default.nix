@@ -39,6 +39,19 @@
 
       users.users.thunder.initialPassword = "password";
 
+      # networking.firewall.allowedTCPPorts = [
+      #   6443
+      # ];
+      # networking.firewall.allowedUDPPorts = [
+      # ];
+      # services.k3s = {
+      #   enable = true;
+      #   role = "server";
+      #   extraFlags = [
+      #     "--disable=traefik"
+      #   ];
+      # };
+
       meow = {
         workstation.enable = false;
         shell.enable = true;
