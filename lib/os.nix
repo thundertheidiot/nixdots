@@ -11,6 +11,10 @@ in {
     then import file
     else throw "No ${file} or ${dir}/default.nix";
 
+  homeModule = module: {
+    meow.home.modules = [module];
+  };
+
   mkSystem = {
     nixosSystem,
     inputs,
@@ -47,9 +51,7 @@ in {
             config,
             ...
           }: {
-            nix.settings = {
             nixpkgs = {
-              config.allowUnfree = true;
               overlays = [
                 inputs.emacs-overlay.overlay
                 inputs.waybar.overlays.default
@@ -73,8 +75,4 @@ in {
           })
         ];
     });
-
-  homeModule = module: {
-    meow.home.modules = [module];
-  };
 }
