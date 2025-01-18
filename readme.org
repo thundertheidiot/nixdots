@@ -27,7 +27,9 @@ At Meow Industries, our commitment to excellence is reflected in our comprehensi
 ** Plans
 
 TODO: Get rid of the separate home module
+
 TODO: Move more stuff back into home manager
+
 TODO: Invent a way of making a home manager output from the module imports list to support non nixos installations
  - It should be possible to =lib.evalModules= all of the nixos modules, and then use the home manager modules inside a standalone home manager setup?
  - For this to be of any use, more stuff must be moved into home manager, as right now you wouldn't even be getting a shell
