@@ -1,3 +1,7 @@
+# This fun abstraction module lets me mix NixOS and home-manager options in a single module
+# I'm pretty sure this is entirely useless though, as I think i can just `home-manager.users.user.imports = [module];'
+# Oh well, it's already baked into much of the config
+# TODO: get rid of the home module
 {
   lib,
   pkgs,
