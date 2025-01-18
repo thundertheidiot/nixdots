@@ -46,10 +46,7 @@
     nixosConfigurations =
       gen ["desktop" "server" "x220" "t440p" "digiboksi"]
       // {
-        # iso = (import ./iso) {inherit lib inputs;};
-        # iso = mkSystem (import ./hosts/iso.nix) [
-        #   "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix"
-        # ];
+        iso = (import ./iso) {inherit mlib lib inputs;};
       };
 
     nixosModules.default = {...}: {

@@ -27,7 +27,7 @@ in {
       sharedModules = mkOpt (listOf raw) [] {};
       modules = mkOpt (listOf raw) [] {};
 
-      user = mkOpt str "thunder" {};
+      user = mkOpt str config.meow.user {};
       stateVersion = mkOpt str "CHANGE" {};
       directory = mkOpt str "/home/${cfg.user}" {};
 
