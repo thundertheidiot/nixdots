@@ -1,5 +1,5 @@
 {lib, ...}: let
-  inherit (builtins) readDir filter attrNames mapAttrs;
+  inherit (builtins) readDir filter attrNames;
   inherit (lib.attrsets) mergeAttrsList;
 
   importFilesAndDirs = {
@@ -7,13 +7,6 @@
     filterF ? (n: n != "default.nix"),
   }:
     map (f: import (dir + "/${f}"))
-    (filter filterF (attrNames (readDir dir)));
-
-  importFilesAndDirsAsAttrs = {
-    dir,
-    filterF ? (n: n != "default.nix"),
-  }:
-    mapAttrs (f: import (dir + "/${f}"))
     (filter filterF (attrNames (readDir dir)));
 
   imports =
