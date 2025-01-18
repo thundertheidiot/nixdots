@@ -27,7 +27,7 @@ in {
       modules =
         extraModules
         ++ [
-          config.system
+          config
           ../sops
 
           inputs.home-manager.nixosModules.home-manager
