@@ -49,6 +49,7 @@ in {
                 inputs.emacs-overlay.overlay
                 inputs.waybar.overlays.default
                 inputs.rust-overlay.overlays.default
+                inputs.hyprland.overlays.default
                 inputs.nixpkgs-xr.overlays.default
                 (import ../overrides.nix {inherit lib inputs;})
               ];

@@ -115,16 +115,16 @@
     # haskell-nix.url = "github:input-output-hk/haskell.nix";
 
     hyprland = {
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
       url = "github:hyprwm/Hyprland/v0.46.2";
     };
 
-    waybar.url = "github:Alexays/Waybar";
-
     hyprsplit = {
-      url = "github:shezdy/hyprsplit";
+      url = "github:shezdy/hyprsplit/v0.46.2";
       inputs.hyprland.follows = "hyprland";
     };
+
+    waybar.url = "github:Alexays/Waybar";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
