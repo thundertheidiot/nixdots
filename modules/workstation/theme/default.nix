@@ -56,22 +56,22 @@ in {
         includeUserConf = true;
       };
 
-      boot = {
-        plymouth.enable = true;
+      # boot = {
+      #   plymouth.enable = true;
 
-        consoleLogLevel = 0;
-        initrd.verbose = false;
+      #   consoleLogLevel = 0;
+      #   initrd.verbose = false;
 
-        kernelParams = [
-          "quiet"
-          "splash"
-          "boot.shell_on_fail"
-          "loglevel=3"
-          "rd.systemd.show_status=false"
-          "rd.udev.log_level=3"
-          "udev.log_priority=3"
-        ];
-      };
+      #   kernelParams = [
+      #     "quiet"
+      #     "splash"
+      #     "boot.shell_on_fail"
+      #     "loglevel=3"
+      #     "rd.systemd.show_status=false"
+      #     "rd.udev.log_level=3"
+      #     "udev.log_priority=3"
+      #   ];
+      # };
 
       environment.systemPackages =
         fontPkgs
@@ -108,6 +108,7 @@ in {
         theme = "sddm-astronaut-theme";
         extraPackages = [
           pkgs.kdePackages.qt5compat
+          pkgs.libsForQt5.phonon
         ];
       };
 
