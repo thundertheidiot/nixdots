@@ -15,7 +15,7 @@
     fullSetup = true;
     workstation.enable = true;
 
-    users = "thunder";
+    user = "thunder";
 
     gaming.enable = true;
     gaming.emulation = true;
