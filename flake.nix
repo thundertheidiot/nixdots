@@ -108,7 +108,6 @@
     # screenshot.url = "./pkgs/screenshot";
 
     naersk.url = "github:nix-community/naersk";
-    # haskell-nix.url = "github:input-output-hk/haskell.nix";
 
     hyprland = {
       # inputs.nixpkgs.follows = "nixpkgs";
