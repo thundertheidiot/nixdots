@@ -27,10 +27,16 @@ in {
 
     users.users = let
       key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBKwHM/9spQfyeNIl/p8N8XBuoKj8UrhuhhlbEwkrgjZ thunder@disroot.org";
-      inherit (lib) mkIf;
-    in {
-      root.openssh.authorizedKeys.keys = mkIf cfg.rootKey [key];
-      ${config.meow.home.user}.openssh.authorizedKeys.keys = mkIf cfg.key [key];
-    };
+      inherit (lib) mkIf mkMerge;
+    in
+      mkMerge [
+        (mkIf cfg.rootKey {
+          root.openssh.authorizedKeys.keys = [key];
+        })
+        # 'mkIf cfg.key [key]' tries to create the user
+        (mkIf cfg.key {
+          "${config.meow.user}".openssh.authorizedKeys.keys = [key];
+        })
+      ];
   };
 }

@@ -168,7 +168,9 @@
   environment.systemPackages = with pkgs; [
     qmk
     android-tools
+
     mpkgs.bambustudio
+    orca-slicer
     (flashprint.overrideAttrs (prev: rec {
       version = "5.8.6";
 
