@@ -38,7 +38,7 @@ in {
           "godot"
           "gimp"
 
-          "freetube"
+          # "freetube"
           # "ansel"
         ];
 

@@ -62,7 +62,7 @@ in {
         wmctrl
       ]);
 
-      services.ollama.enable = lib.mkDefault cfg.llm;
+      # services.ollama.enable = lib.mkDefault cfg.llm;
     }
     // homeModule ({config, ...}: {
       home.packages = with pkgs;
