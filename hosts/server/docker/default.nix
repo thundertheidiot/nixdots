@@ -21,6 +21,7 @@ in {
     "bazarr.local"
     "prowlarr.local"
     "immich.local"
+    "homeassistant.local"
   ];
 
   services.nginx.virtualHosts =
@@ -30,16 +31,20 @@ in {
         "/" = {
           proxyPass = "http://127.0.0.1:${toString port}";
           recommendedProxySettings = true;
+          extraConfig = ''
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+          '';
         };
       };
     }) {
       "torrent.local" = 8080;
-      "soulseek.local" = 5030;
       "radarr.local" = 7878;
       "sonarr.local" = 8989;
       "lidarr.local" = 8686;
       "bazarr.local" = 6767;
       "prowlarr.local" = 9696;
+      "homeassistant.local" = 8123;
     }
     // {
       "immich.local" = {
@@ -56,6 +61,19 @@ in {
             proxy_read_timeout 600s;
             proxy_send_timeout 600s;
             send_timeout 600s;
+          '';
+        };
+      };
+
+      "soulseek.local" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:5030";
+          extraConfig = ''
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            proxy_set_header Host $host;
+            proxy_request_buffering off;
+            client_max_body_size 0;
           '';
         };
       };

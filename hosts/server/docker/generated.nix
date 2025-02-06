@@ -124,6 +124,35 @@
       "docker-compose-uwu-root.target"
     ];
   };
+  virtualisation.oci-containers.containers."homeassistant" = {
+    image = "ghcr.io/home-assistant/home-assistant:stable";
+    environment = {
+      "TZ" = "Europe/Helsinki";
+    };
+    volumes = [
+      "/mnt/storage/config/homeassistant:/config:rw"
+      "/run/dbus:/run/dbus:ro"
+    ];
+    log-driver = "journald";
+    extraOptions = [
+      "--network=host"
+      "--privileged"
+    ];
+  };
+  systemd.services."docker-homeassistant" = {
+    serviceConfig = {
+      Restart = lib.mkOverride 90 "always";
+      RestartMaxDelaySec = lib.mkOverride 90 "1m";
+      RestartSec = lib.mkOverride 90 "100ms";
+      RestartSteps = lib.mkOverride 90 9;
+    };
+    partOf = [
+      "docker-compose-uwu-root.target"
+    ];
+    wantedBy = [
+      "docker-compose-uwu-root.target"
+    ];
+  };
   virtualisation.oci-containers.containers."immich_machine_learning" = {
     image = "ghcr.io/immich-app/immich-machine-learning:release";
     volumes = [
