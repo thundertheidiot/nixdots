@@ -88,6 +88,8 @@
     };
   };
 
+  users.users."thunder".extraGroups = ["docker"];
+
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/disk/by-id/ata-TOSHIBA_MQ01ABD100_97DOPOT9T";
   boot.loader.grub.useOSProber = true;
