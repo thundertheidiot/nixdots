@@ -60,7 +60,7 @@ in {
         package = pkgs.steam.override {
           extraPkgs = pkgs:
             with pkgs; [
-              # apex legends maybe
+              # apex legends maybe   rip :(
               libkrb5
               keyutils
 

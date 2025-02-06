@@ -33,15 +33,6 @@
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "desktop";
 
-  services.ollama = {
-    enable = true;
-    acceleration = "rocm";
-    environmentVariables = {
-      HCC_AMDGPU_TARGET = "gfx1031";
-    };
-    rocmOverrideGfx = "10.3.1";
-  };
-
   meow = {
     fullSetup = true;
     workstation.enable = true;

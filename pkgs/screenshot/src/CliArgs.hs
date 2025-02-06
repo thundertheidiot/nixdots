@@ -1,3 +1,4 @@
+{-# LANGUAGE PatternGuards #-}
 module CliArgs (parseArgs) where
 
 import Options

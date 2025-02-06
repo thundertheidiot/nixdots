@@ -14,6 +14,14 @@
     nixpkgs.hostPlatform = "x86_64-linux";
 
     users.users.nixos.initialPassword = "nixos";
+    users.users.nixos.initialHashedPassword = lib.mkForce null;
+
+    services.xserver.displayManager.gdm.settings = {
+      daemon = {
+        AutomaticLoginEnable = true;
+        AutomaticLogin = "nixos";
+      };
+    };
 
     meow = {
       workstation = {
@@ -30,6 +38,8 @@
       ssh.key = true;
       ssh.rootKey = true;
 
+      user = "nixos";
+
       home = {
         user = "nixos";
         stateVersion = "24.11";
@@ -37,6 +47,11 @@
           {
             home.file."host.nix".source = ./templates/host.nix;
             home.file."disko.nix".source = ./templates/disko.nix;
+
+            home.file."meowos" = {
+              recursive = true;
+              source = ../.;
+            };
           }
         ];
       };

@@ -1,19 +1,3 @@
-# {fetchFromGitHub}: let
-#   haskellNix = import (fetchFromGitHub {
-#     owner = "input-output-hk";
-#     repo = "haskell.nix";
-#     rev = "91fb513e4137d2a763f2227ea4d1b4e3d4225127";
-#     hash = "sha256-cwmZpMzLuSOUcPEO8NB/F8iR4xD8WOB08MPYNnd1P3w=";
-#   }) {};
-#   pkgs =
-#     import
-#     haskellNix.sources.nixpkgs-unstable
-#     haskellNix.nixpkgsArgs;
-# in
-#   pkgs.haskell-nix.project {
-#     src = ./.;
-#     compiler-nix-name = "ghc928";
-#   }
 {
   stdenvNoCC,
   lib,
