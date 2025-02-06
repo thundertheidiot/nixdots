@@ -11,6 +11,8 @@
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "t440p";
 
+  virtualisation.docker.enable = true;
+
   meow = {
     fullSetup = true;
     workstation.enable = true;
