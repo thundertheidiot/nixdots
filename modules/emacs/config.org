@@ -544,6 +544,10 @@ WIP window navigation mode
   (org-src-tab-acts-natively t)
   (org-startup-with-inline-images t)
   (calendar-week-start-day 1)
+  (org-babel-load-languages '((emacs-lisp . t)
+			      (shell . t)
+			      (eshell . t)
+			      (lisp . t)))
   :init
   (add-hook 'org-mode-hook #'org-indent-mode)
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))

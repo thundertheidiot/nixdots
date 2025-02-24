@@ -123,5 +123,22 @@ in {
         }
         // disks)
     ];
+
+    # programs.waybar.style = let
+    #   colors = config.lib.stylix.colors.withHashtag;
+    # in ''
+    #   * {
+    #     border: none;
+    #     font-family: sans;
+    #     font-size: 12px;
+
+    #     border-radius: 0px;
+    #   }
+
+    #   #workspaces button:hover {
+    #     background-color: ${colors.base05};
+    #     color: ${colors.base00};
+    #   }
+    # '';
   };
 }
