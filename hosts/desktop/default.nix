@@ -206,6 +206,8 @@
     memoryPercent = 75;
   };
 
+  networking.firewall.allowedTCPPorts = [3002];
+
   boot.kernel.sysctl."vm.swappiness" = 50;
 
   disko.devices = {

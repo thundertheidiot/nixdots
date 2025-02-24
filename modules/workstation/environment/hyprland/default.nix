@@ -187,7 +187,7 @@ in {
               general = {
                 gaps_in = 5;
                 gaps_out = 20;
-                border_size = 2;
+                border_size = 3;
 
                 layout = "master";
 
@@ -195,7 +195,7 @@ in {
               };
 
               decoration = {
-                rounding = 6;
+                rounding = 0;
 
                 blur = {
                   enabled = false;
@@ -205,8 +205,8 @@ in {
 
                 shadow = {
                   enabled = true;
-                  range = 4;
-                  render_power = 3;
+                  range = 6;
+                  render_power = 4;
                 };
               };
 
