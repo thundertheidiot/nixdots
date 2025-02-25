@@ -120,7 +120,7 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    waybar.url = "github:Alexays/Waybar";
+    # waybar.url = "github:Alexays/Waybar";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 

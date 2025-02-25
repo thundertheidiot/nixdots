@@ -44,6 +44,10 @@
       '';
   });
 
+  rathole = prev.rathole.overrideAttrs (old: {
+    doCheck = false;
+  });
+
   mumble = prev.mumble.overrideAttrs (old: {
     postFixup =
       builtins.replaceStrings
