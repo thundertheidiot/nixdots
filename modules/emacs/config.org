@@ -97,8 +97,8 @@ Preserve window configuration when pressing ESC."
 
 #+begin_src emacs-lisp
 (recentf-mode)
-(setq recentf-max-menu-items 100
-      recentf-max-saved-items 100)
+(setq recentf-max-menu-items 1000
+      recentf-max-saved-items 1000)
 (run-at-time "5 min" 300 'recentf-save-list)
 #+end_src
 
