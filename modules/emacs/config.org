@@ -908,28 +908,24 @@ Index those keywords inside magit.
   :hook
   (after-init . global-corfu-mode)
   :general-config
-  (:states '(normal visual insert) :keymaps 'corfu-mode-map
+  (:states '(insert)
 	   "C-j" nil
 	   "C-k" nil)
-  (:states '(normal visual insert) :keymaps 'corfu-map
+  (:states '(normal visual insert) :keymaps 'corfu-mode-map
+	   "C-j" nil
+	   "C-k" nil
+	   "C-i" nil)
+  (:keymaps 'corfu-map
 	   "RET" nil
 	   "<up>" nil
 	   "<down>" nil
+	   "M-i" (lambda () (interactive) 
+		   (let ((current-prefix-arg t))
+		     (call-interactively #'corfu-info-documentation)))
 	   "C-j" #'corfu-next
 	   "C-k" #'corfu-previous
 	   "S-RET" #'corfu-complete
-	   "S-<return>" #'corfu-complete)
-  :config
-  ;; (make-mode-keymap corfu-mode-map '(("C-j" . nil)
-  ;; 				     ("C-k" . nil)))
-  
-  (make-mode-keymap corfu-map '(("RET" . nil)
-				("<up>" . nil)
-				("<down>" . nil)
-				("C-j" . corfu-next)
-				("C-k" . corfu-previous)
-				("S-RET" . corfu-complete)
-				("S-<return>" . corfu-complete))))
+	   "S-<return>" #'corfu-complete))
 #+end_src
 
 ** Languages
@@ -2131,10 +2127,11 @@ button event."
 		    (exwm-workspace-rename-buffer (generate-new-buffer-name "EXWM - Unknown window")))
 		  (exwm-workspace-rename-buffer (format "EXWM - %s" exwm-class-name))))
 
-      (exwm-xim-enable)
-      (exwm-randr-enable)
+      (exwm-xim-mode 1)
+      (evil-set-initial-state 'exwm-mode 'emacs)
+      (exwm-randr-mode 1)
       (exwm-enable)
-      (exwm-systemtray-enable))))
+      (exwm-systemtray-mode 1))))
 #+end_src
 
 * End
