@@ -182,7 +182,7 @@ in {
               treesit-grammars.with-all-grammars # TODO: split up
             ];
 
-          package = pkgs.emacs-gtk;
+          package = pkgs.emacs30;
           alwaysEnsure = true;
 
           override = final: prev: {
