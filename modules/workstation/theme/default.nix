@@ -170,6 +170,7 @@ in {
 
       stylix.targets = {
         fish.enable = false;
+        qt.platform = "qtct";
       };
 
       stylix.enable = true;

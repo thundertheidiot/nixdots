@@ -47,7 +47,7 @@ in {
             nixpkgs = {
               overlays = [
                 inputs.emacs-overlay.overlay
-                inputs.waybar.overlays.default
+                # inputs.waybar.overlays.default
                 inputs.rust-overlay.overlays.default
                 # inputs.hyprland.overlays.default
                 # inputs.nixpkgs-xr.overlays.default
