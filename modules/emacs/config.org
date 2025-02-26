@@ -186,7 +186,7 @@ This may or may not be necessary somewhere, i don't remember.
 (defun new-window-configuration ()
   "Save the current window configuration close other buffers."
   (interactive)
-  (save-current-window-configuration)
+  (save-window-configuration)
   (select-window (split-window))
   (delete-other-windows))
 
