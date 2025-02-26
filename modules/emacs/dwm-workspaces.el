@@ -102,13 +102,7 @@ Be careful though, all of your workspaces will be deleted."
 	    (when (-contains-p list index)
 	      (setq dwm-workspaces--current-monitor idx))
 	    (setq idx (+ 1 idx)))
-	  dwm-workspaces--workspaces-real))
-  ;; (let ((display-name (alist-get 'name (frame-monitor-attributes))))
-  ;;   (mapc (lambda (i)
-  ;; 	    (when (string= (nth i dwm-workspaces--monitor-list) display-name)
-  ;; 	      (setq dwm-workspaces--current-monitor i)))
-  ;; 	  (number-sequence 0 (- (safe-length dwm-workspaces--monitor-list) 1))))
-  )
+	  dwm-workspaces--workspaces-real)))
 
 (defun dwm-workspaces--get-current-real-workspace-by-monitor-index (monitor-index)
   "Return the stored real EXWM workspace number for the monitor MONITOR-INDEX."
