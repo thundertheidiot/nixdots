@@ -108,6 +108,7 @@ in {
         theme = "sddm-astronaut-theme";
         extraPackages = [
           pkgs.kdePackages.qt5compat
+          pkgs.kdePackages.qtmultimedia
           pkgs.libsForQt5.phonon
         ];
       };

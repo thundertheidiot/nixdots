@@ -2128,7 +2128,6 @@ button event."
 		  (exwm-workspace-rename-buffer (format "EXWM - %s" exwm-class-name))))
 
       (exwm-xim-mode 1)
-      (evil-set-initial-state 'exwm-mode 'emacs)
       (exwm-randr-mode 1)
       (exwm-enable)
       (exwm-systemtray-mode 1))))

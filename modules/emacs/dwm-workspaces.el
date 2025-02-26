@@ -2,7 +2,7 @@
 
 ;; Author: Thunder
 ;; Version: 1.0
-;; Package-Requires: ((exwm "0.28"))
+;; Package-Requires: ((exwm "0.28") ("dash" "2.19.1"))
 ;; Keywords: exwm
 
 ;;; Commentary:
@@ -96,11 +96,19 @@ Be careful though, all of your workspaces will be deleted."
 
 (defun dwm-workspaces--focus-changed ()
   "This function will run on `focus-in-hook'."
-  (let ((display-name (alist-get 'name (frame-monitor-attributes))))
-    (mapc (lambda (i)
-	    (when (string= (nth i dwm-workspaces--monitor-list) display-name)
-	      (setq dwm-workspaces--current-monitor i)))
-	  (number-sequence 0 (- (safe-length dwm-workspaces--monitor-list) 1)))))
+  (let ((index exwm-workspace-current-index)
+	(idx 0))
+    (mapc (lambda (list)
+	    (when (-contains-p list index)
+	      (setq dwm-workspaces--current-monitor idx))
+	    (setq idx (+ 1 idx)))
+	  dwm-workspaces--workspaces-real))
+  ;; (let ((display-name (alist-get 'name (frame-monitor-attributes))))
+  ;;   (mapc (lambda (i)
+  ;; 	    (when (string= (nth i dwm-workspaces--monitor-list) display-name)
+  ;; 	      (setq dwm-workspaces--current-monitor i)))
+  ;; 	  (number-sequence 0 (- (safe-length dwm-workspaces--monitor-list) 1))))
+  )
 
 (defun dwm-workspaces--get-current-real-workspace-by-monitor-index (monitor-index)
   "Return the stored real EXWM workspace number for the monitor MONITOR-INDEX."
