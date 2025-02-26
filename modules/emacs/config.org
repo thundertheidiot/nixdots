@@ -151,10 +151,6 @@ Using the default system fonts (for now).
 
 System to allow saving and loading arbitrary arrangements of buffers easily.
 
-#+begin_src emacs-lisp
-(defvar saved-window-configurations '())
-#+end_src
-
 This may or may not be necessary somewhere, i don't remember.
 
 #+begin_src emacs-lisp
@@ -162,6 +158,8 @@ This may or may not be necessary somewhere, i don't remember.
 #+end_src
 
 #+begin_src emacs-lisp
+(defvar saved-window-configurations '())
+
 (defun wcs--format-window-list ()
   (let ((window-list-string-formatted) (value))
     (dolist (window (window-list) value)
@@ -170,11 +168,9 @@ This may or may not be necessary somewhere, i don't remember.
 					  (format "%s, " (buffer-name (window-buffer window))))))
     (setq window-list-string-formatted (string-remove-suffix ", " window-list-string-formatted))
     window-list-string-formatted))
-#+end_src
 
-#+begin_src emacs-lisp
-(defun save-current-window-configuration (&optional name)
-  "Add `current-window-configuration` to saved window configurations, if NAME is provided, give it a name."
+(defun save-window-configuration (&optional name)
+  "Add the current window configuration to saved window configurations, if NAME is provided, give it a name."
   (interactive)
   (add-to-list 'saved-window-configurations `(,(or name
 						   (if (string= (projectile-project-name) "-")
@@ -185,33 +181,27 @@ This may or may not be necessary somewhere, i don't remember.
 							     (projectile-project-name)
 							     (shell-command-to-string "date \"+%a %R\"")
 							     (wcs--format-window-list))))
-					      . ,(current-window-configuration))))
-#+end_src
+					      . ,(window-state-get (frame-root-window) t))))
 
-#+begin_src emacs-lisp
 (defun new-window-configuration ()
-  "Save the current window configuration, create a new window and close every other window."
+  "Save the current window configuration close other buffers."
   (interactive)
   (save-current-window-configuration)
   (select-window (split-window))
   (delete-other-windows))
-#+end_src
 
-#+begin_src emacs-lisp
-(defun load-a-saved-window-configuration ()
-  "Select a window configuration from the list."
+(defun load-window-configuration ()
+  "Select a window configuration from the list and load it."
   (interactive)
   (let ((config (cdr
 		 (assoc
-		  (completing-read "Select a window configuration: " saved-window-configurations)
+		  (completing-read "Select window config: " saved-window-configurations)
 		  saved-window-configurations))))
     (if config
-	(set-window-configuration config)
+	(window-state-put config (frame-root-window) t)
       (message "Selected item is invalid, something has gone wrong."))))
-#+end_src
 
-#+begin_src emacs-lisp
-(defun delete-from-saved-window-configurations ()
+(defun delete-window-configuration ()
   "Select a window configuration to delete."
   (interactive)
   (setq saved-window-configurations
@@ -420,8 +410,8 @@ Which key
   "ws" '("horizontal split" . (lambda () (interactive) (th/intelligent-split t)))
 
   "wc" '(:ignore t :wk "window configurations")
-  "wcl" '("load" . load-a-saved-window-configuration)
-  "wcs" '("save" . save-current-window-configuration)
+  "wcl" '("load" . load-window-configuration)
+  "wcs" '("save" . save-window-configuration)
   "wcn" '("new" . new-window-configuration)
   
   "H" '("increase window width" . (lambda () (interactive) (evil-window-increase-width 2)))
@@ -434,6 +424,10 @@ Which key
                     (when default-directory
                       (select-window (th/intelligent-split t))
                       (dired default-directory))))
+
+  "D" '("dired in current window" . (lambda () (interactive)
+				      (when default-directory
+					(dired default-directory))))
 
   "o" '(:ignore t :wk "open")
 
@@ -558,11 +552,11 @@ WIP window navigation mode
   (:keymaps 'org-mode-map
 	    "C-j" nil)
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
-    "l" '(:ignore t :wk "org link")
-    "li" '("insert org link" . org-insert-link)
-    "lo" '("open org link" . org-open-at-point)
-    "le" '("open org link" . org-edit-special)
-    "lt" '("toggle link display" . org-toggle-link-display))
+	   "l" '(:ignore t :wk "org link")
+	   "li" '("insert org link" . org-insert-link)
+	   "lo" '("open org link" . org-open-at-point)
+	   "le" '("open org link" . org-edit-special)
+	   "lt" '("toggle link display" . org-toggle-link-display))
   (:keymaps 'org-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (org-open-at-point))
@@ -585,11 +579,11 @@ Note taking
   (org-roam-setup)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "r" '(:ignore t :wk "roam")
-    "rb" '("buffer" . org-roam-buffer-toggle)
-    "rf" '("find node" . org-roam-node-find)
-    "rI" '("create id" . org-id-get-create)
-    "ri" '("insert node" . org-roam-node-insert)))
+	   "r" '(:ignore t :wk "roam")
+	   "rb" '("buffer" . org-roam-buffer-toggle)
+	   "rf" '("find node" . org-roam-node-find)
+	   "rI" '("create id" . org-id-get-create)
+	   "ri" '("insert node" . org-roam-node-insert)))
 #+end_src
 
 ** Org download
@@ -602,8 +596,8 @@ Allow easily inserting images
   :custom (org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s")
   :general
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
-    "s" '("screenshot" . org-download-screenshot)
-    "c" '("image from clipboard" . org-download-clipboard)))
+	   "s" '("screenshot" . org-download-screenshot)
+	   "c" '("image from clipboard" . org-download-clipboard)))
 #+end_src
 
 ** Org tempo
@@ -665,14 +659,14 @@ Faster inserting of templates like the source code blocks here.
   (magit-auto-revert-mode nil)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "g" '(:ignore t :wk "git")
-    "gg" '("open magit" . magit-status)
-    "gd" '(:ignore t :wk "diff")
-    "gdu" '("diff unstaged" . magit-diff-unstaged)
-    "gds" '("diff staged" . magit-diff-staged)
-    "gc" '("commit" . magit-commit)
-    "gp" '("push" . magit-push)
-    "gF" '("push" . magit-pull)))
+	   "g" '(:ignore t :wk "git")
+	   "gg" '("open magit" . magit-status)
+	   "gd" '(:ignore t :wk "diff")
+	   "gdu" '("diff unstaged" . magit-diff-unstaged)
+	   "gds" '("diff staged" . magit-diff-staged)
+	   "gc" '("commit" . magit-commit)
+	   "gp" '("push" . magit-push)
+	   "gF" '("push" . magit-pull)))
 #+end_src
 
 Show added/deleted/edited parts in the fringe
@@ -720,10 +714,10 @@ Show added/deleted/edited parts in the fringe
   (diff-hl-mode . diff-hl-flydiff-mode)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "ga" '("stage hunk" . diff-hl-stage-current-hunk)
-    "gr" '("revert hunk" . diff-hl-revert-hunk)
-    "gn" '("next hunk" . diff-hl-next-hunk)
-    "gN" '("previous hunk" . diff-hl-previous-hunk)))
+	   "ga" '("stage hunk" . diff-hl-stage-current-hunk)
+	   "gr" '("revert hunk" . diff-hl-revert-hunk)
+	   "gn" '("next hunk" . diff-hl-next-hunk)
+	   "gN" '("previous hunk" . diff-hl-previous-hunk)))
 #+end_src
 
 Git timemachine lets you browse through the history of a file tracked by git
@@ -732,17 +726,17 @@ Git timemachine lets you browse through the history of a file tracked by git
 (use-package git-timemachine
   :general-config
   (:states 'normal :keymaps 'git-timemachine-mode-map
-   "<" 'git-timemachine-show-previous-revision
-   "J" 'git-timemachine-show-previous-revision
-   ">" 'git-timemachine-show-next-revision
-   "K" 'git-timemachine-show-next-revision
-   "i" nil ;; no point in going to insert mode, the buffer is read only
-   "C-f" (lambda () (git-timemachine-show-nth-revision 1))
-   "C-g" 'git-timemachine-show-nth-revision
-   "C-c" 'git-timemachine-show-current-revision)
+	   "<" 'git-timemachine-show-previous-revision
+	   "J" 'git-timemachine-show-previous-revision
+	   ">" 'git-timemachine-show-next-revision
+	   "K" 'git-timemachine-show-next-revision
+	   "i" nil ;; no point in going to insert mode, the buffer is read only
+	   "C-f" (lambda () (git-timemachine-show-nth-revision 1))
+	   "C-g" 'git-timemachine-show-nth-revision
+	   "C-c" 'git-timemachine-show-current-revision)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "gt" '("timemachine" . git-timemachine-toggle)))
+	   "gt" '("timemachine" . git-timemachine-toggle)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -766,14 +760,14 @@ Projectile is a project management tool for emacs
   (projectile-mode)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "P" '(:keymap projectile-command-map :package projectile)
-    "p" '(:ignore t :package projectile :wk "project")
-    "pp" '("switch project" . projectile-switch-project)
-    "ps" '("search project" . (lambda () (interactive) (consult-ripgrep (projectile-project-root))))
-    "p." '("find project file" . projectile-find-file)
-    "po" '(:ignore t :wk "open")
-    "pog" '("project version control (git)" . projectile-vc)
-    "pb" '("switch buffer in project" . projectile-switch-to-buffer)))
+	   "P" '(:keymap projectile-command-map :package projectile)
+	   "p" '(:ignore t :package projectile :wk "project")
+	   "pp" '("switch project" . projectile-switch-project)
+	   "ps" '("search project" . (lambda () (interactive) (consult-ripgrep (projectile-project-root))))
+	   "p." '("find project file" . projectile-find-file)
+	   "po" '(:ignore t :wk "open")
+	   "pog" '("project version control (git)" . projectile-vc)
+	   "pb" '("switch buffer in project" . projectile-switch-to-buffer)))
 #+end_src
 
 Sort ibuffer by project
@@ -831,9 +825,9 @@ Index those keywords inside magit.
   (fset #'jsonrpc--log-event #'ignore)
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "c" '(:ignore t :wk "code")
-    "ca" '("code actions" . (lambda () (interactive)
-			     (eglot-code-actions 1 (point-max) nil t)))))
+	   "c" '(:ignore t :wk "code")
+	   "ca" '("code actions" . (lambda () (interactive)
+				     (eglot-code-actions 1 (point-max) nil t)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -870,8 +864,8 @@ Index those keywords inside magit.
   ;; (global-flycheck-mode)
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "cn" '("next error" . flycheck-next-error)
-    "cN" '("previous error" . flycheck-previous-error)))
+	   "cn" '("next error" . flycheck-next-error)
+	   "cN" '("previous error" . flycheck-previous-error)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -916,16 +910,16 @@ Index those keywords inside magit.
 	   "C-k" nil
 	   "C-i" nil)
   (:keymaps 'corfu-map
-	   "RET" nil
-	   "<up>" nil
-	   "<down>" nil
-	   "M-i" (lambda () (interactive) 
-		   (let ((current-prefix-arg t))
-		     (call-interactively #'corfu-info-documentation)))
-	   "C-j" #'corfu-next
-	   "C-k" #'corfu-previous
-	   "S-RET" #'corfu-complete
-	   "S-<return>" #'corfu-complete))
+	    "RET" nil
+	    "<up>" nil
+	    "<down>" nil
+	    "M-i" (lambda () (interactive) 
+		    (let ((current-prefix-arg t))
+		      (call-interactively #'corfu-info-documentation)))
+	    "C-j" #'corfu-next
+	    "C-k" #'corfu-previous
+	    "S-RET" #'corfu-complete
+	    "S-<return>" #'corfu-complete))
 #+end_src
 
 ** Languages
@@ -1145,16 +1139,16 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
   :commands (vterm)
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "ov" '((lambda () (interactive)
-	     (select-window (th/intelligent-split t))
-	     (th/vterm)) :wk "vterm")
-    "oV" '((lambda () (interactive)
-	     (th/vterm)) :wk "vterm in this window")
-    "pov" '((lambda () (interactive)
-	     (select-window (th/intelligent-split t))
-	     (th/vterm t)) :wk "vterm")
-    "poV" '((lambda () (interactive)
-	     (th/vterm t)) :wk "vterm in this window")))
+	   "ov" '((lambda () (interactive)
+		    (select-window (th/intelligent-split t))
+		    (th/vterm)) :wk "vterm")
+	   "oV" '((lambda () (interactive)
+		    (th/vterm)) :wk "vterm in this window")
+	   "pov" '((lambda () (interactive)
+		     (select-window (th/intelligent-split t))
+		     (th/vterm t)) :wk "vterm")
+	   "poV" '((lambda () (interactive)
+		     (th/vterm t)) :wk "vterm in this window")))
 #+end_src
 
 A fun hack to fix vterm evil-mode interactions from [[https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-738842507][this issue comment]].
@@ -1244,24 +1238,24 @@ Eshell itself
   (:states '(normal visual) :keymaps 'eshell-mode-map
 	   "A" (lambda () (interactive) (end-of-buffer) (evil-append-line 1)))
   (:states '(normal visual insert) :keymaps 'eshell-mode-map
-    "C->" (lambda () (interactive) 
-	    (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")))
-    "C-p" (lambda () (interactive)
-	    (insert (read-file-name "Insert path: "))))
+	   "C->" (lambda () (interactive) 
+		   (insert (concat "> #<buffer " (read-buffer "Send to: ") ">")))
+	   "C-p" (lambda () (interactive)
+		   (insert (read-file-name "Insert path: "))))
   (:keymaps 'eshell-mode-map :states '(normal visual motion)
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (browse-url))
 		      (evil-ret))))
   :general
   (:states '(normal visual insert emacs motion) :prefix "SPC" :keymaps 'override :global-prefix "C-SPC"
-    "oe" '("eshell" . (lambda () (interactive) 
-	     (select-window (th/intelligent-split t)) 
-	     (th/eshell)))
-    "oE" '("eshell in this window" . (lambda () (interactive) (th/eshell)))
-    "poe" '("eshell" . (lambda () (interactive) 
-	      (select-window (th/intelligent-split t))
-	      (th/eshell t)))
-    "poE" '("eshell in new window" . (lambda () (interactive) (th/eshell t)))))
+	   "oe" '("eshell" . (lambda () (interactive) 
+			       (select-window (th/intelligent-split t)) 
+			       (th/eshell)))
+	   "oE" '("eshell in this window" . (lambda () (interactive) (th/eshell)))
+	   "poe" '("eshell" . (lambda () (interactive) 
+				(select-window (th/intelligent-split t))
+				(th/eshell t)))
+	   "poE" '("eshell in new window" . (lambda () (interactive) (th/eshell t)))))
 #+end_src
 
 #+RESULTS:
@@ -1288,7 +1282,7 @@ Aliases and functions
        (propertize "<nix-shell> " 'face '(:foreground "green"))
      "")
    (abbreviate-file-name (eshell/pwd))
-  
+   
    (if (magit-toplevel)
        (propertize (format "  %s" (magit-get-current-branch)) 'face '(:foreground "#cba6f7"))
      "")
@@ -1349,10 +1343,30 @@ For some reason advice-add didn't seem to function, so this just manually replic
 * Polymode
 
 #+begin_src emacs-lisp
-;; (use-package polymode)
-;; (use-package poly-org
-;;   :hook (org-mode . poly-org-mode))
+(use-package polymode
+  :config
+  (define-hostmode poly-rustic-hostmode :mode 'rustic-mode)
+  
+  (define-innermode poly-sql-rustic-innermode
+    :mode 'sql-mode
+    :head-matcher (rx 
+		   "sqlx::query"
+		   (opt "_as")
+		   "!("
+		   (* anything)
+		   "\"")
+    :tail-matcher (rx "\"")
+    :head-mode 'host
+    :tail-mode 'host)
 
+  (add-to-list 'polymode-move-these-minor-modes-from-old-buffer 'olivetti-mode)
+  (add-to-list 'polymode-move-these-vars-from-old-buffer 'olivetti-body-width)
+
+  (define-polymode poly-sql-rustic-mode
+    :hostmode 'poly-rustic-hostmode
+    :innermodes '(poly-sql-rustic-innermode)))
+
+(use-package poly-org)
 #+end_src
 
 * Misc stuff
@@ -1397,20 +1411,20 @@ For some reason advice-add didn't seem to function, so this just manually replic
   ;; (:states '(normal visual)
   ;; 	   "/" #'evil-search-forward
   ;; 	   "?" #'evil-search-backward
-	   ;; "C-/" #'evil-search-forward
-	   ;; "C-?" #'evil-search-backward
-	   ;; )
+  ;; "C-/" #'evil-search-forward
+  ;; "C-?" #'evil-search-backward
+  ;; )
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
-    "sg" '("grep" . (lambda () (interactive)
-	     (consult-ripgrep (expand-file-name ""))))
-    "f" '("recent file" . consult-recent-file)
-    "sf" '("find" . consult-fd)
-    "si" '("imenu" . consult-imenu)
-    "bs" '("switch" . consult-buffer)
-    "bo" '("open buffer in new window" (lambda () (interactive)
-	     (select-window (th/intelligent-split t))
-	     (consult-buffer)))
-    ))
+	   "sg" '("grep" . (lambda () (interactive)
+			     (consult-ripgrep (expand-file-name ""))))
+	   "f" '("recent file" . consult-recent-file)
+	   "sf" '("find" . consult-fd)
+	   "si" '("imenu" . consult-imenu)
+	   "bs" '("switch" . consult-buffer)
+	   "bo" '("open buffer in new window" (lambda () (interactive)
+						(select-window (th/intelligent-split t))
+						(consult-buffer)))
+	   ))
 
 (defun advice!-consult-exwm-preview-fix (&rest _args)
   "Kludge to stop EXWM buffers from stealing focus during Consult previews."
@@ -1419,7 +1433,7 @@ For some reason advice-add didn't seem to function, so this just manually replic
       (select-window (active-minibuffer-window)))))
 
 (advice-add
-    #'consult--buffer-preview :after #'advice!-consult-exwm-preview-fix)
+ #'consult--buffer-preview :after #'advice!-consult-exwm-preview-fix)
 #+end_src
 
 Save grep search into evil search history.
@@ -1475,8 +1489,8 @@ Save grep search into evil search history.
   :after (vertico consult)
   :custom
   (completion-styles '(orderless basic))
-	(completion-category-defaults nil)
-	(completion-category-overrides '((file (styles partial-completion)))))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1517,26 +1531,26 @@ Large language models inside emacs, powered by ollama.
 
   (setopt ellama-providers '(
 			     ("llama3.2" . (make-llm-ollama
-					  :chat-model "llama3.2:3b"
-					  :embedding-model "nomic-embed-text"))
+					    :chat-model "llama3.2:3b"
+					    :embedding-model "nomic-embed-text"))
 			     ("qwen2.5-coder:14b" . (make-llm-ollama
-					  :chat-model "qwen2.5-coder:14b"
-					  :embedding-model "nomic-embed-text"))
+						     :chat-model "qwen2.5-coder:14b"
+						     :embedding-model "nomic-embed-text"))
 			     ("qwen2.5-coder:7b" . (make-llm-ollama
-					  :chat-model "qwen2.5-coder:7b"
-					  :embedding-model "nomic-embed-text"))
+						    :chat-model "qwen2.5-coder:7b"
+						    :embedding-model "nomic-embed-text"))
 			     ("qwen2.5-coder:3b" . (make-llm-ollama
-					  :chat-model "qwen2.5-coder:3b"
-					  :embedding-model "nomic-embed-text"))
+						    :chat-model "qwen2.5-coder:3b"
+						    :embedding-model "nomic-embed-text"))
 			     ("exaone3.5:2.4b" . (make-llm-ollama
-					    :chat-model "exaone3.5:2.4b"
-					    :embedding-model "nomic-embed-text"))
+						  :chat-model "exaone3.5:2.4b"
+						  :embedding-model "nomic-embed-text"))
 			     ("exaone3.5:7.8b" . (make-llm-ollama
-					    :chat-model "exaone3.5:7.8b"
-					    :embedding-model "nomic-embed-text"))
+						  :chat-model "exaone3.5:7.8b"
+						  :embedding-model "nomic-embed-text"))
 			     ("exaone3.5:32b" . (make-llm-ollama
-					    :chat-model "exaone3.5:32b"
-					    :embedding-model "nomic-embed-text")))))
+						 :chat-model "exaone3.5:32b"
+						 :embedding-model "nomic-embed-text")))))
 
 (defun eshell/ollama-unload (model)
   (call-process-shell-command 
@@ -1552,8 +1566,8 @@ Large language models inside emacs, powered by ollama.
   (elisa-chat-provider 
    (make-llm-ollama
     :chat-model "qwen2.5:7b"
-   :embedding-model "chatfire/bge-m3:q8_0"
-   :default-chat-non-standard-params '(("num_ctx" . 8192))))
+    :embedding-model "chatfire/bge-m3:q8_0"
+    :default-chat-non-standard-params '(("num_ctx" . 8192))))
   (elisa-sqlite-vss-path "@sqlite_vss@")
   :init
   (require 'llm-ollama))
@@ -1727,11 +1741,11 @@ Custom menus with transient
   "If the mpv playlist is not empty, call MPV, else call MPD.
 MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
   `(empv--send-command
-   '("get_property_string" "playlist")
-   (lambda (result)
-     (if (> (length (json-parse-string result)) 0)
-	 (apply ,mpv ,mpv-args)
-       (apply ,mpd ,mpd-args)))))
+    '("get_property_string" "playlist")
+    (lambda (result)
+      (if (> (length (json-parse-string result)) 0)
+	  (apply ,mpv ,mpv-args)
+	(apply ,mpd ,mpd-args)))))
 
 (defun media-menu--toggle ()
   (interactive)
@@ -1803,17 +1817,19 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
 (use-package dired
   :ensure nil
   :demand t
-  :init (setq dired-listing-switches "-alh")
   :hook (dired-mode . hl-line-mode)
+  :hook (dired-mode . auto-revert-mode)
   :general-config
   (:keymaps 'dired-mode-map :states '(normal insert visual motion)
-    "SPC" nil
-    "q" 'evil-quit
-    "<backspace>" 'dired-up-directory
-    "C-<return>" (lambda () (interactive) (empv-play (dired-get-filename))))
+	    "SPC" nil
+	    "q" 'evil-quit
+	    "<backspace>" 'dired-up-directory
+	    "C-<return>" (lambda () (interactive) (empv-play (dired-get-filename))))
   (:keymaps 'dired-mode-map :states '(normal visual motion) :prefix "SPC"
-    "oe" '("eshell in this window" . (lambda () (interactive) (th/eshell))))
+	    "oe" '("eshell in this window" . (lambda () (interactive) (th/eshell))))
   :config
+  (setq dired-listing-switches "-alh")
+  (setq dired-mouse-drag t)
   (unless (display-graphic-p)
     (general-def dired-mode-map "DEL" 'dired-up-directory)))
 #+end_src
@@ -1933,8 +1949,8 @@ https://github.com/jdtsmith/kind-icon
   :after all-the-icons
   :diminish all-the-icons-ibuffer-mode
   :hook (ibuffer-mode . (lambda ()
-			(when (display-graphic-p)
-			  (all-the-icons-ibuffer-mode)))))
+			  (when (display-graphic-p)
+			    (all-the-icons-ibuffer-mode)))))
 #+end_src
 
 * EXWM
@@ -1976,7 +1992,8 @@ https://github.com/jdtsmith/kind-icon
 
       (mapc 'th/exwm-shell-cmd
 	    '("xset r rate 300 50"
-	      "dbus-update-activation-environment --verbose --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY &"))
+	      "dbus-update-activation-environment --verbose --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY &"
+	      "gnome-keyring-daemon"))
 
       (when (file-directory-p "/sys/class/power_supply/BAT0/")
 	(display-battery-mode))
@@ -2073,18 +2090,14 @@ button event."
       ;; https://github.com/minad/corfu/discussions/408
       (defun advice!corfu-make-frame-with-monitor-awareness (func frame x y width height)
 	"Advice `corfu--make-frame` to be monitor-aware, adjusting X and Y according to the focused monitor."
-	(let* ((monitor-attrs (frame-monitor-attributes))
-	       (geometry (cdr (assoc 'workarea monitor-attrs)))
-	       (mon-x (nth 0 geometry))
-	       (mon-y (nth 1 geometry)))
+	(let* ((workarea (nth exwm-workspace-current-index exwm-workspace--workareas))
+	       (mon-x (oref workarea x))
+	       (mon-y (oref workarea y)))
 	  (funcall func frame (+ mon-x x) (+ mon-y y) width height)))
 
       (advice-add 'corfu--make-frame :around #'advice!corfu-make-frame-with-monitor-awareness)
 
-
       (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
-	;; remap SPC bs to the exwm switch buffer function
-	;; "bs" '(exwm-workspace-switch-to-buffer :wk "switch buffer")
 	"y" '(:ignore t :wk "exwm")
 	"yd" '("dmenu" . dmenu)
 	"yf" '("toggle floating" . exwm-floating-toggle-floating))
