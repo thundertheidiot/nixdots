@@ -171,7 +171,9 @@ This may or may not be necessary somewhere, i don't remember.
 
 (defun save-window-configuration (&optional name)
   "Add the current window configuration to saved window configurations, if NAME is provided, give it a name."
-  (interactive)
+  (interactive "P")
+  (when (and name (not (stringp name)))
+    (setq name (completing-read "Name wcfg: " '())))
   (add-to-list 'saved-window-configurations `(,(or name
 						   (if (string= (projectile-project-name) "-")
 						       (format "%s (%s)"
@@ -197,9 +199,8 @@ This may or may not be necessary somewhere, i don't remember.
 		 (assoc
 		  (completing-read "Select window config: " saved-window-configurations)
 		  saved-window-configurations))))
-    (if config
-	(window-state-put config (frame-root-window) t)
-      (message "Selected item is invalid, something has gone wrong."))))
+    (when config
+	(window-state-put config (frame-root-window) t))))
 
 (defun delete-window-configuration ()
   "Select a window configuration to delete."
@@ -2039,6 +2040,8 @@ button event."
       
       (setq exwm-input-global-keys
 	    `((,(kbd "s-i") . exwm-input-toggle-keyboard)
+	      (,(kbd "s-f") . exwm-layout-toggle-fullscreen)
+	      (,(kbd "s-S-F") . exwm-floating-toggle-floating)
 	      (,(kbd "s-d") . dmenu)
 	      (,(kbd "s-SPC") . th/keyboard-layout)
 	      (,(kbd "<XF86AudioPlay>") . simple-mpc-toggle)
@@ -2047,8 +2050,8 @@ button event."
 	      
 	      ;; (,(kbd "M-x") . execute-extended-command)
 
-	      (,(kbd "s-,") . dwm-workspaces--select-previous-monitor)
-	      (,(kbd "s-.") . dwm-workspaces--select-next-monitor)
+	      (,(kbd "s-.") . dwm-workspaces--select-previous-monitor)
+	      (,(kbd "s-,") . dwm-workspaces--select-next-monitor)
 
 	      (,(kbd "s-1") . (lambda () (interactive) (dwm-workspaces--switch-by-index 1)))
 	      (,(kbd "s-2") . (lambda () (interactive) (dwm-workspaces--switch-by-index 2)))
@@ -2071,16 +2074,17 @@ button event."
 	      ;; (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
 
               ;; ,@(mapc (lambda (i)
-              ;;           `(,(kbd (format "s-%d" i)) .
-              ;;             (lambda () (interactive)
-              ;;               (dwm-workspaces--switch-by-index ,i))))
+              ;;           (,(kbd (format "s-%d" i)) .
+              ;;            (lambda () (interactive)
+              ;;              (dwm-workspaces--switch-by-index ,i))))
               ;;         (number-sequence 1 9))
-              ;; ,@(cl-mapcar (lambda (c n)
-              ;;                `(,(kbd (format "s-%c" c)) .
-              ;;                  (lambda () (interactive)
-              ;;                    (dwm-workspaces--move-window-by-index ,n))))
-              ;;              '(?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
-              ;;              (number-sequence 1 9))
+
+              ,@(cl-mapcar (lambda (c n)
+                             (,(kbd (format "s-%c" c)) .
+                              (lambda () (interactive)
+                                (dwm-workspaces--move-window-by-index ,n))))
+                           '(?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
+                           (number-sequence 1 9))
 	      ))
       
       (mapc (lambda (keybind)

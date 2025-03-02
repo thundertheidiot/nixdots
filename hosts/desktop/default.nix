@@ -8,6 +8,7 @@
   imports = [
     ./vr.nix
     ./rathole.nix
+    ./firedragon.nix
   ];
 
   system.stateVersion = "24.05";
