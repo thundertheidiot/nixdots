@@ -158,7 +158,7 @@ in {
 
               settings = {
                 plugin.split-monitor-workspaces = {
-                  count = 10;
+                  count = 9;
                   keep_focused = 1;
                 };
 
@@ -191,7 +191,6 @@ in {
                   "$mod, 7, ${hyprWorkspace}, 7"
                   "$mod, 8, ${hyprWorkspace}, 8"
                   "$mod, 9, ${hyprWorkspace}, 9"
-                  "$mod, 0, ${hyprWorkspace}, 0"
 
                   "$shiftmod, 1, ${hyprMoveToWorkspaceSilent}, 1"
                   "$shiftmod, 2, ${hyprMoveToWorkspaceSilent}, 2"
@@ -202,7 +201,6 @@ in {
                   "$shiftmod, 7, ${hyprMoveToWorkspaceSilent}, 7"
                   "$shiftmod, 8, ${hyprMoveToWorkspaceSilent}, 8"
                   "$shiftmod, 9, ${hyprMoveToWorkspaceSilent}, 9"
-                  "$shiftmod, 0, ${hyprMoveToWorkspaceSilent}, 0"
                 ];
               };
             };

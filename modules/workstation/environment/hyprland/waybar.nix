@@ -62,6 +62,10 @@ in {
             format = "{name}";
             disable-scroll = true;
             active-only = false;
+            all-outputs = false;
+            persistent-workspaces = {
+              "*" = 9;
+            };
           };
 
           "hyprland/window" = {
@@ -124,21 +128,60 @@ in {
         // disks)
     ];
 
-    # programs.waybar.style = let
-    #   colors = config.lib.stylix.colors.withHashtag;
-    # in ''
-    #   * {
-    #     border: none;
-    #     font-family: sans;
-    #     font-size: 12px;
+    programs.waybar.style = let
+      colors = config.lib.stylix.colors.withHashtag;
+    in ''
+      * {
+      	border: none;
+      	font-family: monospace;
+      	font-size: 12px;
+      	border-radius: 0px;
+      }
 
-    #     border-radius: 0px;
-    #   }
+      #workspaces button:hover {
+      	background-color: ${colors.base05};
+      	color: ${colors.base00};
+      }
 
-    #   #workspaces button:hover {
-    #     background-color: ${colors.base05};
-    #     color: ${colors.base00};
-    #   }
-    # '';
+      #workspaces button {
+        border-bottom: 2px solid ${colors.base08};
+      }
+
+      #workspaces button.empty {
+        border-bottom: 0px solid ${colors.base08};
+      }
+
+      #idle_inhibitor,
+      #clock,
+      #battery,
+      #cpu,
+      #memory,
+      #disk,
+      #temperature,
+      #backlight,
+      #network,
+      #pulseaudio,
+      #custom-weather,
+      #tray,
+      #mode,
+      #custom-notification,
+      #sway-scratchpad,
+      #mpd {
+      	padding: 0 10px;
+      	margin: 6px 3px;
+      	background-color: ${colors.base05};
+      	color: ${colors.base00};
+      	border: 2px solid ${colors.base08};
+      }
+
+      #keyboard-state {
+      	background-color: ${colors.base00};
+      	color: ${colors.base00};
+      	padding: 0 0px;
+      	margin: 0 5px;
+      	min-width: 16px;
+      	border: 2px solid ${colors.base08};
+      }
+    '';
   };
 }
