@@ -13,6 +13,10 @@
 
   virtualisation.docker.enable = true;
 
+  imports = [
+    ./desktop/firedragon.nix
+  ];
+
   meow = {
     fullSetup = true;
     workstation.enable = true;
@@ -23,19 +27,19 @@
     gaming.emulation = true;
     gaming.games = ["duckgame"];
 
-    browser.firefoxConfig = {
-      testfox = {
-        configPath = "browsertest";
-        profiles = {
-          "nix-managed" = {
-            id = 0;
-            default = true;
-          };
-        };
-      };
-    };
+    # browser.firefoxConfig = {
+    #   testfox = {
+    #     configPath = "browsertest";
+    #     profiles = {
+    #       "nix-managed" = {
+    #         id = 0;
+    #         default = true;
+    #       };
+    #     };
+    #   };
+    # };
 
-    firefox.enable = true;
+    # firefox.enable = true;
     emacs.enable = true;
     emacs.exwm = true;
     shell.enable = true;

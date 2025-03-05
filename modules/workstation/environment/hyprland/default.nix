@@ -237,7 +237,7 @@ in {
 
               bind = [
                 "$mod, return, exec, ${terminal}"
-                "$mod, W, exec, firefox"
+                "$mod, W, exec, firedragon"
                 "$mod, D, exec, $(${pkgs.tofi}/bin/tofi-run)"
                 "$mod, E, exec, emacsclient -c -a ''"
                 "$mod, semicolon, exec, emacsclient -c -a '' -e '(th/eshell)'"
