@@ -14,7 +14,7 @@
 in {
   options = {
     meow.browser = {
-      enable = mkOpt (listOf (enum ["firefox" "firedragon"])) [] {
+      enable = mkOpt (listOf (enum ["firefox" "firedragon" "librewolf"])) [] {
         description = "Browsers to install and configure";
       };
     };
@@ -26,17 +26,15 @@ in {
 
   config = mkMerge [
     (mkIf (elem "firefox" cfg.enable) {
-      environment.systemPackages = [pkgs.firefox];
-
       meow.browser.firefoxConfig.firefox = {
         configPath = ".mozilla/firefox";
+        package = pkgs.firefox;
       };
     })
     (mkIf (elem "firedragon" cfg.enable) {
-      environment.systemPackages = [pkgs.firedragon];
-
       meow.browser.firefoxConfig.firedragon = {
         configPath = ".firedragon";
+        package = pkgs.firedragon;
       };
     })
   ];

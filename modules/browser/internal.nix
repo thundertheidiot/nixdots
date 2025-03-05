@@ -11,7 +11,7 @@
   # Easier to deal with than my abstraction for this scale
   inherit (lib.options) mkOption;
 
-  inherit (builtins) concatStringsSep;
+  inherit (builtins) concatStringsSep attrValues;
   inherit (lib.attrsets) mapAttrs' mapAttrsToList;
 
   mkSubMod = module:
@@ -33,7 +33,13 @@ in {
             description = "Path to configuration directory, relative to home directory.";
           };
 
+          package = mkOpt types.package pkgs.firefox {};
+
           profilesPath = mkOpt types.str config.configPath {};
+
+          policies = mkOpt (types.attrsOf (pkgs.formats.json {}).type) {} {
+            description = "[See list of policies](https://mozilla.github.io/policy-templates/)";
+          };
 
           startWithLastProfile = mkOpt types.bool true {};
 
@@ -100,6 +106,11 @@ in {
     ff = cfg.firefoxConfig;
   in
     homeModule ({config, ...}: {
+      home.packages = map (c:
+        c.package.override (old: {
+          extraPolicies = (old.extraPolicies or {}) // c.policies;
+        })) (attrValues ff);
+
       home.file =
         mkMerge
         (mapAttrsToList (

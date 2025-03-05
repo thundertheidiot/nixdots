@@ -53,7 +53,7 @@
     gaming.emulation = true;
     gaming.games = ["duckgame" "minecraft"];
 
-    firefox.enable = true;
+    # firefox.enable = true;
     emacs.enable = true;
     emacs.llm = true;
     emacs.exwm = true;
