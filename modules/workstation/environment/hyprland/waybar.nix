@@ -138,6 +138,10 @@ in {
       	border-radius: 0px;
       }
 
+      #workspaces {
+        margin-right: 5px;
+      }
+
       #workspaces button:hover {
       	background-color: ${colors.base05};
       	color: ${colors.base00};
@@ -149,6 +153,10 @@ in {
 
       #workspaces button.empty {
         border-bottom: 0px solid ${colors.base08};
+      }
+
+      window#waybar.fullscreen {
+      	border-bottom: 2px solid ${colors.base08};
       }
 
       #idle_inhibitor,
