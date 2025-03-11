@@ -59,7 +59,14 @@ in {
             ++ ["network" "pulseaudio" "battery" "tray"];
 
           "hyprland/workspaces" = {
-            format = "{name}";
+            format = "{icon}";
+            format-icons = {
+              urgent = "";
+              active = "";
+              visible = "";
+              default = "";
+              empty = "";
+            };
             disable-scroll = true;
             active-only = false;
             all-outputs = false;

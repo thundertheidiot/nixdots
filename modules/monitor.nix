@@ -157,9 +157,9 @@ in {
               plugins = lib.mkIf splitMonitorWorkspaces [pkgs.hyprsplit];
 
               settings = {
-                plugin.split-monitor-workspaces = {
-                  count = 9;
-                  keep_focused = 1;
+                plugin.hyprsplit = {
+                  num_workspaces = 9;
+                  persistent_workspaces = true;
                 };
 
                 monitor = lib.mkIf (mons != []) (builtins.map (m:

@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   mlib,
@@ -68,6 +69,9 @@ in {
 
       home.enable = false;
     };
+
+    stylix.enable = false;
+    stylix.base16Scheme = "${inputs.tt-schemes}/base16/${config.meow.workstation.theme}.yaml";
 
     boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
     boot.initrd.kernelModules = [];
