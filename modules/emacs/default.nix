@@ -75,7 +75,7 @@ in {
             emacs-lsp-booster
 
             # lsp
-            nixd # nix
+            pkgs."2411".nixd # nix
 
             # formatters
             alejandra
@@ -246,6 +246,44 @@ in {
                 (ultra-scroll :type git :host github :repo "jdtsmith/ultra-mode" :files (:defaults "ultra-scroll.el"))
               '';
             };
+            empv = prev.empv.overrideAttrs {
+              packageRequires = with final; [
+                hydra
+                s
+              ];
+            };
+            rustic = prev.rustic.overrideAttrs {
+              packageRequires = with final; [
+                flycheck
+                dash
+                markdown-mode
+                s
+                xterm-color
+                f
+                rust-mode
+                spinner
+              ];
+            };
+            # "empv" = final.trivialBuild {
+            #   pname = "empv.el";
+            #   version = "1.0.0";
+
+            #   packageRequires = [
+            #     final.s
+            #     final.consult
+            #     final.compat
+            #   ];
+
+            #   src = pkgs.fetchFromGitHub {
+            #     owner = "isamert";
+            #     repo = "empv.el";
+            #     rev = "3673dae751417a66f63a2decc8dfbcbe2712e5fc";
+            #     hash = "sha256-mQMDi4MryowhzTRCWFlynqD5x0DiUWG9ITwrhZtHlVQ=";
+            #   };
+            #   recipe = pkgs.writeText "recipe" ''
+            #     (empv :type git :host github :repo "isamert/empv.el" :files (:defaults "empv.el"))
+            #   '';
+            # };
             eglot-booster = final.trivialBuild {
               pname = "eglot-booster";
               version = "1.0.0";
