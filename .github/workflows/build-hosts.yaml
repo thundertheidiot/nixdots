@@ -4,8 +4,6 @@ concurrency:
   cancel-in-progress: true
 on:
   push:
-    paths-ignore:
-      - ".github/**"
   workflow_dispatch:
 jobs:
   build-desktop:
@@ -13,6 +11,8 @@ jobs:
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
       - uses: actions/checkout@v4
       - name: Lix Installer
         run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
