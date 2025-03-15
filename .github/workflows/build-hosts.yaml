@@ -11,12 +11,11 @@ jobs:
   build-desktop:
     runs-on: ubuntu-latest
     steps:
-      # - name: Free Disk Space (Ubuntu)
-      #   uses: jlumbroso/free-disk-space@main
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
       - uses: actions/checkout@v4
-      # - uses: cachix/install-nix-action@v31
-      - run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
-      - run: cat /etc/nix/nix.conf
+      - name: Lix Installer
+        run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
       - uses: cachix/cachix-action@v16
         with:
           name: meowos
