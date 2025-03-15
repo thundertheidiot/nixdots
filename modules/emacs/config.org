@@ -1820,6 +1820,8 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
   :demand t
   :hook (dired-mode . hl-line-mode)
   :hook (dired-mode . auto-revert-mode)
+  :init
+  (setq dired-mouse-drag t)
   :general-config
   (:keymaps 'dired-mode-map :states '(normal insert visual motion)
 	    "SPC" nil
