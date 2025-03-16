@@ -4,7 +4,7 @@ concurrency:
   cancel-in-progress: true
 on:
   # push:
-  # workflow_dispatch:
+  workflow_dispatch:
 jobs:
   # build-desktop:
   #   runs-on: ubuntu-latest
