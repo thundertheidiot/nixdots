@@ -48,6 +48,10 @@
     doCheck = false;
   });
 
+  lix = prev.lix.overrideAttrs {
+    doCheck = false;
+  };
+
   mumble = prev.mumble.overrideAttrs (old: {
     postFixup =
       builtins.replaceStrings
