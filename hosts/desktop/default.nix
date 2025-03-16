@@ -40,7 +40,7 @@
 
     user = "thunder";
 
-    workstation.environment = ["hyprland" "plasma"];
+    workstation.environment = ["hyprland"];
     workstation.plasma.opinionatedConfig = true;
     # workstation.plasma.tiling = true;
     workstation.hyprland.extraAutostart = [
