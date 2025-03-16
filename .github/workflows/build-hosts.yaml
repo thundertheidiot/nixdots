@@ -54,3 +54,4 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Build server
         run: nix build --accept-flake-config .#nixosConfigurations.server.config.system.build.toplevel
+      - run: nix log /nix/store/csgws5fvib1xc34x1in5fbg4hd31dxzb-lix-2.92.0-pre20250309-0d1f794.drv
