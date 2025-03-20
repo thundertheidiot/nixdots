@@ -113,7 +113,7 @@ in {
 
     programs.bash = {
       interactiveShellInit = ''
-        if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+        if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} && $TERM != "dumb" ]]
         then
           shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
           exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
@@ -130,12 +130,19 @@ in {
         };
       interactiveShellInit =
         ''
+          set fish_greeting
+
           function fish_prompt
             if test -n "$IN_NIX_SHELL"
               echo -n "<nix-shell> "
             end
 
-            ${cfg.prompt}
+            if [ "$TERM" = "dumb" ]
+              echo $USER'@'(uname -n) (pwd) '> '
+            else
+              ${cfg.prompt}
+            end
+
           end
 
           # Keep shell when entering nix-shell or nix run
