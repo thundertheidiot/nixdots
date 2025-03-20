@@ -82,6 +82,11 @@ in {
         format = "dotenv";
       };
 
+      meow.sops.secrets."server_authentik_env" = {
+        sopsFile = ./server/authentik.env;
+        format = "dotenv";
+      };
+
       meow.sops.secrets."desk_rathole" = {
         sopsFile = ./desk/rathole.toml;
         format = "binary";
