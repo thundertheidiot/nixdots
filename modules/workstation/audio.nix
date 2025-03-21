@@ -2,7 +2,6 @@
   config,
   lib,
   mlib,
-  inputs,
   ...
 }: let
   inherit (mlib) mkEnOpt;
@@ -12,10 +11,6 @@ in {
   options = {
     meow.workstation.audio.enable = mkEnOpt "Enable audio configuration.";
   };
-
-  imports = [
-    inputs.nix-gaming.nixosModules.pipewireLowLatency
-  ];
 
   config = mkIf cfg {
     hardware.bluetooth = {
@@ -44,9 +39,8 @@ in {
         };
       };
 
-      lowLatency = {
-        enable = true;
-      };
+      # nix-gaming
+      lowLatency.enable = true;
     };
   };
 }
