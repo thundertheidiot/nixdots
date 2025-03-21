@@ -5,10 +5,14 @@
   ...
 }: let
   inherit (mlib) homeModule mkOpt;
+  inherit (lib) mkIf;
   inherit (lib.types) listOf str;
   inherit (lib.lists) unique elem;
   inherit (lib.attrsets) mapAttrs' mapAttrsToList filterAttrs;
   inherit (builtins) replaceStrings;
+
+  work = config.meow.workstation.enable;
+  env = config.meow.workstation.environment;
 in {
   options = {
     meow.workstation.waybarDiskFilter =
@@ -19,7 +23,7 @@ in {
       };
   };
 
-  config = homeModule {
+  config = mkIf (work && elem "hyprland" env) (homeModule {
     programs.waybar.settings = let
       diskName = name:
         if name == null
@@ -198,5 +202,5 @@ in {
       	border: 2px solid ${colors.base08};
       }
     '';
-  };
+  });
 }
