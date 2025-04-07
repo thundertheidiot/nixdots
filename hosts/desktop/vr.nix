@@ -38,6 +38,10 @@ in {
 
       programs.corectrl.enable = true;
       # programs.corectrl.gpuOverclock.enable = true;
+
+      programs.envision = {
+        enable = true;
+      };
     }
     # funy
     {
@@ -163,7 +167,11 @@ in {
               monado)
                 sudo "${enable_vr_mode}" || true
                 ln -f "$XDG_CONFIG_HOME/openxr/1/monado_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.json"
-                ln -f "$XDG_CONFIG_HOME/openvr/monado_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                if [ -n "$2" ]; then
+                  ln -f "$XDG_CONFIG_HOME/openvr/monado_xrizer_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                else
+                  ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                fi
 
                 { sleep 3; pkexec renice -20 -p $(pgrep monado); } &
 
@@ -208,7 +216,7 @@ in {
         };
       };
 
-      xdg.configFile."openvr/monado_openvrpaths.vrpath".text = builtins.toJSON {
+      xdg.configFile."openvr/monado_opencomposite_openvrpaths.vrpath".text = builtins.toJSON {
         config = [
           "${config.xdg.dataHome}/Steam/config"
         ];
@@ -219,6 +227,21 @@ in {
         ];
         runtime = [
           "${pkgs.opencomposite}/lib/opencomposite"
+        ];
+        version = 1;
+      };
+
+      xdg.configFile."openvr/monado_xrizer_openvrpaths.vrpath".text = builtins.toJSON {
+        config = [
+          "${config.xdg.dataHome}/Steam/config"
+        ];
+        external_drivers = null;
+        jsonid = "vrpathreg";
+        log = [
+          "${config.xdg.dataHome}/Steam/logs"
+        ];
+        runtime = [
+          "${pkgs.xrizer}/lib/xrizer"
         ];
         version = 1;
       };

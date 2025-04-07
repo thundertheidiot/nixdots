@@ -20,8 +20,9 @@
             # privacy
             "network.trr.mode" = 3;
             "network.trr.uri" = "https://dns.quad9.net/dns-query";
-            "privacy.resistFingerprinting" = true;
 
+            # these break websites unfortunately
+            "privacy.resistFingerprinting" = false;
             "webgl.disabled" = false;
 
             # ui

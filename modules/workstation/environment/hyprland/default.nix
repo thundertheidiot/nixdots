@@ -80,6 +80,27 @@ in {
             file-roller
           ];
 
+          programs.hyprlux = {
+            enable = true;
+
+            systemd = {
+              enable = true;
+              target = "hyprland-session.target";
+            };
+
+            night_light = {
+              enabled = false;
+            };
+
+            vibrance_configs = [
+              {
+                window_class = "csgo_linux64";
+                window_title = "";
+                strength = 50;
+              }
+            ];
+          };
+
           programs.waybar.enable = true;
           programs.alacritty.enable = lib.mkDefault true;
           programs.tofi.enable = true;

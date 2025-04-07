@@ -122,6 +122,8 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+    hyprlux.url = "github:amadejkastelic/Hyprlux";
+
     # waybar.url = "github:Alexays/Waybar";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
@@ -129,6 +131,7 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     nur.url = "github:nix-community/NUR";
+    authentik-nix.url = "github:nix-community/authentik-nix";
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
