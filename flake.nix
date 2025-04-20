@@ -76,7 +76,7 @@
     deploy-rs.url = "github:serokell/deploy-rs";
 
     lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0-1.tar.gz";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0-3.tar.gz";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -113,12 +113,13 @@
 
     hyprland = {
       # inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:hyprwm/Hyprland/v0.46.2";
+      # inputs.nixpkgs.follows = "nixpkgs";
+      # url = "github:hyprwm/Hyprland/v0.46.2";
+      url = "github:hyprwm/Hyprland";
     };
 
     hyprsplit = {
-      url = "github:shezdy/hyprsplit/v0.46.2";
+      url = "github:shezdy/hyprsplit/v0.48.1";
       inputs.hyprland.follows = "hyprland";
     };
 
