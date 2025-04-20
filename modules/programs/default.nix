@@ -46,7 +46,7 @@ in {
     environment.systemPackages = with pkgs; let
     in [
       (mkIf cfg.element element-desktop)
-      (mkIf cfg.signal signal-desktop)
+      (mkIf cfg.signal signal-desktop-bin)
       (mkIf cfg.gajim gajim)
       (mkIf cfg.mumble mumble)
       (mkIf cfg.discord vesktop)
