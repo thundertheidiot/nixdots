@@ -988,7 +988,7 @@ Language specific setup
 
 *** Lua
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @lang_ocaml@
 (use-package lua-mode
   :mode "\\.lua\\'"
   :hook (lua-mode . eglot-ensure))

@@ -162,6 +162,8 @@
   environment.systemPackages = with pkgs; [
     pcsx2
 
+    krita
+
     gpu-screen-recorder-gtk
 
     qmk
