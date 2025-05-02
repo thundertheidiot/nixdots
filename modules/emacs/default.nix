@@ -22,6 +22,7 @@ in {
         haskell = mkEnOpt "Haskell";
         rust = mkEnOpt "Rust";
         ocaml = mkEnOpt "Ocaml";
+        lua = mkEnOpt "Lua";
         fennel = mkEnOpt "Fennel";
         janet = mkEnOpt "Janet";
         lisp = mkEnOpt "Lisp";
@@ -101,6 +102,9 @@ in {
             ocamlPackages.ocaml-lsp
             ocamlPackages.ocamlformat
           ])
+          (mkIf cfg.lang.lua [
+            lua-language-server
+          ])
           (mkIf cfg.lang.janet [
             janet
             (jpm.overrideAttrs (prev: {
@@ -167,6 +171,7 @@ in {
             lang_latex = tangle cfg.lang.latex;
             lang_haskell = tangle cfg.lang.haskell;
             lang_ocaml = tangle cfg.lang.ocaml;
+            lang_lua = tangle cfg.lang.lua;
             lang_fennel = tangle cfg.lang.fennel;
             lang_janet = tangle cfg.lang.janet;
             lang_lisp = tangle cfg.lang.lisp;

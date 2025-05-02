@@ -27,6 +27,7 @@ in {
       {
         experimental-features = ["nix-command" "flakes"];
         use-xdg-base-directories = true;
+        allow-import-from-derivation = true;
       }
       # Is this stupid? Yes, unfortunately flakes are stupid too, and the attributes cannot be computed, but i also want a single source of truth for these
       # https://github.com/NixOS/nix/issues/4945

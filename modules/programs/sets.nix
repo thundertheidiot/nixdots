@@ -35,7 +35,7 @@ in {
           "blender"
           "obs"
           "kdenlive"
-          "godot"
+          # "godot"
           "gimp"
 
           # "freetube"
@@ -48,6 +48,7 @@ in {
           "latex"
           "haskell"
           "ocaml"
+          "lua"
           "fennel"
           "janet"
           "lisp"
