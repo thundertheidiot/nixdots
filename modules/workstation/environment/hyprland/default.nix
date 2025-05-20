@@ -125,6 +125,7 @@ in {
               "$shiftmod" = "SUPER_SHIFT";
 
               debug.disable_logs = false;
+              ecosystem.no_update_news = true;
 
               windowrulev2 = [
                 # "workspace 9 silent,class:(steam)"

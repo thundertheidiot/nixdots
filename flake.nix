@@ -76,7 +76,7 @@
     deploy-rs.url = "github:serokell/deploy-rs";
 
     lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0-3.tar.gz";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -97,7 +97,7 @@
     };
 
     stylix.url = "github:danth/stylix";
-    stylix.inputs.home-manager.follows = "home-manager";
+    # stylix.inputs.home-manager.follows = "home-manager";
     tt-schemes = {
       url = "github:tinted-theming/schemes";
       flake = false;
@@ -115,11 +115,11 @@
       # inputs.nixpkgs.follows = "nixpkgs";
       # inputs.nixpkgs.follows = "nixpkgs";
       # url = "github:hyprwm/Hyprland/v0.46.2";
-      url = "github:hyprwm/Hyprland";
+      url = "github:hyprwm/Hyprland/v0.49.0";
     };
 
     hyprsplit = {
-      url = "github:shezdy/hyprsplit/v0.48.1";
+      url = "github:shezdy/hyprsplit/v0.49.0";
       inputs.hyprland.follows = "hyprland";
     };
 

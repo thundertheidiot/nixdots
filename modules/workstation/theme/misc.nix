@@ -16,14 +16,16 @@ in {
     };
 
     services.mako = {
-      margin = "10";
-      padding = "5";
-      borderSize = 2;
-      borderRadius = 6;
-      icons = true;
-      maxIconSize = 32;
-      defaultTimeout = 2000;
-      ignoreTimeout = true;
+      settings = {
+        margin = "10";
+        padding = "5";
+        border-size = 2;
+        border-radius = 6;
+        icons = true;
+        max-icon-size = 32;
+        default-timeout = 2000;
+        ignore-timeout = true;
+      };
     };
 
     # programs.waybar.style = let
