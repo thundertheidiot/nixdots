@@ -162,6 +162,8 @@
   environment.systemPackages = with pkgs; [
     pcsx2
 
+    distrobox
+
     krita
 
     gpu-screen-recorder-gtk
@@ -215,9 +217,12 @@
     memoryPercent = 75;
   };
 
-  networking.firewall.allowedTCPPorts = [3002];
-
   boot.kernel.sysctl."vm.swappiness" = 50;
+
+  networking.firewall.allowedTCPPorts = [
+    3002 # might be orca slicer, i forgot
+    8188 # comfyui
+  ];
 
   disko.devices = {
     nodev."/" = {
