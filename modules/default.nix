@@ -17,13 +17,14 @@
   ./base.nix
   ./shell.nix
   ./ssh.nix
+  ./certs.nix
   ./programs
   ./vm.nix
   ./tv
   ./emacs
   ./xorg.nix
   ./firefox.nix
-  ./browser
+  ./old-browser
   ./workstation
   ./cleanup.nix
   ./keyboard
