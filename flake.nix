@@ -137,5 +137,9 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     sops-nix.url = "github:Mic92/sops-nix";
+
+    # split up server flake, this is incredibly stupid
+    # i thought splitting flakes would make things more simple, but i'm 100% sure this will cause a million headaches down the line, because now they are tangled together
+    servers.url = "github:thundertheidiot/servers";
   };
 }
