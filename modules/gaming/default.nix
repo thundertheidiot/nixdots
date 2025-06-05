@@ -40,6 +40,7 @@ in {
 
       programs.gamemode.enable = true;
       services.joycond.enable = true;
+      programs.joycond-cemuhook.enable = true;
     })
     (lib.mkIf (cfg.enable && cfg.emulation) {
       environment.systemPackages = [

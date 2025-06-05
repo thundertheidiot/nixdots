@@ -53,6 +53,8 @@
     gaming.emulation = true;
     gaming.games = ["duckgame" "minecraft"];
 
+    browser.zen.enable = true;
+
     firefox.enable = true;
     emacs.enable = true;
     emacs.llm = true;
@@ -152,6 +154,10 @@
             explicit_sync = 1;
             explicit_sync_kms = 1;
           };
+
+          services.syncthing = {
+            enable = true;
+          };
         })
       ];
     };
@@ -163,6 +169,11 @@
     pcsx2
 
     distrobox
+
+    easyeffects
+    deepfilternet
+
+    syncthing
 
     krita
 
