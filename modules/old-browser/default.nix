@@ -10,10 +10,10 @@
   inherit (lib.types) listOf enum;
   inherit (builtins) elem;
 
-  cfg = config.meow.browser;
+  cfg = config.meow.old-browser;
 in {
   options = {
-    meow.browser = {
+    meow.old-browser = {
       enable = mkOpt (listOf (enum ["firefox" "firedragon" "librewolf"])) [] {
         description = "Browsers to install and configure";
       };
@@ -26,13 +26,13 @@ in {
 
   config = mkMerge [
     (mkIf (elem "firefox" cfg.enable) {
-      meow.browser.firefoxConfig.firefox = {
+      meow.old-browser.firefoxConfig.firefox = {
         configPath = ".mozilla/firefox";
         package = pkgs.firefox;
       };
     })
     (mkIf (elem "firedragon" cfg.enable) {
-      meow.browser.firefoxConfig.firedragon = {
+      meow.old-browser.firefoxConfig.firedragon = {
         configPath = ".firedragon";
         package = pkgs.firedragon;
       };

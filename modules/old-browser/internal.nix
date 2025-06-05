@@ -23,10 +23,10 @@
     }
     // attrs;
 
-  cfg = config.meow.browser;
+  cfg = config.meow.old-browser;
 in {
   options = {
-    meow.browser.firefoxConfig =
+    meow.old-browser.firefoxConfig =
       subModOpt ({config, ...}: {
         options = {
           configPath = mkOpt types.str ".mozilla/firefox" {
