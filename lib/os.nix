@@ -34,7 +34,6 @@ in {
           inputs.chaotic.nixosModules.default
           inputs.sops-nix.nixosModules.default
           inputs.disko.nixosModules.default
-          inputs.lix-module.nixosModules.default
           inputs.cosmic.nixosModules.default
           inputs.hyprland.nixosModules.default
           inputs.stylix.nixosModules.stylix
