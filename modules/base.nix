@@ -24,7 +24,7 @@ in {
   config = mkIf en {
     nixpkgs.config.allowUnfree = true;
 
-    nix.package = pkgs.lix;
+    nix.package = pkgs.lixPackageSets.latest.lix;
 
     nix.settings =
       {
