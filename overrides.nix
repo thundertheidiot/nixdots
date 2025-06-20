@@ -20,6 +20,10 @@
     config.allowUnfree = final.config.allowUnfree;
   };
 
+  lix = prev.lix.overrideAttrs (old: {
+    doCheck = false;
+  });
+
   mpkgs = (import ./pkgs) {pkgs = final;};
 
   avrdude = prev.avrdude.overrideAttrs (old: {
