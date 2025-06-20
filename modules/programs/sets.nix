@@ -42,20 +42,21 @@ in {
           # "ansel"
         ];
 
-        # meow.emacs.llm = true;
-
-        meow.emacs.lang = enAll [
-          "latex"
-          "haskell"
-          "ocaml"
-          "lua"
-          "fennel"
-          "janet"
-          "lisp"
-          "c_cxx"
-          "bash"
-          "python"
-          "javascript"
+        home-manager.sharedModules = [
+          {
+            # keeping these in sync will prove to be a headache
+            mHome.lang = enAll [
+              "nix"
+              "haskell"
+              "rust"
+              "lua"
+              "c_cxx"
+              "python"
+              "bash"
+              "web"
+              "latex"
+            ];
+          }
         ];
       })
       (mkIf config.meow.baseSetup {
@@ -65,10 +66,14 @@ in {
           "gimp"
         ];
 
-        meow.emacs.lang = enAll [
-          "c_cxx"
-          "bash"
-          "python"
+        home-manager.sharedModules = [
+          {
+            mHome.lang = enAll [
+              "nix"
+              "rust"
+              "bash"
+            ];
+          }
         ];
       })
     ];

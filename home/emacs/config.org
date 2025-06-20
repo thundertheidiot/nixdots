@@ -929,7 +929,7 @@ Language specific setup
 
 *** Rust
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @lang_rust@
 (use-package rustic
   :diminish rustic-mode
   :mode ("\\.rs\\'" . rustic-mode)
@@ -942,7 +942,7 @@ Language specific setup
 
 *** Nix
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle @lang_nix@
 (use-package nix-mode
   :mode "\\.nix\\'"
   :hook (nix-mode . eglot-ensure))
@@ -975,20 +975,9 @@ Language specific setup
 ;;   (json-mode . tsi-json-mode))
 #+end_src
 
-*** Ocaml
-
-#+begin_src emacs-lisp :tangle @lang_ocaml@
-(use-package tuareg
-  :mode "\\.ml\\'"
-  :hook (tuareg-mode . eglot-ensure))
-(use-package merlin
-  :hook (tuareg-mode . merlin-mode))
-(use-package utop)
-#+end_src
-
 *** Lua
 
-#+begin_src emacs-lisp :tangle @lang_ocaml@
+#+begin_src emacs-lisp :tangle @lang_lua@
 (use-package lua-mode
   :mode "\\.lua\\'"
   :hook (lua-mode . eglot-ensure))
@@ -1003,42 +992,6 @@ Language specific setup
 
 (use-package glsl-mode)
 (use-package gdshader-mode)
-#+end_src
-
-*** Fennel
-
-Fennel is a nice lispy language, with lua compatibility
-
-#+begin_src emacs-lisp :tangle @lang_fennel@
-(use-package fennel-mode
-  :mode "\\.fnl\\'"
-  :hook (fennel-mode . eglot-ensure)
-  :config
-  (add-to-list 'eglot-server-programs '(fennel-mode . ("fennel-ls"))))
-#+end_src
-
-Org src blocks in fennel
-
-#+begin_src emacs-lisp :tangle @lang_fennel@
-(use-package ob-fennel
-  :ensure nil
-  :after org)
-#+end_src
-
-*** Janet
-
-#+begin_src emacs-lisp :tangle @lang_janet@
-(use-package janet-mode
-  :mode "\\.janet\\'")
-#+end_src
-
-*** Common lisp
-
-#+begin_src emacs-lisp :tangle @lang_lisp@
-(use-package sly
-  :custom
-  (inferior-lisp-program "sbcl")
-  (sly-symbol-completion-mode nil))
 #+end_src
 
 *** C#
@@ -1515,122 +1468,6 @@ Save grep search into evil search history.
       enable-recursive-minibuffers t)
 
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-#+end_src
-
-** LLM
-
-Large language models inside emacs, powered by ollama.
-
-#+begin_src emacs-lisp :tangle @llm_enable@
-(use-package ellama
-  :init
-  (require 'llm-ollama)
-  (setopt ellama-provider
-          (make-llm-ollama
-           :chat-model "llama3.2:3b"
-           :embedding-model "nomic-embed-text"))
-
-  (setopt ellama-providers '(
-			     ("llama3.2" . (make-llm-ollama
-					    :chat-model "llama3.2:3b"
-					    :embedding-model "nomic-embed-text"))
-			     ("qwen2.5-coder:14b" . (make-llm-ollama
-						     :chat-model "qwen2.5-coder:14b"
-						     :embedding-model "nomic-embed-text"))
-			     ("qwen2.5-coder:7b" . (make-llm-ollama
-						    :chat-model "qwen2.5-coder:7b"
-						    :embedding-model "nomic-embed-text"))
-			     ("qwen2.5-coder:3b" . (make-llm-ollama
-						    :chat-model "qwen2.5-coder:3b"
-						    :embedding-model "nomic-embed-text"))
-			     ("exaone3.5:2.4b" . (make-llm-ollama
-						  :chat-model "exaone3.5:2.4b"
-						  :embedding-model "nomic-embed-text"))
-			     ("exaone3.5:7.8b" . (make-llm-ollama
-						  :chat-model "exaone3.5:7.8b"
-						  :embedding-model "nomic-embed-text"))
-			     ("exaone3.5:32b" . (make-llm-ollama
-						 :chat-model "exaone3.5:32b"
-						 :embedding-model "nomic-embed-text")))))
-
-(defun eshell/ollama-unload (model)
-  (call-process-shell-command 
-   (format 
-    "curl --silent --show-error http://localhost:11434/api/generate -d '{\"model\": \"%s\", \"keep_alive\":0}'" model)))
-#+end_src
-
-#+begin_src emacs-lisp :tangle @llm_enable@
-(use-package elisa
-  :custom
-  (elisa-limit 5)
-  (elisa-prompt-rewriting-enabled nil)
-  (elisa-chat-provider 
-   (make-llm-ollama
-    :chat-model "qwen2.5:7b"
-    :embedding-model "chatfire/bge-m3:q8_0"
-    :default-chat-non-standard-params '(("num_ctx" . 8192))))
-  (elisa-sqlite-vss-path "@sqlite_vss@")
-  :init
-  (require 'llm-ollama))
-#+end_src
-
-** Elfeed
-
-#+begin_src emacs-lisp
-(use-package elfeed 
-  :commands elfeed
-  :custom 
-  (elfeed-db-directory (expand-file-name "elfeed" user-emacs-directory)) (elfeed-enclosure-default-dir user-emacs-directory) 
-  (elfeed-feeds '("https://howardism.org/index.xml"
-		  "https://xenodium.com/rss.xml"
-		  "https://xeiaso.net/blog.rss"
-		  "https://jade.fyi/rss.xml")))
-#+end_src
-
-** Image generation
-
-For whatever reason you can sign up to https://together.xyz with a github account, and they let you generate images with FLUX.1-schnell for free.
-
-#+begin_src emacs-lisp
-(defvar together-prompt-history nil
-  "History list for image prompts.")
-
-(defcustom together-token ""
-  "API Token")
-
-(cl-defun together-image (&optional &key prompt token model steps number height width)
-  "Get an image from together.xyz."
-  (interactive)
-  (let ((prompt (or prompt (completing-read "Prompt: " nil nil nil nil 'together-prompt-history)))
-	(token (or token together-token)) (model (or model "black-forest-labs/FLUX.1-schnell-Free"))
-	(steps (or steps 4))
-	(number (or number 1))
-	(height (or height 1440))
-	(width (or width 1440)))
-    (let ((data (json-encode `((model . ,model)
-			       (prompt . ,prompt)
-			       (negative_prompt . "")
-			       (width . ,width)
-			       (height . ,height)
-			       (steps . ,steps)
-			       (n . ,number)
-			       (response_format . "b64_json")
-			       (update_at . ,(substring (shell-command-to-string "date -u +\"%Y-%m-%dT%H:%M:%SZ\"") 0 -1)))))
-	  (headers `(("Accept" . "application/json, text/plain, */*")
-		     ("Content-Type" . "application/json")
-		     ("Authorization" . ,(format "Bearer %s" token)))))
-      (plz 'post "https://api.together.xyz/inference"
-	:headers headers
-	:body data
-	:as #'json-read
-	:then (lambda (alist)
-		(select-window (th/intelligent-split t))
-		(mapc (lambda (image-data)
-			(let ((buf (generate-new-buffer "together image"))
-			      (data (base64-decode-string (alist-get 'image_base64 image-data))))
-			  (switch-to-buffer buf)
-			  (insert-image (create-image data nil 'data :scale 0.5))))
-		      (alist-get 'choices (alist-get 'output alist))))))))
 #+end_src
 
 ** Media playback "inside" emacs
