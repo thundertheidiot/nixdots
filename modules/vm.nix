@@ -38,6 +38,7 @@ in {
       };
       serviceConfig = {
         ExecStart = "${pkgs.libvirt}/bin/virsh net-start default";
+        RemainAfterExit = true;
       };
       wantedBy = ["multi-user.target"];
     };
