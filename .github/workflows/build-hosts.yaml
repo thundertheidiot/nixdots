@@ -30,8 +30,10 @@ jobs:
         with:
           tool-cache: true
       - uses: actions/checkout@v4
-      - name: Lix Installer
-        run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
+      # - name: Lix Installer
+      #   # run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
+      #   run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
+      - uses: cachix/install-nix-action@v31
       - uses: cachix/cachix-action@v16
         with:
           name: meowos
