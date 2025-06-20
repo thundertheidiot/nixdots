@@ -24,6 +24,8 @@
     # fullSetup = true;
     workstation.enable = true;
     workstation.environment = ["plasma"];
+    workstation.plasma.basicConfig = true;
+    workstation.plasma.opinionatedConfig = true;
 
     user = "thunder";
 

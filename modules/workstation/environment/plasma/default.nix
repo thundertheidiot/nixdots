@@ -17,7 +17,6 @@ in {
     meow.workstation.plasma = {
       basicConfig = mkEnOpt "Configure basic plasma settings.";
       opinionatedConfig = mkEnOpt "Configure more opinionated settings.";
-      tiling = mkEnOpt "Configure plasma into a tiling environment.";
     };
   };
 
@@ -145,29 +144,6 @@ in {
       (mkIf cfg.opinionatedConfig {
         # Keybinds
         programs.plasma = {
-          hotkeys.commands = {
-            "term" = {
-              name = "Launch Terminal";
-              key = "Meta+Return";
-              command = "alacritty";
-            };
-            "web" = {
-              name = "Launch Web Browser";
-              key = "Meta+W";
-              command = "firefox";
-            };
-            "mpd-toggle" = {
-              name = "Toggle MPD";
-              key = "Meta+P";
-              command = "mpc toggle";
-            };
-            "restart-kwin" = {
-              name = "Restart Kwin";
-              key = "Meta+Shift+R";
-              command = "kwin_wayland --replace";
-            };
-          };
-
           configFile = {
             "kcminputrc"."Keyboard" = {
               "RepeatDelay" = V 300;
@@ -176,6 +152,7 @@ in {
 
             "kwinrc"."Desktops"."Number" = V 9;
             "kwinrc"."Desktops"."Rows" = V 1;
+            "kwinrc"."Plugins"."shakecursorEnabled" = V false;
             # Activities
             # "kwinrc"."ModifierOnlyShortcuts"."Meta" = V "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
           };
@@ -222,50 +199,6 @@ in {
 
             "services/org.kde.krunner.desktop"._launch = "Meta+D";
           };
-        };
-      })
-      (mkIf cfg.tiling {
-        xdg.dataFile."kwin/scripts/krohnkite" = let
-          krohnkite = pkgs.callPackage ./krohnkite.nix {};
-        in {
-          source = "${krohnkite}/share/kwin/scripts/krohnkite";
-          recursive = true;
-        };
-
-        programs.plasma.configFile."kwinrc" = {
-          "Plugins"."krohnkiteEnabled" = V true;
-          "Script-krohnkite" = {
-            "enableSpiralLayout" = V false;
-            "enableColumnsLayout" = V false;
-            "enableSpreadLayout" = V false;
-            "enableStairLayout" = V false;
-
-            "monocleMaximize" = V false;
-
-            "screenGapBottom" = V 5;
-            "screenGapLeft" = V 5;
-            "screenGapRight" = V 5;
-            "screenGapTop" = V 5;
-            "tileLayoutGap" = V 5;
-
-            "directionalKeyDwm" = V true;
-            "directionalKeyFocus" = V false;
-
-            # New window = top of stack
-            "newWindowPosition" = V 1;
-          };
-        };
-
-        programs.plasma.configFile."kglobalshortcutsrc".kwin = {
-          "KrohnkiteMonocleLayout" = V "Meta+F";
-          "KrohnkiteTileLayout" = V "Meta+T";
-          "KrohnkiteToggleFloat" = V "Meta+Shift+Space";
-          "KrohnkiteSetMaster" = V "Meta+Shift+Return";
-
-          "KrohnkiteShrinkWidth" = V "Meta+H";
-          "KrohnkiteFocusPrev" = V "Meta+J";
-          "KrohnkiteFocusNext" = V "Meta+K";
-          "KrohnkitegrowWidth" = V "Meta+L"; # typo in krohnkite
         };
       })
     ]))))
