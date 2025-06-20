@@ -56,6 +56,7 @@ in {
             ];
           }
         ];
+        definedAliases = ["@ddg"];
       };
       "Nix Packages" = {
         urls = [
@@ -69,6 +70,7 @@ in {
             ];
           }
         ];
+        definedAliases = ["@np"];
       };
       "Nix Options" = {
         urls = [
@@ -82,6 +84,8 @@ in {
             ];
           }
         ];
+
+        definedAliases = ["@no"];
       };
     };
   in {
