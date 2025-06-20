@@ -38,14 +38,6 @@ in {
   };
   config = mkIf cfg.enable {
     home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      backupFileExtension = "hm_backup";
-
-      extraSpecialArgs = cfg.extraSpecialArgs;
-
-      sharedModules = cfg.sharedModules;
-
       users.${cfg.user} = {
         home = {
           username = cfg.user;

@@ -46,6 +46,8 @@ in {
             config,
             ...
           }: {
+            imports = import ../modules;
+
             nixpkgs = {
               overlays = [
                 inputs.emacs-overlay.overlay
@@ -57,14 +59,20 @@ in {
               ];
             };
 
-            imports = import ../modules;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "hm_backup";
 
-            meow.home = {
               extraSpecialArgs = {inherit inputs mlib;};
               sharedModules = [
                 inputs.plasma-manager.homeManagerModules.plasma-manager
                 inputs.hyprlux.homeManagerModules.default
               ];
+
+              users."${config.meow.user}" = {
+                imports = [../home];
+              };
             };
           })
         ];
