@@ -23,21 +23,26 @@ jobs:
   #     - name: Build desktop
   #       run: nix build --accept-flake-config .#nixosConfigurations.desktop.config.system.build.toplevel
   build-t440p:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: nixos-x86_64_linux
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
         with:
           tool-cache: true
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       # - name: Lix Installer
       #   # run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
       #   run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
-      - uses: cachix/install-nix-action@v31
-      - uses: cachix/cachix-action@v16
-        with:
-          name: meowos
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      # - uses: cachix/install-nix-action@v31
+      # - uses: cachix/cachix-action@v16
+      #   with:
+      #     name: meowos
+      #     authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      - name: Setup Cachix
+        run: cachix authtoken ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build t440p
         run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
   # build-server:
