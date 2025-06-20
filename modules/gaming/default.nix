@@ -80,9 +80,9 @@ in {
               xorg.libxcb
             ];
 
-          extraEnv = {
-            HOME = "${config.meow.stubbornHomeDirectory}"; # send steam to jail
-          };
+          # extraEnv = {
+          #   HOME = "${config.meow.stubbornHomeDirectory}"; # send steam to jail
+          # };
         };
       };
 
