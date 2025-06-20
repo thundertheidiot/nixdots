@@ -18,6 +18,8 @@
     ./disko.nix
   ];
 
+  meow.impermanence.enable = true;
+
   users.users.thunder.initialPassword = "password";
 
   meow = {

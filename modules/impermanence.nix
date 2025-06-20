@@ -167,6 +167,7 @@ in {
         # 5. The old unchanged ${pShadow} is copied over /etc/shadow
         # 6. User is very confused, as their password has changed back
         etc_shadow = ''
+          mkdir --parents "${cfg.persist}/rootfs/etc"
           [ -f "/etc/shadow" ] && cp /etc/shadow ${pShadow}
           [ -f "${pShadow}" ] && cp ${pShadow} /etc/shadow
         '';
