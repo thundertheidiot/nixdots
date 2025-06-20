@@ -98,7 +98,19 @@ in {
 
       programs.gamescope = {
         enable = true;
-        capSysNice = true;
+        capSysNice = false;
+      };
+
+      services.ananicy = {
+        enable = true;
+        package = pkgs.ananicy-cpp;
+        rulesProvider = pkgs.ananicy-cpp;
+        extraRules = [
+          {
+            "name" = "gamescope";
+            "nice" = -20;
+          }
+        ];
       };
     })
   ];

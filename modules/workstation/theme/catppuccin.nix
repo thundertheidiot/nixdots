@@ -38,9 +38,9 @@ in {
 
         qt = {
           enable = true;
-          platformTheme.name = "qtct";
+          # platformTheme.name = "kde6";
           style = {
-            name = "kvantum";
+            # name = "kvantum";
           };
         };
 
