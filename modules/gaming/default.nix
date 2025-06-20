@@ -77,6 +77,7 @@ in {
           extraLibraries = pkgs:
             with pkgs; [
               gperftools
+              xorg.libxcb
             ];
 
           extraEnv = {
@@ -97,6 +98,7 @@ in {
 
       programs.gamescope = {
         enable = true;
+        capSysNice = true;
       };
     })
   ];

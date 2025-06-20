@@ -157,27 +157,25 @@ in {
         enable = true;
 
         package = pkgs.emacsWithPackagesFromUsePackage {
-          config = pkgs.substituteAll (let
+          config = pkgs.replaceVars ./config.org (let
             tangle = cfg:
               if cfg
               then "yes"
               else "no";
           in {
-            src = ./config.org;
-
             exwm_enable = tangle cfg.exwm;
             llm_enable = tangle cfg.llm;
             sqlite_vss = "${pkgs."2405".sqlite-vss}/lib/vss0.so";
-            lang_latex = tangle cfg.lang.latex;
+            # lang_latex = tangle cfg.lang.latex;
             lang_haskell = tangle cfg.lang.haskell;
             lang_ocaml = tangle cfg.lang.ocaml;
-            lang_lua = tangle cfg.lang.lua;
+            # lang_lua = tangle cfg.lang.lua;
             lang_fennel = tangle cfg.lang.fennel;
             lang_janet = tangle cfg.lang.janet;
             lang_lisp = tangle cfg.lang.lisp;
-            lang_c_cxx = tangle cfg.lang.c_cxx;
-            lang_bash = tangle cfg.lang.bash;
-            lang_python = tangle cfg.lang.python;
+            # lang_c_cxx = tangle cfg.lang.c_cxx;
+            # lang_bash = tangle cfg.lang.bash;
+            # lang_python = tangle cfg.lang.python;
           });
           alwaysTangle = true;
           defaultInitFile = true;

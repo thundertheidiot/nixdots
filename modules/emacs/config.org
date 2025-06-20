@@ -2047,8 +2047,6 @@ button event."
 	      (,(kbd "s-d") . dmenu)
 	      (,(kbd "s-SPC") . th/keyboard-layout)
 	      (,(kbd "<XF86AudioPlay>") . simple-mpc-toggle)
-	      (,(kbd "<XF86AudioRaiseVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3%+")))
-	      (,(kbd "<XF86AudioLowerVolume>") . ,(lambda () (interactive) (th/exwm-shell-cmd "wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-")))
 	      
 	      ;; (,(kbd "M-x") . execute-extended-command)
 
