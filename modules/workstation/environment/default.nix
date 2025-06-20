@@ -89,7 +89,7 @@ in {
       };
     })
     {
-      services.cpupower-gui.enable = true;
+      # services.cpupower-gui.enable = true;
 
       meow.home.modules = [
         ({config, ...}: {
