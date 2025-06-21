@@ -19,7 +19,6 @@ in {
   imports = [
     ./audio.nix
     ./network.nix
-    ./media.nix
     ./flatpak.nix
     ./keyring.nix
     ./theme
@@ -33,7 +32,6 @@ in {
       }) [
         "audio"
         "network"
-        "media"
         "theming"
         "flatpak"
         "gnomeKeyring"
