@@ -2748,6 +2748,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-25-05": {
+      "locked": {
+        "lastModified": 1750400657,
+        "narHash": "sha256-3vkjFnxCOP6vm5Pm13wC/Zy6/VYgei/I/2DWgW4RFeA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b2485d56967598da068b5a6946dadda8bfcbcd37",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-25_05": {
       "locked": {
         "lastModified": 1747610100,
@@ -3459,16 +3475,16 @@
     },
     "nixpkgs_9": {
       "locked": {
-        "lastModified": 1750365781,
-        "narHash": "sha256-XE/lFNhz5lsriMm/yjXkvSZz5DfvKJLUjsS6pP8EC50=",
+        "lastModified": 1750490923,
+        "narHash": "sha256-nFyooZtroT1pb5Y2G1nsfu+FDNSouMePSgmr1Eb6qcs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "08f22084e6085d19bcfb4be30d1ca76ecb96fe54",
+        "rev": "86c02c145a0b6ae0fab47564e0a003a967203f46",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "ref": "nixos-unstable-small",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -3846,6 +3862,7 @@
         "nixpkgs": "nixpkgs_9",
         "nixpkgs-24-05": "nixpkgs-24-05",
         "nixpkgs-24-11": "nixpkgs-24-11",
+        "nixpkgs-25-05": "nixpkgs-25-05",
         "nixpkgs-xr": "nixpkgs-xr",
         "nur": "nur",
         "plasma-manager": "plasma-manager",
