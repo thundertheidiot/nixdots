@@ -42,8 +42,6 @@
     # gaming.emulation = true;
     # gaming.games = ["duckgame"];
 
-    browser.zen.enable = true;
-
     emacs.enable = true;
     shell.enable = true;
 
