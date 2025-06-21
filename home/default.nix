@@ -4,5 +4,7 @@
     ./emacs
     ./languages
     ./browser
+    ./cleanup.nix
+    ./shell.nix
   ];
 }

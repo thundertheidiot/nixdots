@@ -79,6 +79,10 @@ in {
               gperftools
               xorg.libxcb
             ];
+
+          extraEnv = {
+            HOME = "${config.meow.home.stubbornHomeDirectory}"; # send steam to jail
+          };
         };
       };
 
