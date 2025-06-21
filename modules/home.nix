@@ -28,7 +28,6 @@ in {
       modules = mkOpt (listOf raw) [] {};
 
       user = mkOpt str config.meow.user {};
-      stateVersion = mkOpt str "CHANGE" {};
       directory = mkOpt str "/home/${cfg.user}" {};
 
       file = mkOpt attrs {} {description = "Files to place in $HOME";};
@@ -42,7 +41,6 @@ in {
         home = {
           username = cfg.user;
           homeDirectory = cfg.directory;
-          stateVersion = cfg.stateVersion;
         };
 
         imports = cfg.modules;

@@ -11,6 +11,12 @@
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "x220";
 
+  home-manager.sharedModules = [
+    {
+      home.stateVersion = "24.05";
+    }
+  ];
+
   meow = {
     workstation = {
       enable = true;
@@ -112,10 +118,6 @@
     keyboard = {
       enable = true;
       devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
-    };
-
-    home = {
-      stateVersion = "24.05";
     };
   };
 
