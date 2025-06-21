@@ -6,5 +6,6 @@
     ./browser
     ./cleanup.nix
     ./shell.nix
+    ./base.nix
   ];
 }
