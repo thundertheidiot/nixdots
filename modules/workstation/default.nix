@@ -51,6 +51,8 @@ in {
       trusted-users = [config.meow.user];
     };
 
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+
     environment.systemPackages = with pkgs; [
       pulsemixer
       rustup
@@ -67,7 +69,6 @@ in {
       rar
       unrar
 
-      yle-dl
       yt-dlp
       # python3
 
