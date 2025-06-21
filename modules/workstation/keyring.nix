@@ -30,6 +30,10 @@ in {
       '';
     };
 
+    environment.variables = {
+      SSH_ASKPASS = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+    };
+
     meow.home.modules = [
       {
         home.sessionVariables = {

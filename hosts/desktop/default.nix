@@ -41,7 +41,7 @@
       mHome.emacs.enable = true;
 
       gtk.gtk3.bookmarks = [
-        "file:///mnt/4tb"
+        # "file:///mnt/4tb"
         "file:///mnt/1tb_nvme"
       ];
 
@@ -288,11 +288,11 @@
     options = ["subvol=/subvolumes/home"];
   };
 
-  fileSystems."/mnt/4tb" = {
-    device = "/dev/disk/by-uuid/03606f24-3ecb-41d3-b918-bfe580452e30";
-    fsType = "btrfs";
-    options = ["compress=zstd"];
-  };
+  # fileSystems."/mnt/4tb" = {
+  #   device = "/dev/disk/by-uuid/03606f24-3ecb-41d3-b918-bfe580452e30";
+  #   fsType = "btrfs";
+  #   options = ["compress=zstd"];
+  # };
 
   networking.useDHCP = lib.mkDefault true;
 
