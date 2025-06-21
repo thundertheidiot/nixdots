@@ -5,13 +5,13 @@ build-flakeless HOST:
   nix-build --argstr host {{HOST}} --attr config.system.build.toplevel
 
 switch host="":
-  just _nh switch {{host}}
+  just _nh switch "{{host}}"
 
 build host="":
-  just _nh build {{host}}
+  just _nh build "{{host}}"
 
 boot host="":
-  just _nh boot {{host}}
+  just _nh boot "{{host}}"
 
 _nh command host:
   #!/usr/bin/env bash
