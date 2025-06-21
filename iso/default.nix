@@ -23,6 +23,19 @@
       };
     };
 
+    home-manager.sharedModules = [
+      {
+        home.stateVersion = "24.11";
+        home.file."host.nix".source = ./templates/host.nix;
+        home.file."disko.nix".source = ./templates/disko.nix;
+
+        home.file."meowos" = {
+          recursive = true;
+          source = ../.;
+        };
+      }
+    ];
+
     meow = {
       workstation = {
         enable = true;
@@ -39,22 +52,6 @@
       ssh.rootKey = true;
 
       user = "nixos";
-
-      home = {
-        user = "nixos";
-        stateVersion = "24.11";
-        modules = [
-          {
-            home.file."host.nix".source = ./templates/host.nix;
-            home.file."disko.nix".source = ./templates/disko.nix;
-
-            home.file."meowos" = {
-              recursive = true;
-              source = ../.;
-            };
-          }
-        ];
-      };
     };
   };
 in
