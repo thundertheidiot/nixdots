@@ -23,7 +23,6 @@
   ./tv
   ./emacs
   ./xorg.nix
-  ./firefox.nix
   ./old-browser
   ./workstation
   ./cleanup.nix
