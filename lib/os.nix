@@ -60,19 +60,11 @@ in {
             };
 
             home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "hm_backup";
-
               extraSpecialArgs = {inherit inputs mlib;};
               sharedModules = [
                 inputs.plasma-manager.homeManagerModules.plasma-manager
                 inputs.hyprlux.homeManagerModules.default
               ];
-
-              users."${config.meow.user}" = {
-                imports = [../home];
-              };
             };
           })
         ];

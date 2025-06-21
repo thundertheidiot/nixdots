@@ -37,13 +37,17 @@ in {
   };
   config = mkIf cfg.enable {
     home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      backupFileExtension = "hm_backup";
+
       users.${cfg.user} = {
         home = {
           username = cfg.user;
           homeDirectory = cfg.directory;
         };
 
-        imports = cfg.modules;
+        imports = cfg.modules ++ [../home];
 
         home.file = cfg.file;
         xdg.configFile = cfg.configFile;
