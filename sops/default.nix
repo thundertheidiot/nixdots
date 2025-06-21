@@ -29,64 +29,6 @@ in {
         format = "binary";
       };
 
-      meow.sops.secrets."server_rathole" = {
-        sopsFile = ./server/rathole.toml;
-        format = "binary";
-      };
-
-      meow.sops.secrets."server_torrent_stack_env" = {
-        sopsFile = ./server/torrent_stack_env;
-        format = "binary";
-      };
-
-      meow.sops.secrets."server_vaultwarden_env" = {
-        sopsFile = ./server/vaultwarden.env;
-        format = "dotenv";
-      };
-
-      meow.sops.secrets."server_homepage_env" = {
-        sopsFile = ./server/homepage.env;
-        format = "dotenv";
-      };
-
-      meow.sops.secrets."server_immich_env" = {
-        sopsFile = ./server/immich.env;
-        format = "dotenv";
-      };
-
-      meow.sops.secrets."server_grafana_radarr_api" = {
-        sopsFile = ./server/grafana.yaml;
-        format = "yaml";
-        key = "radarr_api";
-      };
-
-      meow.sops.secrets."server_wireguard" = {
-        sopsFile = ./server/wg.conf;
-        format = "binary";
-      };
-
-      meow.sops.secrets."server_airvpn_private" = {
-        sopsFile = ./server/airvpn_sweden.yaml;
-        format = "yaml";
-        key = "private_key";
-      };
-
-      meow.sops.secrets."server_airvpn_preshared" = {
-        sopsFile = ./server/airvpn_sweden.yaml;
-        format = "yaml";
-        key = "preshared_key";
-      };
-
-      meow.sops.secrets."server_slskd_env" = {
-        sopsFile = ./server/slskd.env;
-        format = "dotenv";
-      };
-
-      meow.sops.secrets."server_authentik_env" = {
-        sopsFile = ./server/authentik.env;
-        format = "dotenv";
-      };
-
       meow.sops.secrets."desk_rathole" = {
         sopsFile = ./desk/rathole.toml;
         format = "binary";
