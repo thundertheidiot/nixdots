@@ -14,7 +14,7 @@
   dm = config.meow.workstation.displayManager;
 in {
   options = {
-    meow.workstation.environment = mkOpt (listOf (enum ["hyprland" "gnome" "plasma" "cosmic"])) ["hyprland"] {
+    meow.workstation.environment = mkOpt (listOf (enum ["hyprland" "gnome" "plasma"])) ["plasma"] {
       description = "The list of environments to configure and install.";
     };
 
@@ -27,11 +27,9 @@ in {
     # };
   };
   imports = [
-    # TODO: sway
     ./hyprland
     ./plasma
     ./gnome.nix
-    ./cosmic.nix
   ];
 
   config = mkIf cfg (mkMerge [
