@@ -25,7 +25,6 @@
   ./xorg.nix
   ./old-browser
   ./workstation
-  ./cleanup.nix
   ./keyboard
   ./gaming
 ]

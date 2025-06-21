@@ -33,9 +33,13 @@ in {
       file = mkOpt attrs {} {description = "Files to place in $HOME";};
       configFile = mkOpt attrs {} {description = "Files to place in $XDG_CONFIG_HOME";};
       dataFile = mkOpt attrs {} {description = "Files to place in $XDG_DATA_HOME";};
+
+      stubbornHomeDirectory = mkOpt str "${config.meow.home.directory}/.local/state/home" {};
     };
   };
   config = mkIf cfg.enable {
+    meow.home.stubbornHomeDirectory = config.home-manager.users."${cfg.user}".mHome.stubbornHomeDirectory;
+
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;

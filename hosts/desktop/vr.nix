@@ -98,7 +98,7 @@ in {
       };
 
       systemd.user.services.monado.environment = {
-        HOME = config.meow.stubbornHomeDirectory;
+        HOME = config.meow.home.stubbornHomeDirectory;
         XRT_COMPOSITOR_SCALE_PERCENTAGE = "100";
         XRT_COMPOSITOR_COMPUTE = "1";
         U_PACING_COMP_MIN_TIME_MS = "5";
@@ -115,6 +115,15 @@ in {
       ];
     }
     {
+      services.ananicy = {
+        extraRules = [
+          {
+            "name" = "monado";
+            "nice" = -20;
+          }
+        ];
+      };
+
       environment.systemPackages = [
         (pkgs.writeShellApplication {
           name = "vrhelper";
@@ -173,10 +182,10 @@ in {
                   ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
                 fi
 
-                { sleep 3; pkexec renice -20 -p $(pgrep monado); } &
+                # { sleep 3; pkexec renice -20 -p $(pgrep monado); } &
 
                 # steam is placed in stubbornHome, this needs to be set so monado can find the steamvr stuff
-                env HOME=${config.meow.stubbornHomeDirectory} \
+                env HOME=${config.meow.home.stubbornHomeDirectory} \
                     XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
                     XRT_COMPOSITOR_COMPUTE=0 \
                     U_PACING_COMP_MIN_TIME_MS=4 \
