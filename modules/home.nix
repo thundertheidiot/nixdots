@@ -9,7 +9,7 @@
   mlib,
   ...
 }: let
-  inherit (mlib) mkOpt;
+  inherit (mlib) mkOpt mkEnOptTrue;
   inherit (lib) mkIf;
   inherit (lib.types) bool listOf raw attrs str;
   inherit (lib.options) literalExpression;
@@ -18,7 +18,7 @@
 in {
   options = {
     meow.home = {
-      enable = mkOpt bool true {};
+      enable = mkEnOptTrue "Enable home-manager.";
 
       extraSpecialArgs = mkOpt attrs {inherit mlib;} {
         example = literalExpression "{ inherit inputs; }";

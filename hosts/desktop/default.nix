@@ -38,6 +38,7 @@
     {
       home.stateVersion = "24.05";
       mHome.browser.zen.enable = true;
+      mHome.emacs.enable = true;
 
       gtk.gtk3.bookmarks = [
         "file:///mnt/4tb"

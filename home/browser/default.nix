@@ -38,6 +38,12 @@ in {
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
       DontCheckDefaultBrowser = true;
+
+      FirefoxSuggest = {
+        WebSuggestions = false;
+        SponsoredSuggestions = false;
+        ImproveSuggest = false;
+      };
     };
 
     policies = {
