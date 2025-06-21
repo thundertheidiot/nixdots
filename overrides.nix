@@ -20,6 +20,11 @@
     config.allowUnfree = final.config.allowUnfree;
   };
 
+  "2505" = import inputs.nixpkgs-25-05 {
+    system = final.system;
+    config.allowUnfree = final.config.allowUnfree;
+  };
+
   mpkgs = (import ./pkgs) {pkgs = final;};
 
   avrdude = prev.avrdude.overrideAttrs (old: {
@@ -27,6 +32,8 @@
       repo = "avrdude";
     };
   });
+
+  mpd = final."2505".mpd;
 
   vulkan-validation-layers = prev.vulkan-validation-layers.overrideAttrs (old: {
     buildInputs = old.buildInputs ++ [final.spirv-tools];
