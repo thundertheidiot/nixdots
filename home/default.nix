@@ -3,5 +3,6 @@
   imports = [
     ./emacs
     ./languages
+    ./browser
   ];
 }

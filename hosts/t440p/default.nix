@@ -22,6 +22,13 @@
 
   users.users.thunder.initialPassword = "password";
 
+  home-manager.sharedModules = [
+    {
+      home.stateVersion = "25.05";
+      mHome.browser.zen.enable = true;
+    }
+  ];
+
   meow = {
     # fullSetup = true;
     workstation.enable = true;
@@ -56,10 +63,6 @@
         height = "1080";
       }
     ];
-
-    home = {
-      stateVersion = "25.05";
-    };
   };
 
   # users.users."thunder".extraGroups = ["docker"];

@@ -24,7 +24,6 @@
   ./emacs
   ./xorg.nix
   ./firefox.nix
-  ./browser
   ./old-browser
   ./workstation
   ./cleanup.nix

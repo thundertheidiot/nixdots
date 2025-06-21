@@ -8,7 +8,7 @@
   imports = [
     ./vr.nix
     ./rathole.nix
-    ./firedragon.nix
+    # ./firedragon.nix
   ];
 
   system.stateVersion = "24.05";
@@ -34,6 +34,27 @@
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "desktop";
 
+  home-manager.sharedModules = [
+    {
+      home.stateVersion = "24.05";
+      mHome.browser.zen.enable = true;
+
+      gtk.gtk3.bookmarks = [
+        "file:///mnt/4tb"
+        "file:///mnt/1tb_nvme"
+      ];
+
+      wayland.windowManager.hyprland.settings.render = {
+        explicit_sync = 1;
+        explicit_sync_kms = 1;
+      };
+
+      services.syncthing = {
+        enable = true;
+      };
+    }
+  ];
+
   meow = {
     fullSetup = true;
     workstation.enable = true;
@@ -52,8 +73,6 @@
     gaming.emulation = true;
     gaming.games = ["duckgame" "minecraft"];
 
-    browser.zen.enable = true;
-
     emacs.enable = true;
     emacs.exwm = true;
     shell.enable = true;
@@ -61,8 +80,6 @@
     gpu = "amd";
 
     virtualization.enable = true;
-
-    # tv.enable = true;
 
     keyboard.enable = false;
     keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];
@@ -137,27 +154,6 @@
         ];
       }
     ];
-
-    home = {
-      stateVersion = "24.05";
-      modules = [
-        ({...}: {
-          gtk.gtk3.bookmarks = [
-            "file:///mnt/4tb"
-            "file:///mnt/1tb_nvme"
-          ];
-
-          wayland.windowManager.hyprland.settings.render = {
-            explicit_sync = 1;
-            explicit_sync_kms = 1;
-          };
-
-          services.syncthing = {
-            enable = true;
-          };
-        })
-      ];
-    };
   };
 
   hardware.keyboard.qmk.enable = true;

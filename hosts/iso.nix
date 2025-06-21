@@ -21,7 +21,7 @@
     pkgs,
     ...
   }: {
-    system.stateVersion = "24.11";
+    system.stateVersion = "25.05";
 
     services = {
       qemuGuest.enable = true;
@@ -46,23 +46,18 @@
     networking.useDHCP = lib.mkForce true;
     services.openssh.settings.PermitRootLogin = lib.mkForce "prohibit-password";
 
+    home-manager.sharedModules = [
+      {
+        stateVersion = "25.05"
+        mHome.browser.zen.enable = true;
+      }
+    ];
+
     meow = {
       workstation.enable = true;
 
-      firefox.enable = true;
       emacs.enable = true;
       shell.enable = true;
-
-      home = {
-        stateVersion = "24.05";
-        modules = [
-          ({...}: {
-            gtk.gtk3.bookmarks = [
-              "file:///mnt/4tb"
-            ];
-          })
-        ];
-      };
     };
 
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
