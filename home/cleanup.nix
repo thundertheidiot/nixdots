@@ -26,7 +26,6 @@ in {
     home.sessionVariables = let
       x = config.xdg;
     in {
-      GNUPGHOME = "${x.dataHome}/gnupg";
       ANDROID_HOME = "${x.configHome}/android";
       ANDROID_SDK_ROOT = "${x.dataHome}/android";
       ANDROID_SDK_HOME = "${x.configHome}/android";
@@ -51,6 +50,12 @@ in {
       PYTHONSTARTUP = "${x.configHome}/pythonrc";
       CARGO_HOME = "${x.dataHome}/cargo";
       GOPATH = "${x.dataHome}/go";
+    };
+
+    xdg.userDirs = {
+      desktop = "${config.home.homeDirectory}/.local/share/xdg-dirs/desktop";
+      publicShare = "${config.home.homeDirectory}/.local/share/xdg-dirs/publicshare";
+      templates = "${config.home.homeDirectory}/.local/share/xdg-dirs/templates";
     };
 
     home.activation.createStubbornHome = ''
