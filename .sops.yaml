@@ -10,7 +10,7 @@ creation_rules:
      - *desk
      - *t440p
      - *digiboksi
- - path_regex: sops/server/[^/]+$
+ - path_regex: hosts/server/secrets/[^/]+$
    key_groups:
    - age:
      - *desk
