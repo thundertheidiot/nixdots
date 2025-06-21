@@ -5,13 +5,13 @@
   pkgs,
   ...
 }: let
-  inherit (mlib) mkEnOpt;
+  inherit (mlib) mkEnOptTrue mkEnOpt;
   inherit (lib) mkDefault mkIf;
 
   cfg = config.mHome.emacs;
 in {
   options = {
-    mHome.emacs.enable = mkEnOpt "Emacs";
+    mHome.emacs.enable = mkEnOptTrue "Emacs";
     mHome.emacs.exwm = mkEnOpt "exwm";
   };
 
