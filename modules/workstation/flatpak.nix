@@ -44,8 +44,5 @@ in {
         "R! /var/tmp/flatpak-cache-* - - - 10d"
       ];
     }
-    (mkIf cfg.graphicalStore {
-      environment.systemPackages = [pkgs.gnome-software];
-    })
   ]);
 }

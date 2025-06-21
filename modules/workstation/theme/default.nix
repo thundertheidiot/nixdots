@@ -18,11 +18,6 @@
     monospace = ["UDEV Gothic 35NF"];
     emoji = ["Noto Color Emoji"];
   };
-  # fontPkgs = with pkgs; [
-  #   udev-gothic-nf
-  #   cantarell-fonts
-  #   noto-fonts-color-emoji
-  # ];
 
   fontPkgs = [
     config.stylix.fonts.serif.package
@@ -56,22 +51,34 @@ in {
         includeUserConf = true;
       };
 
-      # boot = {
-      #   plymouth.enable = true;
+      stylix.targets.plymouth.enable = false;
 
-      #   consoleLogLevel = 0;
-      #   initrd.verbose = false;
+      boot = {
+        plymouth = {
+          enable = true;
 
-      #   kernelParams = [
-      #     "quiet"
-      #     "splash"
-      #     "boot.shell_on_fail"
-      #     "loglevel=3"
-      #     "rd.systemd.show_status=false"
-      #     "rd.udev.log_level=3"
-      #     "udev.log_priority=3"
-      #   ];
-      # };
+          themePackages = with pkgs; [
+            plymouth-blahaj-theme
+          ];
+
+          theme = "blahaj";
+        };
+
+        loader.timeout = 0;
+
+        consoleLogLevel = 0;
+        initrd.verbose = false;
+
+        kernelParams = [
+          "quiet"
+          "splash"
+          "boot.shell_on_fail"
+          "loglevel=3"
+          "rd.systemd.show_status=false"
+          "rd.udev.log_level=3"
+          "udev.log_priority=3"
+        ];
+      };
 
       environment.systemPackages =
         fontPkgs
