@@ -15,6 +15,6 @@ in {
   };
 
   config = mkIf config.meow.certificates {
-    security.pki.certificateFiles = [(import "${inputs.servers}/certs")."rootCA.pem"];
+    security.pki.certificateFiles = [../certs/rootCA.pem];
   };
 }
