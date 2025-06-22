@@ -7,15 +7,21 @@
 }: let
   inherit (builtins) elem;
   inherit (lib) mkIf;
-  inherit (mlib) mkEnOpt homeModule;
+  inherit (mlib) mkEnOpt mkEnOptTrue homeModule;
 
   work = config.meow.workstation.enable;
   env = config.meow.workstation.environment;
   cfg = config.meow.workstation.plasma;
+
+  # plasma manager helper
+  V = val: {
+    value = val;
+    immutable = true;
+  };
 in {
   options = {
     meow.workstation.plasma = {
-      basicConfig = mkEnOpt "Configure basic plasma settings.";
+      basicConfig = mkEnOptTrue "Configure basic plasma settings.";
       opinionatedConfig = mkEnOpt "Configure more opinionated settings.";
     };
   };
@@ -27,55 +33,41 @@ in {
         enable = true;
         enableQt5Integration = true;
       };
-
-      meow.workstation.plasma.basicConfig = lib.mkDefault true;
-
-      # Package excludes
-      environment.plasma6.excludePackages = with pkgs; [
-        libsForQt5.elisa
-      ];
-
-      # xdg portal configuration
-      # xdg.portal.extraPortals = [
-      #   pkgs.kdePackages.xdg-desktop-portal-kde
-      # ];
+    }
+    # Wrangle kwallet + gnome-keyring config with working ssh-agent
+    {
+      services.gnome.gcr-ssh-agent.enable = false;
+      programs.ssh = {
+        startAgent = true;
+        enableAskPassword = true;
+      };
 
       xdg.portal.config = {
         kde = {
           default = ["kde"];
-          "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
-          "org.freedesktop.impl.portal.Settings" = ["kde"];
+          "org.freedesktop.impl.portal.Secret" = ["gnome-keyring" "kwallet"];
+          "org.freedesktop.impl.portal.Settings" = ["kde" "gtk"];
         };
       };
-    }
-    {
-      # Disable kwallet completely, we use gnome-keyring in every environment, to make switching between them not suck.
-      # Swapping between kwallet and gnome-keyring breaks applications, and you need to relogin to places.
-      environment.plasma6.excludePackages = with pkgs; [
-        kdePackages.kwallet
-        kdePackages.kwallet-pam
-        kdePackages.kwalletmanager
-      ];
 
-      security.pam.services = {
-        login.kwallet.enable = lib.mkForce false;
-        kde.kwallet.enable = lib.mkForce false;
+      environment.variables = {
+        SSH_ASKPASS_REQUIRE = "prefer";
       };
+
+      home-manager.sharedModules = [
+        {
+          # Backwards compatibility, these were previously forced to false, this will upgrade old configurations
+          programs.plasma.configFile."kwalletrc" = {
+            Wallet.Enabled = V true;
+            "org.freedesktop.secrets"."apiEnabled" = V true;
+          };
+        }
+      ];
     }
     (homeModule ({...}: (let
-      V = val: {
-        value = val;
-        immutable = true;
-      };
     in (lib.mkMerge [
       {
         programs.plasma.enable = true;
-
-        # Gnome keyring is used instead
-        programs.plasma.configFile."kwalletrc" = {
-          Wallet.Enabled = V false;
-          "org.freedesktop.secrets"."apiEnabled" = V false;
-        };
       }
       (mkIf cfg.opinionatedConfig {
         # FIXME: wrangle emacs keybind
