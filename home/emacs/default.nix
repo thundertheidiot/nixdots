@@ -6,7 +6,7 @@
   ...
 }: let
   inherit (mlib) mkEnOptTrue mkEnOpt;
-  inherit (lib) mkDefault mkIf;
+  inherit (lib) mkDefault mkIf mkMerge;
 
   cfg = config.mHome.emacs;
 in {
@@ -18,9 +18,15 @@ in {
   config = mkIf cfg.enable {
     programs.man.generateCaches = mkDefault config.mHome.emacs.enable;
 
-    home.packages = lib.mkIf cfg.exwm (with pkgs; [
-      wmctrl
-    ]);
+    home.packages = with pkgs;
+      mkMerge [
+        (mkIf cfg.exwm [
+          wmctrl
+        ])
+        [
+          emacs-lsp-booster
+        ]
+      ];
 
     xdg.mimeApps.defaultApplications = builtins.listToAttrs (builtins.map
       (mime: {

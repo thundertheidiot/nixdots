@@ -14,7 +14,7 @@
   cfg = config.meow.workstation.plasma;
 
   # plasma manager helper
-  V = val: {
+  F = val: {
     value = val;
     immutable = true;
   };
@@ -58,8 +58,8 @@ in {
         {
           # Backwards compatibility, these were previously forced to false, this will upgrade old configurations
           programs.plasma.configFile."kwalletrc" = {
-            Wallet.Enabled = V true;
-            "org.freedesktop.secrets"."apiEnabled" = V true;
+            Wallet.Enabled = F true;
+            "org.freedesktop.secrets"."apiEnabled" = F true;
           };
         }
       ];
@@ -69,28 +69,6 @@ in {
       {
         programs.plasma.enable = true;
       }
-      (mkIf cfg.opinionatedConfig {
-        # FIXME: wrangle emacs keybind
-        # xdg.dataFile."applications/emacsclient-plasma.desktop" = {
-        #   text = ''
-        #     [Desktop Entry]
-        #     Exec=emacsclient -c
-        #     Name=emacsclient -c
-        #     NoDisplay=true
-        #     StartupNotify=false
-        #     Type=Application
-        #     X-KDE-GlobalAccel-CommandShortcut=true
-        #   '';
-        # };
-
-        # programs.plasma = {
-        #   configFile.kglobalshortcutsrc = {
-        #     "services/org.kde.dolphin.desktop"."_launch" = V "";
-        #     "useless/key-for-workaround.desktop"."_launch".value = "Meta+E";
-        #     "services/emacsclient-plasma.desktop"."_launch" = V "Meta+E";
-        #   };
-        # };
-      })
       (mkIf cfg.basicConfig {
         home.activation.plasmaPowerdevilSettings = ''
           run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file ~/.config/powerdevilrc --group AC --group Display --key DimDisplayWhenIdle false
@@ -118,33 +96,55 @@ in {
           };
 
           configFile = {
-            "kdeglobals"."KDE"."SingleClick" = V false;
+            "kdeglobals"."KDE"."SingleClick" = F false;
             "kwinrc"."Xwayland"."XwaylandEavesdrops".value = "modifiers";
             "kwinrc"."Windows" = {
-              "DelayFocusInterval" = V 0;
-              "FocusPolicy" = V "FocusFollowsMouse";
-              "NextFocusPrefersMouse" = V true;
+              "DelayFocusInterval" = F 0;
+              "FocusPolicy" = F "FocusFollowsMouse";
+              "NextFocusPrefersMouse" = F true;
             };
 
             "kwinrc"."org.kde.kdecoration2" = {
-              "ButtonsOnLeft" = V "S";
-              "ButtonsOnRight" = V "IAX";
+              "ButtonsOnLeft" = F "S";
+              "ButtonsOnRight" = F "IAX";
             };
           };
         };
+      })
+      (mkIf cfg.opinionatedConfig {
+        # FIXME: wrangle emacs keybind
+        # xdg.dataFile."applications/emacsclient-plasma.desktop" = {
+        #   text = ''
+        #     [Desktop Entry]
+        #     Exec=emacsclient -c
+        #     Name=emacsclient -c
+        #     NoDisplay=true
+        #     StartupNotify=false
+        #     Type=Application
+        #     X-KDE-GlobalAccel-CommandShortcut=true
+        #   '';
+        # };
+
+        # programs.plasma = {
+        #   configFile.kglobalshortcutsrc = {
+        #     "services/org.kde.dolphin.desktop"."_launch" = F "";
+        #     "useless/key-for-workaround.desktop"."_launch".value = "Meta+E";
+        #     "services/emacsclient-plasma.desktop"."_launch" = F "Meta+E";
+        #   };
+        # };
       })
       (mkIf cfg.opinionatedConfig {
         # Keybinds
         programs.plasma = {
           configFile = {
             "kcminputrc"."Keyboard" = {
-              "RepeatDelay" = V 300;
-              "RepeatRate" = V 50;
+              "RepeatDelay" = F 300;
+              "RepeatRate" = F 50;
             };
 
-            "kwinrc"."Desktops"."Number" = V 9;
-            "kwinrc"."Desktops"."Rows" = V 1;
-            "kwinrc"."Plugins"."shakecursorEnabled" = V false;
+            "kwinrc"."Desktops"."Number" = F 9;
+            "kwinrc"."Desktops"."Rows" = F 1;
+            "kwinrc"."Plugins"."shakecursorEnabled" = F false;
           };
 
           shortcuts = {
