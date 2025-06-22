@@ -10,7 +10,7 @@
   inherit (mlib) mkEnOpt;
 in {
   options = {
-    meow.tv.enable = mkEnOpt "Enable configuration for a \"smart tv\" system.";
+    meow.old-tv.enable = mkEnOpt "Enable configuration for a \"smart tv\" system.";
   };
 
   config = lib.mkIf cfg.enable (let
@@ -29,7 +29,7 @@ in {
       settings = {
         Autologin = {
           Session = "hyprland.desktop";
-          User = builtins.head config.meow.users;
+          User = config.meow.user;
         };
       };
     };
@@ -67,7 +67,7 @@ in {
     meow.home.modules = let
       kodiLauncher = pkgs.writeShellScriptBin "kodi" ''
         ${kodiSettings}/bin/create_kodi_settings
-        export HOME=${config.meow.stubbornHomeDirectory} # hide log files
+        export HOME=${config.meow.home.stubbornHomeDirectory} # hide log files
         export KODI_DATA=${kodiHome}
         exec "${kodiExecutable}" --audio-backend=pulseaudio "$@" # using pulseaudio fixes some weird pipewire issues
       '';
@@ -99,6 +99,8 @@ in {
           cp ${firefoxTv}/bin/firefox_tv "$out/bin/firefox_tv"
         '';
       };
+
+      hyprland = builtins.elem "hyprland" config.meow.workstation.environment;
     in [
       ({
         config,
@@ -107,7 +109,7 @@ in {
       }: {
         home.packages = [kodiLauncher tvScripts];
 
-        wayland.windowManager.hyprland.settings = lib.mkIf (builtins.elem "hyprland" config.workstation.environment) {
+        wayland.windowManager.hyprland.settings = lib.mkIf hyprland {
           workspace = [
             "${specialWorkspace},rounding:false,border:false,shadow:false,gapsin:0,gapsout:0"
           ];

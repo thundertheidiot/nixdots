@@ -20,6 +20,7 @@
   ./certs.nix
   ./programs
   ./vm.nix
+  ./old-tv
   ./tv
   ./emacs
   ./xorg.nix
