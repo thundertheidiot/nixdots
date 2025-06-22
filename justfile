@@ -7,6 +7,14 @@ build-flakeless HOST:
 switch host="":
   just _nh switch "{{host}}"
 
+yeet host target="":
+  #!/usr/bin/env bash
+  if [[ "{{target}}" = "" ]]; then
+    nh os switch -H {{host}} --target-host {{host}} . -- --accept-flake-config --show-trace
+  else
+    nh os switch -H {{host}} --target-host {{target}} . -- --accept-flake-config --show-trace
+  fi
+
 build host="":
   just _nh build "{{host}}"
 

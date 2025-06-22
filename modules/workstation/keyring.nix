@@ -31,7 +31,7 @@ in {
     };
 
     environment.variables = {
-      SSH_ASKPASS = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+      SSH_ASKPASS = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
     };
 
     meow.home.modules = [
