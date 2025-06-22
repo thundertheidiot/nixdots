@@ -17,23 +17,33 @@
     }
   ];
 
+  users.users.thunder.isSystemUser = true;
+  users.users.thunder.group = "thunder";
+  users.groups.thunder = {};
+
+  stylix.enable = false;
+  stylix.autoEnable = false;
+
   meow = {
-    workstation = {
-      enable = true;
-      environment = ["hyprland"];
-      # displayManager = "gdm";
-    };
+    # workstation = {
+    # enable = true;
+    # environment = ["hyprland"];
+    # displayManager = "gdm";
+    # };
 
-    user = "thunder";
+    workstation.enable = false;
+    home.enable = false;
 
-    workstation.flatpak.graphicalStore = true;
+    # workstation.flatpak.graphicalStore = true;
 
-    emacs.exwm = true;
-    shell.enable = true;
+    # emacs.exwm = true;
+    # shell.enable = true;
 
+    ssh.key = false;
     ssh.rootKey = true;
 
-    old-tv.enable = true;
+    # old-tv.enable = true;
+    tv.enable = true;
 
     gpu = "intel";
 
@@ -54,7 +64,7 @@
     };
   };
 
-  users.users.thunder.initialPassword = "password";
+  # users.users.thunder.initialPassword = "password";
 
   boot.loader.grub.enable = true;
   # boot.loader.grub.device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
