@@ -145,8 +145,6 @@ in {
             "kwinrc"."Desktops"."Number" = V 9;
             "kwinrc"."Desktops"."Rows" = V 1;
             "kwinrc"."Plugins"."shakecursorEnabled" = V false;
-            # Activities
-            # "kwinrc"."ModifierOnlyShortcuts"."Meta" = V "org.kde.kglobalaccel,/component/kwin,org.kde.kglobalaccel.Component,invokeShortcut,Overview";
           };
 
           shortcuts = {
