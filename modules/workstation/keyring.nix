@@ -6,16 +6,17 @@
   ...
 }: let
   inherit (lib) mkIf;
-  inherit (mlib) mkEnOpt;
+  inherit (mlib) mkEnOptTrue;
 
   cfg = config.meow.workstation.gnomeKeyring.enable;
 in {
   options = {
-    meow.workstation.gnomeKeyring.enable = mkEnOpt "Set up gnome keyring, disable this if you want kwallet for some reason?";
+    meow.workstation.gnomeKeyring.enable = mkEnOptTrue "Set up gnome keyring, disable this if you want kwallet for some reason?";
   };
 
   config = mkIf cfg {
     services.gnome.gnome-keyring.enable = true;
+    programs.ssh.enableAskPassword = true;
 
     # programs.seahorse.enable = true;
     # programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
