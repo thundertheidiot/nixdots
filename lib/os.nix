@@ -12,7 +12,7 @@ in {
     else throw "No ${file} or ${dir}/default.nix";
 
   homeModule = module: {
-    home-manager.sharedModules = [module];
+    meow.home.modules = [module];
   };
 
   mkSystem = {

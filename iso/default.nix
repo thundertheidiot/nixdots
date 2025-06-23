@@ -26,6 +26,10 @@
     home-manager.sharedModules = [
       {
         home.stateVersion = "24.11";
+        home.file."templates" = {
+          source = ./templates;
+          recursive = true;
+        };
         home.file."host.nix".source = ./templates/host.nix;
         home.file."disko.nix".source = ./templates/disko.nix;
 

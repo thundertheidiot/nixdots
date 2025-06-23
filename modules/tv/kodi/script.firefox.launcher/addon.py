@@ -25,5 +25,10 @@ index = xbmcgui.Dialog().select("Launch:", names)
 if index != -1:
     selected = names[index]
     executable = program_data[selected]
-    subprocess.run([executable])
 
+    with open('/home/cage/kodi_launcher.log', 'w') as f:
+        subprocess.Popen([executable], stdout=f, stderr=f)
+
+# selected = names[index]
+# executable = program_data[selected]
+# subprocess.run([executable])
