@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
 
       - name: Get last successful commit
         id: last_success
@@ -40,6 +42,9 @@ jobs:
             echo "Relevant changes detected"
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
+
+      - name: Debug git log
+        run: git log --oneline --graph --all
 
   build-t440p:
     runs-on: ubuntu-latest
