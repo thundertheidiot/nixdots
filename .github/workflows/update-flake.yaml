@@ -28,7 +28,7 @@ jobs:
       - name: Build hosts
         run: |
           for host in $HOSTS; do
-            nix build --accpet-flake-config .#nixosConfigurations.$host.config.system.build.toplevel
+            nix build --accept-flake-config .#nixosConfigurations.$host.config.system.build.toplevel
           done
 
       - name: Commit
