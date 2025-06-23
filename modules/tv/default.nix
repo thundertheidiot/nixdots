@@ -26,6 +26,7 @@ in {
         addons = [
           "plugin.video.jellyfin"
           "plugin.video.youtube"
+          "script.firefox.launcher"
           "script.module.inputstreamhelper"
         ];
         settings = let
