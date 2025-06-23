@@ -3,8 +3,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 on:
-  schedule:
-    - cron: "0 02 * * *"
+  # schedule:
+  #   - cron: "0 02 * * *"
   workflow_dispatch:
 
 jobs:
