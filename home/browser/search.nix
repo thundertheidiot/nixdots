@@ -69,6 +69,6 @@
       }
     ];
 
-    definedAliases = ["@no"];
+    definedAliases = ["@hm"];
   };
 }
