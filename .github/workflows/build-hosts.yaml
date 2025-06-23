@@ -8,44 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-for-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.detect.outputs.changed }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 20
-
-      - name: Get last successful commit
-        id: last_success
-        run: |
-          git fetch origin +refs/heads/main:refs/remotes/origin/main
-          echo "SHA=$(git rev-parse origin/main)" >> $GITHUB_OUTPUT
-
-      - name: Detect changes
-        id: detect
-        run: |
-          EXCLUDES=(
-            ':!justfile'
-            ':!readme.org'
-            ':!.dir-locals.el'
-            ':!.github/'
-          )
-
-          if git diff --quiet ${{ steps.last_success.outputs.SHA }} HEAD -- . "${EXCLUDES[@]}"; then
-            echo "No relevant changes"
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "Relevant changes detected"
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Debug git log
-        run: git log --oneline --graph --all
-
   build-t440p:
     runs-on: ubuntu-latest
     needs: check-for-changes
