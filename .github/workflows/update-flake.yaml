@@ -1,5 +1,7 @@
 name: Update flake.lock
 on:
+  schedule:
+    - cron: "0 03 * * *"
   workflow_dispatch:
 
 jobs:
@@ -24,7 +26,7 @@ jobs:
           name: meowos
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Update flake inputs
-        run: nix flake update
+        run: nix flake update --accept-flake-config
       - name: Build hosts
         run: |
           for host in $HOSTS; do
