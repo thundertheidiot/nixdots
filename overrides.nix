@@ -10,11 +10,6 @@
   ataraxiasjel = nur.repos.ataraxiasjel;
   hyprsplit = inputs.hyprsplit.packages.${final.system}.default;
 
-  "2405" = import inputs.nixpkgs-24-05 {
-    system = final.system;
-    config.allowUnfree = final.config.allowUnfree;
-  };
-
   "2411" = import inputs.nixpkgs-24-11 {
     system = final.system;
     config.allowUnfree = final.config.allowUnfree;
