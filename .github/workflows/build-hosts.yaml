@@ -1,29 +1,50 @@
-name: build-hosts
+name: Build Hosts
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 on:
-  # push:
+  schedule:
+    - cron: "0 3 * * *"
   workflow_dispatch:
+
 jobs:
-  # build-desktop:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Free Disk Space (Ubuntu)
-  #       uses: jlumbroso/free-disk-space@main
-  #       with:
-  #         tool-cache: true
-  #     - uses: actions/checkout@v4
-  #     - name: Lix Installer
-  #       run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
-  #     - uses: cachix/cachix-action@v16
-  #       with:
-  #         name: meowos
-  #         authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-  #     - name: Build desktop
-  #       run: nix build --accept-flake-config .#nixosConfigurations.desktop.config.system.build.toplevel
+  check-for-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.detect.outputs.changed }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get last successful commit
+        id: last_success
+        run: |
+          git fetch origin +refs/heads/main:refs/remotes/origin/main
+          echo "SHA=$(git rev-parse origin/main)" >> $GITHUB_OUTPUT
+
+      - name: Detect changes
+        id: detect
+        run: |
+          EXCLUDES=(
+            ':!justfile'
+            ':!readme.org'
+            ':!.dir-locals.el'
+            ':!.github/'
+          )
+
+          if git diff --quiet ${{ steps.last_success.outputs.SHA }} HEAD -- . "${EXCLUDES[@]}"; then
+            echo "No relevant changes"
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Relevant changes detected"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
   build-t440p:
     runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: needs.check-for-changes.outputs.changed == 'true'
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
@@ -38,19 +59,21 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Build t440p
         run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
-  # build-server:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Free Disk Space (Ubuntu)
-  #       uses: jlumbroso/free-disk-space@main
-  #       with:
-  #         tool-cache: true
-  #     - uses: actions/checkout@v4
-  #     - name: Lix Installer
-  #       run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
-  #     - uses: cachix/cachix-action@v16
-  #       with:
-  #         name: meowos
-  #         authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-  #     - name: Build server
-  #       run: nix build --accept-flake-config .#nixosConfigurations.server.config.system.build.toplevel
+  build-server:
+    runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: needs.check-for-changes.outputs.changed == 'true'
+    steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+      - uses: actions/checkout@v4
+      - name: Lix Installer
+        run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
+      - uses: cachix/cachix-action@v16
+        with:
+          name: meowos
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      - name: Build server
+        run: nix build --accept-flake-config .#nixosConfigurations.server.config.system.build.toplevel
