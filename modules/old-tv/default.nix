@@ -6,7 +6,7 @@
   mlib,
   ...
 }: let
-  cfg = config.meow.tv;
+  cfg = config.meow.old-tv;
   inherit (mlib) mkEnOpt;
 in {
   options = {

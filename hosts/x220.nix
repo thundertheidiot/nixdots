@@ -17,9 +17,9 @@
     }
   ];
 
-  users.users.thunder.isSystemUser = true;
-  users.users.thunder.group = "thunder";
-  users.groups.thunder = {};
+  # users.users.thunder.isSystemUser = true;
+  # users.users.thunder.group = "thunder";
+  # users.groups.thunder = {};
 
   stylix.enable = false;
   stylix.autoEnable = false;

@@ -6,20 +6,22 @@
   mlib,
   ...
 }: {
-  # Machine specific configuration, filesystems, bootloader, basically hardware-configuration.nix + system.stateVersion
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";
-    extraConfig = ''
-      set timeout=1
-    '';
-  };
-
+  # TODO resetup digiboksi completely
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "digiboksi";
 
+  home-manager.sharedModules = [
+    {
+      home.stateVersion = "24.05";
+    }
+  ];
+
   meow = {
     user = "tv";
+
+    home.enable = true;
+    workstation.enable = true;
+    workstation.environment = ["hyprland"];
 
     monitors = [
       {
@@ -31,25 +33,11 @@
 
     gpu = "intel";
 
-    tv.enable = true;
+    old-tv.enable = true;
 
     emacs.enable = true;
     shell.enable = true;
-
-    firefox = {
-      enable = true;
-      addons = {
-        "uBlock0@raymonhill.net" = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-11423598-latest.xpi";
-        "idcac-pub@guus.ninja" = "https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/addon-17568914-latest.xpi";
-      };
-    };
-
-    home = {
-      stateVersion = "24.05";
-    };
   };
-
-  hardware.graphics.enable = true;
 
   system.stateVersion = "23.11";
 
@@ -57,6 +45,14 @@
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
+
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/sda";
+    extraConfig = ''
+      set timeout=1
+    '';
+  };
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/721918a3-0d55-4b0b-b531-484b224568a1";

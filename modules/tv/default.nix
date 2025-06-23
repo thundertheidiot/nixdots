@@ -16,6 +16,7 @@ in {
 
   imports = [
     ./settings
+    ./firefox
   ];
 
   config = mkIf cfg.enable (mkMerge [
@@ -80,19 +81,30 @@ in {
         users."cage" = {};
       };
     }
-    # widevine
-    (homeModule {
-      home.file = {
-        widevine-lib = {
-          source = "${pkgs.widevine-cdm}/share/gogle/chrome/WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so";
-          target = ".kodi/cdm/libwidevinecdm.so";
-        };
-        widevine-manifest = {
-          source = "${pkgs.widevine-cdm}/share/gogle/chrome/WidevineCdm/manifest.json";
-          target = ".kodi/cdm/manifest.json";
-        };
+    # web interface ports
+    {
+      networking.firewall = {
+        allowedTCPPorts = [8080];
+        allowedUDPPorts = [8080];
       };
-    })
+    }
+    # widevine
+    {
+      home-manager.users."cage".imports = [
+        {
+          home.file = {
+            widevine-lib = {
+              source = "${pkgs.widevine-cdm}/share/gogle/chrome/WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so";
+              target = ".kodi/cdm/libwidevinecdm.so";
+            };
+            widevine-manifest = {
+              source = "${pkgs.widevine-cdm}/share/gogle/chrome/WidevineCdm/manifest.json";
+              target = ".kodi/cdm/manifest.json";
+            };
+          };
+        }
+      ];
+    }
     # plymouth
     {
       boot = {
