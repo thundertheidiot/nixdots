@@ -20,6 +20,8 @@ in {
     meow.home = {
       enable = mkEnOptTrue "Enable home-manager.";
 
+      stateVersion = mkOpt str "25.05" {};
+
       extraSpecialArgs = mkOpt attrs {inherit mlib;} {
         example = literalExpression "{ inherit inputs; }";
       };
