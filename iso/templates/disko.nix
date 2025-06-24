@@ -8,7 +8,7 @@
         "mode=755"
       ];
     };
-    disk.ssd = {
+    disk.main = {
       # Add device here
       type = "disk";
       content = {
@@ -20,7 +20,7 @@
             type = "EF02";
           };
           efi = {
-            size = "500M";
+            size = "300M";
             type = "EF00";
             content = {
               type = "filesystem";
@@ -34,20 +34,23 @@
             content = {
               type = "btrfs";
               subvolumes = {
-                "/home" = {
+                "@home" = {
                   mountOptions = [];
                   mountpoint = "/home";
                 };
-                "/persist" = {
+                "@persist" = {
                   mountOptions = [];
-                  mountpoint = "/persist";
+                  mountpoint = "/nix/persist";
                 };
-                "/nix" = {
+                "@nix" = {
                   mountOptions = [];
                   mountpoint = "/nix";
                 };
-                "/tmp" = {
+                "@tmp" = {
                   mountpoint = "/tmp";
+                };
+                "@var_tmp" = {
+                  mountpoint = "/var/tmp";
                 };
               };
             };
@@ -56,6 +59,8 @@
       };
     };
   };
+
+  meow.impermanence.persist = "/nix/persist";
 
   fileSystems = {
     "/nix".neededForBoot = true;

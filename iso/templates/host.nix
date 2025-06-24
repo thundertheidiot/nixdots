@@ -1,22 +1,24 @@
 {...}: let
-  hostname = "hostname";
-  user = "meow";
-  password = "meowmeow"; # Initial password, change later
+  cfg = builtins.fromTOML ./meow.toml;
+
+  inherit (cfg) user hostname initialPassword desktopEnvironment;
 in {
   imports = [
     ./disko.nix
   ];
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
+
   time.timeZone = "Europe/Helsinki";
   networking.hostName = hostname;
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  users.users."${user}".initialPassword = password;
+  users.users."${user}".initialPassword = initialPassword;
 
   meow = {
     workstation.enable = true;
-    workstation.environment = ["gnome"];
+    workstation.environment = [desktopEnvironment];
+
     impermanence.enable = true;
 
     shell.enable = true;
@@ -26,9 +28,7 @@ in {
 
     inherit user;
 
-    home = {
-      stateVersion = "24.11";
-    };
+    home.stateVersion = "25.05";
   };
 
   boot.loader.grub.enable = true;
