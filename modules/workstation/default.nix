@@ -88,5 +88,32 @@ in {
     };
 
     networking.networkmanager.enable = true;
+
+    i18n.defaultLocale = "en_US.UTF-8";
+    i18n.extraLocales = [
+      "en_US.UTF-8/UTF-8"
+      "fi_FI.UTF-8/UTF-8"
+    ];
+    i18n.extraLocaleSettings =
+      {
+        LC_ALL = "en_US.UTF-8";
+        LC_CTYPE = "en_US.UTF-8";
+      }
+      // (listToAttrs (map (name: {
+          inherit name;
+          value = "fi_FI.UTF-8";
+        }) [
+          "LC_ADDRESS"
+          "LC_IDENTIFICATION"
+          "LC_MEASUREMENT"
+          "LC_MESSAGES"
+          "LC_MONETARY"
+          "LC_NAME"
+          "LC_NUMERIC"
+          "LC_PAPER"
+          "LC_TELEPHONE"
+          "LC_TIME"
+          "LC_COLLATE"
+        ]));
   };
 }
