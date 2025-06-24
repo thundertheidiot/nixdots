@@ -1,0 +1,5 @@
+hostname = "hostname"
+user = "user"
+password = "password"
+
+desktopEnvironment = "gnome"
