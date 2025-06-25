@@ -45,6 +45,9 @@ in {
 
     networking.networkmanager.enable = true;
 
+    programs.command-not-found.enable = true;
+    programs.command-not-found.dbPath = "${pkgs.path}/programs.sqlite";
+
     systemd.extraConfig = ''
       DefaultTimeoutStopSec=3s
     '';
