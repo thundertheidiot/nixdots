@@ -45,7 +45,7 @@ in {
             config,
             ...
           }: {
-            imports = import ../modules;
+            imports = import ../_legacy_modules;
 
             nixpkgs = {
               overlays = [
