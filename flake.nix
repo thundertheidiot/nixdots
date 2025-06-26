@@ -20,48 +20,46 @@
     ];
   };
 
-  outputs = {self, ...} @ inputs: let
-    lib = inputs.nixpkgs.lib;
-    mlib = (import ./lib) {inherit lib;};
-  in rec {
-    formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.alejandra;
+  # outputs = {self, ...} @ inputs: let
+  #   lib = inputs.nixpkgs.lib;
+  #   mlib = (import ./lib) {inherit lib;};
+  # in rec {
+  #   formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
-    deploy.nodes = {
-      server = {
-        hostname = "192.168.101.101";
-        profiles.system = {
-          user = "root";
-          sshUser = "root";
-          path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
-        };
-      };
-    };
+  #   deploy.nodes = {
+  #     server = {
+  #       hostname = "192.168.101.101";
+  #       profiles.system = {
+  #         user = "root";
+  #         sshUser = "root";
+  #         path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
+  #       };
+  #     };
+  #   };
 
-    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
+  #   checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
 
-    nixosConfigurations =
-      gen ["desktop" "server" "x220" "t440p" "digiboksi"]
-      // {
-        iso = (import ./iso) {inherit mlib lib inputs;};
-      };
+  #   nixosConfigurations =
+  #     gen ["desktop" "server" "x220" "t440p" "digiboksi"]
+  #     // {
+  #       iso = (import ./iso) {inherit mlib lib inputs;};
+  #     };
 
-    nixosModules.default = {...}: {
-      imports = ./modules;
-    };
+  #   gen = hosts:
+  #     builtins.listToAttrs (builtins.map
+  #       (s: {
+  #         name = s;
+  #         # lib/os.nix
+  #         value = mlib.mkSystem {
+  #           nixosSystem = lib.nixosSystem;
+  #           inherit inputs mlib;
+  #           config = mlib.getHostConfig s;
+  #         };
+  #       })
+  #       hosts);
+  # };
 
-    gen = hosts:
-      builtins.listToAttrs (builtins.map
-        (s: {
-          name = s;
-          # lib/os.nix
-          value = mlib.mkSystem {
-            nixosSystem = lib.nixosSystem;
-            inherit inputs mlib;
-            config = mlib.getHostConfig s;
-          };
-        })
-        hosts);
-  };
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 
   inputs = {
     # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -70,6 +68,12 @@
     # TODO does this have any other implications?
     nixpkgs-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    import-tree.url = "github:vic/import-tree";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -133,9 +137,5 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     sops-nix.url = "github:Mic92/sops-nix";
-
-    # split up server flake, this is incredibly stupid
-    # i thought splitting flakes would make things more simple, but i'm 100% sure this will cause a million headaches down the line, because now they are tangled together
-    servers.url = "github:thundertheidiot/servers";
   };
 }
