@@ -6,7 +6,8 @@
 }: let
   inherit (builtins) readDir;
   inherit (lib.strings) removeSuffix;
-  inherit (lib.attrsets) mapAttrs';
+  inherit (lib) isFunction;
+  inherit (lib.attrsets) mapAttrs' hasAttr isAttrs;
 in {
   flake.nixosConfigurations = let
     getName = rec {
@@ -24,10 +25,24 @@ in {
       value = config.flake.mkSystem (let
         cfg' = import "${inputs.self.outPath}/hosts/${n}";
 
-        # modules = cfg'.modules;
-        # cfg = cfg'.config;
-        cfg = cfg';
-        modules = [];
+        fn = isFunction cfg';
+        attr = isAttrs cfg';
+        hasConfig = attr && hasAttr "config" cfg';
+        hasModules = attr && hasAttr "modules" cfg';
+
+        cfg =
+          if fn
+          then cfg'
+          else if hasConfig
+          then cfg'.config
+          else throw "No configuration.";
+
+        modules =
+          if fn
+          then []
+          else if hasModules
+          then cfg'.modules
+          else throw "No modules.";
       in {
         inherit cfg modules;
       });
