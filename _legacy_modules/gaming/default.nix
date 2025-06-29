@@ -43,7 +43,7 @@ in {
       programs.joycond-cemuhook.enable = true;
     })
     (lib.mkIf (cfg.enable && cfg.emulation) {
-      environment.systemPackages = [
+      environment.systemPackages = with pkgs; [
         # pkgs."2411".retroarchFull
         # (callPackage retroarch {
         #   cores = with libretro; [
@@ -52,6 +52,7 @@ in {
         #     parallel-n64
         #   ];
         # })
+        retroarch-full
       ];
     })
     (lib.mkIf (cfg.enable) {
