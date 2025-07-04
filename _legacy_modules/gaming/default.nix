@@ -53,6 +53,7 @@ in {
         #   ];
         # })
         retroarch-full
+        steamtinkerlaunch
       ];
     })
     (lib.mkIf (cfg.enable) {
