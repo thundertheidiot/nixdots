@@ -99,9 +99,9 @@ in {
 
       systemd.user.services.monado.environment = {
         HOME = config.meow.home.stubbornHomeDirectory;
-        XRT_COMPOSITOR_SCALE_PERCENTAGE = "100";
-        XRT_COMPOSITOR_COMPUTE = "1";
-        U_PACING_COMP_MIN_TIME_MS = "5";
+        XRT_COMPOSITOR_SCALE_PERCENTAGE = "140";
+        XRT_COMPOSITOR_COMPUTE = "0";
+        U_PACING_COMP_MIN_TIME_MS = "4";
         STEAMVR_LH_ENABLE = "1";
         LH_DRIVER = "steamvr";
         U_PACING_APP_USE_MIN_FRAME_PERIOD = "1";
@@ -109,16 +109,56 @@ in {
       };
     }
     # wlx-overlay-s
-    {
-      environment.systemPackages = with pkgs; [
+    (homeModule {
+      home.packages = with pkgs; [
         wlx-overlay-s
       ];
-    }
+
+      # xdg.configFile."wlxoverlay/openxr_actions.json5".text = lib.generators.toJSON [
+      #   {
+      #     profile = "/interaction_profiles/htc/vive_controller";
+      #     pose = {
+      #       left = "/user/hand/left/input/aim/pose";
+      #       right = "/user/hand/right/input/aim/pose";
+      #     };
+      #     click = {
+      #       left = "/user/hand/left/input/trigger/value";
+      #       right = "/user/hand/right/input/trigger/value";
+      #     };
+      #     grab = {
+      #       left = "/user/hand/left/input/squeeze/click";
+      #       right = "/user/hand/right/input/squeeze/click";
+      #     };
+      #     scroll = {
+      #       left = "/user/hand/left/input/trackpad/y";
+      #       right = "/user/hand/right/input/trackpad/y";
+      #     };
+      #     show_hide = {
+      #       left = "/user/hand/left/input/system/click";
+      #     };
+      #     space_drag = {
+      #       right = "/user/hand/right/input/system/click";
+      #     };
+      #     haptic = {
+      #       left = "/user/hand/left/output/haptic";
+      #       right = "/user/hand/right/output/haptic";
+      #     };
+      #   }
+      # ];
+
+      xdg.configFile."wlxoverlay/conf.d/config.yaml".source = (pkgs.formats.yaml {}).generate "config.yaml" {
+        desktop_view_scale = 2.0;
+      };
+    })
     {
       services.ananicy = {
         extraRules = [
           {
             "name" = "monado";
+            "nice" = -20;
+          }
+          {
+            "name" = "VRChat.exe";
             "nice" = -20;
           }
         ];
@@ -137,21 +177,23 @@ in {
           ];
 
           text = let
+            card = "card0";
+
             enable_vr_mode = pkgs.writeShellScript "enable_vr_mode" ''
               card="$(${pkgs.fd}/bin/fd --absolute-path --type symlink 'card[0-9]$' /sys/class/drm)"
 
               [ "$(cat $card/device/power_dpm_force_performance_level)" = "manual" ] && \
                 [ "$(grep ' VR\*' $card/device/pp_power_profile_mode)" ] && exit 0
 
-              echo "manual" > /sys/class/drm/card1/device/power_dpm_force_performance_level
+              echo "manual" > /sys/class/drm/${card}/device/power_dpm_force_performance_level
 
-              vr_profile=$(cat /sys/class/drm/card1/device/pp_power_profile_mode | grep ' VR ' | awk '{ print $1; }')
-              echo $vr_profile > /sys/class/drm/card1/device/pp_power_profile_mode
+              vr_profile=$(cat /sys/class/drm/${card}/device/pp_power_profile_mode | grep ' VR ' | awk '{ print $1; }')
+              echo $vr_profile > /sys/class/drm/${card}/device/pp_power_profile_mode
             '';
 
             disable_vr_mode = pkgs.writeShellScript "disable_vr_mode" ''
-              echo "auto" > /sys/class/drm/card1/device/power_dpm_force_performance_level
-              echo 0 > /sys/class/drm/card1/device/pp_power_profile_mode
+              echo "auto" > /sys/class/drm/${card}/device/power_dpm_force_performance_level
+              echo 0 > /sys/class/drm/${card}/device/pp_power_profile_mode
             '';
           in ''
             [ -z "$1" ] && { echo "provide argument"; exit 1; }
@@ -183,6 +225,8 @@ in {
                 fi
 
                 # { sleep 3; pkexec renice -20 -p $(pgrep monado); } &
+
+                { sleep 10; wlx-overlay-s; } &
 
                 # steam is placed in stubbornHome, this needs to be set so monado can find the steamvr stuff
                 env HOME=${config.meow.home.stubbornHomeDirectory} \
