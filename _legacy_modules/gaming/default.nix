@@ -53,7 +53,7 @@ in {
         #   ];
         # })
         retroarch-full
-        steamtinkerlaunch
+        protontricks
       ];
     })
     (lib.mkIf (cfg.enable) {
