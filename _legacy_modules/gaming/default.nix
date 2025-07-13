@@ -6,6 +6,7 @@
   ...
 }: let
   inherit (mlib) mkOpt mkEnOpt;
+  inherit (lib) mkForce;
 
   cfg = config.meow.gaming;
 in {
@@ -22,6 +23,10 @@ in {
   ];
 
   config = lib.mkMerge [
+    {
+      boot.kernelPackages = mkForce pkgs.linuxPackages_cachyos-lto;
+      chaotic.mesa-git.enable = true;
+    }
     (lib.mkIf (cfg.enable) {
       environment.systemPackages = let
         # inherit (pkgs.ataraxiasjel) proton-ge wine-ge;
@@ -93,10 +98,25 @@ in {
         capSysNice = false;
       };
 
+      programs.gamemode = {
+        enable = true;
+        settings = {
+          gpu = {
+            amd_performance_level = "high";
+          };
+        };
+      };
+
       services.ananicy = {
         enable = true;
         package = pkgs.ananicy-cpp;
         rulesProvider = pkgs.ananicy-rules-cachyos;
+        extraRules = [
+          {
+            name = "GameThread";
+            nice = -20;
+          }
+        ];
       };
     })
   ];

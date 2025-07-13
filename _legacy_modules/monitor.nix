@@ -60,9 +60,9 @@ in {
           )
           edids;
 
-        environment.systemPackages = [
-          pkgs.mpkgs.cru
-        ];
+        # environment.systemPackages = [
+        #   pkgs.mpkgs.cru
+        # ];
       })
       {
         services.xserver.xrandrHeads = map (m:

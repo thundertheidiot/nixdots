@@ -28,6 +28,13 @@
     };
   });
 
+  gnome2 =
+    prev.gnome2
+    // {
+      # ???????????????
+      libglade = final."2505".gnome2.libglade;
+    };
+
   mpd = final."2505".mpd;
 
   vulkan-validation-layers = prev.vulkan-validation-layers.overrideAttrs (old: {
