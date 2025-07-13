@@ -49,7 +49,7 @@ in {
       trusted-users = [config.meow.user];
     };
 
-    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
 
     environment.systemPackages = with pkgs; [
       pulsemixer
