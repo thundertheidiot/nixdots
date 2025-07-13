@@ -25,7 +25,7 @@ in {
   config = lib.mkMerge [
     {
       boot.kernelPackages = mkForce pkgs.linuxPackages_cachyos-lto;
-      chaotic.mesa-git.enable = true;
+      # chaotic.mesa-git.enable = true;
     }
     (lib.mkIf (cfg.enable) {
       environment.systemPackages = let
