@@ -36,9 +36,6 @@ in {
       #   wantedBy = ["multi-user.target"];
       # };
 
-      programs.corectrl.enable = true;
-      # programs.corectrl.gpuOverclock.enable = true;
-
       programs.envision = {
         enable = true;
       };

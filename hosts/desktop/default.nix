@@ -1,5 +1,7 @@
 [
   "base"
+  "plasma"
+  "plasma/basic"
   ({
     lib,
     config,
@@ -23,6 +25,7 @@
       "video=DP-3:D"
       "video=DP-1:D"
       "video=HDMI-A-1:D"
+      "amdgpu.ppfeaturemask=0xffffffff"
     ];
 
     boot.supportedFilesystems = [
@@ -34,6 +37,11 @@
 
     time.timeZone = "Europe/Helsinki";
     networking.hostName = "desktop";
+
+    programs.corectrl.enable = true;
+    hardware.amdgpu.overdrive.enable = true;
+    hardware.amdgpu.overdrive.ppfeaturemask = "0xffffffff";
+    programs.corectrl.gpuOverclock.enable = true;
 
     home-manager.sharedModules = [
       {
