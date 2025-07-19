@@ -41,7 +41,6 @@
     programs.corectrl.enable = true;
     hardware.amdgpu.overdrive.enable = true;
     hardware.amdgpu.overdrive.ppfeaturemask = "0xffffffff";
-    programs.corectrl.gpuOverclock.enable = true;
 
     home-manager.sharedModules = [
       {
