@@ -46,17 +46,13 @@
       {
         home.stateVersion = "24.05";
         mHome.browser.zen.enable = true;
+        mHome.browser.firefox.enable = true;
         mHome.emacs.enable = true;
 
         gtk.gtk3.bookmarks = [
           # "file:///mnt/4tb"
           "file:///mnt/1tb_nvme"
         ];
-
-        wayland.windowManager.hyprland.settings.render = {
-          explicit_sync = 1;
-          explicit_sync_kms = 1;
-        };
 
         services.syncthing = {
           enable = true;
@@ -70,7 +66,7 @@
 
       user = "thunder";
 
-      workstation.environment = ["plasma"];
+      workstation.environment = ["plasma" "hyprland"];
       workstation.plasma.opinionatedConfig = true;
       workstation.hyprland.extraAutostart = [
         "${pkgs.ckb-next}/bin/ckb-next -b"

@@ -51,6 +51,7 @@ in {
         mapAttrs (_: v: {
           installation_mode = "force_installed";
           install_url = v;
+          private_browsing = true;
         })
         defaultExtensions;
     };
