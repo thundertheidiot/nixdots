@@ -7,7 +7,7 @@
   ...
 }: let
   inherit (mlib) mkEnOpt mkEnOptTrue;
-  inherit (lib) mkIf mkMerge mapAttrs;
+  inherit (lib) mkIf mkMerge mapAttrs recursiveUpdate;
 
   cfg = config.mHome.browser;
 in {
@@ -88,12 +88,30 @@ in {
       programs.firefox = {
         enable = true;
 
-        policies = commonPolicies;
+        policies = recursiveUpdate commonPolicies {
+          # firefox color for stylix
+          ExtensionSettings."FirefoxColor@mozilla.com" = {
+            installation_mode = "force_installed";
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-color/addon-4757633-latest.xpi";
+            private_browsing = true;
+          };
+        };
 
         profiles."nix-managed" = {
           id = 0;
+
+          settings = {
+            "privacy.trackingprotection.enabled" = true;
+            "privacy.trackingprotection.socialtracking.enabled" = true;
+            "browser.contentblocking.category" = "strict";
+          };
+
+          extensions.force = true;
         };
       };
+
+      stylix.targets.firefox.profileNames = ["nix-managed"];
+      stylix.targets.firefox.colorTheme.enable = true;
     })
     (mkIf cfg.firefox.defaults {
       programs.firefox = {
