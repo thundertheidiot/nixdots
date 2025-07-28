@@ -125,6 +125,9 @@ in {
               "$shiftmod" = "SUPER_SHIFT";
 
               debug.disable_logs = false;
+              # fix gamescope
+              debug.full_cm_proto = true;
+
               ecosystem.no_update_news = true;
 
               windowrulev2 = [
@@ -259,7 +262,7 @@ in {
 
               bind = [
                 "$mod, return, exec, ${terminal}"
-                "$mod, W, exec, firedragon"
+                "$mod, W, exec, zen"
                 "$mod, D, exec, $(${pkgs.tofi}/bin/tofi-run)"
                 "$mod, E, exec, emacsclient -c -a ''"
                 "$mod, semicolon, exec, emacsclient -c -a '' -e '(th/eshell)'"
