@@ -1,22 +1,28 @@
 keys:
- - &desk age1est4jdeu803qv6jng7vrj9x92l3xs0mr6qwv6fpt0p7tdd26xd6s84k2pq
- - &digiboksi age1dlh099k5q7uafl7esvrxtewjmmcw2vedmymfw3l8euckxxrqe9wqnhcus3
- - &server age1w785k56chrrsc29jgkjzyvxfj3lx5sx56cm5fg6ldvychdga9umspddsfg
- - &t440p age196cqwq7cfr20zhlxwdnjrtlnn4w3ay5q52wxec5pyk2ksvq3s9ms0qjzyr
+  - &desk age1est4jdeu803qv6jng7vrj9x92l3xs0mr6qwv6fpt0p7tdd26xd6s84k2pq
+  - &digiboksi age1dlh099k5q7uafl7esvrxtewjmmcw2vedmymfw3l8euckxxrqe9wqnhcus3
+  - &server age1w785k56chrrsc29jgkjzyvxfj3lx5sx56cm5fg6ldvychdga9umspddsfg
+  - &t440p age196cqwq7cfr20zhlxwdnjrtlnn4w3ay5q52wxec5pyk2ksvq3s9ms0qjzyr
 creation_rules:
- - path_regex: sops/digiboksi/[^/]+$
-   key_groups:
-   - age:
-     - *desk
-     - *t440p
-     - *digiboksi
- - path_regex: hosts/server/secrets/[^/]+$
-   key_groups:
-   - age:
-     - *desk
-     - *t440p
-     - *server
- - path_regex: sops/desk/[^/]+$
-   key_groups:
-   - age:
-     - *desk
+  - path_regex: sops/digiboksi/[^/]+$
+    key_groups:
+      - age:
+          - *desk
+          - *t440p
+          - *digiboksi
+  - path_regex: hosts/server/secrets/[^/]+$
+    key_groups:
+      - age:
+          - *desk
+          - *t440p
+          - *server
+  - path_regex: certs/[^/]+$
+    key_groups:
+      - age:
+          - *desk
+          - *t440p
+          - *server
+  - path_regex: sops/desk/[^/]+$
+    key_groups:
+      - age:
+          - *desk
