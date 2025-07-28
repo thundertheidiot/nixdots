@@ -24,6 +24,7 @@ in {
     ./homepage.nix
     ./secrets
     ./redlib.nix
+    ./n8n.nix
 
     # local self signed certificates
     (import ../../certs).module
