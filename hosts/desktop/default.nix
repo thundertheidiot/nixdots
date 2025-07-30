@@ -1,5 +1,7 @@
 [
   "base"
+  "efi"
+  "desktop"
   "plasma"
   "plasma/basic"
   ({
@@ -189,16 +191,6 @@
     users.users."${config.meow.user}".extraGroups = ["adbusers"];
 
     hardware.ckb-next.enable = true;
-
-    boot.loader = {
-      grub = {
-        enable = true;
-        efiSupport = true;
-        devices = ["nodev"];
-      };
-      efi.canTouchEfiVariables = true;
-      efi.efiSysMountPoint = "/boot";
-    };
 
     meow.impermanence.enable = true;
     meow.impermanence.persist = "/persist";
