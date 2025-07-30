@@ -538,6 +538,33 @@
       Restart = lib.mkOverride 90 "no";
     };
   };
+  virtualisation.oci-containers.containers."uwu-flaresolverr" = {
+    image = "ghcr.io/flaresolverr/flaresolverr:latest";
+    environment = {
+      "LOG_LEVEL" = "info";
+    };
+    dependsOn = [
+      "gluetun"
+    ];
+    log-driver = "journald";
+    extraOptions = [
+      "--network=container:gluetun"
+    ];
+  };
+  systemd.services."docker-uwu-flaresolverr" = {
+    serviceConfig = {
+      Restart = lib.mkOverride 90 "always";
+      RestartMaxDelaySec = lib.mkOverride 90 "1m";
+      RestartSec = lib.mkOverride 90 "100ms";
+      RestartSteps = lib.mkOverride 90 9;
+    };
+    partOf = [
+      "docker-compose-uwu-root.target"
+    ];
+    wantedBy = [
+      "docker-compose-uwu-root.target"
+    ];
+  };
   virtualisation.oci-containers.containers."watchtower" = {
     image = "containrrr/watchtower:latest";
     environment = {
