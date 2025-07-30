@@ -157,6 +157,13 @@ services:
       - /mnt/storage/media:/media
     restart: unless-stopped
 
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    network_mode: "service:gluetun"
+    environment:
+      - LOG_LEVEL=info
+    restart: unless-stopped
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     network_mode: "service:gluetun"
