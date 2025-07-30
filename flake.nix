@@ -115,11 +115,11 @@
       # inputs.nixpkgs.follows = "nixpkgs";
       # inputs.nixpkgs.follows = "nixpkgs";
       # url = "github:hyprwm/Hyprland/v0.46.2";
-      url = "github:hyprwm/Hyprland";
+      url = "github:hyprwm/Hyprland/v0.50.1";
     };
 
     hyprsplit = {
-      url = "github:shezdy/hyprsplit";
+      url = "github:shezdy/hyprsplit/v0.50.1";
       inputs.hyprland.follows = "hyprland";
     };
 

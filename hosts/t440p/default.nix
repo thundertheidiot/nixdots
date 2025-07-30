@@ -1,80 +1,83 @@
-{
-  config,
-  lib,
-  pkgs,
-  modulesPath,
-  mlib,
-  ...
-}: {
-  system.stateVersion = "25.05";
+[
+  "base"
+  ({
+    config,
+    lib,
+    pkgs,
+    modulesPath,
+    mlib,
+    ...
+  }: {
+    imports = [
+      # ./desktop/firedragon.nix
+      ./disko.nix
+    ];
 
-  time.timeZone = "Europe/Helsinki";
-  networking.hostName = "t440p";
+    system.stateVersion = "25.05";
 
-  # virtualisation.docker.enable = true;
+    time.timeZone = "Europe/Helsinki";
+    networking.hostName = "t440p";
 
-  imports = [
-    # ./desktop/firedragon.nix
-    ./disko.nix
-  ];
+    # virtualisation.docker.enable = true;
 
-  meow.impermanence.enable = true;
+    meow.impermanence.enable = true;
 
-  users.users.thunder.initialPassword = "password";
+    users.users.thunder.initialPassword = "password";
 
-  home-manager.sharedModules = [
-    {
-      home.stateVersion = "25.05";
-      mHome.browser.zen.enable = true;
-      mHome.setup.fullLanguages = true;
-    }
-  ];
-
-  meow = {
-    # fullSetup = true;
-    workstation.enable = true;
-    workstation.environment = ["plasma"];
-    workstation.plasma.basicConfig = true;
-    workstation.plasma.opinionatedConfig = true;
-
-    user = "thunder";
-
-    gaming.enable = true;
-    # gaming.emulation = true;
-    # gaming.games = ["duckgame"];
-
-    emacs.enable = true;
-    shell.enable = true;
-
-    ssh.rootKey = true;
-
-    gpu = "intel";
-
-    keyboard = {
-      enable = true;
-      devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
-    };
-
-    monitors = [
+    home-manager.sharedModules = [
       {
-        name = "eDP-1";
-        width = "1920";
-        height = "1080";
+        home.stateVersion = "25.05";
+        mHome.browser.zen.enable = true;
+        mHome.setup.fullLanguages = true;
       }
     ];
-  };
 
-  # users.users."thunder".extraGroups = ["docker"];
+    meow = {
+      # fullSetup = true;
+      workstation.enable = true;
+      workstation.environment = ["plasma"];
+      workstation.plasma.basicConfig = true;
+      workstation.plasma.opinionatedConfig = true;
 
-  boot.loader.grub.enable = true;
+      user = "thunder";
 
-  boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc"];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+      gaming.enable = true;
+      # gaming.emulation = true;
+      # gaming.games = ["duckgame"];
 
-  networking.useDHCP = lib.mkDefault true;
+      emacs.enable = true;
+      shell.enable = true;
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-}
+      ssh.rootKey = true;
+
+      gpu = "intel";
+
+      keyboard = {
+        enable = true;
+        devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
+      };
+
+      monitors = [
+        {
+          name = "eDP-1";
+          width = "1920";
+          height = "1080";
+        }
+      ];
+    };
+
+    # users.users."thunder".extraGroups = ["docker"];
+
+    boot.loader.grub.enable = true;
+
+    boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc"];
+    boot.initrd.kernelModules = [];
+    boot.kernelModules = ["kvm-intel"];
+    boot.extraModulePackages = [];
+
+    networking.useDHCP = lib.mkDefault true;
+
+    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  })
+]
