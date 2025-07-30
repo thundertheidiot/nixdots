@@ -48,9 +48,10 @@ in {
     programs.command-not-found.enable = true;
     programs.command-not-found.dbPath = "${pkgs.path}/programs.sqlite";
 
-    systemd.extraConfig = ''
-      DefaultTimeoutStopSec=3s
-    '';
+    boot.initrd.systemd.enable = true;
+    boot.initrd.systemd.settings.Manager = {
+      DefaultTimeoutStopSec = "3s";
+    };
 
     security.sudo.enable = lib.mkForce false;
     security.sudo-rs = {

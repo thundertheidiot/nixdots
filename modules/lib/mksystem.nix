@@ -8,7 +8,7 @@
   inherit (lib) isAttrs isFunction isList evalModules mkOption;
   inherit (lib.types) listOf str;
 
-  root = inputs.self.outPath;
+  inherit (config.flake) root;
 in {
   flake.mkSystem = {modules}:
     assert isList modules;
@@ -103,7 +103,7 @@ in {
                   inputs.emacs-overlay.overlay
                   inputs.rust-overlay.overlays.default
                   inputs.nixpkgs-xr.overlays.default
-                  (import "${root}/overrides.nix" {inherit lib inputs;})
+                  # (import "${root}/overrides.nix" {inherit lib inputs;})
                 ];
               };
               home-manager = {
