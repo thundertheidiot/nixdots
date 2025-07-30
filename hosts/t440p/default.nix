@@ -1,5 +1,8 @@
 [
   "base"
+  "desktop"
+  "plasma"
+  "plasma/basic"
   ({
     config,
     lib,
