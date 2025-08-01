@@ -21,6 +21,9 @@ in {
       enable = true;
 
       flake = "github:thundertheidiot/nixdots";
+      flags = [
+        "--accept-flake-config"
+      ];
       persistent = true;
 
       dates = "02:00";
