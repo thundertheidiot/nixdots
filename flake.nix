@@ -62,10 +62,7 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 
   inputs = {
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.xz";
-    # this download of the nixos channel includes the programs.sqlite database, which can be fed to programs.command-not-found
-    # TODO does this have any other implications?
     nixpkgs-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";
 

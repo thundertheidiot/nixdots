@@ -56,6 +56,21 @@
 
     definedAliases = ["@no"];
   };
+  "Noogle" = {
+    urls = [
+      {
+        template = "https://noogle.dev";
+        params = [
+          {
+            name = "q";
+            value = "{searchTerms}";
+          }
+        ];
+      }
+    ];
+
+    definedAliases = ["@noogle"];
+  };
   "Home Manager Options" = {
     urls = [
       {
