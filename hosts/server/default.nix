@@ -1,5 +1,7 @@
 [
   "base"
+  "clean"
+  "autoupgrade/server"
   ({
     pkgs,
     config,
@@ -36,12 +38,6 @@
       system.stateVersion = "24.11";
       time.timeZone = "Europe/Helsinki";
       networking.hostName = "uwu";
-
-      nix.gc = {
-        automatic = true;
-        dates = "daily";
-        options = "--delete-older-than 7d";
-      };
 
       hardware.graphics.enable = true;
       hardware.graphics.extraPackages = with pkgs; [
