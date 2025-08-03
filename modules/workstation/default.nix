@@ -49,14 +49,15 @@ in {
       trusted-users = [config.meow.user];
     };
 
+    programs.command-not-found.enable = true;
+    programs.command-not-found.dbPath = "${pkgs.path}/programs.sqlite";
+
     boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
 
     environment.systemPackages = with pkgs; [
       pulsemixer
       rustup
       sops
-
-      nh
 
       ffmpeg
 
@@ -73,6 +74,8 @@ in {
       libnotify
 
       inputs.deploy-rs.packages."${pkgs.system}".default
+
+      wireguard-tools
     ];
 
     # services.cpupower-gui.enable = true;
@@ -97,6 +100,10 @@ in {
     };
 
     networking.networkmanager.enable = true;
+    # needed for vpns
+    networking.firewall.checkReversePath = false;
+
+    systemd.services."NetworkManager-wait-online".enable = false;
 
     i18n.defaultLocale = "en_US.UTF-8";
     i18n.extraLocales = [

@@ -5,5 +5,4 @@ with pkgs; {
   kodi = callPackage ./kodi {};
   screenshot = callPackage ./screenshot {};
   wl_screenshot = callPackage ./wl_screenshot.nix {};
-  bambustudio = callPackage ./bambustudio.nix {};
 }
