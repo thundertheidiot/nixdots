@@ -1421,6 +1421,21 @@
         "type": "github"
       }
     },
+    "pkgs-by-name": {
+      "locked": {
+        "lastModified": 1743779435,
+        "narHash": "sha256-5eaQ3iKcwUbLw7pOJJqV85qgf5L+ihfsISrifGM7czQ=",
+        "owner": "drupol",
+        "repo": "pkgs-by-name-for-flake-parts",
+        "rev": "477b3e8f981e3d7bac9d297e64796c918942f744",
+        "type": "github"
+      },
+      "original": {
+        "owner": "drupol",
+        "repo": "pkgs-by-name-for-flake-parts",
+        "type": "github"
+      }
+    },
     "plasma-manager": {
       "inputs": {
         "home-manager": [
@@ -1560,6 +1575,7 @@
         "nixpkgs-25-05": "nixpkgs-25-05",
         "nixpkgs-xr": "nixpkgs-xr",
         "nur": "nur",
+        "pkgs-by-name": "pkgs-by-name",
         "plasma-manager": "plasma-manager",
         "rust-overlay": "rust-overlay_2",
         "sops-nix": "sops-nix",

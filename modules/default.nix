@@ -15,6 +15,7 @@
   # specific configuration
   # These are probably less useful
   ./base.nix
+  ./boot.nix
   ./shell.nix
   ./ssh.nix
   ./certs.nix

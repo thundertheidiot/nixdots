@@ -1,8 +1,4 @@
-{
-  config,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   flake.modules.nixos.base = {
     nixpkgs.overlays = [
       (final: prev: rec {
@@ -25,7 +21,7 @@
           config.allowUnfree = final.config.allowUnfree;
         };
 
-        mpkgs = (import "${config.flake.root}/pkgs") {pkgs = final;};
+        mpkgs = (import "${inputs.self.outPath}/pkgs") {pkgs = final;};
 
         avrdude = prev.avrdude.overrideAttrs (old: {
           src = old.src.override {
