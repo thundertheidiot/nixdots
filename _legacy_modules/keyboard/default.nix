@@ -67,6 +67,29 @@ in {
             l (tap-hold-release 150 150 l ralt)
             ; (tap-hold-release 150 150 ; rmet))
 
+          (defalias
+            < S-,
+            > S-.
+            | S-\
+            ^ S-6
+            { S-[
+            } S-]
+            $ S-4
+            unds S--
+            ! S-1
+            * S-8
+            & S-7
+            # S-3
+            lp S-9
+            rp S-0
+            dqu S-'
+            ~ S-grv
+            + S-=
+            % S-5
+            @ S-2
+            : S-;
+            )
+
           (deflayer base
             esc
             grv  1    2    3    4    5    6    7    8    9    0    -     =    bspc
@@ -100,9 +123,9 @@ in {
           (deflayer symbol
             _
             _    _    _    _    _    _    _    _    _    _    _    _     _     _
-            _    `    <    >    -    |    ^    {    }    $    _    _     _     _
-            _    !    *    /    =    &    #    (    )    ;    "    _     _
-            _    ~    +    [    ]    %    @    :    ,    .    '    _     _
+            _    grv  @<   @>   -    @|   @^   @{   @}   @$   @unds _     _     _
+            _    @!   @*   @/   =    @&   @#   @lp  @rp  ;    @dqu _     _
+            _    _    @~   @+   [    ]    @%   @@   @:   ,    .    '    _
             _    _    _              _              _    _    _
                                                               _    _    _
           )
