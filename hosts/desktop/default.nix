@@ -2,12 +2,17 @@
   lib,
   config,
   pkgs,
+  inputs,
   ...
 }: {
   imports = [
     ./vr.nix
     ./rathole.nix
     # ./firedragon.nix
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
+    inputs.nixos-hardware.nixosModules.common-gpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
   ];
 
   system.stateVersion = "24.05";
@@ -21,7 +26,7 @@
     "video=DP-3:D"
     "video=DP-1:D"
     "video=HDMI-A-1:D"
-    "amdgpu.ppfeaturemask=0xffffffff"
+    # "amdgpu.ppfeaturemask=0xffffffff"
   ];
 
   boot.supportedFilesystems = [
@@ -35,8 +40,8 @@
   networking.hostName = "desktop";
 
   programs.corectrl.enable = true;
-  hardware.amdgpu.overdrive.enable = true;
-  hardware.amdgpu.overdrive.ppfeaturemask = "0xffffffff";
+  # hardware.amdgpu.overdrive.enable = true;
+  # hardware.amdgpu.overdrive.ppfeaturemask = "0xffffffff";
 
   home-manager.sharedModules = [
     {
