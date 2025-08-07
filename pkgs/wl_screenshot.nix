@@ -6,7 +6,7 @@
   swappy,
   hyprland,
   wl-clipboard,
-  picturesDir,
+  picturesDir ? "$HOME/Pictures",
   ...
 }:
 writeShellApplication {

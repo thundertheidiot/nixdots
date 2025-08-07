@@ -15,6 +15,7 @@ in {
 
   imports = [
     ./authentik.nix
+    ./camera.nix
     ./disko.nix
     ./docker
     ./forgejo.nix
@@ -25,6 +26,7 @@ in {
     ./secrets
     ./redlib.nix
     ./n8n.nix
+    # ./home-assistant.nix
 
     # local self signed certificates
     (import ../../certs).module
