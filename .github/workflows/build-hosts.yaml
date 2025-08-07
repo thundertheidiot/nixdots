@@ -25,4 +25,4 @@ jobs:
       - name: Build t440p
         run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
       - name: Build server
-        run: nix build --accept-flake-config .#nixosConfigurations.server.config.system.build.toplevel
+        run: nix build --accept-flake-config .#nixosConfigurations.uwu.config.system.build.toplevel
