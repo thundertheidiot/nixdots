@@ -65,6 +65,9 @@ in {
       programs.steam = {
         enable = true;
 
+        remotePlay.openFirewall = true;
+        localNetworkGameTransfers.openFirewall = true;
+
         package = pkgs.steam.override {
           extraPkgs = pkgs:
             with pkgs; [
