@@ -76,6 +76,8 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
     deploy-rs.url = "github:serokell/deploy-rs";
 
     home-manager = {
