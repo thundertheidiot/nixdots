@@ -8,7 +8,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     env:
-      HOSTS: t440p server
+      HOSTS: t440p uwu 
     permissions:
       contents: write
     steps:
