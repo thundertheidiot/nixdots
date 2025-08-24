@@ -25,7 +25,7 @@
   home-manager.sharedModules = [
     {
       home.stateVersion = "25.05";
-      mHome.browser.zen.enable = true;
+      mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
     }
   ];
