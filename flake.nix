@@ -111,11 +111,12 @@
 
     naersk.url = "github:nix-community/naersk";
 
+    slippi.url = "github:lytedev/slippi-nix";
+
     hyprland = {
-      # inputs.nixpkgs.follows = "nixpkgs";
-      # inputs.nixpkgs.follows = "nixpkgs";
       # url = "github:hyprwm/Hyprland/v0.46.2";
       url = "github:hyprwm/Hyprland/v0.50.1";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprsplit = {
