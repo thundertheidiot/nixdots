@@ -33,7 +33,7 @@
   meow = {
     # fullSetup = true;
     workstation.enable = true;
-    workstation.environment = ["plasma"];
+    workstation.environment = ["hyprland"];
     workstation.plasma.basicConfig = true;
     workstation.plasma.opinionatedConfig = true;
 

@@ -41,7 +41,7 @@ in {
     ];
 
     boot.initrd.systemd.enable = true;
-    boot.initrd.systemd.settings.Manager = {
+    systemd.settings.Manager = {
       DefaultTimeoutStopSec = "3s";
     };
 
