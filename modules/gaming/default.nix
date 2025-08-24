@@ -67,6 +67,7 @@ in {
 
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
+        extest.enable = true;
 
         package = pkgs.steam.override {
           extraPkgs = pkgs:

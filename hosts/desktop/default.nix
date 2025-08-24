@@ -13,6 +13,8 @@
     inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+
+    inputs.slippi.nixosModules.default
   ];
 
   system.stateVersion = "24.05";
@@ -43,7 +45,30 @@
   # hardware.amdgpu.overdrive.enable = true;
   # hardware.amdgpu.overdrive.ppfeaturemask = "0xffffffff";
 
+  # the finals fix
+  security.pam.loginLimits = [
+    {
+      domain = "*";
+      type = "soft";
+      item = "nofile";
+      value = "200000";
+    }
+    {
+      domain = "*";
+      type = "hard";
+      item = "nofile";
+      value = "200000";
+    }
+  ];
+
+  systemd.user.extraConfig = "DefaultLimitNOFILE=200000:200000";
+
+  systemd.settings.Manager = {
+    DefaultLimitNOFILE = "200000:200000";
+  };
+
   home-manager.sharedModules = [
+    inputs.slippi.homeManagerModules.default
     {
       home.stateVersion = "24.05";
       mHome.browser.zen.enable = true;
@@ -58,6 +83,8 @@
       services.syncthing = {
         enable = true;
       };
+
+      slippi-launcher.isoPath = "/home/thunder/Games/roms/Super Smash Bros. Melee (USA) (En,Ja) (v1.02).iso";
     }
   ];
 
