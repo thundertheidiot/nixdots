@@ -31,7 +31,7 @@
   ];
 
   meow = {
-    # fullSetup = true;
+    fullSetup = true;
     workstation.enable = true;
     workstation.environment = ["plasma"];
     workstation.plasma.basicConfig = true;
