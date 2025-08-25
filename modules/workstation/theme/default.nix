@@ -178,7 +178,7 @@ in {
 
       stylix.targets = {
         fish.enable = false;
-        qt.platform = "kde";
+        # qt.platform = "kde";
       };
 
       stylix.enable = true;
