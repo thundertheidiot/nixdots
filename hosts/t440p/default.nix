@@ -30,12 +30,12 @@
     }
   ];
 
+  services.cpupower-gui.enable = true;
+
   meow = {
     fullSetup = true;
     workstation.enable = true;
-    workstation.environment = ["plasma"];
-    workstation.plasma.basicConfig = true;
-    workstation.plasma.opinionatedConfig = true;
+    workstation.environment = ["hyprland"];
 
     user = "thunder";
 
