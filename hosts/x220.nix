@@ -21,29 +21,26 @@
   # users.users.thunder.group = "thunder";
   # users.groups.thunder = {};
 
-  stylix.enable = false;
-  stylix.autoEnable = false;
+  # stylix.enable = false;
+  # stylix.autoEnable = false;
 
   meow = {
-    # workstation = {
-    # enable = true;
-    # environment = ["hyprland"];
-    # displayManager = "gdm";
-    # };
+    workstation = {
+      enable = true;
+      environment = ["hyprland"];
+      displayManager = "gdm";
+    };
 
-    workstation.enable = false;
-    home.enable = false;
-
-    # workstation.flatpak.graphicalStore = true;
-
-    # emacs.exwm = true;
-    # shell.enable = true;
+    emacs.enable = true;
+    shell.enable = true;
 
     ssh.key = false;
     ssh.rootKey = true;
 
     # old-tv.enable = true;
-    tv.enable = true;
+    # tv.enable = true;
+    # workstation.enable = false;
+    # home.enable = false;
 
     gpu = "intel";
 
