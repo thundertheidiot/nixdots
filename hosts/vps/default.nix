@@ -6,6 +6,10 @@
 }: let
   inherit (lib) mkForce;
 in {
+  imports = [
+    ./disko.nix
+  ];
+
   config = {
     system.stateVersion = "25.05";
     time.timeZone = "Europe/Helsinki";
