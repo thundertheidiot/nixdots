@@ -20,7 +20,10 @@
 
   meow.impermanence.enable = true;
 
-  users.users.thunder.initialPassword = "password";
+  users.users.thunder = {
+    initialPassword = "password";
+    extraGroups = ["docker"];
+  };
 
   security.pki.certificates = [
     ''
@@ -48,11 +51,18 @@
     ''
   ];
 
+  virtualisation.docker.enable = true;
+
   home-manager.sharedModules = [
     {
       home.stateVersion = "25.05";
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
+
+      home.packages = with pkgs; [
+        vscode
+        distrobox
+      ];
     }
   ];
 
@@ -89,8 +99,6 @@
       }
     ];
   };
-
-  # users.users."thunder".extraGroups = ["docker"];
 
   boot.loader.grub.enable = true;
 
