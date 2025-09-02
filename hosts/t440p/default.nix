@@ -68,6 +68,10 @@
 
   services.cpupower-gui.enable = true;
 
+  # virtualisation.virtualbox.host.enable = true;
+  # users.extraGroups.vboxusers.members = ["thunder"];
+  # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+
   meow = {
     fullSetup = true;
     workstation.enable = true;
@@ -75,7 +79,7 @@
 
     user = "thunder";
 
-    gaming.enable = true;
+    # gaming.enable = true;
     # gaming.emulation = true;
     # gaming.games = ["duckgame"];
 
@@ -85,6 +89,8 @@
     ssh.rootKey = true;
 
     gpu = "intel";
+
+    virtualization.enable = true;
 
     keyboard = {
       enable = true;
