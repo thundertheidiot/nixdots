@@ -50,6 +50,8 @@ in {
     services.xserver.enable = lib.mkDefault cfg.exwm;
     services.xserver.displayManager.startx.enable = cfg.exwm;
 
+    meow.searx.enable = true;
+
     home-manager.sharedModules = [
       {
         mHome.emacs.enable = cfg.enable;
