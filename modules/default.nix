@@ -24,6 +24,7 @@
   ./old-tv
   ./tv
   ./emacs
+  ./searx.nix
   ./xorg.nix
   ./old-browser
   ./workstation
