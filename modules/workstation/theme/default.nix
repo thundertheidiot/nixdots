@@ -120,7 +120,14 @@ in {
         ];
       };
 
+      # NOTE temp qt fix
+      qt.platformTheme = lib.mkForce "kde";
+
       meow.home.modules = [
+        {
+          # NOTE temp qt fix
+          qt.platformTheme.name = lib.mkForce "kde";
+        }
         {
           home.packages = fontPkgs ++ [cfg.iconTheme.package];
 
