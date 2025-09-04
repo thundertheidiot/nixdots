@@ -34,7 +34,7 @@
         target_dir = "/mnt/storage/camera";
       });
     in {
-      enable = true;
+      enable = false;
       description = "motion to watch camera for motion";
       unitConfig = {
         Type = "simple";
