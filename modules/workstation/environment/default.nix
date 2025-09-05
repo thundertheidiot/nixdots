@@ -40,7 +40,7 @@ in {
 
         # extraPortals = lib.mkIf (!builtins.elem "gnome" config.meow.workstation.environment) [pkgs.xdg-desktop-portal-gtk];
 
-        config.common.default = lib.mkForce [];
+        # config.common.default = lib.mkForce [];
       };
     }
     # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?

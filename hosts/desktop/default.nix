@@ -96,8 +96,8 @@
 
     user = "thunder";
 
-    workstation.environment = ["plasma" "hyprland"];
-    workstation.plasma.opinionatedConfig = true;
+    workstation.environment = ["hyprland"];
+    # workstation.plasma.opinionatedConfig = true;
     workstation.hyprland.extraAutostart = [
       "${pkgs.ckb-next}/bin/ckb-next -b"
     ];
