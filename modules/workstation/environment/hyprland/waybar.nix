@@ -2,6 +2,7 @@
   mlib,
   lib,
   config,
+  pkgs,
   ...
 }: let
   inherit (mlib) homeModule mkOpt;
@@ -139,171 +140,20 @@ in {
     # This is pretty much vibe coded, don't @ me
     programs.waybar.style = let
       colors = config.lib.stylix.colors.withHashtag;
-      c = config.lib.stylix.colors;
-      # Choose an accent from your Stylix scheme. base0D is a good “blue” default.
-      accent = colors.base0D;
+    in
+      pkgs.replaceVars ./waybar.css {
+        # Choose an accent from your Stylix scheme. base0D is a good “blue” default.
+        accent = colors.base0D;
 
-      # Centralized color vars
-      fg = colors.base05;
-      border = colors.base02;
-      borderHover = colors.base03;
-      muted = colors.base04;
-      warn = colors.base0A;
-      danger = colors.base08;
+        # Centralized color vars
+        fg = colors.base05;
+        border = colors.base02;
+        borderHover = colors.base03;
+        muted = colors.base04;
+        warn = colors.base0A;
+        danger = colors.base08;
 
-      # RGBA helpers for Stylix base shades
-      rgbaBase00 = alpha: "rgba(${toString c.base00-rgb-r}, ${toString c.base00-rgb-g}, ${toString c.base00-rgb-b}, ${toString alpha})";
-      rgbaBase01 = alpha: "rgba(${toString c.base01-rgb-r}, ${toString c.base01-rgb-g}, ${toString c.base01-rgb-b}, ${toString alpha})";
-      rgbaBase02 = alpha: "rgba(${toString c.base02-rgb-r}, ${toString c.base02-rgb-g}, ${toString c.base02-rgb-b}, ${toString alpha})";
-    in ''
-      /* Base typography */
-      * {
-        border: none;
-        font-family: Inter, System-ui, "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif;
-        font-size: 13.5px;
-        font-weight: 500;
-        min-height: 0;
-      }
-
-      /* Float the bar; let compositor blur it if enabled */
-      window#waybar {
-        background: transparent;
-        margin: 10px 14px 0 14px;
-        color: ${fg};
-      }
-
-      /* Glassy container */
-      window#waybar > box {
-        background: ${rgbaBase00 0.38};
-        border: 1px solid ${border};
-        border-radius: 14px;
-        box-shadow:
-          0 18px 40px rgba(0,0,0,0.35),
-          0 2px 6px rgba(0,0,0,0.22);
-        padding: 6px;
-      }
-
-      /* Even spacing between areas */
-      .modules-left, .modules-center, .modules-right {
-        margin: 0 4px;
-      }
-
-      /* Modern pill modules */
-      .modules-left > widget > *,
-      .modules-center > widget > *,
-      .modules-right > widget > * {
-        background: ${rgbaBase01 0.70};
-        border: 1px solid ${border};
-        border-radius: 12px;
-        padding: 4px 10px;
-        margin: 0 4px;
-        transition: background 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
-      }
-
-      .modules-left > widget > *:hover,
-      .modules-center > widget > *:hover,
-      .modules-right > widget > *:hover {
-        background: ${rgbaBase02 0.80};
-        border-color: ${borderHover};
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-      }
-
-      /* Workspaces: minimal dots with accent for active */
-      #workspaces,
-      #workspaces:hover {
-        padding: 2px 6px;
-        background: ${rgbaBase01 0.70};
-        border: 1px solid ${border};
-        /* optional: keep it visually calm */
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-      }
-
-      #workspaces button label {
-        font-size: 0;
-        padding: 0;
-        margin: 0;
-      }
-
-      #workspaces button {
-        all: unset;
-        min-width: 18px;
-        min-height: 18px;
-        padding: 0;
-        margin: 0 4px;
-        border-radius: 999px;
-
-        background: transparent;
-        border: 1px solid ${border};
-
-        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.10);
-
-        transition: background 120ms ease, border-color 120ms ease;
-      }
-
-      #workspaces button:hover {
-        background: rgba(255,255,255,0.06);
-        margin-top: -1px;
-        margin-bottom: 1px;
-      }
-
-      /* Empty workspaces: just a hollow ring */
-      #workspaces button.empty {
-        opacity: 0.7;
-        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.16);
-      }
-
-      /* Occupied workspaces: show a center dot (via inset box-shadow) */
-      #workspaces button:not(.empty) {
-        /* first value creates the center dot; second keeps a faint inner ring */
-        box-shadow:
-          inset 0 0 0 5px rgba(255,255,255,0.16);
-        opacity: 1;
-      }
-
-      /* Active workspace: fully filled with accent */
-      #workspaces button.active {
-        background: transparent;
-        border-color: rgba(255,255,255,0.22);
-        box-shadow:
-          inset 0 0 0 5px ${accent},                 /* solid accent dot */
-          inset 0 0 0 2px rgba(255,255,255,0.14);    /* faint inner ring */
-        opacity: 1;
-      }
-
-      /* Urgent stays obvious */
-      #workspaces button.urgent {
-        background: ${danger};
-        border-color: rgba(255,255,255,0.25);
-      }
-
-      /* Center title: muted, truncated */
-      #window {
-        color: ${muted};
-        min-width: 380px;
-      }
-
-      /* State coloring to make it feel “alive” */
-      #pulseaudio.muted { color: ${muted}; }
-      #network.disconnected { color: ${muted}; }
-      #battery.warning { color: ${warn}; }  /* warn */
-      #battery.critical { color: ${danger}; } /* crit */
-
-      /* Tray looks cohesive */
-      #tray { padding: 2px 6px; }
-      #tray > .passive { opacity: 0.8; }
-      #tray > .needs-attention {
-        color: ${danger};
-        animation: blink 1s ease-in-out infinite alternate;
-      }
-      @keyframes blink { from { opacity: 1 } to { opacity: .5 } }
-
-      /* Tooltips styled like the bar */
-      tooltip {
-        background: ${rgbaBase00 0.90};
-        border: 1px solid ${border};
-        border-radius: 10px;
-      }
-      tooltip label { color: ${fg}; }
-    '';
+        inherit (colors) base00 base01 base02;
+      };
   });
 }
