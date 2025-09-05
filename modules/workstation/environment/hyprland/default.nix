@@ -28,6 +28,7 @@ in {
   imports = [
     ./waybar.nix
     ./nsxiv.nix
+    ./hyprlock.nix
   ];
 
   config = mkIf (work && elem "hyprland" env) {

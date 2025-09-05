@@ -8,9 +8,9 @@ in {
   config = homeModule {
     programs.tofi = {
       settings = {
-        border-width = 2;
+        border-width = 1;
         outline-width = 0;
-        corner-radius = 6;
+        corner-radius = 7;
         prompt-text = "run: ";
       };
     };
