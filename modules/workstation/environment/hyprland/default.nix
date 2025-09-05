@@ -30,6 +30,7 @@ in {
     ./nsxiv.nix
     ./hyprlock.nix
     ./swaync.nix
+    ./alacritty.nix
   ];
 
   config = mkIf (work && elem "hyprland" env) {

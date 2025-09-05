@@ -10,6 +10,9 @@ Setup use-package
 (require 'use-package)
 (require 'general)
 
+;; wrong place lo 
+(add-to-list 'default-frame-alist '(alpha-background . 0.88))
+
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
