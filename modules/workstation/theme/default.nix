@@ -12,18 +12,8 @@
 
   cfg = config.meow.workstation.theming;
 
-  defaultFonts = {
-    serif = ["Cantarell"];
-    sansSerif = ["Cantarell"];
-    monospace = ["UDEV Gothic 35NF"];
-    emoji = ["Noto Color Emoji"];
-  };
-
-  fontPkgs = [
-    config.stylix.fonts.serif.package
-    config.stylix.fonts.sansSerif.package
-    config.stylix.fonts.monospace.package
-    config.stylix.fonts.emoji.package
+  extraFonts = with pkgs; [
+    nerd-fonts.symbols-only
   ];
 in {
   options = {
@@ -46,6 +36,8 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
+      fonts.packages = extraFonts;
+
       fonts.fontconfig = {
         enable = true;
         includeUserConf = true;
@@ -80,36 +72,34 @@ in {
         ];
       };
 
-      environment.systemPackages =
-        fontPkgs
-        ++ [
-          # SDDM theme
-          ((pkgs.sddm-astronaut.override {
-              themeConfig = let
-                colors = config.lib.stylix.colors.withHashtag;
-              in {
-                Font = config.stylix.fonts.serif.name;
-                FontSize = "12";
+      environment.systemPackages = [
+        # SDDM theme
+        ((pkgs.sddm-astronaut.override {
+            themeConfig = let
+              colors = config.lib.stylix.colors.withHashtag;
+            in {
+              Font = config.stylix.fonts.serif.name;
+              FontSize = "12";
 
-                Background = "background.jpg";
+              Background = "background.jpg";
 
-                HighlightColor = colors.base05;
-                PlaceholderColor = colors.base04;
-                SystemButtonsIconColor = colors.base04;
-                BackgroundColor = colors.base00;
-                TextColor = colors.base01;
-              };
-            })
+              HighlightColor = colors.base05;
+              PlaceholderColor = colors.base04;
+              SystemButtonsIconColor = colors.base04;
+              BackgroundColor = colors.base00;
+              TextColor = colors.base01;
+            };
+          })
             .overrideAttrs
-            (prev: {
-              installPhase =
-                prev.installPhase
-                # TODO: make a system
-                + ''
-                  cp ${./background.jpg} $out/share/sddm/themes/sddm-astronaut-theme/background.jpg
-                '';
-            }))
-        ];
+          (prev: {
+            installPhase =
+              prev.installPhase
+              # TODO: make a system
+              + ''
+                cp ${./background.jpg} $out/share/sddm/themes/sddm-astronaut-theme/background.jpg
+              '';
+          }))
+      ];
 
       services.displayManager.sddm = {
         theme = "sddm-astronaut-theme";
@@ -129,7 +119,7 @@ in {
           qt.platformTheme.name = lib.mkForce "kde";
         }
         {
-          home.packages = fontPkgs ++ [cfg.iconTheme.package];
+          home.packages = [cfg.iconTheme.package];
 
           stylix.targets = {
             emacs.enable = false;

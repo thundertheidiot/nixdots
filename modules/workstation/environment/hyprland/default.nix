@@ -130,6 +130,10 @@ in {
 
               ecosystem.no_update_news = true;
 
+              workspace = [
+                "f[1], gapsout:0, gapsin:0"
+              ];
+
               windowrulev2 = [
                 # "workspace 9 silent,class:(steam)"
                 "workspace 7 silent,class:(gajim)"
@@ -138,6 +142,9 @@ in {
                 # "fullscreen,class:(cs2)"
                 "immediate,class:(.gamescope-wrapped)"
                 "stayfocused, title:^()$,class:^(steam)$"
+
+                # remove borders when fullscreen
+                "bordersize 0, flaoting:0, onworkspace:f[1]"
               ];
 
               env = [
@@ -212,7 +219,7 @@ in {
               general = {
                 gaps_in = 5;
                 gaps_out = 20;
-                border_size = 3;
+                border_size = 2;
 
                 layout = "master";
 
@@ -220,7 +227,7 @@ in {
               };
 
               decoration = {
-                rounding = 0;
+                rounding = 7;
 
                 blur = {
                   enabled = false;

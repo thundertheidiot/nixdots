@@ -53,7 +53,7 @@ in {
       ({
           layer = "top";
           position = "top";
-          height = 30;
+          height = 32;
           modules-left = ["hyprland/workspaces" "hyprland/window"];
           modules-center = ["clock"];
           modules-right =
@@ -81,23 +81,24 @@ in {
 
           "hyprland/window" = {
             format = "{title}";
-            max-length = 20;
+            max-length = 40;
             separate-outputs = true;
+            empty-format = "Desktop";
           };
 
           "clock" = {
             interval = 1;
             timezone = "${config.time.timeZone}";
-            format = "{:%d.%m.%Y (%a) %T}";
+            format = "{:%a, %d %b %H:%M}";
           };
 
           "hyprland/language" = {
-            format = "{short}";
+            format = " {short}";
             tooltip-format = "{long}";
           };
 
           "idle_inhibitor" = {
-            format = "{icon}";
+            format = "{icon} ";
             format-icons = {
               activated = "";
               deactivated = "";
@@ -105,20 +106,25 @@ in {
           };
 
           "network" = {
-            format-wifi = "{essid} ({signalStrength}%) ";
-            format-ethernet = "{ifname}: {ipaddr}/{cidr}";
+            format-wifi = " {essid} ({signalStrength}%)";
+            format-ethernet = "󰈀 {ifname}: {ipaddr}/{cidr}";
             format-linked = "No Internet ⚠";
-            format-disconnected = "Disconnected ⚠";
+            format-disconnected = "  Disconnected";
           };
 
           "pulseaudio" = {
             scroll-step = 3;
             format = "{volume}% {icon}";
-            format-bluetooth = "{volume}% {icon}";
+            format-muted = " Muted";
+
+            format-bluetooth = "{volume}% {icon} ";
+            format-bluetooth-muted = " Muted  ";
+
             format-icons = {
               default = ["" "" ""];
             };
             escape = true;
+            on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           };
 
           "battery" = {
@@ -129,6 +135,7 @@ in {
             format = "{capacity}% {icon} ({time})";
             format-charging = "{capacity}%  ({time})";
             format-plugged = "{capacity}%  ({time})";
+            format-alt = "{capacity}% {icon} ({time})";
             format-icons = ["" "" "" "" ""];
           };
 
@@ -141,66 +148,98 @@ in {
 
     programs.waybar.style = let
       colors = config.lib.stylix.colors.withHashtag;
+      c = config.lib.stylix.colors;
     in ''
       * {
-      	border: none;
-      	font-family: monospace;
-      	font-size: 12px;
-      	border-radius: 0px;
-      }
+          border: none;
+          font-family: sans-serif, "Symbols Nerd Font";
+          font-size: 14px;
+          min-height: 0;
+        }
 
-      #workspaces {
-        margin-right: 5px;
-      }
+        window#waybar {
+          background: rgba(${c.base01-rgb-r}, ${c.base01-rgb-g}, ${c.base01-rgb-b}, 0.75);
+          /*color: ${colors.base05};*/
+          margin: 4px 6px;
+          /*border-radius: 10px; */
+          /*border: 1px solid ${colors.base03};*/
+        }
 
-      #workspaces button:hover {
-      	background-color: ${colors.base05};
-      	color: ${colors.base00};
-      }
+        /* General modules */
+        #workspaces,
+        #idle_inhibitor,
+        #clock,
+        #battery,
+        #cpu,
+        #memory,
+        #disk,
+        #temperature,
+        #backlight,
+        #network,
+        #pulseaudio,
+        #custom-weather,
+        #tray,
+        #mode,
+        #custom-notification,
+        #sway-scratchpad,
+        #window,
+        #mpd {
+          background: ${colors.base01};
+          color: ${colors.base05};
+          padding: 6px 12px;
+          margin: 4px 4px;
+          border-radius: 10px;
+          border: 1px solid ${colors.base03};
+          box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+          transition: background 0.3s ease, color 0.3s ease;
+        }
 
-      #workspaces button {
-        border-bottom: 2px solid ${colors.base08};
-      }
+        /* Hover effect */
+        #workspaces button:hover,
+        #idle_inhibitor:hover,
+        #clock:hover,
+        #battery:hover,
+        #network:hover,
+        #pulseaudio:hover {
+          background: ${colors.base04};
+          color: ${colors.base00};
+        }
 
-      #workspaces button.empty {
-        border-bottom: 0px solid ${colors.base08};
-      }
+        /* Workspaces styling */
+        #workspaces {
+          padding: 4px;
+        }
 
-      window#waybar.fullscreen {
-      	border-bottom: 2px solid ${colors.base08};
-      }
+        #workspaces button {
+          padding: 4px 8px;
+          margin: 2px;
+          border-radius: 8px;
+          background: ${colors.base02};
+          color: ${colors.base05};
+          border: none;
+          transition: background 0.2s ease;
+        }
 
-      #idle_inhibitor,
-      #clock,
-      #battery,
-      #cpu,
-      #memory,
-      #disk,
-      #temperature,
-      #backlight,
-      #network,
-      #pulseaudio,
-      #custom-weather,
-      #tray,
-      #mode,
-      #custom-notification,
-      #sway-scratchpad,
-      #mpd {
-      	padding: 0 10px;
-      	margin: 6px 3px;
-      	background-color: ${colors.base05};
-      	color: ${colors.base00};
-      	border: 2px solid ${colors.base08};
-      }
+        #workspaces button.active {
+          background: ${colors.base08};
+          color: ${colors.base00};
+          font-weight: bold;
+        }
 
-      #keyboard-state {
-      	background-color: ${colors.base00};
-      	color: ${colors.base00};
-      	padding: 0 0px;
-      	margin: 0 5px;
-      	min-width: 16px;
-      	border: 2px solid ${colors.base08};
-      }
+        #workspaces button.empty {
+          background: transparent;
+          color: ${colors.base04};
+        }
+
+        /* Keyboard state (caps lock, etc.) */
+        #language {
+          background: ${colors.base02};
+          color: ${colors.base05};
+          padding: 0 8px;
+          margin: 4px;
+          border-radius: 8px;
+          border: 1px solid ${colors.base03};
+        }
     '';
   });
 }
