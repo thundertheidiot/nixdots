@@ -142,6 +142,19 @@ in {
       c = config.lib.stylix.colors;
       # Choose an accent from your Stylix scheme. base0D is a good “blue” default.
       accent = colors.base0D;
+
+      # Centralized color vars
+      fg = colors.base05;
+      border = colors.base02;
+      borderHover = colors.base03;
+      muted = colors.base04;
+      warn = colors.base0A;
+      danger = colors.base08;
+
+      # RGBA helpers for Stylix base shades
+      rgbaBase00 = alpha: "rgba(${toString c.base00-rgb-r}, ${toString c.base00-rgb-g}, ${toString c.base00-rgb-b}, ${toString alpha})";
+      rgbaBase01 = alpha: "rgba(${toString c.base01-rgb-r}, ${toString c.base01-rgb-g}, ${toString c.base01-rgb-b}, ${toString alpha})";
+      rgbaBase02 = alpha: "rgba(${toString c.base02-rgb-r}, ${toString c.base02-rgb-g}, ${toString c.base02-rgb-b}, ${toString alpha})";
     in ''
       /* Base typography */
       * {
@@ -156,13 +169,13 @@ in {
       window#waybar {
         background: transparent;
         margin: 10px 14px 0 14px;
-        color: ${colors.base05};
+        color: ${fg};
       }
 
       /* Glassy container */
       window#waybar > box {
-        background: rgba(${c.base00-rgb-r}, ${c.base00-rgb-g}, ${c.base00-rgb-b}, 0.38);
-        border: 1px solid ${colors.base02};
+        background: ${rgbaBase00 0.38};
+        border: 1px solid ${border};
         border-radius: 14px;
         box-shadow:
           0 18px 40px rgba(0,0,0,0.35),
@@ -179,8 +192,8 @@ in {
       .modules-left > widget > *,
       .modules-center > widget > *,
       .modules-right > widget > * {
-        background: rgba(${c.base01-rgb-r}, ${c.base01-rgb-g}, ${c.base01-rgb-b}, 0.70);
-        border: 1px solid ${colors.base02};
+        background: ${rgbaBase01 0.70};
+        border: 1px solid ${border};
         border-radius: 12px;
         padding: 4px 10px;
         margin: 0 4px;
@@ -190,8 +203,8 @@ in {
       .modules-left > widget > *:hover,
       .modules-center > widget > *:hover,
       .modules-right > widget > *:hover {
-        background: rgba(${c.base02-rgb-r}, ${c.base02-rgb-g}, ${c.base02-rgb-b}, 0.80);
-        border-color: ${colors.base03};
+        background: ${rgbaBase02 0.80};
+        border-color: ${borderHover};
         box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
       }
 
@@ -199,8 +212,8 @@ in {
       #workspaces,
       #workspaces:hover {
         padding: 2px 6px;
-        background: rgba(${c.base01-rgb-r}, ${c.base01-rgb-g}, ${c.base01-rgb-b}, 0.70);
-        border: 1px solid ${colors.base02};
+        background: ${rgbaBase01 0.70};
+        border: 1px solid ${border};
         /* optional: keep it visually calm */
         box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
       }
@@ -220,7 +233,7 @@ in {
         border-radius: 999px;
 
         background: transparent;
-        border: 1px solid ${colors.base02};
+        border: 1px solid ${border};
 
         box-shadow: inset 0 0 0 2px rgba(255,255,255,0.10);
 
@@ -259,38 +272,38 @@ in {
 
       /* Urgent stays obvious */
       #workspaces button.urgent {
-        background: ${colors.base08};
+        background: ${danger};
         border-color: rgba(255,255,255,0.25);
       }
 
       /* Center title: muted, truncated */
       #window {
-        color: ${colors.base04};
+        color: ${muted};
         min-width: 380px;
       }
 
       /* State coloring to make it feel “alive” */
-      #pulseaudio.muted { color: ${colors.base04}; }
-      #network.disconnected { color: ${colors.base04}; }
-      #battery.warning { color: ${colors.base0A}; }  /* warn */
-      #battery.critical { color: ${colors.base08}; } /* crit */
+      #pulseaudio.muted { color: ${muted}; }
+      #network.disconnected { color: ${muted}; }
+      #battery.warning { color: ${warn}; }  /* warn */
+      #battery.critical { color: ${danger}; } /* crit */
 
       /* Tray looks cohesive */
       #tray { padding: 2px 6px; }
       #tray > .passive { opacity: 0.8; }
       #tray > .needs-attention {
-        color: ${colors.base08};
+        color: ${danger};
         animation: blink 1s ease-in-out infinite alternate;
       }
       @keyframes blink { from { opacity: 1 } to { opacity: .5 } }
 
       /* Tooltips styled like the bar */
       tooltip {
-        background: rgba(${c.base00-rgb-r}, ${c.base00-rgb-g}, ${c.base00-rgb-b}, 0.90);
-        border: 1px solid ${colors.base02};
+        background: ${rgbaBase00 0.90};
+        border: 1px solid ${border};
         border-radius: 10px;
       }
-      tooltip label { color: ${colors.base05}; }
+      tooltip label { color: ${fg}; }
     '';
   });
 }
