@@ -1,0 +1,179 @@
+/* prettier-ignore-start */
+:root {
+	/* Palette */
+	--bg: @base00@ee; /* 93% opaque */
+	--bg-alt: @base01@cc; /* 80% opaque */
+	--fg: @fg@;
+	--muted: @muted@;
+	--accent: @accent@;
+	--warn: @warn@;
+	--danger: @danger@;
+	--border: @border@;
+
+	/* Radii, spacing, sizes */
+	--radius: 12px;
+	--spacing: 10px;
+	--shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+
+	/* SwayNC-tunable root vars */
+	--notification-icon-size: 48px;
+	--mpris-album-art-icon-size: 64px;
+	--widget-volume-row-icon-size: 22px;
+}
+/* prettier-ignore-end */
+
+/* Windows */
+.control-center,
+.notification-window {
+	background: transparent; /* let child containers draw cards */
+}
+
+/* Control Center card */
+.control-center .center-window,
+.control-center .widget,
+.control-center .header,
+.control-center .footer {
+	background: var(--bg);
+	color: var(--fg);
+	border: 2px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+}
+
+/* Layout tweaks */
+.control-center {
+	padding: var(--spacing);
+}
+.control-center .header,
+.control-center .footer {
+	padding: calc(var(--spacing) - 2px);
+	margin-bottom: var(--spacing);
+}
+
+/* Title row and buttons */
+.widget-title {
+	font-weight: 600;
+}
+.widget-title .clear-all,
+.widget-title button {
+	border: 1px solid transparent;
+	border-radius: 8px;
+	padding: 6px 10px;
+	background: transparent;
+	color: var(--fg);
+}
+.widget-title .clear-all:hover,
+.widget-title button:hover {
+	border-color: @borderHover@;
+	background: var(--bg-alt);
+}
+
+/* DND widget */
+.widget-dnd .dnd-title {
+	font-weight: 600;
+}
+.widget-dnd .dnd-enabled {
+	color: var(--accent);
+}
+
+/* Notification list rows */
+.notification-row {
+	margin-bottom: var(--spacing);
+}
+
+/* Individual notification card */
+.notification {
+	background: var(--bg);
+	color: var(--fg);
+	border: 2px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+}
+
+/* Urgency accents */
+.notification.low {
+	border-color: var(--muted);
+}
+.notification.normal {
+	border-color: var(--accent);
+}
+.notification.critical {
+	border-color: var(--danger);
+	/* make critical stand out a bit more */
+	box-shadow: 0 16px 50px rgba(0, 0, 0, 0.45);
+}
+
+/* Text styles */
+.notification .summary {
+	font-weight: 600;
+}
+.notification .time {
+	color: var(--muted);
+}
+.notification .body {
+	color: var(--fg);
+	opacity: 0.95;
+}
+
+/* Action buttons inside notifications */
+.notification .actions .button {
+	border: 1px solid transparent;
+	border-radius: 8px;
+	padding: 6px 10px;
+	background: transparent;
+	color: var(--fg);
+}
+.notification .actions .button:hover {
+	border-color: @borderHover@;
+	background: var(--bg-alt);
+}
+
+/* Progress bars, sliders */
+progressbar trough,
+progressbar progress {
+	min-height: 6px;
+	border-radius: 999px;
+}
+progressbar trough {
+	background: @base02@66;
+}
+progressbar progress {
+	background: var(--accent);
+}
+
+/* MPRIS widget */
+.widget-mpris .title,
+.widget-mpris .artist {
+	color: var(--fg);
+}
+.widget-mpris .artist {
+	opacity: 0.85;
+}
+.widget-mpris .controls button {
+	border: 1px solid transparent;
+	border-radius: 8px;
+	padding: 6px;
+	background: transparent;
+	color: var(--fg);
+}
+.widget-mpris .controls button:hover {
+	border-color: @borderHover@;
+	background: var(--bg-alt);
+}
+
+/* Volume widget */
+.widget-volume .row {
+	margin-top: 6px;
+}
+
+/* Scrollbars (GTK4) */
+* {
+	scrollbar-width: thin;
+}
+scrollbar slider {
+	background: @base02@88;
+	border-radius: 8px;
+}
+scrollbar slider:hover {
+	background: @base02@cc;
+}

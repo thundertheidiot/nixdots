@@ -61,7 +61,7 @@ in {
           modules-left = ["hyprland/workspaces" "hyprland/window"];
           modules-center = ["clock"];
           modules-right =
-            ["hyprland/language" "idle_inhibitor"]
+            ["hyprland/language" "idle_inhibitor" "custom/swaync"]
             ++ unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
               fileSystems)
             ++ ["network" "pulseaudio" "battery" "tray"];
@@ -99,6 +99,26 @@ in {
               deactivated = "";
             };
             on-click = "hyprctl keyword misc:disable_autoreload 1"; # no-op you can replace
+          };
+
+          "custom/swaync" = {
+            tooltip = false;
+            format = "{icon}";
+            "format-icons" = {
+              notification = "<span foreground='red'><sup></sup></span>";
+              none = "";
+              "dnd-notification" = "<span foreground='red'><sup></sup></span>";
+              "dnd-none" = "";
+              "inhibited-notification" = "<span foreground='red'><sup></sup></span>";
+              "inhibited-none" = "";
+              "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
+              "dnd-inhibited-none" = "";
+            };
+            "return-type" = "json";
+            exec = "swaync-client -swb";
+            "on-click" = "swaync-client -t -sw";
+            "on-click-right" = "swaync-client -d -sw";
+            escape = true;
           };
 
           network = {
@@ -142,10 +162,8 @@ in {
       colors = config.lib.stylix.colors.withHashtag;
     in
       pkgs.replaceVars ./waybar.css {
-        # Choose an accent from your Stylix scheme. base0D is a good “blue” default.
         accent = colors.base0D;
 
-        # Centralized color vars
         fg = colors.base05;
         border = colors.base02;
         borderHover = colors.base03;

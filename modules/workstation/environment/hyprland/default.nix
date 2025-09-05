@@ -29,6 +29,7 @@ in {
     ./waybar.nix
     ./nsxiv.nix
     ./hyprlock.nix
+    ./swaync.nix
   ];
 
   config = mkIf (work && elem "hyprland" env) {
@@ -105,7 +106,7 @@ in {
           programs.waybar.enable = true;
           programs.alacritty.enable = lib.mkDefault true;
           programs.tofi.enable = true;
-          services.mako.enable = true;
+          # services.mako.enable = true;
 
           xdg.configFile."swappy/config".text = ''
             [Default]
@@ -163,7 +164,6 @@ in {
 
               exec-once =
                 [
-                  "${pkgs.mako}/bin/mako"
                   # "${pkgs.swaynotificationcenter}/bin/swaync"
                   "${pkgs.hyprpaper}/bin/hyprpaper"
                   "${pkgs.waybar}/bin/waybar"
