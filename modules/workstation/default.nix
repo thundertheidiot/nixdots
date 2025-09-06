@@ -23,6 +23,7 @@ in {
     ./keyring.nix
     ./theme
     ./environment # de's and wm's
+    ./rice
   ];
 
   config = mkIf cfg.enable {

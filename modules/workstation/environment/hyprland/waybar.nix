@@ -44,7 +44,7 @@ in {
           name = "disk#${diskName v.device}";
           value = {
             interval = 30;
-            format = "{path} {free}";
+            format = " {path} {free}";
             path = n;
             warning = 80;
             critical = 90;
@@ -60,14 +60,26 @@ in {
 
           modules-left = ["hyprland/workspaces" "hyprland/window"];
           modules-center = ["clock"];
+
+          "group/system" = {
+            orientation = "horizontal";
+            modules = ["hyprland/language" "idle_inhibitor" "custom/swaync" "pulseaudio" "battery" "tray"];
+          };
+
           modules-right =
-            ["hyprland/language" "idle_inhibitor" "custom/swaync"]
-            ++ unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
+            unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
               fileSystems)
-            ++ ["network" "pulseaudio" "battery" "tray"];
+            ++ ["network" "group/system"];
 
           "hyprland/workspaces" = {
-            format = " ";
+            format = "{icon}";
+            format-icons = {
+              urgent = "";
+              active = "";
+              visible = "";
+              default = "";
+              empty = "";
+            };
             disable-scroll = true;
             active-only = false;
             all-outputs = false;
@@ -156,22 +168,5 @@ in {
         }
         // disks)
     ];
-
-    # This is pretty much vibe coded, don't @ me
-    programs.waybar.style = let
-      colors = config.lib.stylix.colors.withHashtag;
-    in
-      pkgs.replaceVars ./waybar.css {
-        accent = colors.base0D;
-
-        fg = colors.base05;
-        border = colors.base02;
-        borderHover = colors.base03;
-        muted = colors.base04;
-        warn = colors.base0A;
-        danger = colors.base08;
-
-        inherit (colors) base00 base01 base02;
-      };
   });
 }

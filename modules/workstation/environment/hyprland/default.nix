@@ -30,7 +30,6 @@ in {
     ./nsxiv.nix
     ./hyprlock.nix
     ./swaync.nix
-    ./alacritty.nix
   ];
 
   config = mkIf (work && elem "hyprland" env) {
@@ -220,32 +219,10 @@ in {
               };
 
               general = {
-                gaps_in = 5;
-                gaps_out = 20;
-                border_size = 1;
-
                 layout = "master";
 
                 allow_tearing = true;
               };
-
-              decoration = {
-                rounding = 7;
-
-                blur = {
-                  enabled = false;
-                  size = 3;
-                  passes = 1;
-                };
-
-                shadow = {
-                  enabled = true;
-                  range = 6;
-                  render_power = 4;
-                };
-              };
-
-              animations.enabled = false;
 
               master = {
                 new_status = "master";

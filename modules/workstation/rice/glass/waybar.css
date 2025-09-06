@@ -1,3 +1,4 @@
+/* this css file is pretty much vibe coded, i am not a frontend person */
 /* prettier-ignore-start */
 @define-color fg @fg@;
 @define-color base00 @base00@;
@@ -70,79 +71,27 @@ window#waybar > box {
 	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
-/* Workspaces: minimal dots with accent for active */
 #workspaces,
 #workspaces:hover {
 	padding: 2px 6px;
 	background: alpha(@base01, 0.7);
 	border: 1px solid @border;
-	/* optional: keep it visually calm */
 	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-#workspaces button label {
-	font-size: 0;
-	padding: 0;
-	margin: 0;
-}
-
-#workspaces button {
-	all: unset;
-	min-width: 18px;
-	min-height: 18px;
-	padding: 0;
-	margin: 0 4px;
-	border-radius: 999px;
-
-	background: transparent;
-	border: 1px solid @border;
-
-	box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.1);
-
-	transition:
-		background 120ms ease,
-		border-color 120ms ease;
-}
-
-#workspaces button:hover {
-	background: rgba(255, 255, 255, 0.06);
-	margin-top: -1px;
-	margin-bottom: 1px;
-}
-
-/* Empty workspaces: just a hollow ring */
-#workspaces button.empty {
-	opacity: 0.7;
-	box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.16);
-}
-
-/* Occupied workspaces: show a center dot (via inset box-shadow) */
-#workspaces button:not(.empty) {
-	/* first value creates the center dot; second keeps a faint inner ring */
-	box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.16);
-	opacity: 1;
-}
-
-/* Active workspace: fully filled with accent */
-#workspaces button.active {
-	background: transparent;
-	border-color: rgba(255, 255, 255, 0.22);
-	box-shadow:
-		inset 0 0 0 5px @accent,
-		/* solid accent dot */ inset 0 0 0 2px rgba(255, 255, 255, 0.14); /* faint inner ring */
-	opacity: 1;
-}
-
-/* Urgent stays obvious */
-#workspaces button.urgent {
-	background: @danger;
-	border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Center title: muted, truncated */
 #window {
 	color: @muted;
 	min-width: 380px;
+}
+
+#language {
+	margin-right: 7px;
+}
+
+#custom-swaync {
+	margin-left: 7px;
+	margin-right: 7px;
 }
 
 /* State coloring to make it feel “alive” */
