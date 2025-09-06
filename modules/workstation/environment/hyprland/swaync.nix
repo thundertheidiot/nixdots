@@ -60,7 +60,7 @@ in {
               mpris = {
                 "show-album-art" = "when-available";
                 autohide = true;
-                "loop-carousel" = false;
+                "loop-carousel" = true;
               };
               volume = {
                 "show-per-app" = false;
@@ -69,22 +69,6 @@ in {
               };
             };
           };
-
-          style = let
-            colors = config.lib.stylix.colors.withHashtag;
-          in
-            pkgs.replaceVars ./swaync.css {
-              accent = colors.base0D;
-
-              fg = colors.base05;
-              border = colors.base02;
-              borderHover = colors.base03;
-              muted = colors.base04;
-              warn = colors.base0A;
-              danger = colors.base08;
-
-              inherit (colors) base00 base01 base02;
-            };
         };
       }
     ];
