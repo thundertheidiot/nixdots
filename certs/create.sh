@@ -7,7 +7,7 @@ set -euo pipefail
 CERT_DAYS=825
 CA_DAYS=1825
 COMMON_NAME="*.home"
-SAN_DNS="DNS:auth.home,DNS:n8n.home,DNS:*.home"
+SAN_DNS="DNS:auth.home,DNS:n8n.home,DNS:reddit.home,DNS:*.home"
 
 # Generate private key for root CA
 openssl genrsa -out rootCA.key 4096
