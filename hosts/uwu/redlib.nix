@@ -9,6 +9,9 @@ in {
 
     services.nginx.virtualHosts."reddit.local" = {
       serverAliases = ["reddit.home"];
+      forceSSL = true;
+      sslCertificate = certs."local.crt";
+      sslCertificateKey = config.sops.secrets.localKey.path;
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:${toString config.services.redlib.port}";
