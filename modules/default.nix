@@ -26,7 +26,6 @@
   ./emacs
   ./searx.nix
   ./xorg.nix
-  ./old-browser
   ./workstation
   ./keyboard
   ./gaming
