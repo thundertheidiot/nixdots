@@ -100,6 +100,10 @@ window#waybar > box {
 	margin-right: 7px;
 }
 
+#battery {
+	margin-left: 7px;
+}
+
 /* State coloring to make it feel “alive” */
 #pulseaudio.muted {
 	color: @muted;
