@@ -59,6 +59,8 @@
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
 
+      wayland.windowManager.hyprland.settings.animations.enabled = lib.mkForce false;
+
       home.packages = with pkgs; [
         vscode
         lmath
