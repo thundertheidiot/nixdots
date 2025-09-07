@@ -30,6 +30,7 @@ in {
     ./nsxiv.nix
     ./hyprlock.nix
     ./swaync.nix
+    ./anyrun.nix
   ];
 
   config = mkIf (work && elem "hyprland" env) {
@@ -110,9 +111,6 @@ in {
 
           programs.waybar.enable = true;
           programs.alacritty.enable = lib.mkDefault true;
-          programs.tofi.enable = true;
-
-          # services.mako.enable = true;
 
           xdg.configFile."swappy/config".text = ''
             [Default]
@@ -247,6 +245,10 @@ in {
                 ",XF86MonBrightnessDown, exec, ${pkgs.swayosd}/bin/swayosd-client --brighness lower"
               ];
 
+              # bindr = [
+              #   "SUPER, SUPER_L, exec, anyrun"
+              # ];
+
               bindm = [
                 "$mod, mouse:272, movewindow"
                 "$mod, mouse:273, resizewindow"
@@ -255,13 +257,15 @@ in {
               bind = [
                 "$mod, return, exec, ${terminal}"
                 "$mod, W, exec, firefox"
-                "$mod, D, exec, $(${pkgs.tofi}/bin/tofi-run)"
+                "$mod, D, exec, anyrun"
                 "$mod, E, exec, emacsclient -c -a ''"
                 "$mod, semicolon, exec, emacsclient -c -a '' -e '(th/eshell)'"
                 "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
                 "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
                 "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"
                 "$shiftmod, B, exec, ${terminal} -e nvtop"
+
+                "$mod, N, exec, swaync-client -op"
 
                 ",XF86AudioPlay, exec, ${pkgs.mpc-cli}/bin/mpc toggle"
                 ",XF86AudioNext, exec, ${pkgs.mpc-cli}/bin/mpc next"
