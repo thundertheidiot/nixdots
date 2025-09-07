@@ -34,6 +34,7 @@ in {
 
   config = mkIf (work && elem "hyprland" env) {
     programs.hyprland.enable = true;
+    programs.hyprland.withUWSM = true;
 
     services.displayManager.sessionPackages = with pkgs; let
       hypr = inputs.hyprland.packages.${pkgs.system};
@@ -41,7 +42,9 @@ in {
       hypr.hyprland
     ];
 
+    xdg.autostart.enable = true;
     xdg.portal.extraPortals = with pkgs; [
+      xdg-desktop-portal
       xdg-desktop-portal-gtk
     ];
 
@@ -50,6 +53,7 @@ in {
       hyprland = {
         default = ["hyprland" "gtk"];
         "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
       };
     };
 
@@ -107,6 +111,7 @@ in {
           programs.waybar.enable = true;
           programs.alacritty.enable = lib.mkDefault true;
           programs.tofi.enable = true;
+
           # services.mako.enable = true;
 
           xdg.configFile."swappy/config".text = ''
