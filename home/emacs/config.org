@@ -11,7 +11,7 @@ Setup use-package
 (require 'general)
 
 ;; wrong place lo 
-(add-to-list 'default-frame-alist '(alpha-background . 0.88))
+;; (add-to-list 'default-frame-alist '(alpha-background . 0.88))
 
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
@@ -1773,12 +1773,54 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 ** Nyan mode
 
 #+begin_src emacs-lisp
-;; (use-package nyan-mode
-;;   :custom
-;;   (nyan-animate-nyancat t)
-;;   (nyan-wavy-trail t)
-;;   :config
-;;   (nyan-mode))
+(use-package nyan-mode
+  :custom
+  (nyan-animate-nyancat t)
+  (nyan-wavy-trail t))
+#+end_src
+
+** Mode line
+
+#+begin_src emacs-lisp
+(defun th/mode-line ()
+  (let ((ibg (face-background 'mode-line-inactive nil t))
+	(vpad 10))
+    (set-face-attribute 'mode-line-active nil
+			:box `(:line-width (1 . ,vpad) :color ,ibg :style nil))
+    (set-face-attribute 'mode-line-inactive nil
+			:box `(:line-width (1 . ,vpad) :color ,ibg :style nil)))
+
+  ;; always inactive face for modeline
+  ;; TODO fix
+  (custom-set-faces
+   '(solaire-mode-line-face     ((t (:inherit mode-line-inactive))))
+   '(solaire-mode-line-active-face     ((t (:inherit mode-line-inactive))))
+   '(solaire-mode-line-inactive-face ((t (:inherit mode-line-inactive)))))
+
+  (setq mode-line-format nil)
+  (kill-local-variable 'mode-line-format)
+  (force-mode-line-update)
+
+  (setq-default mode-line-format
+		`("%e"
+		  "   "
+		  mode-line-buffer-identification
+		  "   "
+		  mode-line-position
+		  "   "
+		  mode-line-modes
+		  (:eval 
+		   (if (magit-toplevel)
+		       (propertize (format "  %s" (magit-get-current-branch)) 'face '(:foreground "#cba6f7"))
+		     "")
+		   )
+		  "   "
+		  "%="
+		  (:eval (nyan-create))))
+
+  (nyan-start-animation))
+
+(add-hook 'window-setup-hook #'th/mode-line)
 #+end_src
 
 ** All the icons
