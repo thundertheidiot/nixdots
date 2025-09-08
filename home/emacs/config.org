@@ -1814,23 +1814,32 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 	 (green (alist-get 'green flavor))
 	 (red (alist-get 'red flavor))
 	 (yellow (alist-get 'yellow flavor))
-	 (mauve (alist-get 'mauve flavor)))
+	 (rosewater (alist-get 'rosewater flavor))
+	 (mauve (alist-get 'mauve flavor))
+
+	 (envrc-none (propertize "" 'face `(:foreground ,text)))
+	 (envrc-on (propertize (propertize "" 'face `(:foreground ,green))))
+	 (envrc-error (propertize "" 'face `(:foreground ,red)))
+	 )
     (setq-default mode-line-format
 		  `(
 		    "   "
 		    (:eval
 		     (propertize "%b" 'face 'bold))
-		    "   L%l" ;; line number
-		    ;; mode-line-position
-		    "   "
-		    ;; mode-line-modes
+		    "   L%l   " ;; line number
+
+		    ;; (:eval
+		    ;;  (when (file-remote-p default-directory)
+		    ;;    (let* ((vec (tramp-dissect-file-name default-directory))
+		    ;; 	      (user (or (tramp-file-name-user vec) ""))
+		    ;; 	      (host (tramp-file-name-host vec)))
+		    ;; 	 (propertize (format "%s@%s   " user host) 'face ,(list 'quote (list :foreground rosewater))))))
 
 		    (:eval
 		     (pcase envrc--status
-		       ('none (propertize "" 'face ,(list 'quote (list :foreground text))))
-		       ('on (propertize "" 'face ,(list 'quote (list :foreground green))))
-		       ('error (propertize "" 'face ,(list 'quote (list :foreground red))))
-		       (_ (propertize "" 'face ,(list 'quote :foreground red)))))
+		       ('none ,envrc-none)
+		       ('on ,envrc-on)
+		       (_ ,envrc-error)))
 
 		    "   "
 		    
@@ -1842,10 +1851,10 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		    (:eval (when (magit-toplevel) "   "))
 
 		    (:eval
-		     (when (eglot-managed-p)
+		     (when eglot--managed-mode
 		       (eglot--mode-line-format)))
 
-		    (:eval (when (eglot-managed-p) "   "))
+		    (:eval (when eglot--managed-mode "   "))
 		    
 		    (:eval
 		     (when flycheck-mode
@@ -1867,7 +1876,8 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		    "%="
 		    (:eval (nyan-create)))))
   
-  (nyan-start-animation))
+  ;; (nyan-start-animation)
+  )
 
 (add-hook 'window-setup-hook #'th/mode-line)
 (add-hook 'server-after-make-frame-hook #'th/mode-line)
