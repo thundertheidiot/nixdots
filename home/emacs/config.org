@@ -1291,6 +1291,14 @@ Aliases and functions
 	   nonl)
 	  "λ "))
 
+;; (setq eshell-banner-message
+;;       (let ((os (with-temp-buffer
+;; 		  (insert-file-contents "/etc/os-release")
+;; 		  (goto-char (point-min))
+;; 		  (re-search-forward "PRETTY_NAME=\"\\(.*\\)\"")
+;; 		  (match-string 1))))
+;; 	(concat os "\n\n")))
+
 (defun eshell/nix-shell (&rest args)
   (if (member "--run" args)
       (eshell-command-result
@@ -1329,7 +1337,7 @@ For some reason advice-add didn't seem to function, so this just manually replic
 
 * Polymode
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package polymode
   :config
   (define-hostmode poly-rustic-hostmode :mode 'rustic-mode)
@@ -1795,29 +1803,70 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 	    (set-face-attribute face nil
 				:box `(:line-width (1 . ,vpad) :color ,(face-background face nil t) :style nil)
 				:height 110))
-	 '(mode-line-active mode-line-inactive)))
+	  '(mode-line-active mode-line-inactive)))
 
   (setq mode-line-format nil)
   (kill-local-variable 'mode-line-format)
   (force-mode-line-update)
 
-  (setq-default mode-line-format
-		`("%e"
-		  "   "
-		  mode-line-buffer-identification
-		  "   "
-		  mode-line-position
-		  "   "
-		  mode-line-modes
-		  (:eval 
-		   (if (magit-toplevel)
-		       (propertize (format "  %s" (magit-get-current-branch)) 'face '(:foreground "#cba6f7"))
-		     "")
-		   )
-		  "   "
-		  "%="
-		  (:eval (nyan-create))))
+  (let* ((flavor (alist-get catppuccin-flavor catppuccin-flavor-alist))
+	 (text (alist-get 'text flavor))
+	 (green (alist-get 'green flavor))
+	 (red (alist-get 'red flavor))
+	 (yellow (alist-get 'yellow flavor))
+	 (mauve (alist-get 'mauve flavor)))
+    (setq-default mode-line-format
+		  `(
+		    "   "
+		    (:eval
+		     (propertize "%b" 'face 'bold))
+		    "   L%l" ;; line number
+		    ;; mode-line-position
+		    "   "
+		    ;; mode-line-modes
 
+		    (:eval
+		     (pcase envrc--status
+		       ('none (propertize "" 'face ,(list 'quote (list :foreground text))))
+		       ('on (propertize "" 'face ,(list 'quote (list :foreground green))))
+		       ('error (propertize "" 'face ,(list 'quote (list :foreground red))))
+		       (_ (propertize "" 'face ,(list 'quote :foreground red)))))
+
+		    "   "
+		    
+		    (:eval
+		     (when (magit-toplevel)
+		       (propertize (format "  %s" (magit-get-current-branch)) 'face ,(list 'quote (list :foreground mauve)))
+		       ))
+		    
+		    (:eval (when (magit-toplevel) "   "))
+
+		    (:eval
+		     (when (eglot-managed-p)
+		       (eglot--mode-line-format)))
+
+		    (:eval (when (eglot-managed-p) "   "))
+		    
+		    (:eval
+		     (when flycheck-mode
+		       (if (eq flycheck-last-status-change 'finished)
+			   (let-alist (flycheck-count-errors flycheck-current-errors)
+			     (concat
+			      (when (and (not .error) (not .warning:?) (not .warning))
+				(propertize "" 'face ,(list 'quote (list :foreground green))))
+			      (when .error
+				(propertize (format " %s" .error) 'face ,(list 'quote (list :foreground red))))
+			      (when (or .warning:? .warning)
+				(propertize (format "%s %s" (if .error " " "") (+ (or .warning:? 0) (or .warning 0))) 'face ,(list 'quote (list :foreground yellow))))
+			      )
+			     ))
+		       ))
+		    
+		    (:eval (when flycheck-mode "   "))
+
+		    "%="
+		    (:eval (nyan-create)))))
+  
   (nyan-start-animation))
 
 (add-hook 'window-setup-hook #'th/mode-line)
