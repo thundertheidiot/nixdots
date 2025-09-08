@@ -1783,19 +1783,19 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 
 #+begin_src emacs-lisp
 (defun th/mode-line ()
-  (let ((ibg (face-background 'mode-line-inactive nil t))
-	(vpad 10))
-    (set-face-attribute 'mode-line-active nil
-			:box `(:line-width (1 . ,vpad) :color ,ibg :style nil))
-    (set-face-attribute 'mode-line-inactive nil
-			:box `(:line-width (1 . ,vpad) :color ,ibg :style nil)))
+  (dolist (face '(mode-line mode-line-active mode-line-inactive))
+    (setf (alist-get face solaire-mode-remap-alist) nil))
 
-  ;; always inactive face for modeline
-  ;; TODO fix
-  (custom-set-faces
-   '(solaire-mode-line-face     ((t (:inherit mode-line-inactive))))
-   '(solaire-mode-line-active-face     ((t (:inherit mode-line-inactive))))
-   '(solaire-mode-line-inactive-face ((t (:inherit mode-line-inactive)))))
+  (let* ((flavor (alist-get catppuccin-flavor catppuccin-flavor-alist))
+	 (color (alist-get 'text flavor)))
+    (set-face-attribute 'mode-line-active nil :inherit 'mode-line-inactive :foreground color))
+  
+  (let ((vpad 10))
+    (mapc (lambda (face)
+	    (set-face-attribute face nil
+				:box `(:line-width (1 . ,vpad) :color ,(face-background face nil t) :style nil)
+				:height 110))
+	 '(mode-line-active mode-line-inactive)))
 
   (setq mode-line-format nil)
   (kill-local-variable 'mode-line-format)
@@ -1821,6 +1821,7 @@ Solaire mode darkens "lesser" buffers like eshell or magit
   (nyan-start-animation))
 
 (add-hook 'window-setup-hook #'th/mode-line)
+(add-hook 'server-after-make-frame-hook #'th/mode-line)
 #+end_src
 
 ** All the icons
