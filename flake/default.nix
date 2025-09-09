@@ -10,6 +10,18 @@
   ];
 
   systems = [
-    "linux-x86_64"
+    "x86_64-linux"
   ];
+
+  perSystem = {
+    config,
+    pkgs,
+    ...
+  }: {
+    devShells.default = pkgs.mkShell {
+      packages = with pkgs; [
+        just
+      ];
+    };
+  };
 }

@@ -4,11 +4,11 @@
   withSystem,
   ...
 }: {
-  imports = [
-    inputs.pkgs-by-name.flakeModule
-  ];
+  # imports = [
+  #   inputs.pkgs-by-name.flakeModule
+  # ];
 
-  perSystem.pkgsDirectory = "${inputs.self.outPath}/pkgs";
+  # perSystem.pkgsDirectory = "${inputs.self.outPath}/pkgs";
 
   # flake = {
   #   overlays.default = final: prev:
