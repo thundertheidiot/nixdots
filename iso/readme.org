@@ -1,3 +1,0 @@
-* ISO
-
-This is not finished at all, in fact it cannot even be built yet.

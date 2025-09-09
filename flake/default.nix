@@ -9,6 +9,8 @@
     ./pkgs.nix
   ];
 
+  flake.modules = {};
+
   systems = [
     "x86_64-linux"
   ];

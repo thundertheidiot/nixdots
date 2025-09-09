@@ -1,31 +1,25 @@
 {
-  systemArch = "x86_64-linux";
+  lib,
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [
+    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-base.nix"
+    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
+  ];
 
-  options = {
-    config,
-    pkgs,
-    ...
-  }: {
-    username = "iso";
-    hostName = "nixos-install";
-    timeZone = "Europe/Helsinki";
-
-    workstation.enable = true;
-    workstation.utils = "generic/gtk";
-    workstation.environment = ["hyprland"];
-  };
-
-  system = {
-    lib,
-    config,
-    pkgs,
-    ...
-  }: {
+  config = {
+    networking.hostName = "meow-iso";
     system.stateVersion = "25.05";
+
+    time.timeZone = "Europe/Helsinki";
 
     services = {
       qemuGuest.enable = true;
     };
+
+    # networking.wireless.enable = true;
 
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
@@ -33,31 +27,46 @@
       settings = {
         Autologin = {
           Session = "hyprland.desktop";
-          User = "${config.username}";
+          User = "nixos";
         };
       };
     };
 
-    users.users.${config.username} = {
-      password = "iso";
+    users.users.nixos = {
+      password = "password";
+      initialHashedPassword = lib.mkForce null;
     };
-    users.extraUsers.root.password = "iso";
+    users.extraUsers.root = {
+      password = "password";
+      initialHashedPassword = lib.mkForce null;
+    };
 
     networking.useDHCP = lib.mkForce true;
     services.openssh.settings.PermitRootLogin = lib.mkForce "prohibit-password";
 
     home-manager.sharedModules = [
       {
-        stateVersion = "25.05"
-        mHome.browser.zen.enable = true;
+        home.stateVersion = "25.05";
+        mHome.browser.firefox.enable = true;
+        mHome.emacs.enable = true;
       }
     ];
 
     meow = {
+      user = "nixos";
+
       workstation.enable = true;
+      workstation.environment = ["hyprland"];
+      workstation.plasma.opinionatedConfig = true;
+      workstation.flatpak.enable = false;
+
+      gaming.enable = false;
 
       emacs.enable = true;
       shell.enable = true;
+
+      ssh.key = true;
+      ssh.rootKey = true;
     };
 
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
