@@ -8,7 +8,7 @@
     inputs.pkgs-by-name.flakeModule
   ];
 
-  perSystem.pkgsDirectory = "${config.flake.root}/pkgs";
+  perSystem.pkgsDirectory = "${inputs.self.outPath}/pkgs";
 
   # flake = {
   #   overlays.default = final: prev:

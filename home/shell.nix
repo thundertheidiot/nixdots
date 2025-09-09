@@ -30,8 +30,6 @@ in {
     };
 
     home.sessionVariables = {
-      SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/keyring/ssh";
-
       STUBBORN_HOME = "${config.mHome.stubbornHomeDirectory}";
     };
 

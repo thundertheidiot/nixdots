@@ -8,12 +8,11 @@
   inherit (lib) isAttrs isFunction isList evalModules mkOption;
   inherit (lib.types) listOf str;
 
-  inherit (config.flake) root;
+  root = inputs.self.outPath;
 in {
   flake.mkSystem = {modules}:
     assert isList modules;
       lib.nixosSystem (let
-        # legacy lib
         mlib = import "${root}/lib" {inherit lib;};
       in {
         specialArgs = {
@@ -32,7 +31,7 @@ in {
             inputs.authentik-nix.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
             ({...}: {
-              imports = import "${inputs.self.outPath}/modules";
+              imports = import "${root}/modules";
               nixpkgs = {
                 overlays = [
                   inputs.emacs-overlay.overlay

@@ -74,7 +74,7 @@ in {
             rounding = 7;
 
             blur = {
-              enabled = true;
+              enabled = false;
               size = 3;
               passes = 1;
             };

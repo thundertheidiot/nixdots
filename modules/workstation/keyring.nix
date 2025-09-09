@@ -18,8 +18,8 @@ in {
     services.gnome.gnome-keyring.enable = true;
     programs.ssh.enableAskPassword = true;
 
-    # programs.seahorse.enable = true;
-    # programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+    programs.seahorse.enable = true;
+    programs.ssh.askPassword = lib.mkForce "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
 
     meow.home.modules = [
       {
