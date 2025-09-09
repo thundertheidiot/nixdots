@@ -49,7 +49,6 @@ in {
     })
     (lib.mkIf (cfg.enable && cfg.emulation) {
       environment.systemPackages = with pkgs; [
-        # pkgs."2411".retroarchFull
         # (callPackage retroarch {
         #   cores = with libretro; [
         #     snes9x
