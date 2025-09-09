@@ -30,7 +30,6 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    import-tree.url = "github:vic/import-tree";
     pkgs-by-name.url = "github:drupol/pkgs-by-name-for-flake-parts";
 
     disko.url = "github:nix-community/disko";
