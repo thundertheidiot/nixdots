@@ -30,10 +30,17 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+
+    # not sure if aly's fork does much, but it was apparently important for her
+    # https://github.com/nialov/actions.nix/compare/master...alyraffauf:actions.nix:master
+    actions.url = "github:alyraffauf/actions.nix";
+
     pkgs-by-name.url = "github:drupol/pkgs-by-name-for-flake-parts";
 
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
@@ -92,6 +99,7 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     nur.url = "github:nix-community/NUR";
+
     authentik-nix.url = "github:nix-community/authentik-nix";
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
