@@ -17,6 +17,17 @@
       }) (attrNames config.flake.nixosConfigurations);
     in {
       ".github/workflows/update-flake.yaml" = {
+        name = "Update flake.lock";
+
+        on = {
+          schedule = [
+            {
+              cron = "0 03 */2 * *";
+            }
+          ];
+          workflow_dispatch = {};
+        };
+
         jobs.update = {
           steps =
             [
