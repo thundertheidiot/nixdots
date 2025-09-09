@@ -1,45 +1,45 @@
-name: Update flake.lock
-on:
-  schedule:
-    - cron: "0 03 */2 * *"
-  workflow_dispatch:
-
 jobs:
   update:
     runs-on: ubuntu-latest
-    env:
-      HOSTS: t440p uwu 
-    permissions:
-      contents: write
     steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: true
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Lix Installer
-        run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf "trusted-users = root runner"
-      - uses: cachix/cachix-action@v16
-        with:
-          name: meowos
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-      - name: Update flake inputs
-        run: nix flake update --accept-flake-config
-      - name: Build hosts
-        run: |
-          for host in $HOSTS; do
-            nix build --accept-flake-config .#nixosConfigurations.$host.config.system.build.toplevel
-          done
-
-      - name: Commit
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(deps): bump flake.lock"
-          commit_user_name: Flake Bot Update
-          commit_author: Flake Bot Update <actions@github.com>
-          branch: main
-          file_pattern: flake.lock
-          skip_dirty_check: false
-          skip_fetch: true
+    - uses: actions/checkout@v5
+    - uses: wimpysworld/nothing-but-nix@v6
+      with:
+        hatchet-protocol: rampage
+    - name: Lix Installer
+      run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix
+        | sh -s -- install --no-confirm --extra-conf 'trusted-users = root runner'
+    - name: Cachix
+      uses: cachix/cachix-action@v16
+      with:
+        authToken: $${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: meowos
+    - name: Update Flake Inputs
+      run: nix flake update --accept-flake-config
+    - name: Build desktop
+      run: nix build --accept-flake-config .#nixosConfigurations.desktop.config.system.build.toplevel
+    - name: Build digiboksi
+      run: nix build --accept-flake-config .#nixosConfigurations.digiboksi.config.system.build.toplevel
+    - name: Build iso
+      run: nix build --accept-flake-config .#nixosConfigurations.iso.config.system.build.toplevel
+    - name: Build t440p
+      run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
+    - name: Build uwu
+      run: nix build --accept-flake-config .#nixosConfigurations.uwu.config.system.build.toplevel
+    - name: Build vps
+      run: nix build --accept-flake-config .#nixosConfigurations.vps.config.system.build.toplevel
+    - name: Build x220
+      run: nix build --accept-flake-config .#nixosConfigurations.x220.config.system.build.toplevel
+    - name: Commit
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        branch: main
+        commit_author: Flake Bot Update <actions@github.com>
+        commit_message: 'chore(deps): bump flake.lock'
+        commit_user_name: Flake Bot Update
+        file_pattern: flake.lock
+        skip_dirty_check: false
+        skip_fetch: true
+'on':
+  push: {}
+  workflow_dispatch: {}

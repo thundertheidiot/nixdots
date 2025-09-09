@@ -53,7 +53,7 @@ in {
     programs.command-not-found.enable = true;
     programs.command-not-found.dbPath = "${pkgs.path}/programs.sqlite";
 
-    boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
+    boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_cachyos-lto;
 
     environment.systemPackages = with pkgs; [
       pulsemixer
