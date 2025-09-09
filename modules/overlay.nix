@@ -11,11 +11,6 @@
         ataraxiasjel = nur.repos.ataraxiasjel;
         hyprsplit = inputs.hyprsplit.packages.${final.system}.default;
 
-        "2411" = import inputs.nixpkgs-24-11 {
-          system = final.system;
-          config.allowUnfree = final.config.allowUnfree;
-        };
-
         "2505" = import inputs.nixpkgs-25-05 {
           system = final.system;
           config.allowUnfree = final.config.allowUnfree;
@@ -28,6 +23,10 @@
             repo = "avrdude";
           };
         });
+
+        xrizer = prev.xrizer.overrideAttrs {
+          patches = [];
+        };
 
         gnome2 =
           prev.gnome2
