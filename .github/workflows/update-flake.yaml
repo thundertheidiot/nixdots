@@ -40,6 +40,8 @@ jobs:
         file_pattern: flake.lock
         skip_dirty_check: false
         skip_fetch: true
+name: Update flake.lock
 'on':
-  push: {}
+  schedule:
+  - cron: 0 03 */2 * *
   workflow_dispatch: {}
