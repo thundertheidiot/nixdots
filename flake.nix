@@ -20,46 +20,7 @@
     ];
   };
 
-  # outputs = {self, ...} @ inputs: let
-  #   lib = inputs.nixpkgs.lib;
-  #   mlib = (import ./lib) {inherit lib;};
-  # in rec {
-  #   formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.alejandra;
-
-  #   deploy.nodes = {
-  #     server = {
-  #       hostname = "192.168.101.101";
-  #       profiles.system = {
-  #         user = "root";
-  #         sshUser = "root";
-  #         path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.server;
-  #       };
-  #     };
-  #   };
-
-  #   checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
-
-  #   nixosConfigurations =
-  #     gen ["desktop" "server" "x220" "t440p" "digiboksi"]
-  #     // {
-  #       iso = (import ./iso) {inherit mlib lib inputs;};
-  #     };
-
-  #   gen = hosts:
-  #     builtins.listToAttrs (builtins.map
-  #       (s: {
-  #         name = s;
-  #         # lib/os.nix
-  #         value = mlib.mkSystem {
-  #           nixosSystem = lib.nixosSystem;
-  #           inherit inputs mlib;
-  #           config = mlib.getHostConfig s;
-  #         };
-  #       })
-  #       hosts);
-  # };
-
-  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./flake);
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} {imports = [./flake];};
 
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.xz";

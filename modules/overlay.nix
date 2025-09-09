@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.modules.nixos.base = {
+  config = {
     nixpkgs.overlays = [
       (final: prev: rec {
         # TODO organize, break up

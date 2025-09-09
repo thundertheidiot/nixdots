@@ -25,8 +25,7 @@ in {
       value = config.flake.mkSystem (let
         cfg = import "${inputs.self.outPath}/hosts/${n}";
       in {
-        # take in all defined nixos modules, for example nixpkgs overrides are defined in flake.parts
-        modules = [cfg] ++ builtins.attrValues config.flake.modules.nixos;
+        modules = [cfg];
       });
     }) (readDir "${inputs.self.outPath}/hosts");
 }
