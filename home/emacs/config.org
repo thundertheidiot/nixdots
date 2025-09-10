@@ -346,6 +346,7 @@ Collection of evil-like bindings for other modes.
 			  ibuffer
 			  simple-mpc
 			  magit
+			  forge
 			  magit-todos
 			  vdiff
 			  sly
@@ -671,6 +672,9 @@ Faster inserting of templates like the source code blocks here.
 	   "gc" '("commit" . magit-commit)
 	   "gp" '("push" . magit-push)
 	   "gF" '("push" . magit-pull)))
+
+(use-package forge
+  :after magit)
 #+end_src
 
 Show added/deleted/edited parts in the fringe
