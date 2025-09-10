@@ -9,12 +9,15 @@
     };
 
     workflows = let
-      inherit (builtins) attrNames;
-
+      # inherit (builtins) attrNames;
+      # buildAllHosts = map (n: {
+      #   name = "Build ${n}";
+      #   run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
+      # }) (attrNames config.flake.nixosConfigurations);
       buildAllHosts = map (n: {
         name = "Build ${n}";
         run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-      }) (attrNames config.flake.nixosConfigurations);
+      }) ["t440p" "uwu"];
     in {
       ".github/workflows/update-flake.yaml" = {
         name = "Update flake.lock";
