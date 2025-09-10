@@ -16,20 +16,10 @@ jobs:
         name: meowos
     - name: Update Flake Inputs
       run: nix flake update --accept-flake-config
-    - name: Build desktop
-      run: nix build --accept-flake-config .#nixosConfigurations.desktop.config.system.build.toplevel
-    - name: Build digiboksi
-      run: nix build --accept-flake-config .#nixosConfigurations.digiboksi.config.system.build.toplevel
-    - name: Build iso
-      run: nix build --accept-flake-config .#nixosConfigurations.iso.config.system.build.toplevel
     - name: Build t440p
       run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
     - name: Build uwu
       run: nix build --accept-flake-config .#nixosConfigurations.uwu.config.system.build.toplevel
-    - name: Build vps
-      run: nix build --accept-flake-config .#nixosConfigurations.vps.config.system.build.toplevel
-    - name: Build x220
-      run: nix build --accept-flake-config .#nixosConfigurations.x220.config.system.build.toplevel
     - name: Commit
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
