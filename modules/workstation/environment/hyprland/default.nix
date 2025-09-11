@@ -241,8 +241,8 @@ in {
                 ",XF86AudioMute, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume mute-toggle"
                 ",XF86AudioRaiseVolume, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume 3"
                 ",XF86AudioLowerVolume, exec, ${pkgs.swayosd}/bin/swayosd-client --output-volume -3"
-                ",XF86MonBrightnessUp, exec, ${pkgs.swayosd}/bin/swayosd-client --brighness raise"
-                ",XF86MonBrightnessDown, exec, ${pkgs.swayosd}/bin/swayosd-client --brighness lower"
+                ",XF86MonBrightnessUp, exec, ${pkgs.swayosd}/bin/swayosd-client --brightness=+5"
+                ",XF86MonBrightnessDown, exec, ${pkgs.swayosd}/bin/swayosd-client --brightness=-5"
               ];
 
               # bindr = [

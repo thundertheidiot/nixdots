@@ -4,11 +4,14 @@
   pkgs,
   modulesPath,
   mlib,
+  inputs,
   ...
 }: {
   imports = [
     # ./desktop/firedragon.nix
     ./disko.nix
+    inputs.nixos-hardware.nixosModules.framework-13-7040-amd
+    ./kmod.nix # nixos-hardware workaround
   ];
 
   system.stateVersion = "25.05";
@@ -59,7 +62,7 @@
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
 
-      wayland.windowManager.hyprland.settings.animations.enabled = lib.mkForce false;
+      wayland.windowManager.hyprland.settings.xwayland.force_zero_scaling = true;
 
       home.packages = with pkgs; [
         vscode
@@ -82,7 +85,7 @@
 
     user = "thunder";
 
-    # gaming.enable = true;
+    gaming.enable = true;
     # gaming.emulation = true;
     # gaming.games = ["duckgame"];
 
@@ -102,13 +105,16 @@
 
     boot.efi = true;
 
-    # monitors = [
-    #   {
-    #     name = "eDP-1";
-    #     width = "1920";
-    #     height = "1080";
-    #   }
-    # ];
+    monitors = [
+      {
+        name = "eDP-1";
+        width = "2880";
+        height = "1920";
+        refresh = 120;
+        primary = true;
+        scale = "1.5";
+      }
+    ];
   };
 
   boot.loader.grub.enable = true;
