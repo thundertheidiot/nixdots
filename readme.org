@@ -14,11 +14,9 @@ At Meow Industries, our commitment to excellence is reflected in our comprehensi
 - [X] Unused and useless customization options for those modules
 - [X] Modules for things I don't even use, for example gnome is a "supported" environment
 - [X] Rewrites of community modules that I was slightly unsatisfied with
-  - See [[file:modules/impermanence.nix][impermanence.nix]], [[file:modules/programs/discord/default.nix][discord]] or the WIP [[file:modules/browser/default.nix][browser module]]
+  - See [[file:modules/impermanence.nix][impermanence.nix]], [[file:modules/programs/discord/default.nix][discord]]
 - [X] Helper programs which could have just been scripts
   - See [[file:pkgs/screenshot/][screenshot]] or [[file:modules/tv/ir-client/][ir-client]] 
-- [X] [[file:default.nix][Unfunctional flakeless build system]]
-- [X] [[file:modules/home.nix][Useless abstraction on top of home-manager]]
   - As a bonus treat there is no consistency in the usage of home-manager or NixOS options
 - [X] Bad file organization
 - [?] Bad programming practices
