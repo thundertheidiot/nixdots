@@ -16,8 +16,8 @@ jobs:
         name: meowos
     - name: Update Flake Inputs
       run: nix flake update --accept-flake-config
-    - name: Build t440p
-      run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
+    - name: Build framework
+      run: nix build --accept-flake-config .#nixosConfigurations.framework.config.system.build.toplevel
     - name: Build uwu
       run: nix build --accept-flake-config .#nixosConfigurations.uwu.config.system.build.toplevel
     - name: Commit
