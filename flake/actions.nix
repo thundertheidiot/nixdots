@@ -17,7 +17,7 @@
       buildAllHosts = map (n: {
         name = "Build ${n}";
         run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-      }) ["t440p" "uwu"];
+      }) ["framework" "uwu"];
     in {
       ".github/workflows/update-flake.yaml" = {
         name = "Update flake.lock";
