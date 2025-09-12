@@ -1808,12 +1808,11 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 	 (color (alist-get 'text flavor)))
     (set-face-attribute 'mode-line-active nil :inherit 'mode-line-inactive :foreground color))
   
-  (let ((vpad 10))
-    (mapc (lambda (face)
-	    (set-face-attribute face nil
-				:box `(:line-width (1 . ,vpad) :color ,(face-background face nil t) :style nil)
-				:height 110))
-	  '(mode-line-active mode-line-inactive)))
+  (mapc (lambda (face)
+	  (set-face-attribute face nil
+			      :box `(:line-width (1 . 10) :color ,(face-background face nil t) :style nil)
+			      :height 110))
+	'(mode-line-active mode-line-inactive))
 
   (setq mode-line-format nil)
   (kill-local-variable 'mode-line-format)
@@ -1838,12 +1837,12 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		     (propertize "%b" 'face 'bold))
 		    "   L%l   " ;; line number
 
-		    ;; (:eval
-		    ;;  (when (file-remote-p default-directory)
-		    ;;    (let* ((vec (tramp-dissect-file-name default-directory))
-		    ;; 	      (user (or (tramp-file-name-user vec) ""))
-		    ;; 	      (host (tramp-file-name-host vec)))
-		    ;; 	 (propertize (format "%s@%s   " user host) 'face ,(list 'quote (list :foreground rosewater))))))
+		    (:eval
+		     (when (file-remote-p default-directory)
+		       (let* ((vec (tramp-dissect-file-name default-directory))
+			      (user (or (tramp-file-name-user vec) ""))
+			      (host (tramp-file-name-host vec)))
+			 (propertize (format "%s@%s   " user host) 'face ,(list 'quote (list :foreground rosewater))))))
 
 		    (:eval
 		     (pcase envrc--status
@@ -1854,39 +1853,34 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		    "   "
 		    
 		    (:eval
-		     (when (magit-toplevel)
+		     (when (and (not (file-remote-p default-directory)) (magit-toplevel))
 		       (propertize (format "  %s" (magit-get-current-branch)) 'face ,(list 'quote (list :foreground mauve)))
 		       ))
 		    
-		    (:eval (when (magit-toplevel) "   "))
+		    (:eval (when (and (not (file-remote-p default-directory)) (magit-toplevel)) "   "))
 
-		    (:eval
-		     (when eglot--managed-mode
-		       (eglot--mode-line-format)))
-
-		    (:eval (when eglot--managed-mode "   "))
+		    (eglot--managed-mode eglot--mode-line-format "")
+		    (eglot--managed-mode "   " "")
 		    
-		    (:eval
-		     (when flycheck-mode
-		       (if (eq flycheck-last-status-change 'finished)
-			   (let-alist (flycheck-count-errors flycheck-current-errors)
-			     (concat
-			      (when (and (not .error) (not .warning:?) (not .warning))
-				(propertize "" 'face ,(list 'quote (list :foreground green))))
-			      (when .error
-				(propertize (format " %s" .error) 'face ,(list 'quote (list :foreground red))))
-			      (when (or .warning:? .warning)
-				(propertize (format "%s %s" (if .error " " "") (+ (or .warning:? 0) (or .warning 0))) 'face ,(list 'quote (list :foreground yellow))))
-			      )
-			     ))
-		       ))
-		    
-		    (:eval (when flycheck-mode "   "))
+		    (flycheck-mode
+		     (:eval
+		      (when (and (eq flycheck-last-status-change 'finished) flycheck-current-errors)
+			 (let-alist (flycheck-count-errors flycheck-current-errors)
+			   (concat
+			    (when (and (not .error) (not .warning:?) (not .warning))
+			      (propertize "" 'face ,(list 'quote (list :foreground green))))
+			    (when .error
+			      (propertize (format " %s" .error) 'face ,(list 'quote (list :foreground red))))
+			    (when (or .warning:? .warning)
+			      (propertize (format "%s %s" (if .error " " "") (+ (or .warning:? 0) (or .warning 0))) 'face ,(list 'quote (list :foreground yellow))))))))
+		     
+		     "")
 
-		    "%="
+		    (flycheck-mode "   " "")
+
+		    ;; "%="
 		    (:eval (nyan-create)))))
   
-  ;; (nyan-start-animation)
   )
 
 (add-hook 'window-setup-hook #'th/mode-line)
