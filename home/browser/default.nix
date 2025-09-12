@@ -58,8 +58,8 @@ in {
 
     search = {
       force = true;
-      default = "ddg";
-      privateDefault = "ddg";
+      default = "g";
+      privateDefault = "g";
       inherit engines;
     };
   in (mkMerge [
