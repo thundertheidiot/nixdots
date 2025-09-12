@@ -25,22 +25,13 @@
   # stylix.autoEnable = false;
 
   meow = {
-    workstation = {
-      enable = true;
-      environment = ["hyprland"];
-      displayManager = "gdm";
-    };
-
-    emacs.enable = true;
-    shell.enable = true;
-
     ssh.key = false;
     ssh.rootKey = true;
 
     # old-tv.enable = true;
-    # tv.enable = true;
-    # workstation.enable = false;
-    # home.enable = false;
+    tv.enable = true;
+    workstation.enable = false;
+    home.enable = false;
 
     gpu = "intel";
 

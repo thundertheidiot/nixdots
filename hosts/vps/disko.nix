@@ -9,7 +9,7 @@
       ];
     };
     disk."main" = {
-      device = "/dev/disk/by-id/virtio-019d2bb6980c4d708729";
+      device = "/dev/vda";
       type = "disk";
       content = {
         type = "gpt";
