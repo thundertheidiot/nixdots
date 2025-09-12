@@ -16,6 +16,10 @@ creation_rules:
           - *desk
           - *t440p
           - *server
+  - path_regex: hosts/vps/secrets/[^/]+$
+    key_groups:
+      - age:
+          - *desk
   - path_regex: certs/[^/]+$
     key_groups:
       - age:
