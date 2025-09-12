@@ -33,9 +33,22 @@
 
           search = {
             force = true;
-            default = "DuckDuckGo";
-            privateDefault = "DuckDuckGo";
+            default = "Google";
+            privateDefault = "Google";
             engines = {
+              "Google" = {
+                urls = [
+                  {
+                    template = "https://google.com/search";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
               "DuckDuckGo" = {
                 urls = [
                   {

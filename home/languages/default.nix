@@ -74,7 +74,8 @@ in {
               nodePackages.bash-language-server
             ])
             (mkIf cfg.python [
-              pyright
+              basedpyright
+              python313Packages.python
             ])
             (mkIf cfg.web [
               nodejs

@@ -990,6 +990,12 @@ Language specific setup
   :hook (lua-mode . eglot-ensure))
 #+end_src
 
+*** python
+
+#+begin_src emacs-lisp :tangle @lang_python@
+
+#+end_src
+
 *** Gdscript/godot
 
 #+begin_src emacs-lisp

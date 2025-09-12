@@ -43,7 +43,10 @@
               }
               {
                 name = "Lix Installer";
-                run = "curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf 'trusted-users = root runner'";
+                env = {
+                  GH_TOKEN = "$${{ secrets.GITHUB_TOKEN }}";
+                };
+                run = "curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf 'trusted-users = root runner\naccess-tokens = github.com=$GH_TOKEN'";
               }
               {
                 name = "Cachix";

@@ -137,6 +137,15 @@ in {
             persistPath = "${cfg.persist}/containers";
             permissions = "710";
           }
+          "/var/lib/fwupd"
+          "/var/cache/fwupd"
+          (
+            if config.services.fprintd.enable
+            then {
+              path = "/var/lib/fprint";
+            }
+            else null
+          )
           # (
           #   if config.services.displayManager.sddm.enable
           #   then {

@@ -8,7 +8,6 @@
   ...
 }: {
   imports = [
-    # ./desktop/firedragon.nix
     ./disko.nix
     inputs.nixos-hardware.nixosModules.framework-13-7040-amd
     ./kmod.nix # nixos-hardware workaround
@@ -19,40 +18,64 @@
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "framework";
 
-  # virtualisation.docker.enable = true;
-
-  meow.impermanence.enable = true;
+  # networking.networkmanager.wifi.backend = "iwd";
 
   users.users.thunder = {
     initialPassword = "password";
     extraGroups = ["docker"];
   };
 
-  security.pki.certificates = [
-    ''
-      -----BEGIN CERTIFICATE-----
-      MIIDdzCCAl+gAwIBAgIQZqyAKU9rZpVPfh7Yfh2LxTANBgkqhkiG9w0BAQUFADBC
-      MRIwEAYKCZImiZPyLGQBGRYCZmkxFzAVBgoJkiaJk/IsZAEZFgdjZW50cmlhMRMw
-      EQYDVQQDEwpjZW50cmlhLUNBMB4XDTE1MTIwODEwMDMwMVoXDTQwMTIwODEwMTMw
-      MFowQjESMBAGCgmSJomT8ixkARkWAmZpMRcwFQYKCZImiZPyLGQBGRYHY2VudHJp
-      YTETMBEGA1UEAxMKY2VudHJpYS1DQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-      AQoCggEBAJ5oNRf1Q7SMuZOCTqz0NWx/6mL7HinOmAYxWtX0MolZvumGUEVD711g
-      wjmD4n2rgFz6j/afNA6EM7a+tgFDnWNwSxzZkopqu5pkif9/kWu1edqbyHmJRAC3
-      ul8mUQUSdWaAW/oGM8CkGqozg3F/lusUsohoVhpkWwVNEhZSBtu8Z/rissPA7pXA
-      gG9yhpr28CfwW9Rg64Gq2tDQtxr+xVt7lYVJe/dCggtvyBgTn9AFe/NCiocGfqOw
-      47y2Q0M/NpE1tnsFhyzWpspmE0236F3Z2qfDwopQsNgjr0mT1atPJpYKOHfBhT1l
-      GtIDVizqB7v/feryBWXOjAVnFOMgPMECAwEAAaNpMGcwEwYJKwYBBAGCNxQCBAYe
-      BABDAEEwDgYDVR0PAQH/BAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYE
-      FNe8NC6s4083zu5iFogjHtbrEeTfMBAGCSsGAQQBgjcVAQQDAgEAMA0GCSqGSIb3
-      DQEBBQUAA4IBAQArJVsKfE/TEI3qypF/VevKFQmbutGj4IdnziREDg//ROtIltnj
-      21eQScPWIvMlxPhponjohgXYG8MaRL7n02e6ugxVRVlG4J2BtmBsa+mdjceWcGwj
-      J3n3RuxDAjIyxbwhJ/gC3JaBBKJ9AEcgcwhlf7fa7+4KAVfjhHmNS+ACrGmm2kef
-      6NHlou4vDw7toCmOJ1s6AJhy7z8mp54NOm0FJEeNXdEMvujcTHdMTixXjbse6FWK
-      PjT5a0LdlUY2ZdYbskECp4nPm83LeKppPv13Quq/YZAtHvFXwDCDgEN3bMFEaMwY
-      Wlyku1axVbOOXygANEc0ueAZZHXzyERKB+B6
-      -----END CERTIFICATE-----
-    ''
-  ];
+  powerManagement.enable = true;
+  powerManagement.powertop.enable = true;
+
+  services.fprintd = {
+    enable = true;
+    # tod.enable = true;
+    # tod.driver = pkgs.libfprint-2-tod1-goodix;
+  };
+
+  services.power-profiles-daemon.enable = lib.mkForce false;
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+
+      CPU_MIN_PERF_ON_AC = 0;
+      CPU_MAX_PERF_ON_AC = 100;
+      CPU_MIN_PERF_ON_BAT = 0;
+      CPU_MAX_PERF_ON_BAT = 100;
+    };
+  };
+
+  # security.pki.certificates = [
+  #   ''
+  #     -----BEGIN CERTIFICATE-----
+  #     MIIDdzCCAl+gAwIBAgIQZqyAKU9rZpVPfh7Yfh2LxTANBgkqhkiG9w0BAQUFADBC
+  #     MRIwEAYKCZImiZPyLGQBGRYCZmkxFzAVBgoJkiaJk/IsZAEZFgdjZW50cmlhMRMw
+  #     EQYDVQQDEwpjZW50cmlhLUNBMB4XDTE1MTIwODEwMDMwMVoXDTQwMTIwODEwMTMw
+  #     MFowQjESMBAGCgmSJomT8ixkARkWAmZpMRcwFQYKCZImiZPyLGQBGRYHY2VudHJp
+  #     YTETMBEGA1UEAxMKY2VudHJpYS1DQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+  #     AQoCggEBAJ5oNRf1Q7SMuZOCTqz0NWx/6mL7HinOmAYxWtX0MolZvumGUEVD711g
+  #     wjmD4n2rgFz6j/afNA6EM7a+tgFDnWNwSxzZkopqu5pkif9/kWu1edqbyHmJRAC3
+  #     ul8mUQUSdWaAW/oGM8CkGqozg3F/lusUsohoVhpkWwVNEhZSBtu8Z/rissPA7pXA
+  #     gG9yhpr28CfwW9Rg64Gq2tDQtxr+xVt7lYVJe/dCggtvyBgTn9AFe/NCiocGfqOw
+  #     47y2Q0M/NpE1tnsFhyzWpspmE0236F3Z2qfDwopQsNgjr0mT1atPJpYKOHfBhT1l
+  #     GtIDVizqB7v/feryBWXOjAVnFOMgPMECAwEAAaNpMGcwEwYJKwYBBAGCNxQCBAYe
+  #     BABDAEEwDgYDVR0PAQH/BAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYE
+  #     FNe8NC6s4083zu5iFogjHtbrEeTfMBAGCSsGAQQBgjcVAQQDAgEAMA0GCSqGSIb3
+  #     DQEBBQUAA4IBAQArJVsKfE/TEI3qypF/VevKFQmbutGj4IdnziREDg//ROtIltnj
+  #     21eQScPWIvMlxPhponjohgXYG8MaRL7n02e6ugxVRVlG4J2BtmBsa+mdjceWcGwj
+  #     J3n3RuxDAjIyxbwhJ/gC3JaBBKJ9AEcgcwhlf7fa7+4KAVfjhHmNS+ACrGmm2kef
+  #     6NHlou4vDw7toCmOJ1s6AJhy7z8mp54NOm0FJEeNXdEMvujcTHdMTixXjbse6FWK
+  #     PjT5a0LdlUY2ZdYbskECp4nPm83LeKppPv13Quq/YZAtHvFXwDCDgEN3bMFEaMwY
+  #     Wlyku1axVbOOXygANEc0ueAZZHXzyERKB+B6
+  #     -----END CERTIFICATE-----
+  #   ''
+  # ];
 
   virtualisation.docker.enable = true;
 
@@ -68,6 +91,8 @@
         vscode
         lmath
         distrobox
+
+        python313Packages.python
       ];
     }
   ];
@@ -82,6 +107,8 @@
     fullSetup = true;
     workstation.enable = true;
     workstation.environment = ["hyprland"];
+
+    impermanence.enable = true;
 
     user = "thunder";
 
