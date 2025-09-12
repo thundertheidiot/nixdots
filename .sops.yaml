@@ -22,6 +22,8 @@ creation_rules:
     key_groups:
       - age:
           - *desk
+          - *vps
+          - *framework
   - path_regex: certs/[^/]+$
     key_groups:
       - age:
