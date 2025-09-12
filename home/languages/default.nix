@@ -47,7 +47,7 @@ in {
           "python"
           "bash"
           "web"
-          "latex"
+          # "latex"
         ];
       })
       {
@@ -58,8 +58,8 @@ in {
               alejandra # fmt
             ])
             (mkIf cfg.haskell [
-              (haskellPackages.ghcWithPackages (pkgs: with pkgs; [stack]))
-              haskell-language-server
+              # (haskellPackages.ghcWithPackages (pkgs: with pkgs; [stack]))
+              # haskell-language-server
             ])
             (mkIf cfg.lua [
               lua-language-server

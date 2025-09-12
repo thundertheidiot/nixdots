@@ -42,20 +42,9 @@ in {
           # "ansel"
         ];
 
-        home-manager.sharedModules = [
+        meow.home.modules = [
           {
-            # keeping these in sync will prove to be a headache
-            mHome.lang = enAll [
-              "nix"
-              "haskell"
-              "rust"
-              "lua"
-              "c_cxx"
-              "python"
-              "bash"
-              "web"
-              "latex"
-            ];
+            mHome.setup.fullLanguages = true;
           }
         ];
       })

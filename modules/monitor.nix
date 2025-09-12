@@ -3,9 +3,10 @@
   mlib,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
-  mons = mlib.mkMonitors config.meow.monitors;
+  mons = inputs.self.lib.mkMonitors config.meow.monitors;
 
   inherit (lib) mkIf mkMerge;
   inherit (mlib) homeModule;
