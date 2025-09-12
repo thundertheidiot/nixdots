@@ -82,6 +82,7 @@ in {
         ExecStart = "${pkgs.callPackage ./settings.nix {
           kodiHome = "$HOME/.kodi";
           kodiSettings = cfg.settings;
+          inherit mlib;
         }}/bin/create_settings";
       };
     };

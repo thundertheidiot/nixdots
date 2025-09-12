@@ -1,6 +1,4 @@
 {lib, ...}: rec {
-  inherit (builtins) hasAttr;
-
   mkOpt = type: default: {
     example ? "",
     description ? "",

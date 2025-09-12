@@ -13,8 +13,6 @@
     inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
-
-    inputs.slippi.nixosModules.default
   ];
 
   system.stateVersion = "24.05";
@@ -68,10 +66,8 @@
   };
 
   home-manager.sharedModules = [
-    inputs.slippi.homeManagerModules.default
     {
       home.stateVersion = "24.05";
-      mHome.browser.zen.enable = true;
       mHome.browser.firefox.enable = true;
       mHome.emacs.enable = true;
 
@@ -83,8 +79,6 @@
       services.syncthing = {
         enable = true;
       };
-
-      slippi-launcher.isoPath = "/home/thunder/Games/roms/Super Smash Bros. Melee (USA) (En,Ja) (v1.02).iso";
     }
   ];
 

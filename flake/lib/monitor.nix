@@ -1,5 +1,7 @@
-{...}:
-with builtins; rec {
+{lib, ...}: let
+  inherit (builtins) mapAttrs;
+  inherit (lib) isAttrs;
+in rec {
   mkMon = {
     name,
     width ? "1920",

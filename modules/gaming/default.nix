@@ -56,7 +56,7 @@ in {
         #     parallel-n64
         #   ];
         # })
-        retroarch-full
+        # retroarch-full
         protontricks
       ];
     })

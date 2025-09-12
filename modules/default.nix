@@ -20,4 +20,5 @@
   ./vm.nix
   ./workstation
   ./xorg.nix
+  ./server
 ]

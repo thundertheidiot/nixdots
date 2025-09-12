@@ -23,15 +23,6 @@
 
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
-    services.displayManager.sddm = {
-      settings = {
-        Autologin = {
-          Session = "hyprland.desktop";
-          User = "nixos";
-        };
-      };
-    };
-
     users.users.nixos = {
       password = "password";
       initialHashedPassword = lib.mkForce null;
@@ -46,9 +37,12 @@
 
     home-manager.sharedModules = [
       {
-        home.stateVersion = "25.05";
-        mHome.browser.firefox.enable = true;
-        mHome.emacs.enable = true;
+        disabledModules = ["home/browser/default.nix"];
+
+        config = {
+          home.stateVersion = "25.05";
+          mHome.browser.firefox.enable = false;
+        };
       }
     ];
 
@@ -57,14 +51,7 @@
     meow = {
       user = "nixos";
 
-      workstation.enable = true;
-      workstation.environment = ["hyprland"];
-      workstation.plasma.opinionatedConfig = true;
-      workstation.flatpak.enable = false;
-
-      gaming.enable = false;
-
-      emacs.enable = true;
+      emacs.enable = false;
       shell.enable = true;
 
       ssh.key = true;

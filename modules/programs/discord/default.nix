@@ -8,7 +8,7 @@
   inherit (lib) mkIf;
   inherit (lib.types) bool str attrs;
   inherit (lib.attrsets) mergeAttrsList;
-  inherit (mlib) mkOpt mkEnOpt defineJqDeepmerge applyWithJq;
+  inherit (mlib) mkOpt mkEnOpt defineJqDeepmerge applyWithJq jqMergeFileWithValue;
   inherit (builtins) toJSON;
   cfg = config.meow.program.discordConfig;
 in {
@@ -42,26 +42,6 @@ in {
   };
 
   config = mkIf (config.meow.program.discord && cfg.enable) (let
-    createFile = {
-      name,
-      path ? "${config.meow.home.directory}/.config/vesktop/",
-      attrs,
-    }: let
-      file = "${path}/${name}";
-    in ''
-      if [ ! -f "${file}" ]; then
-        mkdir -p ${path}
-        echo '{}' > "${file}"
-      fi
-
-      ${applyWithJq {
-        jq = "${pkgs.jq}/bin/jq";
-        args = "--argjson settings '${toJSON attrs}'";
-        file = "${file}";
-        operation = "${defineJqDeepmerge} deepmerge({}; [., $settings])";
-      }}
-    '';
-
     defaultSettings = {
       discordBranch = "stable";
       splashColor = "rgb(205, 214, 244)";
@@ -123,14 +103,19 @@ in {
     };
 
     nixpkgs.overlays = let
+      path = f: "${config.meow.home.directory}/.config/vesktop/${f}";
+      jq = "${pkgs.jq}/bin/jq";
+
       makeSettings = pkgs.writeShellScript "create_discord_settings" ''
-        ${createFile {
-          name = "settings.json";
-          attrs = finalSettings;
+        ${jqMergeFileWithValue {
+          inherit jq;
+          file = path "settings.json";
+          value = finalSettings;
         }}
-        ${createFile {
-          name = "settings/settings.json";
-          attrs = finalUserSettings;
+        ${jqMergeFileWithValue {
+          inherit jq;
+          file = path "settings/settings.json";
+          value = finalUserSettings;
         }}
       '';
     in [

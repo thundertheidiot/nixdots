@@ -13,7 +13,8 @@ in {
   flake.mkSystem = {modules}:
     assert isList modules;
       lib.nixosSystem (let
-        mlib = import "${root}/lib" {inherit lib;};
+        # mlib = import "${root}/lib" {inherit lib;};
+        mlib = inputs.self.lib;
       in {
         specialArgs = {
           inherit inputs mlib;
