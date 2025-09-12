@@ -14,7 +14,7 @@
 
     workflows = let
       inherit (lib.lists) flatten;
-      # inherit (builtins) attrNames;
+      inherit (builtins) attrNames;
       # buildAllHosts = map (n: {
       #   name = "Build ${n}";
       #   run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
@@ -67,6 +67,15 @@
         };
       };
     in {
+      ".github/workflows/build-hosts.yaml" = {
+        on.workflow_dispatch = {};
+
+        jobs.build = mkBasicNix (map (n: {
+          name = "Build ${n}";
+          run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
+        }) (attrNames config.flake.nixosConfigurations));
+      };
+
       ".github/workflows/update-flake.yaml" = {
         name = "Update flake.lock";
 
