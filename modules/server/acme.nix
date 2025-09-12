@@ -6,7 +6,7 @@
 }: let
   inherit (mlib) mkOpt;
   inherit (lib.types) listOf str;
-  inherit (lib) mkIf length listToAttrs;
+  inherit (lib) mkIf length unique listToAttrs;
 
   cfg = config.meow.server;
 in {
@@ -32,7 +32,7 @@ in {
           group = "acme";
         };
       })
-      cfg.certificates);
+      (unique cfg.certificates));
 
     services.nginx.virtualHosts = listToAttrs (map (name: {
         inherit name;
@@ -41,7 +41,7 @@ in {
           enableACME = true;
         };
       })
-      cfg.certificates);
+      (unique cfg.certificates));
 
     meow.impermanence.directories = [
       {path = "/var/lib/acme";}

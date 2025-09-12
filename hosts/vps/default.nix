@@ -29,6 +29,8 @@ in {
         webserver = true;
 
         certificates = ["saatana.xyz"];
+        xmppDomains = ["saatana.xyz"];
+        # coturn = true;
       };
     };
 
