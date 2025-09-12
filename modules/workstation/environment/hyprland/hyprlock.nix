@@ -25,6 +25,10 @@ in {
               after_sleep_cmd = "hyprctl dispatch dpms on";
             };
 
+            auth = {
+              fingerprint.enabled = true;
+            };
+
             # 5 min: lock. 10 min: screen off. 60 min: suspend.
             listener = [
               {
