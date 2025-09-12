@@ -75,8 +75,6 @@
 
     naersk.url = "github:nix-community/naersk";
 
-    slippi.url = "github:lytedev/slippi-nix";
-
     hyprland = {
       # url = "github:hyprwm/Hyprland/v0.46.2";
       url = "github:hyprwm/Hyprland/v0.50.1";
