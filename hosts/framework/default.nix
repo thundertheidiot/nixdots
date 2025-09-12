@@ -107,6 +107,7 @@
     fullSetup = true;
     workstation.enable = true;
     workstation.environment = ["hyprland"];
+    workstation.displayManager = "gdm";
 
     impermanence.enable = true;
 
