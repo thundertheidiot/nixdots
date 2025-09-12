@@ -1,15 +1,12 @@
 {lib, ...}: let
-  inherit (lib) mkOption;
-  inherit (lib.types) attrsOf anything;
+  inherit (builtins) readDir attrNames;
+  inherit (lib) mergeAttrsList pipe;
 in {
-  imports = [
-    ./modules.nix
+  # TODO replace with pipe operator when convenient
+  flake.lib = pipe null [
+    (_: readDir ./.)
+    attrNames
+    (map (n: import (./. + "/${n}") {inherit lib;}))
+    mergeAttrsList
   ];
-
-  options = {
-    flake.lib = mkOption {
-      type = attrsOf anything;
-      default = {};
-    };
-  };
 }

@@ -7,6 +7,7 @@
     ./mksystem.nix
     ./nixos-configurations.nix
     ./pkgs.nix
+    ./lib
   ];
 
   flake.modules = {};
