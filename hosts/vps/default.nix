@@ -8,6 +8,7 @@
 in {
   imports = [
     ./disko.nix
+    ./secrets
   ];
 
   config = {

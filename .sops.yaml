@@ -12,7 +12,7 @@ creation_rules:
           - *desk
           - *framework
           - *digiboksi
-  - path_regex: hosts/server/secrets/[^/]+$
+  - path_regex: hosts/uwu/secrets/[^/]+$
     key_groups:
       - age:
           - *desk
