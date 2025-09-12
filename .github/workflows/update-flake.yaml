@@ -9,7 +9,7 @@ jobs:
     - env:
         NIX_INSTALLER_EXTRA_CONF: |-
           trusted-users = root runner
-          access-tokens = github.com=$${{ secrets.GITHUB_TOKEN }}
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
       name: Lix Installer
       run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix
         | sh -s -- install --no-confirm
@@ -17,7 +17,7 @@ jobs:
     - name: Cachix
       uses: cachix/cachix-action@v16
       with:
-        authToken: $${{ secrets.CACHIX_AUTH_TOKEN }}
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
         name: meowos
     - name: Update Flake Inputs
       run: nix flake update --accept-flake-config
