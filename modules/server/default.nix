@@ -10,6 +10,7 @@ in {
     ./coturn.nix
     ./prosody
     ./ssh.nix
+    ./mumble.nix
     ./webserver.nix
   ];
 }
