@@ -43,7 +43,10 @@
 
         cleanup = {
           uses = "wimpysworld/nothing-but-nix@v6";
-          "with".hatchet-protocol = "rampage";
+          "with" = {
+            hatchet-protocol = "rampage";
+            witness-carnage = true;
+          };
         };
 
         nixInstaller = {

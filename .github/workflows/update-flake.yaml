@@ -6,6 +6,7 @@ jobs:
     - uses: wimpysworld/nothing-but-nix@v6
       with:
         hatchet-protocol: rampage
+        witness-carnage: true
     - env:
         NIX_INSTALLER_EXTRA_CONF: |-
           trusted-users = root runner
