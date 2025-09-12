@@ -11,7 +11,7 @@ jobs:
       name: Lix Installer
       run: |-
         curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm --extra-conf 'trusted-users = root runner
-        access-tokens = github.com=$GH_TOKEN'
+        access-tokens = github.com=PAT:glpat-$GH_TOKEN'
     - name: Cachix
       uses: cachix/cachix-action@v16
       with:
