@@ -2,6 +2,7 @@
   config,
   lib,
   mlib,
+  modulesPath,
   ...
 }: let
   inherit (lib) mkForce;
@@ -34,6 +35,8 @@ in {
         xmppDomains = ["saatana.xyz"];
         coturn = true;
         mumble = true;
+
+        # radio = true;
       };
     };
 
