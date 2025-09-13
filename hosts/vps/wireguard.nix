@@ -11,16 +11,16 @@ in {
   config = {
     networking.wg-quick.interfaces.wg0 = {
       address = ["10.100.0.1/24"];
-      listenPort = 51820;
-
       privateKeyFile = config.sops.secrets.wg_private.path;
+
+      listenPort = 51820;
 
       peers = [
         # Homeserver - port forward
         {
           allowedIPs = ["10.100.0.2/32"];
           publicKey = builtins.readFile keys.pubkeyHome;
-          presharedKeyFile = config.sops.secrets.wg_home_psk.path;
+          presharedKeyFile = config.sops.secrets.wg_vps_psk.path;
         }
       ];
     };

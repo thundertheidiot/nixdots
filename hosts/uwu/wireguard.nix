@@ -9,16 +9,13 @@ in {
   imports = [keys.home];
 
   config = {
-    networking.wireguard.enable = true;
-    networking.wireguard.interfaces.wg0 = {
-      ips = ["10.100.0.2/24"];
-      listenPort = 51820;
-
+    networking.wg-quick.interfaces.wg0 = {
+      address = ["10.100.0.2/24"];
       privateKeyFile = config.sops.secrets.wg_private.path;
 
       peers = [
         {
-          allowedIPs = ["10.100.0.0/24"];
+          allowedIPs = ["10.100.0.1/32"];
           publicKey = builtins.readFile keys.pubkeyVps;
           presharedKeyFile = config.sops.secrets.wg_vps_psk.path;
           persistentKeepalive = 25;

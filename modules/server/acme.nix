@@ -6,7 +6,7 @@
 }: let
   inherit (mlib) mkOpt;
   inherit (lib.types) listOf str;
-  inherit (lib) mkIf length unique listToAttrs;
+  inherit (lib) mkIf length unique listToAttrs mkDefault;
 
   cfg = config.meow.server;
 in {
@@ -37,8 +37,8 @@ in {
     services.nginx.virtualHosts = listToAttrs (map (name: {
         inherit name;
         value = {
-          forceSSL = true;
-          enableACME = true;
+          forceSSL = mkDefault true;
+          enableACME = mkDefault true;
         };
       })
       (unique cfg.certificates));
