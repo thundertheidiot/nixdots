@@ -8,9 +8,10 @@
   inherit (lib) mkForce;
 in {
   imports = [
+    (modulesPath + "/profiles/qemu-guest.nix")
     ./disko.nix
     ./secrets
-    (modulesPath + "/profiles/qemu-guest.nix")
+    ./wireguard.nix
   ];
 
   config = {
