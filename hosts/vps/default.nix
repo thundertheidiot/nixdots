@@ -10,7 +10,6 @@ in {
   imports = [
     ./disko.nix
     ./secrets
-    ./network.nix
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
@@ -18,7 +17,7 @@ in {
     system.stateVersion = "25.05";
     time.timeZone = "Europe/Helsinki";
 
-    users.users.root.initialPassword = "password";
+    users.users.root.hashedPassword = "!";
 
     meow = {
       workstation.enable = false;
@@ -50,6 +49,8 @@ in {
       root = ./http;
     };
 
+    networking.networkmanager.enable = false;
+    networking.useDHCP = true;
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
     programs.nh.clean.extraArgs = mkForce "--keep 3";
