@@ -3,6 +3,7 @@
   lib,
   mlib,
   modulesPath,
+  server,
   ...
 }: let
   inherit (lib) mkForce head;
@@ -40,6 +41,9 @@ in {
         webserver = true;
 
         domains = ["saatana.xyz"];
+        reverseProxy = {
+          "img.saatana.xyz" = "http://${server.homeServer}:2283";
+        };
 
         certificates = ["saatana.xyz"];
         xmppDomains = ["saatana.xyz"];
