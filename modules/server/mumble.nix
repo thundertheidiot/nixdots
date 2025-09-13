@@ -30,9 +30,16 @@ in {
 
     services.botamusique = {
       enable = false;
-      package = pkgs.botamusique.overrideAttrs (prev: {
-        pythonPath = prev.pythonPath ++ [pkgs.python313Packages.audioop-lts];
-      });
+      package = let
+        "2311" = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-23.11.tar.gz") {
+          inherit (pkgs) config;
+        };
+      in
+        "2311".botamusique.override {
+        };
+      # package = pkgs.botamusique.overrideAttrs (prev: {
+      #   pythonPath = prev.pythonPath ++ [pkgs.python313Packages.audioop-lts];
+      # });
       settings = {
         commands.play = "p, play";
         commands.yt_search = "ys";

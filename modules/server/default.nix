@@ -8,9 +8,11 @@ in {
   imports = [
     ./acme.nix
     ./coturn.nix
-    ./prosody
-    ./ssh.nix
+    ./mail.nix
     ./mumble.nix
+    ./prosody
+    ./radio.nix
+    ./ssh.nix
     ./webserver.nix
   ];
 }
