@@ -5,16 +5,23 @@
   modulesPath,
   ...
 }: let
-  inherit (lib) mkForce;
+  inherit (lib) mkForce head;
 in {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disko.nix
+    ./jellyfin.nix
     ./secrets
     ./wireguard.nix
   ];
 
   config = {
+    _module.args = rec {
+      server.domains = ["saatana.xyz"];
+      server.mainDomain = head server.domains;
+      server.homeServer = "10.100.0.2";
+    };
+
     system.stateVersion = "25.05";
     time.timeZone = "Europe/Helsinki";
 
@@ -36,11 +43,8 @@ in {
 
         certificates = ["saatana.xyz"];
         xmppDomains = ["saatana.xyz"];
-        # mail.domains = ["saatana.xyz"];
         coturn = true;
         mumble = true;
-
-        # radio = true;
       };
     };
 
