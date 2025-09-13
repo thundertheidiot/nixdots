@@ -17,8 +17,6 @@ in {
 
   config = {
     _module.args = rec {
-      server.domains = ["saatana.xyz"];
-      server.mainDomain = head server.domains;
       server.homeServer = "10.100.0.2";
     };
 
@@ -40,6 +38,8 @@ in {
       server = {
         publicSSH = true;
         webserver = true;
+
+        domains = ["saatana.xyz"];
 
         certificates = ["saatana.xyz"];
         xmppDomains = ["saatana.xyz"];

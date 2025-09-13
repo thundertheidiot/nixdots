@@ -1,10 +1,18 @@
 {
+  config,
   mlib,
   lib,
   ...
 }: let
-  inherit (mlib) mkEnOpt;
+  inherit (mlib) mkOpt;
+  inherit (lib) head;
+  inherit (lib.types) listOf str;
 in {
+  options.meow.server = {
+    domains = mkOpt (listOf str) [] {};
+    mainDomain = mkOpt str (head config.meow.server.domains) {};
+  };
+
   imports = [
     ./acme.nix
     ./coturn.nix

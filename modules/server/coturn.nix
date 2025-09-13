@@ -22,14 +22,14 @@ in {
 
       no-cli = true;
       no-tcp-relay = true;
-      realm = "saatana.xyz";
+      realm = cfg.mainDomain;
 
       extraConfig = ''
         no-multicast-peers
         stale-nonce
       '';
 
-      cert = "/var/lib/acme/${realm}/cert.pem";
+      cert = "/var/lib/acme/${realm}/fullchain.pem";
       pkey = "/var/lib/acme/${realm}/key.pem";
     };
 

@@ -1,6 +1,10 @@
-{server, ...}: let
+{
+  server,
+  config,
+  ...
+}: let
   addr = "http://${server.homeServer}:8096";
-  jellyDomain = "jellyfin.${server.mainDomain}";
+  jellyDomain = "jellyfin.${config.meow.server.mainDomain}";
 in {
   meow.server.certificates = [jellyDomain];
 
