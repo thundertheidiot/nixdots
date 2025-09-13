@@ -2,6 +2,7 @@
   lib,
   inputs,
   pkgs,
+  config,
   ...
 }: {
   imports = [
@@ -44,11 +45,42 @@
     networking.useDHCP = lib.mkForce true;
     services.openssh.settings.PermitRootLogin = lib.mkForce "prohibit-password";
 
+    specialisation.nvidia.configuration = {config, ...}: {
+      hardware.graphics.enable = true;
+      services.xserver.videoDrivers = ["nvidia"];
+
+      boot.blacklistedKernelModules = ["nouveau"];
+
+      hardware.nvidia = {
+        modesetting.enable = true;
+        open = false;
+        package = config.boot.kernelPackages.nvidiaPackages.production;
+      };
+    };
+
+    boot.loader.grub.extraEntries = let
+      nvidiaTop = config.specialisation.nvidia.configuration.system.build.toplevel;
+    in ''
+      menuentry "Proprietary NVIDIA Drivers" {
+        linux ${nvidiaTop}/kernel init=${nvidiaTop}/init systemConfig=${nvidiaTop} initrd=${nvidiaTop}/initrd
+      }
+    '';
+
     home-manager.sharedModules = [
       {
         home.stateVersion = "25.05";
         mHome.browser.firefox.enable = true;
         mHome.emacs.enable = true;
+
+        home.packages = with pkgs; [
+          stress-ng
+          mprime
+          furmark
+          glxinfo
+          unigine-heaven
+          unigine-superposition
+          unigine-valley
+        ];
       }
     ];
 

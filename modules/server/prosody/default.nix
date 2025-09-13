@@ -60,6 +60,7 @@ in {
 
             ssl = {
               certificate = "/var/lib/acme/${mainDomain}/fullchain.pem";
+              # prosody searches for privkey.pem
               key = "/var/lib/acme/${mainDomain}/key.pem";
             };
           };
@@ -75,6 +76,7 @@ in {
 
             ssl = {
               certificate = "/var/lib/acme/${mainDomain}/fullchain.pem";
+              # prosody searches for privkey.pem
               key = "/var/lib/acme/${mainDomain}/key.pem";
             };
           };
@@ -105,9 +107,11 @@ in {
 
           ssl = {
             certificate = "/var/lib/acme/${mainDomain}/fullchain.pem";
+            # prosody searches for privkey.pem
             key = "/var/lib/acme/${mainDomain}/key.pem";
           };
 
+          # if this is not set it tries to search a nonexistent directory and prosodyctl crashes
           certificates = "/var/lib/acme";
         }
       ];
