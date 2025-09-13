@@ -9,6 +9,7 @@ in {
   imports = [
     ./disko.nix
     ./secrets
+    (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
   config = {
