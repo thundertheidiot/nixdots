@@ -14,22 +14,22 @@ in {
   };
 
   imports = [
+    # ./home-assistant.nix
+    # local self signed certificates
+    (import ../../certs).module
     ./authentik.nix
     ./camera.nix
     ./disko.nix
+    ./dns.nix
     ./docker
     ./forgejo.nix
-    ./jellyfin.nix
-    ./rathole.nix
-    ./dns.nix
     ./homepage.nix
-    ./secrets
-    ./redlib.nix
+    ./jellyfin.nix
     ./n8n.nix
-    # ./home-assistant.nix
-
-    # local self signed certificates
-    (import ../../certs).module
+    ./rathole.nix
+    ./redlib.nix
+    ./secrets
+    ./wireguard.nix
   ];
 
   config = {
