@@ -96,10 +96,12 @@
 
     nur.url = "github:nix-community/NUR";
 
-    authentik-nix.url = "github:nix-community/authentik-nix";
-
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     sops-nix.url = "github:Mic92/sops-nix";
+
+    # server
+    authentik-nix.url = "github:nix-community/authentik-nix";
+    nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
   };
 }

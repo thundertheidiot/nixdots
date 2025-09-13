@@ -6,7 +6,7 @@
   ...
 }: let
   inherit (mlib) mkOpt;
-  inherit (lib) mkIf head;
+  inherit (lib) mkIf head length;
   inherit (lib.types) listOf nullOr str;
 
   cfg = config.meow.server;
@@ -18,7 +18,7 @@ in {
   options.meow.server.mail.domains = mkOpt (listOf str) [] {};
   options.meow.server.mail.fqdn = mkOpt (nullOr str) null {};
 
-  config = mkIf cfg.mail {
+  config = mkIf (length cfg.mail.domains > 0) {
     meow.impermanence.directories = [
       {path = "/var/lib/postgresql";}
       {path = "/var/lib/dovecot";}
@@ -40,7 +40,10 @@ in {
       backup.snapshotRoot = p "mail/rsnapshot";
       indexDir = p "mail/index";
 
-      fqdn = cfg.mail.fqdn or "mail.${head cfg.mailDomains}";
+      fqdn =
+        if cfg.mail.fqdn != null
+        then cfg.mail.fqdn
+        else "mail.${head cfg.mail.domains}";
       inherit (cfg.mail) domains;
 
       loginAccounts = {

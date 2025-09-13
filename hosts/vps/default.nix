@@ -10,12 +10,15 @@ in {
   imports = [
     ./disko.nix
     ./secrets
+    ./network.nix
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
   config = {
     system.stateVersion = "25.05";
     time.timeZone = "Europe/Helsinki";
+
+    users.users.root.initialPassword = "password";
 
     meow = {
       workstation.enable = false;
@@ -33,12 +36,15 @@ in {
 
         certificates = ["saatana.xyz"];
         xmppDomains = ["saatana.xyz"];
+        # mail.domains = ["saatana.xyz"];
         coturn = true;
         mumble = true;
 
         # radio = true;
       };
     };
+
+    mailserver.stateVersion = 3;
 
     services.nginx.virtualHosts."saatana.xyz" = {
       root = ./http;

@@ -31,7 +31,7 @@ in {
 
         output.icecast(
           %vorbis(samplerate=44100, channels=2, quality=0.6),
-          host = "127.0.0.1", port = ${config.services.icecast.listen.port},
+          host = "127.0.0.1", port = ${toString config.services.icecast.listen.port},
           password = "${config.services.icecast.admin.password}", mount = "radio.ogg",
           mksafe(files)
         )
