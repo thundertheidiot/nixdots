@@ -4,6 +4,7 @@
   mlib,
   modulesPath,
   server,
+  pkgs,
   ...
 }: let
   inherit (lib) mkForce head;
@@ -42,7 +43,7 @@ in {
 
         domains = ["saatana.xyz"];
         reverseProxy = {
-          "img.saatana.xyz" = "http://${server.homeServer}:2283";
+          "img.${config.meow.server.mainDomain}" = "http://${server.homeServer}:2283";
         };
 
         certificates = ["saatana.xyz"];
@@ -50,6 +51,25 @@ in {
         coturn = true;
         mumble = true;
       };
+    };
+
+    meow.impermanence.directories = [
+      {path = "/var/lib/sodexobot";}
+    ];
+
+    systemd.services."sodexobot" = {
+      enable = true;
+      description = "Sodexobot";
+      unitConfig = {
+        Type = "simple";
+      };
+      serviceConfig = {
+        ExecStart = "${pkgs.sodexobot}/bin/sodexobot";
+        EnvironmentFile = config.sops.secrets."sodexobot_env".path;
+        WorkingDirectory = "/var/lib/sodexobot";
+        StateDirectory = "sodexobot";
+      };
+      wantedBy = ["multi-user.target"];
     };
 
     mailserver.stateVersion = 3;

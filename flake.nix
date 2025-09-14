@@ -103,5 +103,9 @@
     # server
     authentik-nix.url = "github:nix-community/authentik-nix";
     nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
+    sodexobot = {
+      url = "github:thundertheidiot/sodexobot";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }
