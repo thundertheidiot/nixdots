@@ -10,6 +10,11 @@
         sopsFile = ./sodexobot.env;
         format = "dotenv";
       };
+
+      meowdzbot_env = {
+        sopsFile = ./meowdzbot.env;
+        format = "dotenv";
+      };
     };
   };
 }
