@@ -13,6 +13,7 @@
 
         sodexobot = inputs.sodexobot.packages.${final.system}.default;
         leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.system}.default;
+        meowdzbot = inputs.meowdzbot.packages.${final.system}.default;
 
         "2505" = import inputs.nixpkgs-25-05 {
           system = final.system;

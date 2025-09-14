@@ -1,5 +1,3 @@
-# TODO leptos kotiboksi
-# TODO meowdzbot
 {
   config,
   lib,
@@ -15,6 +13,7 @@ in {
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disko.nix
     ./jellyfin.nix
+    ./meowdzbot.nix
     ./secrets
     ./sodexobot.nix
     ./website.nix
