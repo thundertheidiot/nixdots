@@ -23,7 +23,7 @@
       buildAllHosts = map (n: {
         name = "Build ${n}";
         run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-      }) ["framework" "uwu"];
+      }) ["uwu" "vps"];
 
       mkBasicNix = list: {
         steps =
