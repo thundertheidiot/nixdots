@@ -11,6 +11,8 @@
         ataraxiasjel = nur.repos.ataraxiasjel;
         hyprsplit = inputs.hyprsplit.packages.${final.system}.default;
 
+        sodexobot = inputs.sodexobot.packages.${final.system}.default;
+
         "2505" = import inputs.nixpkgs-25-05 {
           system = final.system;
           config.allowUnfree = final.config.allowUnfree;

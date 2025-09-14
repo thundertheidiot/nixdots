@@ -15,7 +15,7 @@ in {
   config = mkIf cfg.mumble {
     meow.impermanence.directories = [
       {path = config.services.murmur.stateDir;}
-      # {path = "/var/lib/botamusique";}
+      {path = "/var/lib/botamusique";}
     ];
 
     users.users."murmur".extraGroups = ["acme" "turnserver"];
@@ -29,18 +29,14 @@ in {
     };
 
     services.botamusique = {
-      enable = false;
-      package = let
-        "2311" = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-23.11.tar.gz") {
-          inherit (pkgs) config;
-        };
-      in
-        "2311".botamusique.override {
-        };
-      # package = pkgs.botamusique.overrideAttrs (prev: {
-      #   pythonPath = prev.pythonPath ++ [pkgs.python313Packages.audioop-lts];
-      # });
+      enable = true;
+      package = pkgs.botamusique.overrideAttrs (prev: {
+        pythonPath = prev.pythonPath ++ [pkgs.python313Packages.audioop-lts];
+      });
       settings = {
+        bot.music_folder = "music/";
+        bot.admin = "thunder";
+
         commands.play = "p, play";
         commands.yt_search = "ys";
       };

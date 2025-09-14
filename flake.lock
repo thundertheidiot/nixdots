@@ -203,6 +203,21 @@
         "type": "github"
       }
     },
+    "crane": {
+      "locked": {
+        "lastModified": 1755993354,
+        "narHash": "sha256-FCRRAzSaL/+umLIm3RU3O/+fJ2ssaPHseI2SSFL8yZU=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "25bd41b24426c7734278c2ff02e53258851db914",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
     "deploy-rs": {
       "inputs": {
         "flake-compat": "flake-compat_3",
@@ -1447,6 +1462,22 @@
     },
     "nixpkgs_14": {
       "locked": {
+        "lastModified": 1744536153,
+        "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "18dd725c29603f582cf1900e0d25f9f1063dbf11",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_15": {
+      "locked": {
         "lastModified": 1744868846,
         "narHash": "sha256-5RJTdUHDmj12Qsv7XOhuospjAjATNiTMElplWnJE9Hs=",
         "owner": "NixOS",
@@ -1461,7 +1492,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_15": {
+    "nixpkgs_16": {
       "locked": {
         "lastModified": 1756819007,
         "narHash": "sha256-12V64nKG/O/guxSYnr5/nq1EfqwJCdD2+cIGmhz3nrE=",
@@ -1807,6 +1838,7 @@
         "pkgs-by-name": "pkgs-by-name",
         "plasma-manager": "plasma-manager",
         "rust-overlay": "rust-overlay_2",
+        "sodexobot": "sodexobot",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "tt-schemes": "tt-schemes",
@@ -1869,9 +1901,49 @@
         "type": "github"
       }
     },
-    "sops-nix": {
+    "rust-overlay_3": {
       "inputs": {
         "nixpkgs": "nixpkgs_14"
+      },
+      "locked": {
+        "lastModified": 1756262090,
+        "narHash": "sha256-PQHSup4d0cVXxJ7mlHrrxBx1WVrmudKiNQgnNl5xRas=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "df7ea78aded79f195a92fc5423de96af2b8a85d1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sodexobot": {
+      "inputs": {
+        "crane": "crane",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay_3"
+      },
+      "locked": {
+        "lastModified": 1757834194,
+        "narHash": "sha256-/FPoVRE6Q4ADyehfUKJ1qyaBE93v/P519jrbdwoYEzA=",
+        "owner": "thundertheidiot",
+        "repo": "sodexobot",
+        "rev": "0511d11292ebe6d019c016340d7dd7f61729d580",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thundertheidiot",
+        "repo": "sodexobot",
+        "type": "github"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_15"
       },
       "locked": {
         "lastModified": 1754988908,
@@ -1896,7 +1968,7 @@
         "firefox-gnome-theme": "firefox-gnome-theme",
         "flake-parts": "flake-parts_6",
         "gnome-shell": "gnome-shell",
-        "nixpkgs": "nixpkgs_15",
+        "nixpkgs": "nixpkgs_16",
         "nur": "nur_2",
         "systems": "systems_6",
         "tinted-foot": "tinted-foot",
