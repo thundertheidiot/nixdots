@@ -1,3 +1,5 @@
+# TODO leptos kotiboksi
+# TODO meowdzbot
 {
   config,
   lib,
@@ -14,6 +16,8 @@ in {
     ./disko.nix
     ./jellyfin.nix
     ./secrets
+    ./sodexobot.nix
+    ./website.nix
     ./wireguard.nix
   ];
 
@@ -50,33 +54,11 @@ in {
         xmppDomains = ["saatana.xyz"];
         coturn = true;
         mumble = true;
+        radio = true;
       };
-    };
-
-    meow.impermanence.directories = [
-      {path = "/var/lib/sodexobot";}
-    ];
-
-    systemd.services."sodexobot" = {
-      enable = true;
-      description = "Sodexobot";
-      unitConfig = {
-        Type = "simple";
-      };
-      serviceConfig = {
-        ExecStart = "${pkgs.sodexobot}/bin/sodexobot";
-        EnvironmentFile = config.sops.secrets."sodexobot_env".path;
-        WorkingDirectory = "/var/lib/sodexobot";
-        StateDirectory = "sodexobot";
-      };
-      wantedBy = ["multi-user.target"];
     };
 
     mailserver.stateVersion = 3;
-
-    services.nginx.virtualHosts."saatana.xyz" = {
-      root = ./http;
-    };
 
     networking.networkmanager.enable = false;
     networking.useDHCP = true;

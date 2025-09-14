@@ -13,14 +13,28 @@ in {
   options.meow.server.radio = mkEnOpt "Radio";
 
   config = mkIf cfg.radio {
+    services.nginx.virtualHosts."${config.meow.server.mainDomain}" = {
+      locations."/radio.ogg" = {
+        proxyPass = "http://127.0.0.1:${toString config.services.icecast.listen.port}";
+        recommendedProxySettings = true;
+      };
+    };
+
     services.icecast = {
       enable = true;
       hostname = "localhost";
       listen.address = "127.0.0.1";
-      listen.port = 8002;
+      listen.port = 8000;
 
       # should only be listening on localhost
       admin.password = "icecast";
+
+      extraConf = ''
+        <authentication>
+          <source-password>icecast</source-password>
+          <relay-password>icecast</relay-password>
+        </authentication>
+      '';
     };
 
     services.liquidsoap.streams = {
@@ -32,7 +46,7 @@ in {
         output.icecast(
           %vorbis(samplerate=44100, channels=2, quality=0.6),
           host = "127.0.0.1", port = ${toString config.services.icecast.listen.port},
-          password = "${config.services.icecast.admin.password}", mount = "radio.ogg",
+          password = "icecast", mount = "radio.ogg",
           mksafe(files)
         )
       '';

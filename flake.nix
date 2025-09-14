@@ -107,5 +107,9 @@
       url = "github:thundertheidiot/sodexobot";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    leptos-kotiboksi = {
+      url = "github:thundertheidiot/leptos-kotiboksi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }
