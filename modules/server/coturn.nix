@@ -34,9 +34,6 @@ in {
       pkey = "/var/lib/acme/${realm}/key.pem";
     };
 
-    sops.secrets.coturn_secret.owner = "turnserver";
-    sops.secrets.coturn_secret.group = "turnserver";
-
     users.users.turnserver.extraGroups = ["acme"];
 
     networking.firewall = {

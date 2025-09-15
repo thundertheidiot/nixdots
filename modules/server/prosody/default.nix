@@ -29,75 +29,71 @@ in {
       extraDomainNames = map msubd ["chat" "share" "proxy"];
     };
 
+    # hack for cert discovery
+    systemd.tmpfiles.rules = map (d: "L+ /var/lib/acme/${d}/privkey.pem - - - - /var/lib/acme/${d}/key.pem") cfg.xmppDomains;
+
     meow.impermanence.directories = [
       {path = config.services.prosody.dataDir;}
     ];
 
     users.users."${config.services.prosody.user}".extraGroups = ["acme" "turnserver"];
 
-    networking.firewall.allowedTCPPorts = config.services.prosody.settings.legacy_ssl_ports;
+    networking.firewall.allowedTCPPorts = config.services.prosody.settings.c2s_direct_tls_ports;
 
-    services.nginx.virtualHosts = {
-      "${mainDomain}" = {
-        locations."/http-bind" = {
-          proxyPass = "http://127.0.0.1:5280/http-bind";
-          recommendedProxySettings = false;
-          extraConfig = ''
-            proxy_http_version 1.1;
-            proxy_set_header Connection "Upgrade";
-            proxy_set_header Upgrade $http_upgrade;
+    services.nginx.virtualHosts =
+      {
+        "${mainDomain}" = {
+          locations."/http-bind" = {
+            proxyPass = "http://127.0.0.1:5280/http-bind";
+            recommendedProxySettings = false;
+            extraConfig = ''
+              proxy_http_version 1.1;
+              proxy_set_header Connection "Upgrade";
+              proxy_set_header Upgrade $http_upgrade;
 
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
+              proxy_set_header Host $host;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            '';
+          };
+
+          locations."/xmpp-websocket" = {
+            proxyPass = "http://127.0.0.1:5280/xmpp-websocket";
+            recommendedProxySettings = false;
+            extraConfig = ''
+              proxy_http_version 1.1;
+              proxy_set_header Connection "Upgrade";
+              proxy_set_header Upgrade $http_upgrade;
+
+              proxy_set_header Host $host;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_read_timeout 900s;
+            '';
+          };
         };
+      }
+      // listToAttrs (map (name: {
+          inherit name;
+          value = {
+            locations."/.well-known/host-meta" = {
+              proxyPass = "https://${name}:5281/.well-known/host-meta";
+              extraConfig = ''
+                default_type 'application/xrd+xml';
+                add_header Access-Control-Allow-Origin '*' always;
+              '';
+            };
 
-        locations."/xmpp-websocket" = {
-          proxyPass = "http://127.0.0.1:5280/xmpp-websocket";
-          recommendedProxySettings = false;
-          extraConfig = ''
-            proxy_http_version 1.1;
-            proxy_set_header Connection "Upgrade";
-            proxy_set_header Upgrade $http_upgrade;
-
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_read_timeout 900s;
-          '';
-        };
-
-        locations."/.well-known/host-meta" = {
-          proxyPass = "http://127.0.0.1:5280/.well-known/host-meta";
-          extraConfig = ''
-            default_type 'application/xrd+xml';
-            add_header Access-Control-Allow-Origin '*' always;
-          '';
-        };
-
-        locations."/.well-known/host-meta.json" = {
-          proxyPass = "http://127.0.0.1:5280/.well-known/host-meta.json";
-          extraConfig = ''
-            default_type 'application/jrd+json';
-            add_header Access-Control-Allow-Origin '*' always;
-          '';
-        };
-
-        locations."/file_share" = {
-          proxyPass = "http://127.0.0.1:5280/file_share";
-          extraConfig = ''
-            proxy_http_version 1.1;
-            proxy_set_header Connection "Upgrade";
-            proxy_set_header Upgrade $http_upgrade;
-
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-          '';
-        };
-      };
-    };
+            locations."/.well-known/host-meta.json" = {
+              proxyPass = "https://${name}:5281/.well-known/host-meta.json";
+              extraConfig = ''
+                default_type 'application/jrd+json';
+                add_header Access-Control-Allow-Origin '*' always;
+              '';
+            };
+          };
+        })
+        cfg.xmppDomains);
 
     services.prosody = {
       enable = true;
@@ -112,7 +108,9 @@ in {
       virtualHosts = listToAttrs (map (name: {
           inherit name;
           value = {
-            useACMEHost = name;
+            settings = {
+              inherit (config.services.prosody.settings) disco_items;
+            };
           };
         })
         cfg.xmppDomains);
@@ -125,15 +123,11 @@ in {
             http_upload_file_daily_quota = "1024*1024*1024";
             http_upload_file_global_quota = "1024*1024*2048";
 
+            http_file_share_access = cfg.xmppDomains;
+
             http_host = "${mainDomain}";
 
-            http_external_url = "https://${mainDomain}";
-
-            ssl = {
-              certificate = "/var/lib/acme/${mainDomain}/fullchain.pem";
-              # prosody searches for privkey.pem
-              key = "/var/lib/acme/${mainDomain}/key.pem";
-            };
+            # http_external_url = "https://${mainDomain}";
           };
         };
 
@@ -143,12 +137,6 @@ in {
             restrict_room_creation = "local";
             muc_room_default_public = false;
             muc_room_default_members_only = true;
-
-            ssl = {
-              certificate = "/var/lib/acme/${mainDomain}/fullchain.pem";
-              # prosody searches for privkey.pem
-              key = "/var/lib/acme/${mainDomain}/key.pem";
-            };
           };
         };
       };
@@ -158,23 +146,6 @@ in {
           turn_external_host = mainDomain;
           turn_external_port = config.services.coturn.listening-port;
           modules_enabled = ["turn_external" "external_services"];
-
-          external_services = [
-            {
-              type = "stun";
-              transport = "udp";
-              port = config.services.coturn.listening-port;
-              host = cfg.mainDomain;
-              secret = true;
-            }
-            {
-              type = "turn";
-              transport = "udp";
-              port = config.services.coturn.listening-port;
-              host = cfg.mainDomain;
-              secret = true;
-            }
-          ];
         })
         {
           prosodyctl_service_warnings = false;
@@ -185,9 +156,6 @@ in {
             "bosh"
             "websocket"
           ];
-
-          cross_domain_bosh = true;
-          cross_domain_websocket = true;
 
           trusted_proxies = ["127.0.0.1" "::1"];
 
@@ -203,13 +171,7 @@ in {
             database = "prosody.sqlite";
           };
 
-          legacy_ssl_ports = [5223];
-
-          ssl = {
-            certificate = "/var/lib/acme/${mainDomain}/fullchain.pem";
-            # prosody searches for privkey.pem
-            key = "/var/lib/acme/${mainDomain}/key.pem";
-          };
+          c2s_direct_tls_ports = [5223];
 
           # if this is not set it tries to search a nonexistent directory and prosodyctl crashes
           certificates = "/var/lib/acme";
