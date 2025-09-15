@@ -59,6 +59,17 @@ in {
 
     mailserver.stateVersion = 3;
 
+    networking.enableIPv6 = true;
+    networking.interfaces.enp1s0.ipv6.addresses = [
+      {
+        address = "2a01:4f9:c010:9973::1";
+        prefixLength = 64;
+      }
+    ];
+    networking.defaultGateway6 = {
+      address = "fe80::1";
+      interface = "enp1s0";
+    };
     networking.networkmanager.enable = false;
     networking.useDHCP = true;
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

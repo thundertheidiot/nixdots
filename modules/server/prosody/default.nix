@@ -165,12 +165,14 @@ in {
               transport = "udp";
               port = config.services.coturn.listening-port;
               host = cfg.mainDomain;
+              secret = true;
             }
             {
               type = "turn";
               transport = "udp";
               port = config.services.coturn.listening-port;
               host = cfg.mainDomain;
+              secret = true;
             }
           ];
         })
@@ -226,6 +228,7 @@ in {
         end
 
         turn_external_secret = read_file("${config.sops.secrets.coturn_secret.path}")
+        external_service_secret = read_file("${config.sops.secrets.coturn_secret.path}")
       '';
     };
   });
