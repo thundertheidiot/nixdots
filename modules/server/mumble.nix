@@ -18,18 +18,19 @@ in {
       {path = "/var/lib/botamusique";}
     ];
 
-    users.users."murmur".extraGroups = ["acme" "turnserver"];
+    users.users."murmur".extraGroups = ["acme"];
 
     services.murmur = {
       enable = true;
       openFirewall = true;
 
-      sslKey = "/var/lib/acme/${head cfg.certificates}/key.pem";
-      sslCert = "/var/lib/acme/${head cfg.certificates}/fullchain.pem";
+      sslKey = "/var/lib/acme/${cfg.mainDomain}/key.pem";
+      sslCert = "/var/lib/acme/${cfg.mainDomain}/fullchain.pem";
+      bandwidth = 96000;
     };
 
     services.botamusique = {
-      enable = true;
+      enable = false;
       package = pkgs.botamusique.overrideAttrs (prev: {
         pythonPath = prev.pythonPath ++ [pkgs.python313Packages.audioop-lts];
       });

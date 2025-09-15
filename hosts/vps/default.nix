@@ -44,13 +44,13 @@ in {
         publicSSH = true;
         webserver = true;
 
-        domains = ["saatana.xyz"];
+        domains = ["kotiboksi.xyz" "gooptyland.xyz" "saatana.xyz"];
         reverseProxy = {
           "img.${config.meow.server.mainDomain}" = "http://${server.homeServer}:2283";
         };
 
-        certificates = ["saatana.xyz"];
-        xmppDomains = ["saatana.xyz"];
+        certificates = ["kotiboksi.xyz"];
+        xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];
         coturn = true;
         mumble = true;
         radio = true;

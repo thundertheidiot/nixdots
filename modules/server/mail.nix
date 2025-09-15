@@ -46,12 +46,7 @@ in {
         else "mail.${head cfg.mail.domains}";
       inherit (cfg.mail) domains;
 
-      loginAccounts = {
-        # nix-shell -p mkpasswd --run "mkpasswd -sm bcrypt"
-        "perkele@saatana.xyz" = {
-          hashedPassword = "$2b$05$7GdXl3NnetmS8yW4SL8UEuyhjtqDrkwk8r7sup8khTQZmcDcY8n7e";
-        };
-      };
+      # nix-shell -p mkpasswd --run "mkpasswd -sm bcrypt"
 
       certificateScheme = "acme-nginx";
     };
