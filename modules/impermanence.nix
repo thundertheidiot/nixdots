@@ -115,7 +115,7 @@ in {
         ++ [
           {
             path = "/var/log";
-            permissions = "644";
+            permissions = "711";
           }
           "/var/lib/bluetooth"
           # "/var/lib/nixos"
@@ -157,6 +157,11 @@ in {
           #   else null
           # )
         ]);
+
+      # logrotate permission fix for updates
+      systemd.tmpfiles.rules = [
+        "d /var/log 0711 root root - -"
+      ];
 
       environment.etc = builtins.listToAttrs (builtins.map (loc: {
         name = loc;
