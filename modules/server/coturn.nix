@@ -25,6 +25,7 @@ in {
       realm = cfg.mainDomain;
 
       extraConfig = ''
+        verbose
         no-multicast-peers
         stale-nonce
       '';

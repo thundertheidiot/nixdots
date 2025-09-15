@@ -2,6 +2,7 @@
   config,
   lib,
   mlib,
+  pkgs,
   ...
 }: let
   inherit (mlib) mkOpt;
@@ -67,6 +68,22 @@ in {
           '';
         };
 
+        locations."/.well-known/host-meta" = {
+          proxyPass = "http://127.0.0.1:5280/.well-known/host-meta";
+          extraConfig = ''
+            default_type 'application/xrd+xml';
+            add_header Access-Control-Allow-Origin '*' always;
+          '';
+        };
+
+        locations."/.well-known/host-meta.json" = {
+          proxyPass = "http://127.0.0.1:5280/.well-known/host-meta.json";
+          extraConfig = ''
+            default_type 'application/jrd+json';
+            add_header Access-Control-Allow-Origin '*' always;
+          '';
+        };
+
         locations."/file_share" = {
           proxyPass = "http://127.0.0.1:5280/file_share";
           extraConfig = ''
@@ -87,6 +104,10 @@ in {
       openFirewall = true;
       # requires http_upload instead of http_file_share
       xmppComplianceSuite = false;
+
+      package = pkgs.prosody.override {
+        withCommunityModules = ["http_altconnect"];
+      };
 
       virtualHosts = listToAttrs (map (name: {
           inherit name;
@@ -136,7 +157,22 @@ in {
         (mkIf cfg.coturn {
           turn_external_host = mainDomain;
           turn_external_port = config.services.coturn.listening-port;
-          modules_enabled = ["turn_external"];
+          modules_enabled = ["turn_external" "external_services"];
+
+          external_services = [
+            {
+              type = "stun";
+              transport = "udp";
+              port = config.services.coturn.listening-port;
+              host = cfg.mainDomain;
+            }
+            {
+              type = "turn";
+              transport = "udp";
+              port = config.services.coturn.listening-port;
+              host = cfg.mainDomain;
+            }
+          ];
         })
         {
           prosodyctl_service_warnings = false;
@@ -144,9 +180,12 @@ in {
           modules_enabled = [
             "admin_shell"
             "csi_simple"
-            "mod_bosh"
-            "mod_websocket"
+            "bosh"
+            "websocket"
           ];
+
+          cross_domain_bosh = true;
+          cross_domain_websocket = true;
 
           trusted_proxies = ["127.0.0.1" "::1"];
 
