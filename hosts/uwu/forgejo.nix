@@ -60,9 +60,17 @@
     #   };
     # };
 
+    meow.impermanence.directories = [
+      {
+        path = "/var/lib/forgejo";
+        persistPath = "${config.meow.impermanence.persist}/forgejo";
+        user = "forgejo";
+        group = "forgejo";
+      }
+    ];
+
     services.forgejo = {
       enable = true;
-      stateDir = "/nix/persist/forgejo";
 
       lfs.enable = true;
 
