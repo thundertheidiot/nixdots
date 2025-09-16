@@ -72,9 +72,11 @@ in {
       yt-dlp
       # python3
 
+      grayjay
+
       libnotify
 
-      inputs.deploy-rs.packages."${pkgs.system}".default
+      # inputs.deploy-rs.packages."${pkgs.system}".default
 
       wireguard-tools
     ];

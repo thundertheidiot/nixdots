@@ -76,7 +76,6 @@
     naersk.url = "github:nix-community/naersk";
 
     hyprland = {
-      # url = "github:hyprwm/Hyprland/v0.46.2";
       url = "github:hyprwm/Hyprland/v0.50.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
