@@ -17,11 +17,6 @@
         key = "oauth_client_secret";
       };
 
-      rathole = {
-        sopsFile = ./rathole.toml;
-        format = "binary";
-      };
-
       authentik_env = {
         sopsFile = ./authentik.env;
         format = "dotenv";
