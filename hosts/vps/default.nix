@@ -11,6 +11,7 @@
 in {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
+    ./authentik.nix
     ./disko.nix
     ./jellyfin.nix
     ./meowdzbot.nix
@@ -45,6 +46,7 @@ in {
         webserver = true;
 
         domains = ["kotiboksi.xyz" "gooptyland.xyz" "saatana.xyz"];
+        mainDomain = "kotiboksi.xyz";
         reverseProxy = {
           "img.${config.meow.server.mainDomain}" = "http://${server.homeServer}:2283";
         };

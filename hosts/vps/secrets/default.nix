@@ -14,6 +14,11 @@
         format = "dotenv";
       };
 
+      authentik_env = {
+        sopsFile = ./authentik.env;
+        format = "dotenv";
+      };
+
       meowdzbot_env = {
         sopsFile = ./meowdzbot.env;
         format = "dotenv";
