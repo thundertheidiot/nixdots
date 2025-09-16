@@ -57,7 +57,7 @@ in {
 
     environment.systemPackages = with pkgs; [
       pulsemixer
-      rustup
+      # rustup
       sops
 
       ffmpeg

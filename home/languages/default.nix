@@ -57,6 +57,10 @@ in {
               nixd # lsp
               alejandra # fmt
             ])
+            (mkIf cfg.rust [
+              rust-bin.stable.latest.default
+              rust-bin.stable.latest.rust-analyzer
+            ])
             (mkIf cfg.haskell [
               (haskellPackages.ghcWithPackages (pkgs: []))
               haskell-language-server

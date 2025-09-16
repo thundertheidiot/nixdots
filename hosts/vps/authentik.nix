@@ -3,7 +3,14 @@
   config,
   ...
 }: {
-  meow.server.domains = ["auth.kotiboksi.xyz"];
+  meow.impermanence.directories = [
+    {
+      path = "/var/lib/postgresql";
+    }
+    {
+      path = "/var/lib/authentik";
+    }
+  ];
 
   services.authentik = {
     enable = true;
