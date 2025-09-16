@@ -26,7 +26,6 @@ in {
     ./homepage.nix
     ./jellyfin.nix
     ./n8n.nix
-    ./rathole.nix
     ./redlib.nix
     ./secrets
     ./wireguard.nix
