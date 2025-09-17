@@ -1763,7 +1763,7 @@ This function will only execute a given function on the first server frame creat
 
 *** Catppuccin
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package catppuccin-theme
   :init
   (setq catppuccin-flavor 'mocha)
@@ -1771,6 +1771,16 @@ This function will only execute a given function on the first server frame creat
   (after-init . catppuccin-reload)
   (server-after-make-frame . (lambda () (when (display-graphic-p)
 					  (th--unless-first-server-frame-created 'catppuccin-reload)))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package doom-themes
+  :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
+  :config
+  (load-theme 'doom-one t)
+  (doom-themes-org-config))
 #+end_src
 
 *** Solaire
@@ -1850,12 +1860,12 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 
 		    "   "
 		    
-		    (:eval
-		     (when (and (not (file-remote-p default-directory)) (magit-toplevel))
-		       (propertize (format "  %s" (magit-get-current-branch)) 'face ,(list 'quote (list :foreground mauve)))
-		       ))
+		    ;; (:eval
+		    ;;  (when (and (not (file-remote-p default-directory)) (magit-toplevel))
+		    ;;    (propertize (format "  %s" (magit-get-current-branch)) 'face ,(list 'quote (list :foreground mauve)))
+		    ;;    ))
 		    
-		    (:eval (when (and (not (file-remote-p default-directory)) (magit-toplevel)) "   "))
+		    ;; (:eval (when (and (not (file-remote-p default-directory)) (magit-toplevel)) "   "))
 
 		    (eglot--managed-mode eglot--mode-line-format "")
 		    (eglot--managed-mode "   " "")
