@@ -82,10 +82,12 @@ in {
             treesit-grammars.with-all-grammars
           ];
 
-        package =
-          if config.mHome.emacs.exwm
-          then pkgs.emacs-gtk
-          else pkgs.emacs-pgtk;
+        # package =
+        #   if config.mHome.emacs.exwm
+        #   then pkgs.emacs-gtk
+        #   else pkgs.emacs-pgtk;
+
+        package = pkgs.emacs-igc-pgtk;
 
         override = import ./overrides.nix {inherit pkgs;};
       };

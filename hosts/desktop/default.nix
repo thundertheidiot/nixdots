@@ -103,7 +103,6 @@
     gaming.games = ["duckgame" "minecraft"];
 
     emacs.enable = true;
-    emacs.exwm = true;
     shell.enable = true;
 
     gpu = "amd";
