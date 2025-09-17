@@ -21,6 +21,7 @@ in {
     ./prosody
     ./radio.nix
     ./ssh.nix
+    ./vaultwarden.nix
     ./webserver.nix
   ];
 }
