@@ -1763,7 +1763,7 @@ This function will only execute a given function on the first server frame creat
 
 *** Catppuccin
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (use-package catppuccin-theme
   :init
   (setq catppuccin-flavor 'mocha)
@@ -1773,7 +1773,7 @@ This function will only execute a given function on the first server frame creat
 					  (th--unless-first-server-frame-created 'catppuccin-reload)))))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package doom-themes
   :custom
   (doom-themes-enable-bold t)
