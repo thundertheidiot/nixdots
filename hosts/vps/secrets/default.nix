@@ -19,6 +19,11 @@
         format = "dotenv";
       };
 
+      vaultwarden_env = {
+        sopsFile = ./vaultwarden.env;
+        format = "dotenv";
+      };
+
       meowdzbot_env = {
         sopsFile = ./meowdzbot.env;
         format = "dotenv";
