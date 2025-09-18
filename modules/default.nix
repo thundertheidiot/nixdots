@@ -2,6 +2,7 @@
   ./base.nix
   ./boot.nix
   ./certs.nix
+  ./displaylink.nix
   ./emacs
   ./gaming
   ./gpu.nix
@@ -13,6 +14,7 @@
   ./overlay.nix
   ./programs
   ./searx.nix
+  ./server
   ./shell.nix
   ./ssh.nix
   ./tv
@@ -20,5 +22,4 @@
   ./vm.nix
   ./workstation
   ./xorg.nix
-  ./server
 ]
