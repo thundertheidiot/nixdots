@@ -103,7 +103,7 @@
 
   # virtualisation.virtualbox.host.enable = true;
   # users.extraGroups.vboxusers.members = ["thunder"];
-  # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   meow = {
     fullSetup = true;
@@ -134,6 +134,7 @@
     };
 
     boot.efi = true;
+    displaylink = true;
 
     monitors = [
       {
