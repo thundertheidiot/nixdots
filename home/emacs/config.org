@@ -1891,7 +1891,7 @@ Solaire mode darkens "lesser" buffers like eshell or magit
   (doom-themes-enable-bold t)
   (doom-themes-enable-italic t)
   :config
-  (load-theme 'doom-feather-dark t)
+  (load-theme 'doom-vibrant t)
   (doom-themes-org-config))
 #+end_src
 
