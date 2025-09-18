@@ -56,6 +56,7 @@ in {
         coturn = true;
         mumble = true;
         radio = true;
+        vaultwarden = true;
       };
     };
 
