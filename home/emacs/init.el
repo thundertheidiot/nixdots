@@ -1,12 +1,4 @@
-#+TITLE: GNU/Emacs
-#+STARTUP: overview
-#+PROPERTY: header-args:emacs-lisp :tangle yes :results none
-
-https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration/
-
-Setup use-package
-
-#+begin_src emacs-lisp
+					; -*- lexical-binding: t -*-
 (require 'use-package)
 (require 'general)
 
@@ -23,24 +15,11 @@ Setup use-package
   (diminish 'visual-line-mode)
   (diminish 'auto-revert-mode)
   (diminish 'eldoc-mode))
-#+end_src
 
-* Libraries
-
-These are used somewhere later, but don't require any configuration.
-
-#+begin_src emacs-lisp
 (use-package pcre2el)
 (use-package dash)
 (use-package plz)
-#+end_src
 
-
-* Basic settings
-
-** Cleanup
-
-#+begin_src emacs-lisp
 (setq backup-directory-alist `(("." . ,(expand-file-name "backup-files" user-emacs-directory))))
 
 (let ((auto-save-dir (expand-file-name "auto-saves/" user-emacs-directory)))
@@ -50,11 +29,7 @@ These are used somewhere later, but don't require any configuration.
 	auto-save-file-name-transforms `((".*" ,auto-save-dir t))))
 
 (setq create-lockfiles nil)
-#+end_src
 
-** General stuff
-
-#+begin_src emacs-lisp
 (add-function :after after-focus-change-function
 	      (defun th/garbage-collect ()
 		(unless (frame-focus-state)
@@ -96,26 +71,14 @@ Preserve window configuration when pressing ESC."
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "ESC") 'keyboard-escape-quit)
-#+end_src
 
-#+begin_src emacs-lisp
 (recentf-mode)
 (setq recentf-max-menu-items 1000
       recentf-max-saved-items 1000)
 (run-at-time "5 min" 300 'recentf-save-list)
-#+end_src
 
-This is here for my weird keyboards, due to their sizes, i don't have a separate grave key, instead i use (a modified) QK_GESC, where pressing shift + escape sends ~, and super + escape sends `.
-
-#+begin_src emacs-lisp
 (global-set-key (kbd "s-`") #'(lambda () (interactive) (insert "`")))
-#+end_src
 
-** Fonts
-
-Using the default system fonts (for now).
-
-#+begin_src emacs-lisp
 (set-face-attribute 'default nil
 		    :family "Monospace"
 		    :height 90
@@ -138,29 +101,14 @@ Using the default system fonts (for now).
 (add-to-list 'default-frame-alist '(font . "Monospace"))
 
 (setq-default line-spacing 0.12)
-#+end_src
 
-** Some settings related to scrolling? 
-
-#+begin_src emacs-lisp
 (setq scroll-conservatively 10)
 (setq scroll-margin 7)
 (setq pixel-scroll-precision-large-scroll-height 40.0)
 (setq pixel-scroll-precision-use-momentum t)
-#+end_src
 
-
-* Window configuration system
-
-System to allow saving and loading arbitrary arrangements of buffers easily.
-
-This may or may not be necessary somewhere, i don't remember.
-
-#+begin_src emacs-lisp
 (use-package subr-x :ensure nil)
-#+end_src
 
-#+begin_src emacs-lisp
 (defvar saved-window-configurations '())
 
 (defun wcs--format-window-list ()
@@ -203,7 +151,7 @@ This may or may not be necessary somewhere, i don't remember.
 		  (completing-read "Select window config: " saved-window-configurations)
 		  saved-window-configurations))))
     (when config
-	(window-state-put config (frame-root-window) t))))
+      (window-state-put config (frame-root-window) t))))
 
 (defun delete-window-configuration ()
   "Select a window configuration to delete."
@@ -214,31 +162,16 @@ This may or may not be necessary somewhere, i don't remember.
 				saved-window-configurations)
 	       saved-window-configurations)
 	      saved-window-configurations)))
-#+end_src
 
-
-* Misc functions
-
-This is defined here so i can hook it easily.
-
-#+begin_src emacs-lisp
 (defun th/turn-off-line-numbers ()
   "Turn off line numbers 🤯"
   (display-line-numbers-mode 0))
-#+end_src
 
-Function to make mode keymaps easier, there's no real point to this.
-
-#+begin_src emacs-lisp
 (defun make-mode-keymap (map outer)
   (mapc (lambda (inner)
 	  (define-key map (kbd (car inner)) (cdr inner)))
 	outer))
-#+end_src
 
-This is bound to =gc= in normal mode
-
-#+begin_src emacs-lisp
 (defun comment-or-uncomment-region-or-line ()
   "If a region is selected, either uncomment or comment it, if not, uncomment or comment the current line."
   (interactive)
@@ -247,11 +180,7 @@ This is bound to =gc= in normal mode
 	(setq beg (region-beginning) end (region-end))
       (setq beg (line-beginning-position) end (line-end-position)))
     (comment-or-uncomment-region beg end)))
-#+end_src
 
-This is bound to =SPC er=
-
-#+begin_src emacs-lisp
 (defun eval-region-and-go-to-normal-mode ()
   "Evaluate elisp in the selected region and go back to normal mode."
   (interactive)
@@ -261,11 +190,7 @@ This is bound to =SPC er=
       (setq beg (line-beginning-position) end (line-end-position)))
     (eval-region beg end)
     (evil-normal-state)))
-#+end_src
 
-Intelligently split windows
-
-#+begin_src emacs-lisp
 (defun th/intelligent-split (&optional force)
   (interactive)
   (let ((width (window-total-width))
@@ -273,15 +198,7 @@ Intelligently split windows
     (cond ((and (< width 140) (< height 40) (not force)) (current-buffer))
 	  ((> (+ 10 (* 2 height)) width) (split-window-below))
 	  (t (split-window-right)))))
-#+end_src
 
-* Keybinding
-
-** Evil mode and prerequisites
-
-Undo system for evil mode, i don't really have a point for using undo-tree specifically, but it looked cool so i picked it.
-
-#+begin_src emacs-lisp
 (use-package undo-tree
   :demand t
   :diminish undo-tree-mode
@@ -296,11 +213,7 @@ Undo system for evil mode, i don't really have a point for using undo-tree speci
   (global-undo-tree-mode)
   (unless (file-directory-p (expand-file-name "undo-tree/" user-emacs-directory))
     (make-directory (expand-file-name "undo-tree/" user-emacs-directory))))
-#+end_src
 
-Vi(m) bindings in emacs
-
-#+begin_src emacs-lisp
 (use-package evil
   :after undo-tree
   :demand t
@@ -314,13 +227,7 @@ Vi(m) bindings in emacs
   :config
   (evil-set-undo-system evil-undo-system)
   (evil-mode))
-#+end_src
 
-** Evil mode improvements
-
-Collection of evil-like bindings for other modes.
-
-#+begin_src emacs-lisp
 (use-package evil-collection
   :demand t
   :after evil
@@ -354,32 +261,20 @@ Collection of evil-like bindings for other modes.
 			  yaml-mode
 			  diff-hl
 			  vterm)))
-#+end_src
 
-j and k go down visual lines, not real lines
-
-#+begin_src emacs-lisp
 (use-package evil-better-visual-line
   :demand t
   :after evil
   :config
   (evil-better-visual-line-on))
-#+end_src
 
-** general.el
-
-Which key
-
-#+begin_src emacs-lisp
 (use-package which-key
   :demand t
   :diminish which-key-mode
   :config
   (which-key-setup-side-window-bottom)
   (which-key-mode))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package general
   :demand t
   :config
@@ -488,52 +383,7 @@ Which key
  "ESC" #'keyboard-escape-quit
  "<C-wheel-up>" 'text-scale-increase
  "<C-wheel-down>" 'text-scale-decrease)
-#+end_src
 
-WIP window navigation mode
-
-#+begin_src emacs-lisp :tangle no
-(defvar window-navigation-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "h") 'windmove-left)
-    (define-key map (kbd "j") 'windmove-down)
-    (define-key map (kbd "k") 'windmove-up)
-    (define-key map (kbd "l") 'windmove-right)
-    (define-key map (kbd "<escape>") 'window-navigation-mode)
-    map)
-  "Keymap for `my-windmove-mode'.")
-
-(evil-make-overriding-map window-navigation-mode-map 'normal)
-(evil-make-overriding-map window-navigation-mode-map)
-
-(define-minor-mode window-navigation-mode
-  "A minor mode for using hjkl to move between windows."
-  :global t
-  :lighter " WindMove"
-  :keymap window-navigation-mode-map)
-
-#+end_src
-
-* Org mode
-
-** Org itself
-
-#+begin_src emacs-lisp :tangle no
-(defun th/agenda-category ()
-  (let* ((file-name (when buffer-file-name
-		      (file-name-sans-extension
-		       (file-name-nondirectory))))
-	 (title (org-get-title))
-	 (category (org-get-category)))
-    (or (if (and
-	     title
-	     (string= category file-name))
-	    title
-	  category)
-	"")))
-#+end_src
-
-#+begin_src emacs-lisp
 (use-package org
   :demand t
   :mode ("\\.org\\'" . org-mode)
@@ -566,13 +416,7 @@ WIP window navigation mode
 	    "RET" (lambda () (interactive)
 		    (unless (ignore-errors (org-open-at-point))
 		      (evil-ret)))))
-#+end_src
 
-** Org roam
-
-Note taking
-
-#+begin_src emacs-lisp
 (use-package org-roam
   :custom
   (org-roam-directory (file-truename "~/Documents/org/roam"))
@@ -589,13 +433,7 @@ Note taking
 	   "rf" '("find node" . org-roam-node-find)
 	   "rI" '("create id" . org-id-get-create)
 	   "ri" '("insert node" . org-roam-node-insert)))
-#+end_src
 
-** Org download
-
-Allow easily inserting images
-
-#+begin_src emacs-lisp
 (use-package org-download
   :hook (dired-mode . org-download-enable)
   :custom (org-download-screenshot-method "grim -g \"$(slurp)\" -t png %s")
@@ -603,13 +441,7 @@ Allow easily inserting images
   (:states '(normal visual motion) :keymaps 'org-mode-map :prefix "SPC l"
 	   "s" '("screenshot" . org-download-screenshot)
 	   "c" '("image from clipboard" . org-download-clipboard)))
-#+end_src
 
-** Org tempo
-
-Faster inserting of templates like the source code blocks here.
-
-#+begin_src emacs-lisp
 (defun th/org-tempo-electric-pair-fix ()
   (setq-local electric-pair-inhibit-predicate
 	      `(lambda (c)
@@ -624,19 +456,11 @@ Faster inserting of templates like the source code blocks here.
   :hook (org-mode . th/org-tempo-electric-pair-fix)
   :custom
   (org-structure-template-alist '(("el" . "src emacs-lisp"))))
-#+end_src
 
-** Org bullets
-
-#+begin_src emacs-lisp
 (use-package org-bullets
   :diminish org-bullets-mode
   :hook (org-mode . org-bullets-mode))
-#+end_src
 
-** Olivetti
-
-#+begin_src emacs-lisp
 (use-package olivetti
   :diminish olivetti-mode
   :custom 
@@ -649,15 +473,7 @@ Faster inserting of templates like the source code blocks here.
   :hook
   (olivetti-mode-on . (lambda () (olivetti-set-width olivetti-body-width)))
   (org-mode . olivetti-mode))
-#+end_src
 
-* IDE
-
-** Project management
-
-*** Git
-
-#+begin_src emacs-lisp
 (use-package magit
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
@@ -675,11 +491,7 @@ Faster inserting of templates like the source code blocks here.
 
 (use-package forge
   :after magit)
-#+end_src
 
-Show added/deleted/edited parts in the fringe
-
-#+begin_src emacs-lisp
 (defun th/last-diff-hl-hunk (&optional backward)
   "Go to the last hunk in the file, first if BACKWARD is t."
   (while-let ((pos (diff-hl-search-next-hunk backward)))
@@ -699,6 +511,9 @@ Show added/deleted/edited parts in the fringe
   :diminish diff-hl-mode
   :custom
   (diff-hl-show-staged-changes nil)
+  (diff-hl-global-modes '(not image-mode pdf-view-mode))
+  (diff-hl-update-async t)
+  (vc-git-diff-switches '("--histogram"))
   :config
   (advice-add 'diff-hl-next-hunk :around #'advice!diff-hl-next-hunk-loop-around)
   (global-diff-hl-mode +1)
@@ -726,11 +541,7 @@ Show added/deleted/edited parts in the fringe
 	   "gr" '("revert hunk" . diff-hl-revert-hunk)
 	   "gn" '("next hunk" . diff-hl-next-hunk)
 	   "gN" '("previous hunk" . diff-hl-previous-hunk)))
-#+end_src
 
-Git timemachine lets you browse through the history of a file tracked by git
-
-#+begin_src emacs-lisp
 (use-package git-timemachine
   :general-config
   (:states 'normal :keymaps 'git-timemachine-mode-map
@@ -745,20 +556,12 @@ Git timemachine lets you browse through the history of a file tracked by git
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "gt" '("timemachine" . git-timemachine-toggle)))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package emsg-blame
   :demand t
   :config
   (global-emsg-blame-mode t))
-#+end_src
 
-*** Projectile
-
-Projectile is a project management tool for emacs
-
-#+begin_src emacs-lisp
 (use-package projectile
   :diminish projectile-mode
   :commands (projectile-run-eshell projectile-run-vterm)
@@ -776,27 +579,13 @@ Projectile is a project management tool for emacs
 	   "po" '(:ignore t :wk "open")
 	   "pog" '("project version control (git)" . projectile-vc)
 	   "pb" '("switch buffer in project" . projectile-switch-to-buffer)))
-#+end_src
 
-Sort ibuffer by project
-
-#+begin_src emacs-lisp
 (use-package ibuffer-projectile
   :hook
   (ibuffer-mode . (lambda () (ibuffer-projectile-set-filter-groups)
 		    (unless (eq ibuffer-sorting-mode 'alphabetic)
 		      (ibuffer-do-sort-by-alphabetic)))))
-#+end_src
 
-*** TODO
-
-Highlight the following keywords in code
-
-- =TODO=
-- =HACK=
-- =FIXME=
-
-#+begin_src emacs-lisp
 (use-package hl-todo
   :demand t
   :diminish hl-todo-mode
@@ -808,20 +597,12 @@ Highlight the following keywords in code
 			   ("FIXME" . "#cc9393")))
   :config
   (global-hl-todo-mode 1))
-#+end_src
 
-Index those keywords inside magit.
-
-#+begin_src emacs-lisp
 (use-package magit-todos
   :after magit
   :hook (magit-mode . magit-todos-mode)
   :config (magit-todos-mode 1))
-#+end_src
 
-** Lsp
-
-#+begin_src emacs-lisp
 (use-package eglot
   :commands eglot-ensure
   :custom
@@ -836,34 +617,12 @@ Index those keywords inside magit.
 	   "c" '(:ignore t :wk "code")
 	   "ca" '("code actions" . (lambda () (interactive)
 				     (eglot-code-actions 1 (point-max) nil t)))))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package eglot-booster
   :demand t
   :after eglot
   :config (eglot-booster-mode))
-#+end_src
 
-** Debug
-
-#+begin_src emacs-lisp :tangle no
-(use-package dape
-  :defer t
-  :hook
-  (eglot-managed-mode . dape-modesave)
-  (kill-emacs . dape-breakpoint-save)
-  (after-init . dape-breakpoint-load)
-  :custom
-  (dape-inlay-hints t)
-  ;; :config
-  ;; (dape-breakpoint-global-mode)
-  )
-#+end_src
-
-** Errors
-
-#+begin_src emacs-lisp
 (use-package flycheck
   :hook
   (prog-mode . flycheck-mode)
@@ -874,19 +633,13 @@ Index those keywords inside magit.
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "cn" '("next error" . flycheck-next-error)
 	   "cN" '("previous error" . flycheck-previous-error)))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package flycheck-eglot
   :demand t
   :after (flycheck eglot)
   :config
   (global-flycheck-eglot-mode 1))
-#+end_src
 
-** Formatting
-
-#+begin_src emacs-lisp
 (use-package apheleia
   :demand t
   :diminish apheleia
@@ -894,11 +647,7 @@ Index those keywords inside magit.
   (setf (alist-get 'nixfmt apheleia-formatters)
 	'("alejandra"))
   (apheleia-global-mode +1))
-#+end_src
 
-** Completion
-
-#+begin_src emacs-lisp
 (use-package corfu
   :demand t
   :custom
@@ -926,15 +675,7 @@ Index those keywords inside magit.
 	    "C-k" #'corfu-previous
 	    "S-RET" #'corfu-complete
 	    "S-<return>" #'corfu-complete))
-#+end_src
 
-** Languages
-
-Language specific setup
-
-*** Rust
-
-#+begin_src emacs-lisp :tangle @lang_rust@
 (use-package rustic
   :diminish rustic-mode
   :mode ("\\.rs\\'" . rustic-mode)
@@ -943,19 +684,11 @@ Language specific setup
   (setq rustic-lsp-client 'eglot
 	rustic-use-rust-save-some-buffers t
 	compilation-ask-about-save nil))
-#+end_src
 
-*** Nix
-
-#+begin_src emacs-lisp :tangle @lang_nix@
 (use-package nix-mode
   :mode "\\.nix\\'"
   :hook (nix-mode . eglot-ensure))
-#+end_src
 
-*** Haskell
-
-#+begin_src emacs-lisp :tangle @lang_haskell@
 (use-package haskell-mode
   :mode "\\.hs\\'"
   :hook (haskell-mode . eglot-ensure))
@@ -963,11 +696,7 @@ Language specific setup
 ;; (use-package haskell-ts-mode
 ;;   :mode "\\.hs\\'"
 ;;   :config (haskell-ts-setup-eglot))
-#+end_src
 
-*** Type/JavaScript
-
-#+begin_src emacs-lisp
 (use-package typescript-mode
   :mode "\\.tsx?\\'")
 
@@ -978,68 +707,35 @@ Language specific setup
 ;;   (css-mode . tsi-css-mode)
 ;;   (scss-mode . tsi-scss-mode)
 ;;   (json-mode . tsi-json-mode))
-#+end_src
 
-*** Lua
-
-#+begin_src emacs-lisp :tangle @lang_lua@
 (use-package lua-mode
   :mode "\\.lua\\'"
   :hook (lua-mode . eglot-ensure))
-#+end_src
 
-*** python
 
-#+begin_src emacs-lisp :tangle @lang_python@
 
-#+end_src
-
-*** Gdscript/godot
-
-#+begin_src emacs-lisp
 (use-package gdscript-mode
   :mode "\\.gdscript\\'"
   :hook (gdscript-mode . eglot-ensure))
 
 (use-package glsl-mode)
 (use-package gdshader-mode)
-#+end_src
 
-*** C#
-
-#+begin_src emacs-lisp
 (use-package csharp-mode
   :require nil ;; comes with emacs
   :mode "\\.cs\\'"
   :hook
   (csharp-mode . eglot-ensure)
   (csharp-mode . csharp-ts-mode))
-#+end_src
 
-*** Elisp
-
-#+begin_src emacs-lisp
 (add-hook 'emacs-lisp-mode-hook #'corfu-mode)
-#+end_src
 
-** Misc nice things
-
-*** Puni
-
-#+begin_src emacs-lisp
 (use-package puni
   :config
   (puni-global-mode)
   :general-config
   (:states '(normal visual) :keymaps 'override))
-#+end_src
 
-*** Smartparens
-
-Smartparens-mode allows you to use parenthesis and some other characters more easily.
-??
-
-#+begin_src emacs-lisp
 ;; (use-package smartparens
 ;;   :demand t
 ;;   :diminish smartparens-mode
@@ -1057,23 +753,13 @@ Smartparens-mode allows you to use parenthesis and some other characters more ea
 
 ;; (use-package evil-smartparens
 ;;   :hook (smartparens-enabled . evil-smartparens-mode))
-#+end_src
 
-*** Rainbow delimeters
-
-Rainbow delimiters gives colors to delimiters like parenthesis, which helps with seeing where you are at, especially in lisp land.
-
-#+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :diminish rainbow-delimiters-mode
   :hook
   (prog-mode . rainbow-delimiters-mode)
   (org-mode . rainbow-delimiters-mode))
-#+end_src
 
-Envrc loads environment variables from direnv for use in any buffer. This combined with nix-direnv allows you to automatically enter a nix-shell by just being in the correct directory, which is incredibly useful for developement on nixos.
-
-#+begin_src emacs-lisp
 (use-package envrc
   :demand t
   :hook (after-init . envrc-global-mode))
@@ -1081,47 +767,32 @@ Envrc loads environment variables from direnv for use in any buffer. This combin
 ;; (use-package inheritenv
 ;;   :config
 ;;   (inheritenv-add-advice 'shell-command-to-string))
-#+end_src
 
+(use-package gptel
+  :config
+  (setq gptel-backend (gptel-make-gh-copilot "Copilot"))
+  (add-to-list 'gptel-tools
+	       (gptel-make-tool
+		:function (lambda (query)
+			    (with-temp-message (format "Searching for: `%s`" query)
+			      (let ((url (format "http://127.0.0.1:8080/search?q=%s&format=json"
+						 (url-hexify-string query))))
+				(with-temp-buffer
+				  (url-insert-file-contents url)
+				  (let ((json-response (json-read)))
+				    (mapconcat (lambda (result)
+						 (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
+					       (cdr (assoc 'results json-response))
+					       "\n\n"))))))
+		:name "search_web"
+		:description "Searches the web using SearXNG metasearch engine and returns formatted results including titles, URLs, and content excerpts."
+		:args (list
+		       '(:name "query"
+			       :type string
+			       :description "The search query to execute against the search engine."))
+		:category "web"
+		:include t)))
 
-* AI
-
-** GPTEL
-
-#+begin_src emacs-lisp
-  (use-package gptel
-    :config
-    (setq gptel-backend (gptel-make-gh-copilot "Copilot"))
-    (add-to-list 'gptel-tools
-		 (gptel-make-tool
-		  :function (lambda (query)
-			      (with-temp-message (format "Searching for: `%s`" query)
-				(let ((url (format "http://127.0.0.1:8080/search?q=%s&format=json"
-						   (url-hexify-string query))))
-				  (with-temp-buffer
-				    (url-insert-file-contents url)
-				    (let ((json-response (json-read)))
-				      (mapconcat (lambda (result)
-						   (format "%s - %s\n%s" (cdr (assoc 'title result)) (cdr (assoc 'url result)) (cdr (assoc 'content result))))
-						 (cdr (assoc 'results json-response))
-						 "\n\n"))))))
-		  :name "search_web"
-		  :description "Searches the web using SearXNG metasearch engine and returns formatted results including titles, URLs, and content excerpts."
-		  :args (list
-			 '(:name "query"
-				 :type string
-				 :description "The search query to execute against the search engine."))
-		  :category "web"
-		  :include t)))
-#+end_src
-
-* Terminals 
-
-** Vterm
-
-Vterm is a full fledged terminal emulator inside emacs, it should work with any terminal application.
-
-#+begin_src emacs-lisp
 (defun th/vterm (&optional projectile)
   (if projectile
       (projectile-run-vterm t)
@@ -1144,11 +815,7 @@ Vterm is a full fledged terminal emulator inside emacs, it should work with any 
 		     (th/vterm t)) :wk "vterm")
 	   "poV" '((lambda () (interactive)
 		     (th/vterm t)) :wk "vterm in this window")))
-#+end_src
 
-A fun hack to fix vterm evil-mode interactions from [[https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-738842507][this issue comment]].
-
-#+begin_src emacs-lisp
 (defun vterm-evil-insert ()
   (interactive)
   (vterm-goto-char (point))
@@ -1179,29 +846,15 @@ A fun hack to fix vterm evil-mode interactions from [[https://github.com/akermu/
   "d" 'vterm-evil-delete
   "i" 'vterm-evil-insert
   "c" 'vterm-evil-change)
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package eshell-vterm
   :demand t
   :after eshell
   :config 
   (eshell-vterm-mode))
-#+end_src
 
-** Eshell
-
-Eshell is a built in shell, with support for normal system commands, and emacs lisp expressions. It is very powerful and extensible.
-
-Fish-completion allows eshell to use completions from fish.
-
-#+begin_src emacs-lisp
 (use-package fish-completion)
-#+end_src
 
-Eshell itself
-
-#+begin_src emacs-lisp
 (defun th/eshell (&optional projectile &rest args)
   (if projectile
       (projectile-run-eshell t)
@@ -1251,13 +904,7 @@ Eshell itself
 				(select-window (th/intelligent-split t))
 				(th/eshell t)))
 	   "poE" '("eshell in new window" . (lambda () (interactive) (th/eshell t)))))
-#+end_src
 
-#+RESULTS:
-
-Aliases and functions
-
-#+begin_src emacs-lisp
 (defun eshell/v (&rest args)
   (select-window (th/intelligent-split t))
   (apply 'eshell-exec-visual args))
@@ -1332,51 +979,12 @@ Aliases and functions
   `(rxt-elisp-to-pcre (rx ,@rx-sexp)))
 
 (defalias 'eshell/less 'view-file)
-#+end_src
 
-For some reason advice-add didn't seem to function, so this just manually replicates eshell/exit.
-
-#+begin_src emacs-lisp
 (defun eshell/exit ()
   (evil-quit)
   (throw 'eshell-terminal t))
 (defalias 'eshell/e 'eshell/exit)
-#+end_src
 
-* Polymode
-
-#+begin_src emacs-lisp :tangle no
-(use-package polymode
-  :config
-  (define-hostmode poly-rustic-hostmode :mode 'rustic-mode)
-  
-  (define-innermode poly-sql-rustic-innermode
-    :mode 'sql-mode
-    :head-matcher (rx 
-		   "sqlx::query"
-		   (opt "_as")
-		   "!("
-		   (* anything)
-		   "\"")
-    :tail-matcher (rx "\"")
-    :head-mode 'host
-    :tail-mode 'host)
-
-  (add-to-list 'polymode-move-these-minor-modes-from-old-buffer 'olivetti-mode)
-  (add-to-list 'polymode-move-these-vars-from-old-buffer 'olivetti-body-width)
-
-  (define-polymode poly-sql-rustic-mode
-    :hostmode 'poly-rustic-hostmode
-    :innermodes '(poly-sql-rustic-innermode)))
-
-(use-package poly-org)
-#+end_src
-
-* Misc stuff
-
-** Vertico, consult, orderless and marginalia
-
-#+begin_src emacs-lisp
 (use-package vertico
   :demand t
   :custom
@@ -1402,9 +1010,7 @@ For some reason advice-add didn't seem to function, so this just manually replic
 	    "C-c c" #'vertico-buffer-mode)
   :config
   (vertico-mode))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package consult
   :demand t
   :custom
@@ -1437,11 +1043,7 @@ For some reason advice-add didn't seem to function, so this just manually replic
 
 (advice-add
  #'consult--buffer-preview :after #'advice!-consult-exwm-preview-fix)
-#+end_src
 
-Save grep search into evil search history.
-
-#+begin_src emacs-lisp
 (defun advice!-consult-grep-evil-search-history (ret)
   "Add the selected item to the evil search history."
   (when ret ;; return value is nil if you quit early
@@ -1465,13 +1067,9 @@ Save grep search into evil search history.
       (setq evil-ex-search-direction 'forward))
     ret))
 (advice-add 'consult-line :filter-return #'advice!-consult-line-evil-search-history)
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package wgrep)
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package embark
   ;; :after wgrep
   :demand t
@@ -1484,9 +1082,7 @@ Save grep search into evil search history.
   :after embark
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package orderless
   :demand t
   :after (vertico consult)
@@ -1494,16 +1090,12 @@ Save grep search into evil search history.
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package marginalia
   :demand t
   :config
   (marginalia-mode))
-#+end_src
 
-#+begin_src emacs-lisp
 (defun advice!-crm-indicator (args)
   (cons (format "[CRM%s] %s"
 		(replace-regexp-in-string
@@ -1517,18 +1109,10 @@ Save grep search into evil search history.
       enable-recursive-minibuffers t)
 
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-#+end_src
 
-** Media playback "inside" emacs
-
-#+begin_src emacs-lisp
 (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
   "m" '(:ignore t :wk "media"))
-#+end_src
 
-Control mpd from emacs
-
-#+begin_src emacs-lisp
 (use-package simple-mpc
   :demand t
   :hook (simple-mpc-mode . th/turn-off-line-numbers)
@@ -1546,11 +1130,7 @@ Control mpd from emacs
   ;;   "mh" '("prev" . simple-mpc-prev)
   ;;   "ml" '("next" . simple-mpc-next)))
   )
-#+end_src
 
-Control an mpv instance inside emacs
-
-#+begin_src emacs-lisp
 (use-package empv
   :demand t
   :general-config
@@ -1566,11 +1146,7 @@ Control an mpv instance inside emacs
 
 (defun eshell/yt (&rest args)
   (empv-youtube (mapconcat (lambda (s) (format "%s " s)) args)))
-#+end_src
 
-Custom menus with transient
-
-#+begin_src emacs-lisp
 (use-package transient)
 
 ;; (defun media-menu--empv-remove-playlist-item ()
@@ -1662,45 +1238,23 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
 
 (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC" 
   "m" '("media menu" . media-menu))
-#+end_src
 
-** Separedit
-
-Separedit allows you to edit a part of a buffer in another buffer, and use another major mode that way, a bit like org src blocks, but worse.
-
-#+begin_src emacs-lisp
 (use-package separedit)
-#+end_src
 
-** Ultra scroll
-
-#+begin_src emacs-lisp
 (use-package ultra-scroll
   :init
   (setq scroll-conservatively 101 ; important!
         scroll-margin 0) 
   :config
   (ultra-scroll-mode 1))
-#+end_src
 
-** Fix/improve some emacs stuff
-
-*** Tramp
-
-Tramp doesn't work properly on nixos systems by default, because it doesn't find $PATH
-
-#+begin_src emacs-lisp
 (use-package tramp-sh
   :ensure nil ;; part of emacs
   :config
   (setq tramp-remote-path
 	(append tramp-remote-path
  		'(tramp-own-remote-path))))
-#+end_src
 
-*** Dired
-
-#+begin_src emacs-lisp
 (use-package dired
   :ensure nil
   :demand t
@@ -1721,22 +1275,9 @@ Tramp doesn't work properly on nixos systems by default, because it doesn't find
   (setq dired-mouse-drag t)
   (unless (display-graphic-p)
     (general-def dired-mode-map "DEL" 'dired-up-directory)))
-#+end_src
 
-#+begin_src emacs-lisp
 (use-package dired-du)
-#+end_src
 
-Casual dired has magit-like menus for dired commands
-
-#+begin_src emacs-lisp :tangle no
-(use-package casual-dired
-  :general
-  (:keymaps dired-mode-map
-	    "C-o" 'casual-dired-tmenu))
-#+end_src
-
-#+begin_src emacs-lisp
 (use-package openwith
   :custom
   (openwith-associations `((,(rx nonl (or ".mkv"
@@ -1747,46 +1288,25 @@ Casual dired has magit-like menus for dired commands
 			   ))
   :config
   (openwith-mode))
-#+end_src
 
-* Theming
-
-This function will only execute a given function on the first server frame creation.
-
-#+begin_src emacs-lisp
 (defvar th/first-server-frame-created nil)
 (defun th--unless-first-server-frame-created (func)
   (unless th/first-server-frame-created
     (funcall func)
     (setq th/first-server-frame-created t)))
-#+end_src
 
-
-** Solaire
-
-Solaire mode darkens "lesser" buffers like eshell or magit
-
-#+begin_src emacs-lisp
 (use-package solaire-mode
   :hook
   (after-init . (lambda ()
 		  (when (display-graphic-p) (solaire-global-mode +1))))
   (server-after-make-frame . (lambda ()
 			       (when (display-graphic-p) (solaire-global-mode +1)))))
-#+end_src
 
-** Nyan mode
-
-#+begin_src emacs-lisp
 (use-package nyan-mode
   :custom
   (nyan-animate-nyancat t)
   (nyan-wavy-trail t))
-#+end_src
 
-** Mode line
-
-#+begin_src emacs-lisp
 (defun th/mode-line ()
   (dolist (face '(mode-line mode-line-active mode-line-inactive))
     (setf (alist-get face solaire-mode-remap-alist) nil))
@@ -1846,14 +1366,14 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 		    (flycheck-mode
 		     (:eval
 		      (when (and (eq flycheck-last-status-change 'finished) flycheck-current-errors)
-			 (let-alist (flycheck-count-errors flycheck-current-errors)
-			   (concat
-			    (when (and (not .error) (not .warning:?) (not .warning))
-			      (propertize "" 'face ,okay-face))
-			    (when .error
-			      (propertize (format " %s" .error) 'face ,error-face))
-			    (when (or .warning:? .warning)
-			      (propertize (format "%s %s" (if .error " " "") (+ (or .warning:? 0) (or .warning 0))) 'face ,warning-face))))))
+			(let-alist (flycheck-count-errors flycheck-current-errors)
+			  (concat
+			   (when (and (not .error) (not .warning:?) (not .warning))
+			     (propertize "" 'face ,okay-face))
+			   (when .error
+			     (propertize (format " %s" .error) 'face ,error-face))
+			   (when (or .warning:? .warning)
+			     (propertize (format "%s %s" (if .error " " "") (+ (or .warning:? 0) (or .warning 0))) 'face ,warning-face))))))
 		     
 		     "")
 
@@ -1869,23 +1389,7 @@ Solaire mode darkens "lesser" buffers like eshell or magit
 
 ;; (add-hook 'window-setup-hook #'th/mode-line)
 ;; (add-hook 'server-after-make-frame-hook #'th/mode-line)
-#+end_src
 
-** Catppuccin
-
-#+begin_src emacs-lisp :tangle no
-(use-package catppuccin-theme
-  :init
-  (setq catppuccin-flavor 'mocha)
-  :hook
-  (after-init . catppuccin-reload)
-  (server-after-make-frame . (lambda () (when (display-graphic-p)
-					  (th--unless-first-server-frame-created 'catppuccin-reload)))))
-#+end_src
-
-** Doom Themes
-
-#+begin_src emacs-lisp :tangle yes
 (use-package doom-themes
   :custom
   (doom-themes-enable-bold t)
@@ -1893,26 +1397,14 @@ Solaire mode darkens "lesser" buffers like eshell or magit
   :config
   (load-theme 'doom-vibrant t)
   (doom-themes-org-config))
-#+end_src
 
-** All the icons
-
-#+begin_src emacs-lisp
 (use-package all-the-icons)
-#+end_src
 
-https://github.com/jdtsmith/kind-icon
-
-#+begin_src emacs-lisp
 (use-package kind-icon
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-#+end_src
 
-*** Dired
-
-#+begin_src emacs-lisp
 (defun th--ati-dired ()
   (when (display-graphic-p)
     (th--unless-first-server-frame-created
@@ -1923,11 +1415,7 @@ https://github.com/jdtsmith/kind-icon
   :hook (dired-mode . (lambda ()
 			(when (display-graphic-p)
 			  (all-the-icons-dired-mode)))))
-#+end_src
 
-*** Ibuffer
-
-#+begin_src emacs-lisp
 (defun th--ati-ibuffer ()
   (when (display-graphic-p)
     (th--unless-first-server-frame-created
@@ -1938,205 +1426,194 @@ https://github.com/jdtsmith/kind-icon
   :hook (ibuffer-mode . (lambda ()
 			  (when (display-graphic-p)
 			    (all-the-icons-ibuffer-mode)))))
-#+end_src
 
-* EXWM
+;; TODO implement conditional system
+;; (use-package dmenu
+;;   :demand t)
 
-#+begin_src emacs-lisp :tangle @exwm_enable@
-(use-package dmenu
-  :demand t)
+;; ;; custom package by me, defined in default.nix
+;; ;; allows for per monitor workspaces to be bound to mod+1-9, like on dwm
+;; (use-package dwm-workspaces
+;;   :demand t)
 
-;; custom package by me, defined in default.nix
-;; allows for per monitor workspaces to be bound to mod+1-9, like on dwm
-(use-package dwm-workspaces
-  :demand t)
+;; (use-package exwm
+;;   :demand t)
 
-(use-package exwm
-  :demand t)
+;; (use-package exwm-firefox-evil
+;;   :config
+;;   (add-hook 'exwm-manage-finish-hook #'exwm-firefox-evil-activate-if-firefox))
 
-(use-package exwm-firefox-evil
-  :config
-  (add-hook 'exwm-manage-finish-hook #'exwm-firefox-evil-activate-if-firefox))
+;; (when (and (getenv "EMACS_ENABLE_EXWM") (executable-find "wmctrl"))
+;;   (unless (eq (call-process "wmctrl" nil nil nil "-m") 0)
+;;     (progn
+;;       (require 'exwm-randr)
+;;       (require 'exwm-systemtray)
+;;       (require 'exwm-xim)
 
-(when (and (getenv "EMACS_ENABLE_EXWM") (executable-find "wmctrl"))
-  (unless (eq (call-process "wmctrl" nil nil nil "-m") 0)
-    (progn
-      (require 'exwm-randr)
-      (require 'exwm-systemtray)
-      (require 'exwm-xim)
+;;       (dwm-workspaces--init)
 
-      (dwm-workspaces--init)
+;;       (defun th/exwm-shell-cmd (command) (start-process-shell-command (car (split-string command " ")) nil command))
 
-      (defun th/exwm-shell-cmd (command) (start-process-shell-command (car (split-string command " ")) nil command))
+;;       (defun th/keyboard-layout ()
+;; 	(interactive)
+;; 	(let* ((output (shell-command-to-string "setxkbmap -query"))
+;; 	       (layout (nth 2 (split-string output "\n"))))
+;; 	  (if (string-match-p "us" layout)
+;; 	      (shell-command-to-string "setxkbmap fi")
+;; 	    (shell-command-to-string "setxkbmap us"))))
 
-      (defun th/keyboard-layout ()
-	(interactive)
-	(let* ((output (shell-command-to-string "setxkbmap -query"))
-	       (layout (nth 2 (split-string output "\n"))))
-	  (if (string-match-p "us" layout)
-	      (shell-command-to-string "setxkbmap fi")
-	    (shell-command-to-string "setxkbmap us"))))
+;;       (mapc 'th/exwm-shell-cmd
+;; 	    '("xset r rate 300 50"
+;; 	      "dbus-update-activation-environment --verbose --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY &"
+;; 	      "gnome-keyring-daemon"))
 
-      (mapc 'th/exwm-shell-cmd
-	    '("xset r rate 300 50"
-	      "dbus-update-activation-environment --verbose --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY &"
-	      "gnome-keyring-daemon"))
+;;       (when (file-directory-p "/sys/class/power_supply/BAT0/")
+;; 	(display-battery-mode))
 
-      (when (file-directory-p "/sys/class/power_supply/BAT0/")
-	(display-battery-mode))
+;;       (setq display-time-format "%H:%M:%S - %d %b %Y (%a)"
+;; 	    display-time-default-load-average nil
 
-      (setq display-time-format "%H:%M:%S - %d %b %Y (%a)"
-	    display-time-default-load-average nil
+;; 	    mouse-autoselect-window t
+;; 	    focus-follow-mouse t
 
-	    mouse-autoselect-window t
-	    focus-follow-mouse t
+;; 	    exwm-input-line-mode-passthrough t
+;; 	    exwm-workspace-show-all-buffers t)
+;;       (display-time-mode 1)
 
-	    exwm-input-line-mode-passthrough t
-	    exwm-workspace-show-all-buffers t)
-      (display-time-mode 1)
+;;       (dolist (k `(
+;;                    escape
+;;                    ))
+;;         (cl-pushnew k exwm-input-prefix-keys))
 
-      (dolist (k `(
-                   escape
-                   ))
-        (cl-pushnew k exwm-input-prefix-keys))
 
-      
-      (defun advice!-exwm-input--on-ButtonPress-line-mode (buffer button-event)
-	"Handle button events in line mode.
-BUFFER is the `exwm-mode' buffer the event was generated
-on. BUTTON-EVENT is the X event converted into an Emacs event.
+;;       (defun advice!-exwm-input--on-ButtonPress-line-mode (buffer button-event)
+;; 	"Handle button events in line mode.
+;; BUFFER is the `exwm-mode' buffer the event was generated
+;; on. BUTTON-EVENT is the X event converted into an Emacs event.
 
-The return value is used as event_mode to release the original
-button event."
-	(with-current-buffer buffer
-	  (let ((read-event (exwm-input--mimic-read-event button-event)))
-	    (exwm--log "%s" read-event)
-	    (if (and read-event
-		     (exwm-input--event-passthrough-p read-event))
-		;; The event should be forwarded to emacs
-		(progn
-		  (exwm-input--cache-event read-event)
-		  (exwm-input--unread-event button-event)
+;; The return value is used as event_mode to release the original
+;; button event."
+;; 	(with-current-buffer buffer
+;; 	  (let ((read-event (exwm-input--mimic-read-event button-event)))
+;; 	    (exwm--log "%s" read-event)
+;; 	    (if (and read-event
+;; 		     (exwm-input--event-passthrough-p read-event))
+;; 		;; The event should be forwarded to emacs
+;; 		(progn
+;; 		  (exwm-input--cache-event read-event)
+;; 		  (exwm-input--unread-event button-event)
 
-		  xcb:Allow:ReplayPointer)
-	      ;; The event should be replayed
-	      xcb:Allow:ReplayPointer))))
+;; 		  xcb:Allow:ReplayPointer)
+;; 	      ;; The event should be replayed
+;; 	      xcb:Allow:ReplayPointer))))
 
-      (advice-add 'exwm-input--on-ButtonPress-line-mode :override #'advice!-exwm-input--on-ButtonPress-line-mode)
-      
-      (setq exwm-input-global-keys
-	    `((,(kbd "s-i") . exwm-input-toggle-keyboard)
-	      (,(kbd "s-f") . exwm-layout-toggle-fullscreen)
-	      (,(kbd "s-S-F") . exwm-floating-toggle-floating)
-	      (,(kbd "s-d") . dmenu)
-	      (,(kbd "s-SPC") . th/keyboard-layout)
-	      (,(kbd "<XF86AudioPlay>") . simple-mpc-toggle)
-	      
-	      ;; (,(kbd "M-x") . execute-extended-command)
+;;       (advice-add 'exwm-input--on-ButtonPress-line-mode :override #'advice!-exwm-input--on-ButtonPress-line-mode)
 
-	      (,(kbd "s-.") . dwm-workspaces--select-previous-monitor)
-	      (,(kbd "s-,") . dwm-workspaces--select-next-monitor)
+;;       (setq exwm-input-global-keys
+;; 	    `((,(kbd "s-i") . exwm-input-toggle-keyboard)
+;; 	      (,(kbd "s-f") . exwm-layout-toggle-fullscreen)
+;; 	      (,(kbd "s-S-F") . exwm-floating-toggle-floating)
+;; 	      (,(kbd "s-d") . dmenu)
+;; 	      (,(kbd "s-SPC") . th/keyboard-layout)
+;; 	      (,(kbd "<XF86AudioPlay>") . simple-mpc-toggle)
 
-	      (,(kbd "s-1") . (lambda () (interactive) (dwm-workspaces--switch-by-index 1)))
-	      (,(kbd "s-2") . (lambda () (interactive) (dwm-workspaces--switch-by-index 2)))
-	      (,(kbd "s-3") . (lambda () (interactive) (dwm-workspaces--switch-by-index 3)))
-	      (,(kbd "s-4") . (lambda () (interactive) (dwm-workspaces--switch-by-index 4)))
-	      (,(kbd "s-5") . (lambda () (interactive) (dwm-workspaces--switch-by-index 5)))
-	      (,(kbd "s-6") . (lambda () (interactive) (dwm-workspaces--switch-by-index 6)))
-	      (,(kbd "s-7") . (lambda () (interactive) (dwm-workspaces--switch-by-index 7)))
-	      (,(kbd "s-8") . (lambda () (interactive) (dwm-workspaces--switch-by-index 8)))
-	      (,(kbd "s-9") . (lambda () (interactive) (dwm-workspaces--switch-by-index 9)))
+;; 	      ;; (,(kbd "M-x") . execute-extended-command)
 
-	      ;; (,(kbd "s-!") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 1)))
-	      ;; (,(kbd "s-@") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 2)))
-	      ;; (,(kbd "s-#") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 3)))
-	      ;; (,(kbd "s-$") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 4)))
-	      ;; (,(kbd "s-%") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 5)))
-	      ;; (,(kbd "s-^") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 6)))
-	      ;; (,(kbd "s-&") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 7)))
-	      ;; (,(kbd "s-*") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 8)))
-	      ;; (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
+;; 	      (,(kbd "s-.") . dwm-workspaces--select-previous-monitor)
+;; 	      (,(kbd "s-,") . dwm-workspaces--select-next-monitor)
 
-              ;; ,@(mapc (lambda (i)
-              ;;           (,(kbd (format "s-%d" i)) .
-              ;;            (lambda () (interactive)
-              ;;              (dwm-workspaces--switch-by-index ,i))))
-              ;;         (number-sequence 1 9))
+;; 	      (,(kbd "s-1") . (lambda () (interactive) (dwm-workspaces--switch-by-index 1)))
+;; 	      (,(kbd "s-2") . (lambda () (interactive) (dwm-workspaces--switch-by-index 2)))
+;; 	      (,(kbd "s-3") . (lambda () (interactive) (dwm-workspaces--switch-by-index 3)))
+;; 	      (,(kbd "s-4") . (lambda () (interactive) (dwm-workspaces--switch-by-index 4)))
+;; 	      (,(kbd "s-5") . (lambda () (interactive) (dwm-workspaces--switch-by-index 5)))
+;; 	      (,(kbd "s-6") . (lambda () (interactive) (dwm-workspaces--switch-by-index 6)))
+;; 	      (,(kbd "s-7") . (lambda () (interactive) (dwm-workspaces--switch-by-index 7)))
+;; 	      (,(kbd "s-8") . (lambda () (interactive) (dwm-workspaces--switch-by-index 8)))
+;; 	      (,(kbd "s-9") . (lambda () (interactive) (dwm-workspaces--switch-by-index 9)))
 
-              ,@(cl-mapcar (lambda (c n)
-                             (,(kbd (format "s-%c" c)) .
-                              (lambda () (interactive)
-                                (dwm-workspaces--move-window-by-index ,n))))
-                           '(?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
-                           (number-sequence 1 9))
-	      ))
-      
-      (mapc (lambda (keybind)
-	      (global-set-key (car keybind) (cdr keybind)))
-	    exwm-input-global-keys)
+;; 	      ;; (,(kbd "s-!") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 1)))
+;; 	      ;; (,(kbd "s-@") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 2)))
+;; 	      ;; (,(kbd "s-#") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 3)))
+;; 	      ;; (,(kbd "s-$") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 4)))
+;; 	      ;; (,(kbd "s-%") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 5)))
+;; 	      ;; (,(kbd "s-^") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 6)))
+;; 	      ;; (,(kbd "s-&") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 7)))
+;; 	      ;; (,(kbd "s-*") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 8)))
+;; 	      ;; (,(kbd "s-(") . (lambda () (interactive) (dwm-workspaces--move-window-by-index 9)))
 
-      ;; https://github.com/minad/corfu/discussions/408
-      (defun advice!corfu-make-frame-with-monitor-awareness (func frame x y width height)
-	"Advice `corfu--make-frame` to be monitor-aware, adjusting X and Y according to the focused monitor."
-	(let* ((workarea (nth exwm-workspace-current-index exwm-workspace--workareas))
-	       (mon-x (oref workarea x))
-	       (mon-y (oref workarea y)))
-	  (funcall func frame (+ mon-x x) (+ mon-y y) width height)))
+;;               ;; ,@(mapc (lambda (i)
+;;               ;;           (,(kbd (format "s-%d" i)) .
+;;               ;;            (lambda () (interactive)
+;;               ;;              (dwm-workspaces--switch-by-index ,i))))
+;;               ;;         (number-sequence 1 9))
 
-      (advice-add 'corfu--make-frame :around #'advice!corfu-make-frame-with-monitor-awareness)
+;;               ,@(cl-mapcar (lambda (c n)
+;;                              (,(kbd (format "s-%c" c)) .
+;;                               (lambda () (interactive)
+;;                                 (dwm-workspaces--move-window-by-index ,n))))
+;;                            '(?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
+;;                            (number-sequence 1 9))
+;; 	      ))
 
-      (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
-	"y" '(:ignore t :wk "exwm")
-	"yd" '("dmenu" . dmenu)
-	"yf" '("toggle floating" . exwm-floating-toggle-floating))
+;;       (mapc (lambda (keybind)
+;; 	      (global-set-key (car keybind) (cdr keybind)))
+;; 	    exwm-input-global-keys)
 
-      (general-define-key 
-       :states '(normal visual visual replace motion emacs operator-pending)
-       :keymaps 'exwm-mode-map
-       "<mouse-1>" (lambda () (interactive) (exwm-input--fake-key 'down))
-       "<mouse-2>" nil
-       "<mouse-3>" nil
-       "<down-mouse-1>" nil
-       "<down-mouse-2>" nil
-       "<down-mouse-3>" nil
+;;       ;; https://github.com/minad/corfu/discussions/408
+;;       (defun advice!corfu-make-frame-with-monitor-awareness (func frame x y width height)
+;; 	"Advice `corfu--make-frame` to be monitor-aware, adjusting X and Y according to the focused monitor."
+;; 	(let* ((workarea (nth exwm-workspace-current-index exwm-workspace--workareas))
+;; 	       (mon-x (oref workarea x))
+;; 	       (mon-y (oref workarea y)))
+;; 	  (funcall func frame (+ mon-x x) (+ mon-y y) width height)))
 
-       ;; "i" 'exwm-input-release-keyboard
-       
-       "h" (lambda () (interactive) (exwm-input--fake-key 'left))
-       "j" (lambda () (interactive) (exwm-input--fake-key 'down))
-       "k" (lambda () (interactive) (exwm-input--fake-key 'up))
-       "l" (lambda () (interactive) (exwm-input--fake-key 'right)))
+;;       (advice-add 'corfu--make-frame :around #'advice!corfu-make-frame-with-monitor-awareness)
 
-      (setq exwm-workspace-warp-cursor t
-	    exwm-layout-show-all-buffers t
-	    mouse-autoselect-window t
-	    focus-follows-mouse t)
+;;       (general-def :states '(normal visual motion) :keymaps 'override :prefix "SPC"
+;; 	"y" '(:ignore t :wk "exwm")
+;; 	"yd" '("dmenu" . dmenu)
+;; 	"yf" '("toggle floating" . exwm-floating-toggle-floating))
 
-      (setq ibuffer-saved-filter-groups
-	    '(("default"
-	       ("Process" (mode . comint-mode))
-	       )))
+;;       (general-define-key 
+;;        :states '(normal visual visual replace motion emacs operator-pending)
+;;        :keymaps 'exwm-mode-map
+;;        "<mouse-1>" (lambda () (interactive) (exwm-input--fake-key 'down))
+;;        "<mouse-2>" nil
+;;        "<mouse-3>" nil
+;;        "<down-mouse-1>" nil
+;;        "<down-mouse-2>" nil
+;;        "<down-mouse-3>" nil
 
-      (add-hook 'ibuffer-mode-hook
-		(lambda ()
-		  (ibuffer-switch-to-saved-filter-groups "default")))
+;;        ;; "i" 'exwm-input-release-keyboard
 
-      (add-hook 'exwm-update-class-hook
-		(lambda ()
-		  (if exwm-class-name
-		      (exwm-workspace-rename-buffer exwm-class-name)
-		    (exwm-workspace-rename-buffer (generate-new-buffer-name "EXWM - Unknown window")))
-		  (exwm-workspace-rename-buffer (format "EXWM - %s" exwm-class-name))))
+;;        "h" (lambda () (interactive) (exwm-input--fake-key 'left))
+;;        "j" (lambda () (interactive) (exwm-input--fake-key 'down))
+;;        "k" (lambda () (interactive) (exwm-input--fake-key 'up))
+;;        "l" (lambda () (interactive) (exwm-input--fake-key 'right)))
 
-      (exwm-xim-mode 1)
-      (exwm-randr-mode 1)
-      (exwm-enable)
-      (exwm-systemtray-mode 1))))
-#+end_src
+;;       (setq exwm-workspace-warp-cursor t
+;; 	    exwm-layout-show-all-buffers t
+;; 	    mouse-autoselect-window t
+;; 	    focus-follows-mouse t)
 
-* End
+;;       (setq ibuffer-saved-filter-groups
+;; 	    '(("default"
+;; 	       ("Process" (mode . comint-mode))
+;; 	       )))
 
-# Local Variables:
-# olivetti-body-width: 120
-# org-confirm-babel-evaluate: nil
-# End:
+;;       (add-hook 'ibuffer-mode-hook
+;; 		(lambda ()
+;; 		  (ibuffer-switch-to-saved-filter-groups "default")))
+
+;;       (add-hook 'exwm-update-class-hook
+;; 		(lambda ()
+;; 		  (if exwm-class-name
+;; 		      (exwm-workspace-rename-buffer exwm-class-name)
+;; 		    (exwm-workspace-rename-buffer (generate-new-buffer-name "EXWM - Unknown window")))
+;; 		  (exwm-workspace-rename-buffer (format "EXWM - %s" exwm-class-name))))
+
+;;       (exwm-xim-mode 1)
+;;       (exwm-randr-mode 1)
+;;       (exwm-enable)
+;;       (exwm-systemtray-mode 1))))
