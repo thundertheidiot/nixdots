@@ -48,6 +48,8 @@ in {
             path = n;
             warning = 80;
             critical = 90;
+
+            on-click = "xdg-open '${n}'";
           };
         })
         fileSystems;
