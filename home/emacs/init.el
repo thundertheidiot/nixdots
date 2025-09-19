@@ -369,7 +369,8 @@ Preserve window configuration when pressing ESC."
  "M-j" 'shrink-window
 
  "C-j" #'backward-sexp
- "C-k" #'forward-sexp)
+ "C-k" #'forward-sexp
+ "C-d" #'kill-sexp)
 
 (general-define-key
  "C-=" 'text-scale-increase
