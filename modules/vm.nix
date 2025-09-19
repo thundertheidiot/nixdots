@@ -36,10 +36,16 @@ in {
       unitConfig = {
         Type = "simple";
       };
-      serviceConfig = {
-        ExecStart = "${pkgs.libvirt}/bin/virsh net-start default";
-        RemainAfterExit = true;
-      };
+      # don't fail the service on failure, this fails on system upgrades
+      path = [pkgs.libvirt];
+      script = ''
+        set -o pipefail
+
+        if ! virsh net-info default | grep -q 'Active:\s*yes'; then
+           virsh net-start default
+        fi
+      '';
+      serviceConfig.RemainAfterExit = true;
       wantedBy = ["multi-user.target"];
     };
   };
