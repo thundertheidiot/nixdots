@@ -510,7 +510,7 @@ Preserve window configuration when pressing ESC."
   :demand t
   :diminish diff-hl-mode
   :custom
-  (diff-hl-show-staged-changes nil)
+  (diff-hl-show-staged-changes t)
   (diff-hl-global-modes '(not image-mode pdf-view-mode))
   (diff-hl-update-async t)
   (vc-git-diff-switches '("--histogram"))
@@ -533,6 +533,7 @@ Preserve window configuration when pressing ESC."
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
   (olivetti-mode . diff-hl-margin-mode)
+
   (dired-mode . diff-hl-dired-mode)
   (diff-hl-mode . diff-hl-flydiff-mode)
   :general
