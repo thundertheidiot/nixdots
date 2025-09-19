@@ -52,28 +52,8 @@ in {
       enable = true;
 
       package = pkgs.emacsWithPackagesFromUsePackage {
-        config = pkgs.replaceVars ./config.org (let
-          tangle = cfg:
-            if cfg
-            then "yes"
-            else "no";
+        config = ./init.el;
 
-          l = config.mHome.lang;
-        in {
-          lang_nix = tangle l.nix;
-          lang_haskell = tangle l.haskell;
-          lang_rust = tangle l.rust;
-          lang_lua = tangle l.lua;
-          lang_python = tangle l.python;
-          # TODO make emacs setup for these
-          # lang_c_cxx  = tangle l.c_cxx;
-          # lang_bash = tangle l.bash;
-          # lang_web = tangle l.web;
-
-          exwm_enable = tangle cfg.exwm;
-        });
-
-        alwaysTangle = true;
         alwaysEnsure = true;
         defaultInitFile = true;
 
