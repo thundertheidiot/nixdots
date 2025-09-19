@@ -191,13 +191,19 @@ Preserve window configuration when pressing ESC."
     (eval-region beg end)
     (evil-normal-state)))
 
+;; (setq split-width-threshold 160)
+;; (setq split-height-threshold 80)
 (defun th/intelligent-split (&optional force)
   (interactive)
-  (let ((width (window-total-width))
-	(height (window-total-height)))
-    (cond ((and (< width 140) (< height 40) (not force)) (current-buffer))
-	  ((> (+ 10 (* 2 height)) width) (split-window-below))
-	  (t (split-window-right)))))
+  (let* ((width (window-total-width))
+	 (height (window-total-height))
+	 (window (cond ((and (< width split-width-threshold) (< height split-height-threshold) (not force)) (current-buffer))
+		       ((> (+ 10 (* 2 height)) width) (split-window-below))
+		       (t (split-window-right)))))
+    (ignore-errors (balance-windows (window-parent)))
+    window))
+
+
 
 (use-package undo-tree
   :demand t
@@ -307,7 +313,7 @@ Preserve window configuration when pressing ESC."
   "<right>" '("move right" . windmove-right)
   "wq" '("close" . evil-quit)
   "ww" '("close" . evil-quit)
-  "ws" '("horizontal split" . (lambda () (interactive) (th/intelligent-split t)))
+  "ws" '("horizontal split" . (lambda () (interactive) (select-window (th/intelligent-split t))))
 
   "wc" '(:ignore t :wk "window configurations")
   "wcl" '("load" . load-window-configuration)
