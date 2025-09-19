@@ -492,7 +492,7 @@ Preserve window configuration when pressing ESC."
 (use-package forge
   :after magit)
 
-(defun th/last-diff-hl-hunk (&optional backward)
+(defun my/last-diff-hl-hunk (&optional backward)
   "Go to the last hunk in the file, first if BACKWARD is t."
   (while-let ((pos (diff-hl-search-next-hunk backward)))
     (goto-char (overlay-start pos))))
@@ -503,7 +503,7 @@ Preserve window configuration when pressing ESC."
 		    t)) ;; flip
 	(return (ignore-errors (funcall orig-fun args)))) 
     (unless return
-      (th/last-diff-hl-hunk backward)
+      (my/last-diff-hl-hunk backward)
       (message "Looped around"))))
 
 (use-package diff-hl
