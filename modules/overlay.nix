@@ -16,8 +16,7 @@
         meowdzbot = inputs.meowdzbot.packages.${final.system}.default;
 
         "2505" = import inputs.nixpkgs-25-05 {
-          system = final.system;
-          config.allowUnfree = final.config.allowUnfree;
+          inherit (final) system config;
         };
 
         mpkgs = (import "${inputs.self.outPath}/pkgs") {pkgs = final;};
@@ -30,6 +29,10 @@
 
         xrizer = prev.xrizer.overrideAttrs {
           patches = [];
+        };
+
+        ckb-next = prev.ckb-next.override {
+          libdbusmenu = final."2505".libsForQt5.libdbusmenu;
         };
 
         gnome2 =
