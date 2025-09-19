@@ -532,10 +532,10 @@ Preserve window configuration when pressing ESC."
   :hook
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
-  (olivetti-mode . diff-hl-margin-mode)
 
   (dired-mode . diff-hl-dired-mode)
   (diff-hl-mode . diff-hl-flydiff-mode)
+  (diff-hl-mode . diff-hl-margin-mode) ;; to simultaniously support flycheck symbols in fringe
   :general
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "ga" '("stage hunk" . diff-hl-stage-current-hunk)
@@ -592,10 +592,10 @@ Preserve window configuration when pressing ESC."
   :diminish hl-todo-mode
   :diminish global-hl-todo-mode
   :custom
-  (hl-todo-keyword-faces '(("TODO" . "#cc9393")
-			   ("HACK" . "#d0bf8f")
-			   ("NOTE" . "#cc9393")
-			   ("FIXME" . "#cc9393")))
+  (hl-todo-keyword-faces '(("TODO" . ,(face-attribute 'error :foreground))
+			   ("HACK" . ,(face-attribute 'warning :foreground))
+			   ("NOTE" . ,(face-attribute 'match :foreground))
+			   ("FIXME" . ,(face-attribute 'error :foreground))))
   :config
   (global-hl-todo-mode 1))
 
@@ -628,8 +628,7 @@ Preserve window configuration when pressing ESC."
   :hook
   (prog-mode . flycheck-mode)
   (eglot-managed-mode . flycheck-mode)
-  ;; :config 
-  ;; (global-flycheck-mode)
+  (flycheck-mode . (lambda () (flycheck-set-indication-mode 'right-fringe)))
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "cn" '("next error" . flycheck-next-error)
@@ -904,7 +903,7 @@ Preserve window configuration when pressing ESC."
 	   "poe" '("eshell" . (lambda () (interactive) 
 				(select-window (th/intelligent-split t))
 				(th/eshell t)))
-	   "poE" '("eshell in new window" . (lambda () (interactive) (th/eshell t)))))
+	   "poE" '("eshell in this window" . (lambda () (interactive) (th/eshell t)))))
 
 (defun eshell/v (&rest args)
   (select-window (th/intelligent-split t))
@@ -1325,13 +1324,13 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
   (force-mode-line-update)
 
   (let* ((default-face `(:foreground ,(face-attribute 'default :foreground)))
-	 (okay-face `(:foreground ,(face-attribute 'envrc-mode-line-on-face :foreground)))
+	 (okay-face `(:foreground ,(face-attribute 'match :foreground)))
 	 (error-face `(:foreground ,(face-attribute 'error :foreground)))
 	 (warning-face `(:foreground ,(face-attribute 'warning :foreground)))
 	 (emphasize-face `(:foreground ,(face-attribute 'font-lock-keyword-face :foreground)))
 
 	 (envrc-none (propertize "" 'face default-face))
-	 (envrc-on (propertize (propertize "" 'face okay-face)))
+	 (envrc-on (propertize "" 'face okay-face))
 	 (envrc-error (propertize "" 'face error-face)))
     (setq-default mode-line-format
 		  `(
@@ -1355,9 +1354,9 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
 
 		    "   "
 		    
-		    ;; (:eval
-		    ;;  (when (and (not (file-remote-p default-directory)) (magit-toplevel))
-		    ;;    (propertize (format "  %s" (magit-get-current-branch)) 'face ,emphasize-face)))
+		    (:eval
+		     (when (and (not (file-remote-p default-directory)) (magit-toplevel))
+		       (propertize (format "  %s   " (magit-get-current-branch)) 'face ',emphasize-face)))
 		    
 		    ;; (:eval (when (and (not (file-remote-p default-directory)) (magit-toplevel)) "   "))
 
@@ -1366,24 +1365,22 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
 		    
 		    (flycheck-mode
 		     (:eval
-		      (when (and (eq flycheck-last-status-change 'finished) flycheck-current-errors)
+		      (when (and (eq flycheck-last-status-change 'finished))
 			(let-alist (flycheck-count-errors flycheck-current-errors)
 			  (concat
 			   (when (and (not .error) (not .warning:?) (not .warning))
-			     (propertize "" 'face ,okay-face))
+			     (propertize "" 'face ',okay-face))
 			   (when .error
-			     (propertize (format " %s" .error) 'face ,error-face))
+			     (propertize (format " %s" .error) 'face ',error-face))
 			   (when (or .warning:? .warning)
-			     (propertize (format "%s %s" (if .error " " "") (+ (or .warning:? 0) (or .warning 0))) 'face ,warning-face))))))
+			     (propertize (format "%s %s" (if .error " " "") (+ (or .warning:? 0) (or .warning 0))) 'face ',warning-face))))))
 		     
 		     "")
 
 		    (flycheck-mode "   " "")
 
 		    ;; "%="
-		    (:eval (nyan-create)))))
-  
-  )
+		    (:eval (nyan-create))))))
 
 (add-hook 'enable-theme-functions
 	  (lambda (_theme) (th/mode-line)))
