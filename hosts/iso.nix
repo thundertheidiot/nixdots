@@ -45,26 +45,28 @@
     networking.useDHCP = lib.mkForce true;
     services.openssh.settings.PermitRootLogin = lib.mkForce "prohibit-password";
 
-    specialisation.nvidia.configuration = {config, ...}: {
-      hardware.graphics.enable = true;
-      services.xserver.videoDrivers = ["nvidia"];
+    # TODO apply crazy hack from here to make this work
+    # https://discourse.nixos.org/t/how-do-i-add-boot-menu-entries-to-an-install-iso/39748/3
+    # specialisation.nvidia.configuration = {config, ...}: {
+    #   hardware.graphics.enable = true;
+    #   services.xserver.videoDrivers = ["nvidia"];
 
-      boot.blacklistedKernelModules = ["nouveau"];
+    #   boot.blacklistedKernelModules = ["nouveau"];
 
-      hardware.nvidia = {
-        modesetting.enable = true;
-        open = false;
-        package = config.boot.kernelPackages.nvidiaPackages.production;
-      };
-    };
+    #   hardware.nvidia = {
+    #     modesetting.enable = true;
+    #     open = false;
+    #     package = config.boot.kernelPackages.nvidiaPackages.production;
+    #   };
+    # };
 
-    boot.loader.grub.extraEntries = let
-      nvidiaTop = config.specialisation.nvidia.configuration.system.build.toplevel;
-    in ''
-      menuentry "Proprietary NVIDIA Drivers" {
-        linux ${nvidiaTop}/kernel init=${nvidiaTop}/init systemConfig=${nvidiaTop} initrd=${nvidiaTop}/initrd
-      }
-    '';
+    # boot.loader.grub.extraEntries = let
+    #   nvidiaTop = config.specialisation.nvidia.configuration.system.build.toplevel;
+    # in ''
+    #   menuentry "Proprietary NVIDIA Drivers" {
+    #     linux ${nvidiaTop}/kernel init=${nvidiaTop}/init systemConfig=${nvidiaTop} initrd=${nvidiaTop}/initrd
+    #   }
+    # '';
 
     home-manager.sharedModules = [
       {
