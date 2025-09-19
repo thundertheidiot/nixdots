@@ -369,9 +369,7 @@ Preserve window configuration when pressing ESC."
  "M-j" 'shrink-window
 
  "C-j" #'backward-sexp
- "C-k" #'forward-sexp
- "C-d" #'kill-sexp
- )
+ "C-k" #'forward-sexp)
 
 (general-define-key
  "C-=" 'text-scale-increase
@@ -1358,8 +1356,6 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
 		     (when (and (not (file-remote-p default-directory)) (magit-toplevel))
 		       (propertize (format "  %s   " (magit-get-current-branch)) 'face ',emphasize-face)))
 		    
-		    ;; (:eval (when (and (not (file-remote-p default-directory)) (magit-toplevel)) "   "))
-
 		    (eglot--managed-mode eglot--mode-line-format "")
 		    (eglot--managed-mode "   " "")
 		    

@@ -107,17 +107,6 @@ in {
             mlib,
             ...
           }: let
-            # splitMonitorWorkspaces = (builtins.length mons) > 1;
-            splitMonitorWorkspaces = true; # TODO remove balls
-            hyprWorkspace =
-              if splitMonitorWorkspaces
-              then "split:workspace"
-              else "workspace";
-            hyprMoveToWorkspaceSilent =
-              if splitMonitorWorkspaces
-              then "split:movetoworkspacesilent"
-              else "movetoworkspacesilent";
-
             inherit (builtins) filter isList length;
 
             monitorsWithModes = map (m: {
@@ -155,7 +144,7 @@ in {
                 '');
           in {
             wayland.windowManager.hyprland = {
-              plugins = lib.mkIf splitMonitorWorkspaces [pkgs.hyprsplit];
+              plugins = [pkgs.hyprsplit];
 
               settings = {
                 plugin.hyprsplit = {
@@ -173,35 +162,28 @@ in {
                     }")
                 mons);
 
-                workspace = lib.mkIf (!splitMonitorWorkspaces && mons != []) (
-                  builtins.map (n: let
-                    mon = (builtins.head mons).name;
-                  in "${builtins.toString n}, monitor:${mon}")
-                  [1 2 3 4 5 6 7 8 9]
-                );
-
                 bind = [
                   (lib.mkIf (builtins.length monitorsWithModes > 0) "$mod, C, exec, ${modeSwitcher}")
 
-                  "$mod, 1, ${hyprWorkspace}, 1"
-                  "$mod, 2, ${hyprWorkspace}, 2"
-                  "$mod, 3, ${hyprWorkspace}, 3"
-                  "$mod, 4, ${hyprWorkspace}, 4"
-                  "$mod, 5, ${hyprWorkspace}, 5"
-                  "$mod, 6, ${hyprWorkspace}, 6"
-                  "$mod, 7, ${hyprWorkspace}, 7"
-                  "$mod, 8, ${hyprWorkspace}, 8"
-                  "$mod, 9, ${hyprWorkspace}, 9"
+                  "$mod, 1, split:workspace, 1"
+                  "$mod, 2, split:workspace, 2"
+                  "$mod, 3, split:workspace, 3"
+                  "$mod, 4, split:workspace, 4"
+                  "$mod, 5, split:workspace, 5"
+                  "$mod, 6, split:workspace, 6"
+                  "$mod, 7, split:workspace, 7"
+                  "$mod, 8, split:workspace, 8"
+                  "$mod, 9, split:workspace, 9"
 
-                  "$shiftmod, 1, ${hyprMoveToWorkspaceSilent}, 1"
-                  "$shiftmod, 2, ${hyprMoveToWorkspaceSilent}, 2"
-                  "$shiftmod, 3, ${hyprMoveToWorkspaceSilent}, 3"
-                  "$shiftmod, 4, ${hyprMoveToWorkspaceSilent}, 4"
-                  "$shiftmod, 5, ${hyprMoveToWorkspaceSilent}, 5"
-                  "$shiftmod, 6, ${hyprMoveToWorkspaceSilent}, 6"
-                  "$shiftmod, 7, ${hyprMoveToWorkspaceSilent}, 7"
-                  "$shiftmod, 8, ${hyprMoveToWorkspaceSilent}, 8"
-                  "$shiftmod, 9, ${hyprMoveToWorkspaceSilent}, 9"
+                  "$shiftmod, 1, split:movetoworkspacesilent, 1"
+                  "$shiftmod, 2, split:movetoworkspacesilent, 2"
+                  "$shiftmod, 3, split:movetoworkspacesilent, 3"
+                  "$shiftmod, 4, split:movetoworkspacesilent, 4"
+                  "$shiftmod, 5, split:movetoworkspacesilent, 5"
+                  "$shiftmod, 6, split:movetoworkspacesilent, 6"
+                  "$shiftmod, 7, split:movetoworkspacesilent, 7"
+                  "$shiftmod, 8, split:movetoworkspacesilent, 8"
+                  "$shiftmod, 9, split:movetoworkspacesilent, 9"
                 ];
               };
             };
