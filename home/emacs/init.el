@@ -510,7 +510,7 @@ Preserve window configuration when pressing ESC."
   :demand t
   :diminish diff-hl-mode
   :custom
-  (diff-hl-show-staged-changes t)
+  (diff-hl-show-staged-changes nil)
   (diff-hl-global-modes '(not image-mode pdf-view-mode))
   (diff-hl-update-async t)
   (vc-git-diff-switches '("--histogram"))
