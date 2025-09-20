@@ -232,7 +232,7 @@
 
   networking.interfaces."wlp74s0".wakeOnLan = {
     enable = true;
-    policy = "unicast";
+    policy = ["unicast"];
   };
 
   disko.devices = {
