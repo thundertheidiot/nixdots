@@ -19,10 +19,10 @@ in {
   };
 
   config = mkMerge [
-    {
+    (mkIf (cfg != "none") {
       hardware.graphics.enable = true;
       hardware.graphics.enable32Bit = config.meow.gaming.enable;
-    }
+    })
     (mkIf (cfg == "intel") {
       boot.initrd.kernelModules = ["i915"];
 

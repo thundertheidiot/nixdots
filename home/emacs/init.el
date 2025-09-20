@@ -1267,7 +1267,7 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
   :hook (dired-mode . auto-revert-mode)
   :custom
   (dired-dwim-target t)
-  (dired-mouse-drag t)
+  (dired-mouse-drag-files t)
   (dired-listing-switches "-alh")
   :general-config
   (:keymaps 'dired-mode-map :states '(normal insert visual motion)
