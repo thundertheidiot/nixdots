@@ -1265,8 +1265,10 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
   :demand t
   :hook (dired-mode . hl-line-mode)
   :hook (dired-mode . auto-revert-mode)
-  :init
-  (setq dired-mouse-drag t)
+  :custom
+  (dired-dwim-target t)
+  (dired-mouse-drag t)
+  (dired-listing-switches "-alh")
   :general-config
   (:keymaps 'dired-mode-map :states '(normal insert visual motion)
 	    "SPC" nil
@@ -1276,8 +1278,6 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
   (:keymaps 'dired-mode-map :states '(normal visual motion) :prefix "SPC"
 	    "oe" '("eshell in this window" . (lambda () (interactive) (th/eshell))))
   :config
-  (setq dired-listing-switches "-alh")
-  (setq dired-mouse-drag t)
   (unless (display-graphic-p)
     (general-def dired-mode-map "DEL" 'dired-up-directory)))
 
