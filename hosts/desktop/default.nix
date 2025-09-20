@@ -230,6 +230,11 @@
     8188 # comfyui
   ];
 
+  networking.interfaces."wlp74s0".wakeOnLan = {
+    enable = true;
+    policy = "unicast";
+  };
+
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";
