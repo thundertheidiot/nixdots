@@ -119,14 +119,13 @@ in {
         "share.${mainDomain}" = {
           module = "http_file_share";
           settings = {
-            http_upload_file_size_limit = "100*1024*1024";
-            http_upload_file_daily_quota = "1024*1024*1024";
-            http_upload_file_global_quota = "1024*1024*2048";
-
             http_file_share_access = cfg.xmppDomains;
 
-            http_host = "${mainDomain}";
+            http_file_share_size_limit = 100 * 1024 * 1024;
+            http_file_share_daily_quota = 1024 * 1024 * 1024;
+            http_file_share_global_quota = 1024 * 1024 * 2048;
 
+            # http_host = "${mainDomain}";
             # http_external_url = "https://${mainDomain}";
           };
         };

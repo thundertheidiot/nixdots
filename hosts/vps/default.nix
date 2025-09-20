@@ -30,6 +30,7 @@ in {
     time.timeZone = "Europe/Helsinki";
 
     users.users.root.hashedPassword = "!";
+    hardware.enableRedistributableFirmware = false;
 
     meow = {
       workstation.enable = false;
@@ -40,6 +41,8 @@ in {
 
       ssh.key = false;
       ssh.rootKey = true;
+
+      gpu = "none";
 
       server = {
         publicSSH = true;
