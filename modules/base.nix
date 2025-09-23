@@ -54,7 +54,7 @@ in {
     # doesn't work on lix, doesn't work with flakes anyway?
     system.tools.nixos-option.enable = false;
 
-    nix.package = pkgs.lixPackageSets.latest.lix;
+    nix.package = pkgs.nixVersions.latest;
 
     nix.settings =
       {
