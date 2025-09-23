@@ -25,6 +25,7 @@ in {
         ])
         [
           emacs-lsp-booster
+          emacs-all-the-icons-fonts
         ]
       ];
 
