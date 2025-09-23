@@ -618,7 +618,8 @@ Preserve window configuration when pressing ESC."
   (eglot-connect-timeout nil)
   :config
   (fset #'jsonrpc--log-event #'ignore)
-  ;; (fset (alist-get '(csharp-mode csharp-ts-mode) eglot-server-programs) '("OmniSharp" "-lsp"))
+  ;; nixos executable is OmniSharp
+  (setf (alist-get '(csharp-mode csharp-ts-mode) eglot-server-programs nil nil #'equal) '("OmniSharp" "-lsp"))
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "c" '(:ignore t :wk "code")
