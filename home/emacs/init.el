@@ -618,6 +618,7 @@ Preserve window configuration when pressing ESC."
   (eglot-connect-timeout nil)
   :config
   (fset #'jsonrpc--log-event #'ignore)
+  ;; (fset (alist-get '(csharp-mode csharp-ts-mode) eglot-server-programs) '("OmniSharp" "-lsp"))
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "c" '(:ignore t :wk "code")
@@ -717,8 +718,6 @@ Preserve window configuration when pressing ESC."
   :mode "\\.lua\\'"
   :hook (lua-mode . eglot-ensure))
 
-
-
 (use-package gdscript-mode
   :mode "\\.gdscript\\'"
   :hook (gdscript-mode . eglot-ensure))
@@ -727,7 +726,7 @@ Preserve window configuration when pressing ESC."
 (use-package gdshader-mode)
 
 (use-package csharp-mode
-  :require nil ;; comes with emacs
+  :ensure nil
   :mode "\\.cs\\'"
   :hook
   (csharp-mode . eglot-ensure)

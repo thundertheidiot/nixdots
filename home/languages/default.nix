@@ -18,6 +18,7 @@ in {
     "rust"
     "lua"
     "c_cxx"
+    "c_sharp"
     "python"
     "bash"
     "web"
@@ -44,6 +45,7 @@ in {
           "rust"
           "lua"
           "c_cxx"
+          "c_sharp"
           "python"
           "bash"
           "web"
@@ -73,6 +75,10 @@ in {
             ])
             (mkIf cfg.c_cxx [
               clang-tools
+            ])
+            (mkIf cfg.c_sharp [
+              dotnetCorePackages.sdk_8_0-bin
+              omnisharp-roslyn
             ])
             (mkIf cfg.bash [
               nodePackages.bash-language-server
