@@ -648,7 +648,7 @@ Preserve window configuration when pressing ESC."
   :hook
   (prog-mode . flycheck-mode)
   (eglot-managed-mode . flycheck-mode)
-  (flycheck-mode . (lambda () (flycheck-set-indication-mode 'right-fringe)))
+  (flycheck-mode . (lambda () (flycheck-set-indication-mode 'left-fringe)))
   :general-config
   (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
 	   "cn" '("next error" . flycheck-next-error)
