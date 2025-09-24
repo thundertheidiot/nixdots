@@ -428,7 +428,7 @@ Preserve window configuration when pressing ESC."
   (org-agenda-files (org-roam-list-files))
   :config
   (unless (file-directory-p org-roam-directory)
-    (make-directory org-roam-directory))
+    (make-directory org-roam-directory t))
   (org-roam-db-autosync-mode)
   (org-roam-setup)
   :general
