@@ -422,13 +422,20 @@ Preserve window configuration when pressing ESC."
 		    (unless (ignore-errors (org-open-at-point))
 		      (evil-ret)))))
 
+(use-package evil-org
+  :after org
+  :hook (org-mode . evil-org-mode)
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+
 (use-package org-roam
   :custom
   (org-roam-directory (file-truename "~/Documents/org/roam"))
-  (org-agenda-files (org-roam-list-files))
   :config
   (unless (file-directory-p org-roam-directory)
     (make-directory org-roam-directory t))
+  (setq org-agenda-files (org-roam-list-files))
   (org-roam-db-autosync-mode)
   (org-roam-setup)
   :general
@@ -608,6 +615,12 @@ Preserve window configuration when pressing ESC."
   :after magit
   :hook (magit-mode . magit-todos-mode)
   :config (magit-todos-mode 1))
+
+(use-package yasnippet
+  :custom
+  (yas-snippets-dirs (expand-file-name "snippets" user-emacs-directory))
+  :config
+  (yas-global-mode 1))
 
 (use-package eglot
   :commands eglot-ensure
