@@ -44,7 +44,8 @@ in {
 
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBKwHM/9spQfyeNIl/p8N8XBuoKj8UrhuhhlbEwkrgjZ thunder@disroot.org"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE076iY58F/FczOv+ct8OKh2ByMaxN/a7+52rjdF6Vmv"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE076iY58F/FczOv+ct8OKh2ByMaxN/a7+52rjdF6Vmv" # orgzly
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMKvFyn0+PoSl4PWZPyg2A+feiC3wgYElw+p2MPLTmy u0_a298@localhost" # termux
       ];
     };
 
