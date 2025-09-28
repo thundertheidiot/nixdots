@@ -1053,6 +1053,12 @@ Preserve window configuration when pressing ESC."
 						(consult-buffer)))
 	   ))
 
+(use-package consult-flycheck
+  :general
+  (:states '(normal visual motion) :keymaps 'override :prefix "SPC"
+	   "sd" '("flycheck" . consult-flycheck)
+	   ))
+
 (defun advice!-consult-exwm-preview-fix (&rest _args)
   "Kludge to stop EXWM buffers from stealing focus during Consult previews."
   (when (derived-mode-p 'exwm-mode)
