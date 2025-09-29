@@ -397,6 +397,7 @@ Preserve window configuration when pressing ESC."
   (org-src-preserve-indentation t)
   (org-src-tab-acts-natively t)
   (org-startup-with-inline-images t)
+  (org-log-done 'time)
   (calendar-week-start-day 1)
   (org-babel-load-languages '((emacs-lisp . t)
 			      (shell . t)
@@ -787,12 +788,15 @@ Preserve window configuration when pressing ESC."
 ;;   (inheritenv-add-advice 'shell-command-to-string))
 
 (use-package gptel
+  :custom
+  (gptel-model 'gpt-4.1)
   :config
   (setq gptel-backend (gptel-make-gh-copilot "Copilot"))
   (add-to-list 'gptel-tools
 	       (gptel-make-tool
 		:function (lambda (query)
 			    (with-temp-message (format "Searching for: `%s`" query)
+			      ;; provided by nixos
 			      (let ((url (format "http://127.0.0.1:8080/search?q=%s&format=json"
 						 (url-hexify-string query))))
 				(with-temp-buffer

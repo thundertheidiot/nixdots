@@ -9,8 +9,8 @@ stdenv.mkDerivation {
   name = "duck_game_rebuilt";
 
   src = fetchzip {
-    url = "https://github.com/TheFlyingFoool/DuckGameRebuilt/releases/download/v1.4.2.2/DuckGameRebuilt.zip";
-    hash = "sha256-p3NnLnVMM4cAUsEToerbABGRZu8Tpc14xiuEAELQ5nI=";
+    url = "https://github.com/TheFlyingFoool/DuckGameRebuilt/releases/download/v1.4.6.1/DuckGameRebuilt.zip";
+    hash = "sha256-D8/1Bq2Sk4Ai00D/j6UT9i1KT/8cyIlDN09/WMSMGOo=";
     stripRoot = false;
   };
 
