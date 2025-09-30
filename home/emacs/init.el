@@ -275,6 +275,12 @@ Preserve window configuration when pressing ESC."
   :config
   (evil-better-visual-line-on))
 
+;; (use-package evil-textobj-tree-sitter
+;;   :after evil
+;;   :config
+;;   (define-key evil-outer-text-objects-map "f" (evil-treeobj-tree-sitter-get-textobj "function.outer"))
+;;   (define-key evil-inner-text-objects-map "f" (evil-treeobj-tree-sitter-get-textobj "function.inner")))
+
 (use-package which-key
   :demand t
   :diminish which-key-mode
