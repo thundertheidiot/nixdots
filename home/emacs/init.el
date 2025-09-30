@@ -59,6 +59,7 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (global-display-line-numbers-mode 1)
+(global-prettify-symbols-mode 1)
 (global-visual-line-mode t)
 (savehist-mode 1)
 
@@ -1427,6 +1428,12 @@ MPV is called with MPV-ARGS and MPD is called with MPD-ARGS."
   :config
   (load-theme 'doom-vibrant t)
   (doom-themes-org-config))
+
+(use-package ligature
+  :config
+  (ligature-set-ligatures 'prog-mode
+			  '("==" "===" "!=" "!==" "&&" "||"))
+  (global-ligature-mode t))
 
 (use-package all-the-icons)
 
