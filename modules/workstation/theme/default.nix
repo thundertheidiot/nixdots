@@ -200,8 +200,8 @@ in {
           name = "Cantarell";
         };
         monospace = {
-          package = pkgs.udev-gothic-nf;
-          name = "UDEV Gothic 35NF";
+          package = pkgs.maple-mono.NF-CN;
+          name = "Maple Mono NF CN";
         };
         emoji = {
           package = pkgs.noto-fonts-color-emoji;

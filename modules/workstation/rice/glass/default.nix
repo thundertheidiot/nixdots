@@ -121,7 +121,7 @@ in {
           * {
           	border: none;
           	font-family:
-          		Inter, System-ui, "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif;
+          		Inter, System-ui, "Symbols Nerd Font", sans-serif;
           	font-size: 13.5px;
           	font-weight: 500;
           	min-height: 0;

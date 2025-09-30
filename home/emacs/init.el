@@ -487,6 +487,12 @@ Preserve window configuration when pressing ESC."
   (olivetti-mode-on . (lambda () (olivetti-set-width olivetti-body-width)))
   (org-mode . olivetti-mode))
 
+(use-package pdf-tools
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
+  :config
+  (evil-collection-pdf-setup))
+
 (use-package magit
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
