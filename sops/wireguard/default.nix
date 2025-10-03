@@ -1,12 +1,7 @@
 let
   shared = {
-    wg_home_psk = {
-      sopsFile = ./home-wg-pskey;
-      format = "binary";
-    };
-
-    wg_vps_psk = {
-      sopsFile = ./vps-wg-pskey;
+    wg_psk = {
+      sopsFile = ./wg-pskey;
       format = "binary";
     };
   };

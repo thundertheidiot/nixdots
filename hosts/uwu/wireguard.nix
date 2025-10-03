@@ -17,7 +17,7 @@ in {
         {
           allowedIPs = ["10.100.0.1/32"];
           publicKey = builtins.readFile keys.pubkeyVps;
-          presharedKeyFile = config.sops.secrets.wg_vps_psk.path;
+          presharedKeyFile = config.sops.secrets.wg_psk.path;
           persistentKeepalive = 25;
 
           endpoint = "95.216.151.56:51820";
