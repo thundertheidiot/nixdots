@@ -20,7 +20,7 @@ in {
         {
           allowedIPs = ["10.100.0.2/32"];
           publicKey = builtins.readFile keys.pubkeyHome;
-          presharedKeyFile = config.sops.secrets.wg_vps_psk.path;
+          presharedKeyFile = config.sops.secrets.wg_psk.path;
         }
       ];
     };

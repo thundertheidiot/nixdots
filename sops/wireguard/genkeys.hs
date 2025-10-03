@@ -17,12 +17,13 @@ makeKeys :: String -> IO ()
 makeKeys name = do
   key <- genkey
   pubkey <- pubkey key
-  pskey <- genpsk
   
   writeFile (name ++ "-wg-pubkey") pubkey
   encrypt key >>= writeFile (name ++ "-wg-privkey")
-  encrypt pskey >>= writeFile (name ++ "-wg-pskey")
   return ()
 
-main = 
+main = do
+  pskey <- genpsk
+  encrypt pskey >>= writeFile "wg-pskey"
+  
   mapM_ makeKeys ["home", "vps"]
