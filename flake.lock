@@ -1215,11 +1215,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1757859035,
-        "narHash": "sha256-WwGyXYi7Fin9GgNMwC+3cGvTZdDqHRAJ+bOgWJibroM=",
+        "lastModified": 1759413468,
+        "narHash": "sha256-qacaXwAJ9sciuxwREsGZBeSRaE9BSqQR2b9M52NhCMA=",
         "owner": "thundertheidiot",
         "repo": "leptos-kotiboksi",
-        "rev": "3829ed3ace5de062515d7211e7a2b3eae2e6517f",
+        "rev": "2114d1ae8bced589dd878ed9b96f243d90b31559",
         "type": "github"
       },
       "original": {

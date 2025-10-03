@@ -192,8 +192,8 @@ Preserve window configuration when pressing ESC."
     (eval-region beg end)
     (evil-normal-state)))
 
-;; (setq split-width-threshold 160)
-;; (setq split-height-threshold 80)
+(setq split-width-threshold 180)
+(setq split-height-threshold 80)
 (defun th/intelligent-split (&optional force)
   (interactive)
   (let* ((width (window-total-width))
