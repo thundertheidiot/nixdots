@@ -1237,11 +1237,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1758007808,
-        "narHash": "sha256-BO9TbPaJT4UVfuzCH6bQXPHHJyKPyC59wDedRNGSsBE=",
+        "lastModified": 1759772320,
+        "narHash": "sha256-M0NFIdNmIyhb6i6CREc57ZRyGlfRIWJZn/NlkbeHOkY=",
         "owner": "thundertheidiot",
         "repo": "meowdzbot",
-        "rev": "c77718c6188c8a946f901d56526020e7ffcb9133",
+        "rev": "e084e17096c2b7334c6da97c21ac718205b009a8",
         "type": "github"
       },
       "original": {
