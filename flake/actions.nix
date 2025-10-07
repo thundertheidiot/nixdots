@@ -83,11 +83,11 @@
         name = "Update flake.lock";
 
         on = {
-          schedule = [
-            {
-              cron = "0 03 */2 * *";
-            }
-          ];
+          # schedule = [
+          #   {
+          #     cron = "0 03 */2 * *";
+          #   }
+          # ];
           workflow_dispatch = {};
         };
 
