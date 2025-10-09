@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }: let
   root = inputs.self.outPath;
@@ -31,5 +32,20 @@ in {
       "net.ipv4.ip_forward" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
     };
+
+    # proxy ssh from home
+    services.nginx.package = pkgs.nginxMainline;
+    services.nginx.streamConfig = ''
+      upstream home_ssh {
+        server 10.0.0.2:22;
+      }
+
+      server {
+        listen 2222;
+        proxy_pass home_ssh;
+      }
+    '';
+
+    networking.firewall.allowedTCPPorts = [2222];
   };
 }
