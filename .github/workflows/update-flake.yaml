@@ -35,6 +35,8 @@ jobs:
   update:
     needs:
     - build-matrix
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5

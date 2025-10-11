@@ -143,6 +143,7 @@
         jobs.update =
           {
             needs = ["build-matrix"];
+            permissions.contents = "write";
           }
           // mkBasicNix [
             {
