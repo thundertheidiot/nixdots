@@ -66,6 +66,7 @@
           uses = "cachix/install-nix-action@v31";
           "with" = {
             github_access_token = "\${{ secrets.GITHUB_TOKEN }}";
+            install_options = "--no-daemon";
           };
         };
 
