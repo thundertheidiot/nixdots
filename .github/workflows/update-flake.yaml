@@ -1,5 +1,5 @@
 jobs:
-  update:
+  build-matrix:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
@@ -7,20 +7,50 @@ jobs:
       with:
         hatchet-protocol: rampage
         witness-carnage: true
-    - env:
-        NIX_INSTALLER_EXTRA_CONF: |-
-          trusted-users = root runner
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      name: Lix Installer
-      run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix
-        | sh -s -- install --no-confirm
+    - name: Nix Installer
+      uses: cachix/install-nix-action@v31
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Cachix
       uses: cachix/cachix-action@v16
       with:
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
         name: meowos
-    - name: Update Flake Inputs
-      run: nix flake update --accept-flake-config
+    - name: Download flake.lock
+      uses: actions/download-artifact@v4
+      with:
+        name: flake-lock
+    - name: Build ${{ matrix.target }}
+      run: nix build .#${{ matrix.target }} --print-build-logs
+    strategy:
+      matrix:
+        target:
+        - nixosConfigurations.vps.pkgs.meowdzbot
+        - nixosConfigurations.vps.pkgs.sodexobot
+        - nixosConfigurations.vps.pkgs.leptos-kotiboksi
+  update:
+    needs:
+    - build-crates
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: wimpysworld/nothing-but-nix@v6
+      with:
+        hatchet-protocol: rampage
+        witness-carnage: true
+    - name: Nix Installer
+      uses: cachix/install-nix-action@v31
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Cachix
+      uses: cachix/cachix-action@v16
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: meowos
+    - name: Download flake.lock
+      uses: actions/download-artifact@v4
+      with:
+        name: flake-lock
     - name: Build uwu
       run: nix build --accept-flake-config .#nixosConfigurations.uwu.config.system.build.toplevel
     - name: Build vps
@@ -35,8 +65,31 @@ jobs:
         file_pattern: flake.lock
         skip_dirty_check: false
         skip_fetch: true
+  update-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: wimpysworld/nothing-but-nix@v6
+      with:
+        hatchet-protocol: rampage
+        witness-carnage: true
+    - name: Nix Installer
+      uses: cachix/install-nix-action@v31
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Cachix
+      uses: cachix/cachix-action@v16
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: meowos
+    - name: Update flake.lock
+      run: nix flake update --accept-flake-config
+    - name: Upload flake.lock
+      uses: actions/upload-artifact@v4
+      with:
+        name: flake-lock
+        path: flake.lock
+        retention-days: 1
 name: Update flake.lock
 'on':
-  schedule:
-  - cron: 0 03 */2 * *
   workflow_dispatch: {}
