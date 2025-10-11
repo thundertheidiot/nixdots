@@ -46,6 +46,7 @@
           "with" = {
             hatchet-protocol = "rampage";
             witness-carnage = true;
+            nix-permission-edict = true;
           };
         };
 
