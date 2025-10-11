@@ -92,4 +92,6 @@ jobs:
         retention-days: 1
 name: Update flake.lock
 'on':
+  schedule:
+  - cron: 0 03 */4 * *
   workflow_dispatch: {}
