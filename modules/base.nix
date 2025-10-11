@@ -73,6 +73,7 @@ in {
       # TODO check this
       permittedInsecurePackages = [
         "libsoup-2.74.3"
+        "mbedtls-2.28.10" # TODO insecure check why
       ];
     };
 
