@@ -49,15 +49,23 @@
           };
         };
 
+        # nixInstaller = {
+        #   name = "Lix Installer";
+        #   env = {
+        #     NIX_INSTALLER_EXTRA_CONF = ''
+        #       trusted-users = root runner
+        #       access-tokens = github.com=''${{ secrets.GITHUB_TOKEN }}
+        #     '';
+        #   };
+        #   run = "curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm";
+        # };
+
         nixInstaller = {
-          name = "Lix Installer";
-          env = {
-            NIX_INSTALLER_EXTRA_CONF = ''
-              trusted-users = root runner
-              access-tokens = github.com=''${{ secrets.GITHUB_TOKEN }}
-            '';
+          name = "Nix Installer";
+          uses = "cachix/install-nix-action@v31";
+          "with" = {
+            github_access_token = "\${{ secrets.GITHUB_TOKEN }}";
           };
-          run = "curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm";
         };
 
         cachix = {
