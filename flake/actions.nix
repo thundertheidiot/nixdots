@@ -99,7 +99,9 @@
           workflow_dispatch = {};
         };
 
-        jobs.update-lockfile = mkBasicNix [
+        jobs.update-lockfile.steps = [
+          blocks.checkout
+          blocks.nixInstaller
           {
             name = "Update flake.lock";
             run = "nix flake update --accept-flake-config";
@@ -117,6 +119,7 @@
 
         jobs.build-matrix =
           {
+            needs = ["update-lockfile"];
             strategy.matrix.target = [
               "nixosConfigurations.vps.pkgs.meowdzbot"
               "nixosConfigurations.vps.pkgs.sodexobot"
