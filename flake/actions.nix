@@ -137,7 +137,7 @@
 
         jobs.update =
           {
-            needs = ["build-crates"];
+            needs = ["build-matrix"];
           }
           // mkBasicNix [
             {
