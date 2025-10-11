@@ -1,5 +1,7 @@
 jobs:
   build-matrix:
+    needs:
+    - update-lockfile
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
@@ -69,19 +71,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
-    - uses: wimpysworld/nothing-but-nix@v6
-      with:
-        hatchet-protocol: rampage
-        witness-carnage: true
     - name: Nix Installer
       uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Cachix
-      uses: cachix/cachix-action@v16
-      with:
-        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-        name: meowos
     - name: Update flake.lock
       run: nix flake update --accept-flake-config
     - name: Upload flake.lock
