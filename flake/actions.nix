@@ -99,26 +99,67 @@
           workflow_dispatch = {};
         };
 
-        jobs.update = mkBasicNix [
+        jobs.update-lockfile = mkBasicNix [
           {
-            name = "Update Flake Inputs";
+            name = "Update flake.lock";
             run = "nix flake update --accept-flake-config";
           }
-          buildAllHosts
           {
-            name = "Commit";
-            uses = "stefanzweifel/git-auto-commit-action@v5";
+            name = "Upload flake.lock";
+            uses = "actions/upload-artifact@v4";
             "with" = {
-              commit_message = "chore(deps): bump flake.lock";
-              commit_user_name = "Flake Bot Update";
-              commit_author = "Flake Bot Update <actions@github.com>";
-              branch = "main";
-              file_pattern = "flake.lock";
-              skip_dirty_check = false;
-              skip_fetch = true;
+              name = "flake-lock";
+              path = "flake.lock";
+              retention-days = 1;
             };
           }
         ];
+
+        jobs.build-matrix =
+          {
+            strategy.matrix.target = [
+              "nixosConfigurations.vps.pkgs.meowdzbot"
+              "nixosConfigurations.vps.pkgs.sodexobot"
+              "nixosConfigurations.vps.pkgs.leptos-kotiboksi"
+            ];
+          }
+          // mkBasicNix [
+            {
+              name = "Download flake.lock";
+              uses = "actions/download-artifact@v4";
+              "with".name = "flake-lock";
+            }
+            {
+              name = "Build \${{ matrix.target }}";
+              run = "nix build .#\${{ matrix.target }} --print-build-logs";
+            }
+          ];
+
+        jobs.update =
+          {
+            needs = ["build-crates"];
+          }
+          // mkBasicNix [
+            {
+              name = "Download flake.lock";
+              uses = "actions/download-artifact@v4";
+              "with".name = "flake-lock";
+            }
+            buildAllHosts
+            {
+              name = "Commit";
+              uses = "stefanzweifel/git-auto-commit-action@v5";
+              "with" = {
+                commit_message = "chore(deps): bump flake.lock";
+                commit_user_name = "Flake Bot Update";
+                commit_author = "Flake Bot Update <actions@github.com>";
+                branch = "main";
+                file_pattern = "flake.lock";
+                skip_dirty_check = false;
+                skip_fetch = true;
+              };
+            }
+          ];
       };
     };
   };

@@ -7,13 +7,10 @@ jobs:
       with:
         hatchet-protocol: rampage
         witness-carnage: true
-    - env:
-        NIX_INSTALLER_EXTRA_CONF: |-
-          trusted-users = root runner
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      name: Lix Installer
-      run: curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix
-        | sh -s -- install --no-confirm
+    - name: Nix Installer
+      uses: cachix/install-nix-action@v31
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Cachix
       uses: cachix/cachix-action@v16
       with:
@@ -27,8 +24,6 @@ jobs:
       run: nix build --accept-flake-config .#nixosConfigurations.framework.config.system.build.toplevel
     - name: Build iso
       run: nix build --accept-flake-config .#nixosConfigurations.iso.config.system.build.toplevel
-    - name: Build miniso
-      run: nix build --accept-flake-config .#nixosConfigurations.miniso.config.system.build.toplevel
     - name: Build t440p
       run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
     - name: Build uwu
