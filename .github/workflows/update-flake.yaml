@@ -8,6 +8,7 @@ jobs:
     - uses: wimpysworld/nothing-but-nix@v6
       with:
         hatchet-protocol: rampage
+        nix-permission-edict: true
         witness-carnage: true
     - name: Nix Installer
       uses: cachix/install-nix-action@v31
@@ -39,6 +40,7 @@ jobs:
     - uses: wimpysworld/nothing-but-nix@v6
       with:
         hatchet-protocol: rampage
+        nix-permission-edict: true
         witness-carnage: true
     - name: Nix Installer
       uses: cachix/install-nix-action@v31
