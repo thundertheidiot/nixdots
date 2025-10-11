@@ -198,9 +198,10 @@ Preserve window configuration when pressing ESC."
   (interactive)
   (let* ((width (window-total-width))
 	 (height (window-total-height))
+	 (aspect (/ (float width) (float height)))
 	 (window (cond ((and (< width split-width-threshold) (< height split-height-threshold) (not force)) (current-buffer))
-		       ((> (+ 10 (* 2 height)) width) (split-window-below))
-		       (t (split-window-right)))))
+		       ((> aspect 2.3) (split-window-right))
+		       (t (split-window-below)))))
     (ignore-errors (balance-windows (window-parent)))
     window))
 
@@ -234,6 +235,10 @@ Preserve window configuration when pressing ESC."
   :config
   (evil-set-undo-system evil-undo-system)
   (evil-mode))
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
 
 (use-package evil-collection
   :demand t
