@@ -30,7 +30,7 @@ jobs:
         - nixosConfigurations.vps.pkgs.leptos-kotiboksi
   update:
     needs:
-    - build-crates
+    - build-matrix
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
