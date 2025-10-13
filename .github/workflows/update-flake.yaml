@@ -25,13 +25,17 @@ jobs:
       with:
         name: flake-lock
     - name: Build ${{ matrix.target }}
-      run: nix build .#${{ matrix.target }} --print-build-logs
+      run: |-
+        for i in ${{ matrix.target }}; do
+          nix build .#$i --print-build-logs
+        done
     strategy:
       matrix:
         target:
-        - nixosConfigurations.vps.pkgs.meowdzbot
-        - nixosConfigurations.vps.pkgs.sodexobot
+        - nixosConfigurations.vps.pkgs.meowdzbot nixosConfigurations.vps.pkgs.sodexobot
         - nixosConfigurations.vps.pkgs.leptos-kotiboksi
+        - nixosConfigurations.framework.pkgs.krita nixosConfigurations.framework.pkgs.element-desktop
+          nixosConfigurations.framework.pkgs.blender
   update:
     needs:
     - build-matrix
@@ -63,6 +67,8 @@ jobs:
       run: nix build --accept-flake-config .#nixosConfigurations.uwu.config.system.build.toplevel
     - name: Build vps
       run: nix build --accept-flake-config .#nixosConfigurations.vps.config.system.build.toplevel
+    - name: Build framework
+      run: nix build --accept-flake-config .#nixosConfigurations.framework.config.system.build.toplevel
     - name: Commit
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
