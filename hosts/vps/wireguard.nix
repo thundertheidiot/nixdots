@@ -37,7 +37,7 @@ in {
     services.nginx.package = pkgs.nginxMainline;
     services.nginx.streamConfig = ''
       upstream home_ssh {
-        server 10.0.0.2:22;
+        server 10.100.0.2:22;
       }
 
       server {

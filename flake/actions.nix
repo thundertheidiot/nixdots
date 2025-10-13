@@ -23,7 +23,7 @@
       buildAllHosts = map (n: {
         name = "Build ${n}";
         run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-      }) ["uwu" "vps"];
+      }) ["uwu" "vps" "framework"];
 
       mkBasicNix = list: {
         steps =
@@ -122,10 +122,20 @@
         jobs.build-matrix =
           {
             needs = ["update-lockfile"];
-            strategy.matrix.target = [
-              "nixosConfigurations.vps.pkgs.meowdzbot"
-              "nixosConfigurations.vps.pkgs.sodexobot"
-              "nixosConfigurations.vps.pkgs.leptos-kotiboksi"
+            strategy.matrix.target = let
+              inherit (lib) concatStringsSep;
+              hostPackage = h: p: "nixosConfigurations.${h}.pkgs.${p}";
+              join = concatStringsSep " ";
+
+              vpsPackage = hostPackage "vps";
+              vpsPkgs = map vpsPackage;
+
+              frameworkPackage = hostPackage "framework";
+              fwPkgs = map frameworkPackage;
+            in [
+              (join (vpsPkgs ["meowdzbot" "sodexobot"]))
+              (vpsPackage "leptos-kotiboksi")
+              (join (fwPkgs ["krita" "element-desktop" "blender"]))
             ];
           }
           // mkBasicNix [
@@ -136,7 +146,11 @@
             }
             {
               name = "Build \${{ matrix.target }}";
-              run = "nix build .#\${{ matrix.target }} --print-build-logs";
+              run = ''
+                for i in ''${{ matrix.target }}; do
+                  nix build .#$i --print-build-logs
+                done
+              '';
             }
           ];
 
