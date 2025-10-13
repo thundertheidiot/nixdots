@@ -29,7 +29,7 @@
   AnonymiseFileNames = {
     anonymiseByDefault = true;
     consistent = "image";
-    enabled = true;
+    enabled = false;
     method = 0;
     randomisedLength = 7;
   };
