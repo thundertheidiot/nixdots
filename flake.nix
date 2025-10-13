@@ -22,6 +22,7 @@
 
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.xz";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     flake-parts = {

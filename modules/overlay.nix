@@ -19,6 +19,13 @@
           inherit (final) system config;
         };
 
+        unstable = import inputs.nixpkgs-unstable {
+          inherit (final) system config;
+        };
+
+        # unstable-small occasionally results in electron rebuilds
+        inherit (final.unstable) element-desktop;
+
         mpkgs = (import "${inputs.self.outPath}/pkgs") {pkgs = final;};
 
         avrdude = prev.avrdude.overrideAttrs (old: {
