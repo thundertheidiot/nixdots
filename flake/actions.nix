@@ -135,7 +135,7 @@
             in [
               (join (vpsPkgs ["meowdzbot" "sodexobot"]))
               (vpsPackage "leptos-kotiboksi")
-              (join (fwPkgs ["krita" "element-desktop" "blender"]))
+              (join (fwPkgs ["krita" "blender"]))
             ];
           }
           // mkBasicNix [
