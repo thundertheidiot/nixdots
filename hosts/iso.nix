@@ -68,6 +68,16 @@
     #   }
     # '';
 
+    # nvidia drivers for nvidia systems
+    hardware.graphics.enable = true;
+    services.xserver.videoDrivers = ["nvidia" "modesetting"];
+
+    hardware.nvidia = {
+      modesettings.enable = true;
+      open = false;
+      package = cnfig.boot.kernelPackages.nvidiaPackages.beta;
+    };
+
     home-manager.sharedModules = [
       {
         home.stateVersion = "25.05";
@@ -76,12 +86,8 @@
 
         home.packages = with pkgs; [
           stress-ng
-          mprime
-          furmark
           glxinfo
           unigine-heaven
-          unigine-superposition
-          unigine-valley
         ];
       }
     ];

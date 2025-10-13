@@ -50,17 +50,6 @@
           };
         };
 
-        # nixInstaller = {
-        #   name = "Lix Installer";
-        #   env = {
-        #     NIX_INSTALLER_EXTRA_CONF = ''
-        #       trusted-users = root runner
-        #       access-tokens = github.com=''${{ secrets.GITHUB_TOKEN }}
-        #     '';
-        #   };
-        #   run = "curl --proto '=https' --tlsv1.2 -sSf -L https://install.lix.systems/lix | sh -s -- install --no-confirm";
-        # };
-
         nixInstaller = {
           name = "Nix Installer";
           uses = "cachix/install-nix-action@v31";
@@ -148,7 +137,7 @@
               name = "Build \${{ matrix.target }}";
               run = ''
                 for i in ''${{ matrix.target }}; do
-                  nix build .#$i --print-build-logs
+                  nix build .#$i --print-build-logs --accept-flake-config
                 done
               '';
             }

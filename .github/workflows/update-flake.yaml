@@ -27,7 +27,7 @@ jobs:
     - name: Build ${{ matrix.target }}
       run: |-
         for i in ${{ matrix.target }}; do
-          nix build .#$i --print-build-logs
+          nix build .#$i --print-build-logs --accept-flake-config
         done
     strategy:
       matrix:
