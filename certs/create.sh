@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash openssl sops
+#! nix-shell -i bash -p bash openssl sops jq
 
 set -euo pipefail
 
@@ -7,7 +7,11 @@ set -euo pipefail
 CERT_DAYS=825
 CA_DAYS=1825
 COMMON_NAME="*.home"
-SAN_DNS="DNS:auth.home,DNS:n8n.home,DNS:reddit.home,DNS:*.home"
+# SAN_DNS="DNS:auth.home,DNS:n8n.home,DNS:reddit.home,DNS:firefox.home,DNS:*.home"
+SAN_DNS=$(nix eval --impure --expr '(import ./default.nix).domains' --json \
+	      | jq -r '[.[] | "DNS:" + .] + ["DNS:*.home"] | join(",")')
+
+echo "$SAN_DNS"
 
 # Generate private key for root CA
 openssl genrsa -out rootCA.key 4096
