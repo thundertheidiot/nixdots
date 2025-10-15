@@ -24,6 +24,7 @@
     "torrent.home"
     "radarr.home"
     "sonarr.home"
+    "soulseek.home"
     "prowlarr.home"
     "lidarr.home"
     "bazarr.home"
