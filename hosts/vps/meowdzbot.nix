@@ -18,6 +18,9 @@
       Type = "simple";
     };
 
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
+
     environment = {
       DATABASE_URL = "/var/lib/meowdzbot/database.db";
     };
