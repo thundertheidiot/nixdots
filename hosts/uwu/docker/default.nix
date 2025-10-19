@@ -32,6 +32,7 @@ in {
     mapAttrs (_: port: {
       root = "/fake";
 
+      addSSL = true;
       sslCertificate = certs."local.crt";
       sslCertificateKey = config.sops.secrets.localKey.path;
 
@@ -56,6 +57,7 @@ in {
     }
     // {
       "immich.home" = {
+        addSSL = true;
         sslCertificate = certs."local.crt";
         sslCertificateKey = config.sops.secrets.localKey.path;
 
@@ -77,6 +79,7 @@ in {
       };
 
       "soulseek.home" = {
+        addSSL = true;
         sslCertificate = certs."local.crt";
         sslCertificateKey = config.sops.secrets.localKey.path;
 
@@ -93,6 +96,7 @@ in {
       };
 
       "firefox.home" = {
+        addSSL = true;
         sslCertificate = certs."local.crt";
         sslCertificateKey = config.sops.secrets.localKey.path;
 
