@@ -96,6 +96,35 @@
       "${pkgs.ckb-next}/bin/ckb-next -b"
     ];
 
+    workstation.extraWaybarModules = {
+      "custom/qbittorrent" = let
+        script = pkgs.stdenv.mkDerivation {
+          name = "qbittorrent-waybar";
+
+          propagatedBuildInputs = [
+            (pkgs.python3.withPackages (pyPkgs: [pyPkgs.requests]))
+          ];
+
+          dontUnpack = true;
+
+          installPhase = ''
+            install -Dm755 ${./qbit.py} $out/bin/qbit
+          '';
+        };
+      in {
+        exec = "${script}/bin/qbit";
+        on-click = "${script}/bin/qbit toggle_limit";
+        on-click-right = "xdg-open https://torrent.home";
+        return-type = "json";
+        restart-interval = "1";
+        format = "{icon} {text}";
+        format-icons = {
+          normal = "<span foreground='green'>󰓅</span> ";
+          alternative = "<span foreground='red'>󰾆</span> ";
+        };
+      };
+    };
+
     workstation.flatpak.graphicalStore = true;
 
     gaming.enable = true;

@@ -7,9 +7,9 @@
 }: let
   inherit (mlib) homeModule mkOpt;
   inherit (lib) mkIf;
-  inherit (lib.types) listOf str;
+  inherit (lib.types) listOf str attrsOf anything;
   inherit (lib.lists) unique elem;
-  inherit (lib.attrsets) mapAttrs' mapAttrsToList filterAttrs;
+  inherit (lib.attrsets) mapAttrs' mapAttrsToList filterAttrs attrNames;
   inherit (builtins) replaceStrings;
 
   work = config.meow.workstation.enable;
@@ -22,6 +22,10 @@ in {
       {
         description = "Mountpoints to filter out in waybar.";
       };
+
+    meow.workstation.extraWaybarModules = mkOpt (attrsOf anything) {} {
+      description = "Extra modules to add to waybar.";
+    };
   };
 
   config = mkIf (work && elem "hyprland" env) (homeModule {
@@ -71,7 +75,9 @@ in {
           modules-right =
             unique (mapAttrsToList (_: fs: "disk#${replaceStrings ["/"] ["_"] fs.device}")
               fileSystems)
-            ++ ["network" "group/system"];
+            ++ (attrNames config.meow.workstation.extraWaybarModules)
+            ++ ["network"]
+            ++ ["group/system"];
 
           "hyprland/workspaces" = {
             format = "{icon}";
@@ -168,7 +174,8 @@ in {
 
           tray = {spacing = 10;};
         }
-        // disks)
+        // disks
+        // config.meow.workstation.extraWaybarModules)
     ];
   });
 }
