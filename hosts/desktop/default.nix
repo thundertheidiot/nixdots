@@ -102,7 +102,7 @@
           name = "qbittorrent-waybar";
 
           propagatedBuildInputs = [
-            (pkgs.python3.withPackages (pyPkgs: [pyPkgs.requests]))
+            (pkgs.python3.withPackages (pkgs: with pkgs; [humanize requests]))
           ];
 
           dontUnpack = true;
