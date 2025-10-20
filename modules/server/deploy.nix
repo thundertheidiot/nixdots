@@ -18,11 +18,13 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    # users.groups.deploy = {};
+  config = mkIf cfg.enable (let
+    # point to real path in nix store
+    nixos-rebuild = getExe' config.system.build.nixos-rebuild "nixos-rebuild";
+  in {
+    users.groups.deploy = {};
     users.users.deploy = {
-      # group = "deploy";
-      group = "wheel";
+      group = "deploy";
       isSystemUser = true;
 
       home = "/tmp/deploy-home";
@@ -34,7 +36,7 @@ in {
         pkgs.writeShellApplication {
           name = "deploy";
           text = ''
-            exec /run/wrappers/bin/sudo nixos-rebuild switch --accept-flake-config --verbose --no-reexec --flake github:thundertheidiot/nixdots#${config.networking.hostName}
+            exec /run/wrappers/bin/sudo ${nixos-rebuild} switch --accept-flake-config --verbose --no-reexec --flake github:thundertheidiot/nixdots#${config.networking.hostName}
           '';
         }
         + "/bin/deploy";
@@ -46,34 +48,12 @@ in {
           users = ["deploy"];
           commands = [
             {
-              command = getExe' config.system.build.nixos-rebuild "nixos-rebuild";
-              options = ["NOPASSWD"];
-            }
-            {
-              command = "/run/current-system/sw/bin/nixos-rebuild";
+              command = nixos-rebuild;
               options = ["NOPASSWD"];
             }
           ];
         }
       ];
     };
-
-    # nix.settings.trusted-users = ["deploy"];
-
-    # security.polkit.extraConfig = ''
-    #   polkit.addRule(function(action, subject) {
-    #     if (subject.user == "deploy") {
-    #       if (action.id == "org.nixos.nixos.rebuild-switch" || action.id.indexOf("org.freedesktop.systemd1") === 0) {
-    #         return polkit.Result.YES;
-    #       }
-    #     }
-    #   });
-    # '';
-
-    # allow deploy user to symlink here
-    # systemd.tmpfiles.rules = [
-    #   "z /nix/var/nix/profiles 0775 root deploy -"
-    #   "z /nix/var/nix/profiles/system 0775 root deploy -"
-    # ];
-  };
+  });
 }
