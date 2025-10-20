@@ -65,6 +65,11 @@ in {
         publicSSH = true;
         webserver = true;
 
+        deploy = {
+          enable = true;
+          pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH43IsqYdCbqrJ6M00a7idsUJSC7hS96Nj3FQOxa355r";
+        };
+
         domains = ["kotiboksi.xyz" "gooptyland.xyz" "saatana.xyz"];
         mainDomain = "kotiboksi.xyz";
         reverseProxy = {
