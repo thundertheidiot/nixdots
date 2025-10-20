@@ -16,6 +16,7 @@ in {
   imports = [
     ./acme.nix
     ./coturn.nix
+    ./deploy.nix
     ./mail.nix
     ./mumble.nix
     ./prosody
