@@ -1,0 +1,12 @@
+jobs:
+  update-vps:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy update to vps
+      run: |-
+        echo "${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+        chmod 600 ~/deploykey
+
+        ssh -i ~/deploykey deploy@kotiboksi.xyz
+'on':
+  workflow_dispatch: {}
