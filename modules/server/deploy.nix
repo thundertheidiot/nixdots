@@ -48,5 +48,11 @@ in {
         }
       });
     '';
+
+    # allow deploy user to symlink here
+    systemd.tmpfiles.rules = [
+      "z /nix/var/nix/profiles 0775 root deploy -"
+      "z /nix/var/nix/profiles/system 0775 root deploy -"
+    ];
   };
 }
