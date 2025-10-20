@@ -66,6 +66,21 @@
             authToken = "\${{ secrets.CACHIX_AUTH_TOKEN }}";
           };
         };
+
+        vpsDeploy = {
+          name = "Deploy update to vps";
+
+          # other half of the setup in modules/server/deploy.nix
+          run = ''
+            echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+            chmod 600 ~/deploykey
+
+            mkdir -p ~/.ssh
+            ssh-keyscan -H kotiboksi.xyz >> ~/.ssh/known_hosts
+
+            ssh -T -o BatchMode=yes -i ~/deploykey deploy@kotiboksi.xyz
+          '';
+        };
       };
     in {
       ".github/workflows/build-hosts.yaml" = {
@@ -125,34 +140,12 @@
           ];
 
         jobs.update-vps.needs = ["build"];
-        jobs.update-vps.steps = [
-          {
-            name = "Deploy update to vps";
-            run = ''
-              echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
-              chmod 600 ~/deploykey
-
-              ssh -i ~/deploykey deploy@kotiboksi.xyz
-            '';
-            # other half of the setup in modules/server/deploy.nix
-          }
-        ];
+        jobs.update-vps.steps = [blocks.vpsDeploy];
       };
 
       ".github/workflows/deploy-vps.yaml" = {
         on.workflow_dispatch = {};
-        jobs.update-vps.steps = [
-          {
-            name = "Deploy update to vps";
-            run = ''
-              echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
-              chmod 600 ~/deploykey
-
-              ssh -i ~/deploykey deploy@kotiboksi.xyz
-            '';
-            # other half of the setup in modules/server/deploy.nix
-          }
-        ];
+        jobs.update-vps.steps = [blocks.vpsDeploy];
       };
 
       ".github/workflows/update-flake.yaml" = {
