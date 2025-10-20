@@ -36,7 +36,7 @@ in {
         pkgs.writeShellApplication {
           name = "deploy";
           text = ''
-            exec /run/wrappers/bin/sudo ${nixos-rebuild} switch --accept-flake-config --verbose --no-reexec --flake github:thundertheidiot/nixdots#${config.networking.hostName}
+            exec /run/wrappers/bin/sudo ${nixos-rebuild} switch --accept-flake-config --no-reexec --flake github:thundertheidiot/nixdots#${config.networking.hostName}
           '';
         }
         + "/bin/deploy";
