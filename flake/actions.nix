@@ -77,6 +77,50 @@
         }) (attrNames config.flake.nixosConfigurations));
       };
 
+      ".github/workflows/build-package.yaml" = {
+        name = "Update and build packages";
+
+        on.workflow_dispatch.inputs = {
+          package = {
+            description = "Package(s) to build";
+            required = true;
+          };
+
+          flake-input = {
+            description = "Flake input(s) to update";
+            required = true;
+          };
+        };
+
+        jobs.build = mkBasicNix [
+          {
+            name = "Update \${{ github.event.inputs.flake-input }}";
+            run = "nix flake update --accept-flake-config \${{ github.event.inputs.flake-input }}";
+          }
+          {
+            name = "Build \${{ github.event.inputs.package }}";
+            run = ''
+              for i in ''${{ github.event.inputs.package }}; do
+                nix build .#$i --print-build-logs --accept-flake-config
+              done
+            '';
+          }
+          {
+            name = "Commit";
+            uses = "stefanzweifel/git-auto-commit-action@v5";
+            "with" = {
+              commit_message = "chore(deps): update \${{ github.event.inputs.flake-input }}";
+              commit_user_name = "Flake Bot Update";
+              commit_author = "Flake Bot Update <actions@github.com>";
+              branch = "main";
+              file_pattern = "flake.lock";
+              skip_dirty_check = false;
+              skip_fetch = true;
+            };
+          }
+        ];
+      };
+
       ".github/workflows/update-flake.yaml" = {
         name = "Update flake.lock";
 

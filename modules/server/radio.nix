@@ -37,6 +37,8 @@ in {
       '';
     };
 
+    systemd.services.radio.wants = ["network-online.target"];
+
     services.liquidsoap.streams = {
       radio = pkgs.writeText "radio.liq" ''
         set("log.stdout", true)
