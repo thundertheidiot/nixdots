@@ -26,6 +26,8 @@ in {
       server.homeServer = "10.100.0.2";
     };
 
+    networking.hostName = "vps";
+
     system.stateVersion = "25.05";
     time.timeZone = "Europe/Helsinki";
 
