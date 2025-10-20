@@ -37,6 +37,17 @@ jobs:
         file_pattern: flake.lock
         skip_dirty_check: false
         skip_fetch: true
+  update-vps:
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy update to vps
+      run: |-
+        echo "${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+        chmod 600 ~/deploykey
+
+        ssh -i ~/deploykey deploy@kotiboksi.xyz
 name: Update and build packages
 'on':
   workflow_dispatch:
