@@ -78,7 +78,7 @@
             mkdir -p ~/.ssh
             ssh-keyscan -H kotiboksi.xyz >> ~/.ssh/known_hosts
 
-            ssh -T -o BatchMode=yes -i ~/deploykey deploy@kotiboksi.xyz
+            ssh -t -v -o BatchMode=yes -i ~/deploykey deploy@kotiboksi.xyz
           '';
         };
       };
