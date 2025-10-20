@@ -19,7 +19,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    users.groups.deploy = {};
     users.users.deploy = {
+      group = "deploy";
       isSystemUser = true;
       openssh.authorizedKeys.keys = [cfg.pubkey];
       shell = pkgs.writeShellApplication {
