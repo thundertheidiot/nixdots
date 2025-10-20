@@ -47,7 +47,10 @@ jobs:
         echo "${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
         chmod 600 ~/deploykey
 
-        ssh -i ~/deploykey deploy@kotiboksi.xyz
+        mkdir -p ~/.ssh
+        ssh-keyscan -H kotiboksi.xyz >> ~/.ssh/known_hosts
+
+        ssh -T -o BatchMode=yes -i ~/deploykey deploy@kotiboksi.xyz
 name: Update and build packages
 'on':
   workflow_dispatch:
