@@ -139,6 +139,22 @@
         ];
       };
 
+      ".github/workflows/deploy-vps.yaml" = {
+        on.workflow_dispatch = {};
+        jobs.update-vps.steps = [
+          {
+            name = "Deploy update to vps";
+            run = ''
+              echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+              chmod 600 ~/deploykey
+
+              ssh -i ~/deploykey deploy@kotiboksi.xyz
+            '';
+            # other half of the setup in modules/server/deploy.nix
+          }
+        ];
+      };
+
       ".github/workflows/update-flake.yaml" = {
         name = "Update flake.lock";
 
