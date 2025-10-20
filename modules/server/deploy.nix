@@ -23,28 +23,30 @@ in {
     users.users.deploy = {
       group = "deploy";
       isSystemUser = true;
+
+      home = "/tmp/deploy-home";
+      createHome = true;
+
       openssh.authorizedKeys.keys = [cfg.pubkey];
-      shell = pkgs.writeShellApplication {
-        name = "deploy";
-        runtimeInputs = [pkgs.nh];
-        text = ''
-          exec sudo nixos-rebuild switch --sudo --accept-flake-config --no-reexec --flake github:thundertheidiot/nixdots#nixosConfigurations.${config.networking.hostName}
-        '';
-      };
+
+      shell =
+        pkgs.writeShellApplication {
+          name = "deploy";
+          text = ''
+            exec nixos-rebuild switch --accept-flake-config --no-reexec --flake github:thundertheidiot/nixdots#${config.networking.hostName}
+          '';
+        }
+        + "/bin/deploy";
     };
 
-    security.sudo-rs = {
-      extraRules = [
-        {
-          users = ["deploy"];
-          commands = [
-            {
-              command = getExe' config.system.build.nixos-rebuild "nixos-rebuild";
-              options = ["NOPASSWD"];
-            }
-          ];
+    nix.settings.trusted-users = ["deploy"];
+
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (subject.user == "deploy" && action.id == "org.nixos.nixos.rebuild-switch") {
+          return polkit.Result.YES;
         }
-      ];
-    };
+      });
+    '';
   };
 }
