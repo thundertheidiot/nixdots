@@ -75,7 +75,7 @@
             echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
             chmod 600 ~/deploykey
 
-            ssh -t -v -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey deploy@kotiboksi.xyz
+            ssh -t -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey deploy@kotiboksi.xyz -p 69
           '';
         };
       };
