@@ -1,23 +1,7 @@
 * MeowOS
 
-Welcome to my horrifyingly convoluted NixOS configuration. This mess currently runs on my desktop (=desktop=), laptop (=t440p=), optiplex homeserver (=server=), testing laptop (=x220=) and an unused smart tv replacment (=digiboksi=). I am very creative with naming things.
+Welcome to my very complicated NixOS configuration. This mess currently runs on my desktop (=desktop=), laptop (=framework=), optiplex homeserver (=uwu=) and vps (=vps=). I am very creative with naming things. It's a slowly moving flake of theseus, infinitely going through small refactoring. The original commits in this repo date back to when i first got started with [[https://github.com/nix-community/home-manager/][home-manager]].
 
-This is a slowly moving flake of theseus, going through occasional half assed refactors. This repository has been around from when i first got started with home-manager, most of the oldest stuff has been replaced, but there are still probably a few lines of nix remaining.
+This is obviously a **personal** configuration repository, feel free to take inspiration but this is not a general purpose operating system, and you should not run this on your own systems. The commit messages are borderline useless spam, you should not rely on them to gather information.
 
-** Features
-
-At Meow Industries, our commitment to excellence is reflected in our comprehensive list of innovative features, including but not limited to: 
-
-- [X] Modules to abstract away the abstractions provided by NixOS
-- [X] Library with useless helper functions that only add extra complexity
-- [X] Configuration only used by one machine represented as a module in =modules/=.
-- [X] Unused and useless customization options for those modules
-- [X] Modules for things I don't even use, for example gnome is a "supported" environment
-- [X] Rewrites of community modules that I was slightly unsatisfied with
-  - See [[file:modules/impermanence.nix][impermanence.nix]], [[file:modules/programs/discord/default.nix][discord]]
-- [X] Helper programs which could have just been scripts
-  - See [[file:pkgs/screenshot/][screenshot]] or [[file:modules/tv/ir-client/][ir-client]] 
-  - As a bonus treat there is no consistency in the usage of home-manager or NixOS options
-- [X] Bad file organization
-- [?] Bad programming practices
-- [X] Unreadable nix incantations
+I run =nixos-unstable-small=, it's manageable with rebuilds done in github actions and caching to cachix. My workflows are defined in [[file:flake/actions.nix][flake/actions.nix]] using [[https://github.com/alyraffauf/actions.nix][actions.nix]]. A flake update is scheduled every 4 days.
