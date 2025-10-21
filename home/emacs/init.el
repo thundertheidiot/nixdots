@@ -758,12 +758,33 @@ Preserve window configuration when pressing ESC."
 (use-package glsl-mode)
 (use-package gdshader-mode)
 
+(defun tmc-test ()
+  (interactive)
+  (let* ((test-dir (expand-file-name "../.." default-directory))
+	 (default-directory test-dir))
+    (async-shell-command "tmc test")))
+
+(defun tmc-submit ()
+  (interactive)
+  (let* ((test-dir (expand-file-name "../.." default-directory))
+	 (default-directory test-dir))
+    (async-shell-command "tmc submit")))
+
+(defun dotnet-run ()
+  (interactive)
+  (async-shell-command "dotnet run"))
+
 (use-package csharp-mode
   :ensure nil
   :mode "\\.cs\\'"
   :hook
   (csharp-mode . eglot-ensure)
-  (csharp-mode . csharp-ts-mode))
+  (csharp-mode . apheleia-mode)
+  :general-config
+  (:states '(normal visual) :prefix "SPC l" :keymaps 'csharp-mode-map
+	   "t" #'tmc-test
+	   "s" #'tmc-submit
+	   "r" #'dotnet-run))
 
 (add-hook 'emacs-lisp-mode-hook #'corfu-mode)
 

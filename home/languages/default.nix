@@ -78,7 +78,8 @@ in {
             ])
             (mkIf cfg.c_sharp [
               dotnetCorePackages.sdk_8_0-bin
-              omnisharp-roslyn
+              omnisharp-roslyn # lsp
+              csharpier # fmt
             ])
             (mkIf cfg.bash [
               nodePackages.bash-language-server
