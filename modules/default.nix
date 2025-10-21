@@ -13,6 +13,7 @@
   ./old-tv
   ./overlay.nix
   ./programs
+  ./school.nix
   ./searx.nix
   ./server
   ./shell.nix
