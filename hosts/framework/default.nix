@@ -62,8 +62,6 @@
       wayland.windowManager.hyprland.settings.xwayland.force_zero_scaling = true;
 
       home.packages = with pkgs; [
-        vscode
-        lmath
         distrobox
 
         python313Packages.python
@@ -89,6 +87,8 @@
 
     emacs.enable = true;
     shell.enable = true;
+
+    school.enable = true;
 
     ssh.rootKey = true;
 

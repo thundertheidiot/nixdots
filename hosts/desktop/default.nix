@@ -134,6 +134,8 @@
     emacs.enable = true;
     shell.enable = true;
 
+    school.enable = true;
+
     gpu = "amd";
 
     virtualization.enable = true;
