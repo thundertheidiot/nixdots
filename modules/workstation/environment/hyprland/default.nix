@@ -259,7 +259,7 @@ in {
                 "$mod, W, exec, firefox"
                 "$mod, D, exec, anyrun"
                 "$mod, E, exec, emacsclient -c -a ''"
-                "$mod, semicolon, exec, emacsclient -c -a '' -e '(th/eshell)'"
+                "$mod, semicolon, exec, emacsclient -c -a '' -e '(meow/eshell)'"
                 "$mod, M, exec, ${terminal} -e ${pkgs.ncmpcpp}/bin/ncmpcpp"
                 "$shiftmod, M, exec, ${terminal} -e ${pkgs.pulsemixer}/bin/pulsemixer"
                 "$mod, B, exec, ${terminal} -e ${pkgs.btop}/bin/btop"
