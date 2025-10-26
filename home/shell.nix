@@ -56,7 +56,7 @@ in {
           end
         ''
         + (
-          if config.mHome.emacs.enable
+          if config.meowEmacs.enable
           then ''
              function vterm_printf;
                 if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end

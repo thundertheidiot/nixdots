@@ -1,4 +1,3 @@
-# This module is
 {
   config,
   pkgs,
