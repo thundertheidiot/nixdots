@@ -80,12 +80,12 @@
     naersk.url = "github:nix-community/naersk";
 
     hyprland = {
-      url = "github:hyprwm/Hyprland/v0.50.1";
+      url = "github:hyprwm/Hyprland/v0.51.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprsplit = {
-      url = "github:shezdy/hyprsplit/v0.50.1";
+      url = "github:shezdy/hyprsplit/v0.51.1";
       inputs.hyprland.follows = "hyprland";
     };
 
