@@ -13,7 +13,7 @@
     };
 
     workflows = let
-      inherit (lib.lists) flatten;
+      inherit (lib.lists) flatten singleton;
       inherit (builtins) attrNames;
       # buildAllHosts = map (n: {
       #   name = "Build ${n}";
@@ -102,6 +102,12 @@
             description = "Flake input(s) to update";
             required = true;
           };
+
+          vps-deploy = {
+            description = "Should redeploy vps";
+            required = false;
+            default = "false";
+          };
         };
 
         jobs.build =
@@ -137,7 +143,10 @@
           ];
 
         jobs.update-vps.needs = ["build"];
-        jobs.update-vps.steps = [blocks.vpsDeploy];
+        jobs.update-vps.steps = singleton (blocks.vpsDeploy
+          // {
+            "if" = "\${{ inputs.vps-deploy == 'true' }}";
+          });
       };
 
       ".github/workflows/deploy-vps.yaml" = {
