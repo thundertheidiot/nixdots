@@ -82,7 +82,7 @@
       {
         home.stateVersion = "25.05";
         mHome.browser.firefox.enable = true;
-        mHome.emacs.enable = true;
+        meowEmacs.enable = true;
 
         home.packages = with pkgs; [
           stress-ng

@@ -34,28 +34,28 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.xserver.displayManager.session = lib.mkIf cfg.exwm [
-      {
-        manage = "desktop";
-        name = "EXWM";
-        start = ''
-          export EMACS_ENABLE_EXWM=1
-          export _JAVA_AWT_WM_NONREPARENTING=1
-          exec ${pkgs.dbus}/bin/dbus-launch --exit-with-session emacs -mm &
-          waitPID=$!
-        '';
-      }
-    ];
+    # TODO no exwm yet
+    # services.xserver.displayManager.session = lib.mkIf cfg.exwm [
+    #   {
+    #     manage = "desktop";
+    #     name = "EXWM";
+    #     start = ''
+    #       export EMACS_ENABLE_EXWM=1
+    #       export _JAVA_AWT_WM_NONREPARENTING=1
+    #       exec ${pkgs.dbus}/bin/dbus-launch --exit-with-session emacs -mm &
+    #       waitPID=$!
+    #     '';
+    #   }
+    # ];
 
-    services.xserver.enable = lib.mkDefault cfg.exwm;
-    services.xserver.displayManager.startx.enable = cfg.exwm;
+    # services.xserver.enable = lib.mkDefault cfg.exwm;
+    # services.xserver.displayManager.startx.enable = cfg.exwm;
 
     meow.searx.enable = true;
 
     home-manager.sharedModules = [
       {
-        mHome.emacs.enable = cfg.enable;
-        mHome.emacs.exwm = cfg.exwm;
+        meowEmacs.enable = cfg.enable;
       }
     ];
   };

@@ -50,6 +50,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    emacs.url = "github:thundertheidiot/emacs";
+    emacs.inputs.nixpkgs.follows = "nixpkgs";
+
     plasma-manager = {
       url = "github:pjones/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";

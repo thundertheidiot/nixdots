@@ -43,8 +43,9 @@ in {
               home-manager = {
                 extraSpecialArgs = {inherit inputs mlib;};
                 sharedModules = [
-                  inputs.plasma-manager.homeManagerModules.plasma-manager
                   inputs.hyprlux.homeManagerModules.default
+                  inputs.plasma-manager.homeModules.plasma-manager
+                  inputs.emacs.homeModules.default
                 ];
               };
             })

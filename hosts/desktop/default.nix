@@ -69,7 +69,7 @@
     {
       home.stateVersion = "24.05";
       mHome.browser.firefox.enable = true;
-      mHome.emacs.enable = true;
+      meowEmacs.enable = true;
 
       gtk.gtk3.bookmarks = [
         # "file:///mnt/4tb"
