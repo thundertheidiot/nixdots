@@ -73,6 +73,11 @@ in {
           pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH43IsqYdCbqrJ6M00a7idsUJSC7hS96Nj3FQOxa355r";
         };
 
+        forgejo = {
+          enable = true;
+          domain = "git.kotiboksi.xyz";
+        };
+
         domains = ["kotiboksi.xyz" "gooptyland.xyz" "saatana.xyz"];
         mainDomain = "kotiboksi.xyz";
         reverseProxy = {
