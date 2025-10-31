@@ -9,6 +9,14 @@
         format = "binary";
       };
 
+      forgejo_postgres = {
+        sopsFile = ./forgejo-postgres;
+        owner = "forgejo";
+        group = "forgejo";
+        mode = "0440";
+        format = "binary";
+      };
+
       sodexobot_env = {
         sopsFile = ./sodexobot.env;
         format = "dotenv";
