@@ -88,6 +88,12 @@ in {
       };
     };
 
+    services.journald.extraConfig = ''
+      SystemMaxUse=500M
+      SystemKeepFree=200M
+      MaxFileSec=7day
+    '';
+
     mailserver.stateVersion = 3;
 
     networking.enableIPv6 = true;
