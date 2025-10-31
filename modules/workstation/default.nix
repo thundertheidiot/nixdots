@@ -72,8 +72,6 @@ in {
       yt-dlp
       # python3
 
-      grayjay
-
       libnotify
 
       # inputs.deploy-rs.packages."${pkgs.system}".default
