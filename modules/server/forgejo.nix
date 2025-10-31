@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  mlib,
   config,
   ...
 }: let
@@ -8,7 +9,7 @@
   inherit (lib) mkIf;
   inherit (lib.types) nullOr str;
 
-  cfg = config.meow.server.forgejo.domains;
+  cfg = config.meow.server.forgejo;
 in {
   options.meow.server.forgejo = {
     enable = mkEnOpt "Enable forgejo";
@@ -27,7 +28,7 @@ in {
     ];
 
     meow.server.reverseProxy = {
-      "${cfg.domain}" = "http://127.0.0.1:${config.services.forgejo.settings.server.HTTP_PORT}";
+      "${cfg.domain}" = "http://127.0.0.1:${toString config.services.forgejo.settings.server.HTTP_PORT}";
     };
 
     services.forgejo = {
