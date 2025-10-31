@@ -35,10 +35,6 @@ in {
       #   };
       #   wantedBy = ["multi-user.target"];
       # };
-
-      programs.envision = {
-        enable = true;
-      };
     }
     # funy
     {
@@ -83,10 +79,6 @@ in {
         })
       ];
     }
-    # Envision
-    # {
-    #   programs.envision.enable = true;
-    # }
     # Monado
     {
       services.monado = {

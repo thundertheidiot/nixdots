@@ -47,6 +47,8 @@ in {
     security.sudo.enable = lib.mkForce false;
     security.sudo-rs.enable = true;
 
+    services.speechd.enable = false;
+
     # doesn't work on lix, doesn't work with flakes anyway?
     system.tools.nixos-option.enable = false;
 

@@ -218,7 +218,6 @@
   hardware.keyboard.qmk.enable = true;
 
   environment.systemPackages = with pkgs; [
-    pcsx2
     lmath
 
     distrobox
