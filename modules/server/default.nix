@@ -17,6 +17,7 @@ in {
     ./acme.nix
     ./coturn.nix
     ./deploy.nix
+    ./forgejo.nix
     ./mail.nix
     ./mumble.nix
     ./prosody
