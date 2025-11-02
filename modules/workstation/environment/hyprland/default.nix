@@ -267,12 +267,12 @@ in {
 
                 "$mod, N, exec, swaync-client -op"
 
-                ",XF86AudioPlay, exec, ${pkgs.mpc-cli}/bin/mpc toggle"
-                ",XF86AudioNext, exec, ${pkgs.mpc-cli}/bin/mpc next"
-                ",XF86AudioPrev, exec, ${pkgs.mpc-cli}/bin/mpc prev"
-                "$mod,P, exec, ${pkgs.mpc-cli}/bin/mpc toggle"
-                "$mod,bracketright, exec, ${pkgs.mpc-cli}/bin/mpc next"
-                "$mod,bracketleft, exec, ${pkgs.mpc-cli}/bin/mpc prev"
+                ",XF86AudioPlay, exec, ${pkgs.mpc}/bin/mpc toggle"
+                ",XF86AudioNext, exec, ${pkgs.mpc}/bin/mpc next"
+                ",XF86AudioPrev, exec, ${pkgs.mpc}/bin/mpc prev"
+                "$mod,P, exec, ${pkgs.mpc}/bin/mpc toggle"
+                "$mod,bracketright, exec, ${pkgs.mpc}/bin/mpc next"
+                "$mod,bracketleft, exec, ${pkgs.mpc}/bin/mpc prev"
 
                 "$shiftmod, return, layoutmsg, swapwithmaster master"
 
