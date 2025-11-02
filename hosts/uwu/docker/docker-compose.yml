@@ -2,6 +2,5 @@ name: "uwu"
 include:
   - ./media_stack.yml
   # - ./jellyfin.yml
-  # - ./home-assistant.yml
   - ./watchtower.yml
   - ./immich/docker-compose.yml
