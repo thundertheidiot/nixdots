@@ -11,6 +11,11 @@
         format = "dotenv";
       };
 
+      home_assistant_secrets = {
+        sopsFile = ./home-assistant.yaml;
+        format = "yaml";
+      };
+
       forgejo_oauth_client_secret = {
         sopsFile = ./forgejo.yaml;
         format = "yaml";

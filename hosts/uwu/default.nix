@@ -14,7 +14,6 @@ in {
   };
 
   imports = [
-    # ./home-assistant.nix
     # local self signed certificates
     (import ../../certs).module
     ./authentik.nix
@@ -23,6 +22,7 @@ in {
     ./dns.nix
     ./docker
     ./forgejo.nix
+    ./home-assistant
     ./homepage.nix
     ./jellyfin.nix
     ./n8n.nix
