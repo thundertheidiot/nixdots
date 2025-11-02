@@ -24,7 +24,7 @@
         };
 
         # unstable-small occasionally results in electron rebuilds
-        inherit (final.unstable) element-desktop;
+        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc;
 
         mpkgs = (import "${inputs.self.outPath}/pkgs") {pkgs = final;};
 

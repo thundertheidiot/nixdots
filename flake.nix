@@ -108,15 +108,12 @@
     nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
     sodexobot = {
       url = "github:thundertheidiot/sodexobot";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     leptos-kotiboksi = {
       url = "github:thundertheidiot/leptos-kotiboksi";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     meowdzbot = {
       url = "github:thundertheidiot/meowdzbot";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 }

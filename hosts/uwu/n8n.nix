@@ -25,7 +25,7 @@
 
       locations = {
         "/" = {
-          proxyPass = "http://127.0.0.1:${toString config.services.n8n.settings.port}";
+          proxyPass = "http://127.0.0.1:${toString config.services.n8n.environment.N8N_PORT}";
           recommendedProxySettings = true;
           extraConfig = ''
             proxy_set_header Upgrade $http_upgrade;
@@ -38,7 +38,7 @@
     services.n8n = {
       enable = true;
       openFirewall = true;
-      settings = {
+      environment = {
         N8N_SECURE_COOKIE = false;
       };
     };

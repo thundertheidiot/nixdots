@@ -25,7 +25,7 @@ in {
     ./home-assistant
     ./homepage.nix
     ./jellyfin.nix
-    ./n8n.nix
+    # ./n8n.nix
     ./redlib.nix
     ./secrets
     ./wireguard.nix
@@ -35,6 +35,8 @@ in {
     system.stateVersion = "24.11";
     time.timeZone = "Europe/Helsinki";
     networking.hostName = "uwu";
+
+    powerManagement.powertop.enable = true;
 
     hardware.graphics.enable = true;
     hardware.graphics.extraPackages = with pkgs; [
