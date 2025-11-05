@@ -2455,11 +2455,11 @@
         "rust-overlay": "rust-overlay_5"
       },
       "locked": {
-        "lastModified": 1762070827,
-        "narHash": "sha256-Wno1BfmwMk2m7xwaGDNQMQ1Y+/GIuGt0WWhwZ32Naqg=",
+        "lastModified": 1762341809,
+        "narHash": "sha256-Y8Q/Qsgi8vGja7xggwvZG/qkWoHb7s9ktTgIEM79b0s=",
         "owner": "thundertheidiot",
         "repo": "sodexobot",
-        "rev": "292602123e995f9b3af65cc602103802984db668",
+        "rev": "27d8c3a2cba3e1a252f590d746d3fb41971955d7",
         "type": "github"
       },
       "original": {
