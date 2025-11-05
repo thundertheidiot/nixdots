@@ -1453,11 +1453,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1759413468,
-        "narHash": "sha256-qacaXwAJ9sciuxwREsGZBeSRaE9BSqQR2b9M52NhCMA=",
+        "lastModified": 1762349236,
+        "narHash": "sha256-tqPyomlAkPA7qH3+KGriVNwHfpZ20e9Oz42M5OR7S/I=",
         "owner": "thundertheidiot",
         "repo": "leptos-kotiboksi",
-        "rev": "2114d1ae8bced589dd878ed9b96f243d90b31559",
+        "rev": "09f8f84522349341a198d2a656f5f91c89ae56de",
         "type": "github"
       },
       "original": {
