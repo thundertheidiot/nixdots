@@ -76,7 +76,6 @@ in {
               keyutils
 
               # steamvr
-              libcef
               openvr
               gperftools # steamvr home symlink libtcmalloc_minimal.so.0
 
