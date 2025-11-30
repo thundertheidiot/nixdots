@@ -30,7 +30,6 @@ in {
             inputs.hyprland.nixosModules.default
             inputs.stylix.nixosModules.stylix
             inputs.authentik-nix.nixosModules.default
-            inputs.nix-gaming.nixosModules.pipewireLowLatency
             ({...}: {
               imports = import "${root}/modules";
               nixpkgs = {

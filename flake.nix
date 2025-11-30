@@ -95,8 +95,6 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
-    nix-gaming.url = "github:fufexan/nix-gaming";
-
     nur.url = "github:nix-community/NUR";
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
