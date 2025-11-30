@@ -49,7 +49,7 @@ in {
     mkMerge [
       (mkIf ((length edids) != 0) {
         hardware.firmware = map (s:
-          with s; (pkgs.runCommandNoCC "${name}-edid-override" {compressFirmware = false;} ''
+          with s; (pkgs.runCommand "${name}-edid-override" {compressFirmware = false;} ''
             mkdir -p "$out/lib/firmware/edid"
             cp "${edid}" "$out/lib/firmware/edid/${name}.bin"
           ''))

@@ -1,7 +1,6 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash compose2nix
 
-files="$(echo ./*.yml | sed 's/ /,/g')"
 compose2nix --output=generated.nix \
 	    --runtime=docker \
 	    --include_env_files=true

@@ -38,9 +38,6 @@ in {
           "bluez5.enable-hw-volume" = false;
         };
       };
-
-      # nix-gaming
-      lowLatency.enable = true;
     };
   };
 }
