@@ -10,7 +10,7 @@
   env = config.meow.workstation.environment;
 in {
   config = mkIf (work && elem "gnome" env) {
-    services.xserver.desktopManager.gnome.enable = true;
+    services.desktopManager.gnome.enable = true;
     # services.gnome.gnome-online-accounts.enable = false;
 
     xdg.portal.config = {

@@ -225,6 +225,8 @@
     easyeffects
     deepfilternet
 
+    grayjay
+
     syncthing
 
     krita

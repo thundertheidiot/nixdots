@@ -6,7 +6,7 @@
   ...
 }: let
   inherit (mlib) mkEnOpt;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkForce;
 
   cfg = config.meow.displaylink;
 in {
@@ -22,27 +22,9 @@ in {
     boot = {
       extraModulePackages = [
         config.boot.kernelPackages.evdi
-        # (config.boot.kernelPackages.evdi.overrideAttrs (_: {
-        #   env.NIX_CFLAGS_COMPILE = toString [
-        #     "-Wno-error"
-        #     "-Wno-error=sign-compare"
-        #   ];
-
-        #   buildInputs = [
-        #     config.boot.kernelPackages.kernel
-        #     pkgs.libdrm
-        #     (
-        #       pkgs.python3.withPackages
-        #       (ps: [
-        #         (ps.pybind11.overrideAttrs
-        #           (_: {
-        #             doCheck = false;
-        #           }))
-        #       ])
-        #     )
-        #   ];
-        # }))
       ];
+
+      kernelPackages = mkForce pkgs.linuxKernel.packages.linux_6_17;
 
       initrd.kernelModules = ["evdi"];
     };
