@@ -23,10 +23,6 @@ in {
   ];
 
   config = lib.mkMerge [
-    {
-      boot.kernelPackages = pkgs.linuxPackages_cachyos-lto;
-      # chaotic.mesa-git.enable = true;
-    }
     (lib.mkIf (cfg.enable) {
       environment.systemPackages = let
         # inherit (pkgs.ataraxiasjel) proton-ge wine-ge;

@@ -24,7 +24,6 @@ in {
           ++ [
             "${root}/sops"
             inputs.home-manager.nixosModules.home-manager
-            inputs.chaotic.nixosModules.default
             inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default
             inputs.hyprland.nixosModules.default
