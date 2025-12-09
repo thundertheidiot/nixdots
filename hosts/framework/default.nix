@@ -71,7 +71,7 @@
 
   services.cpupower-gui.enable = true;
 
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+  # boot.kernelPackages = lib..mkForce pkgs.linuxPackages_latest;
 
   meow = {
     fullSetup = true;
