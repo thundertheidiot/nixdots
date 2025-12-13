@@ -125,7 +125,7 @@ in {
                     value = pkgs.writers.writeBash "${name}_modemenu" ''
                       pos=${x}x${y}
 
-                      case $(echo -e "Disable\n${concatStringsSep "\n" (map (mode: mode.display) customModes)}" | tofi --prompt-text "Select mode: ") in
+                      case $(echo -e "Disable\n${concatStringsSep "\n" (map (mode: mode.display) customModes)}" | ${lib.getExe pkgs.tofi} --prompt-text "Select mode: ") in
                         "Disable")
                           hyprctl keyword monitor "${name}, disabled"
                           ;;
@@ -138,7 +138,7 @@ in {
                 if (length monitorsWithModes == 1)
                 then "${monitorSwitchScripts."${(head monitorsWithModes).name}"}"
                 else ''
-                  case $(echo -e "${concatStringsSep "\n" (map (m: m.name) monitorsWithModes)}" | tofi --prompt-text "Select monitor: ") in
+                  case $(echo -e "${concatStringsSep "\n" (map (m: m.name) monitorsWithModes)}" | ${lib.getExe pkgs.tofi} --prompt-text "Select monitor: ") in
                   ${concatStringsSep "\n" (map (m: with m; "\"${name}\") ${monitorSwitchScripts.${name}} ;;") monitorsWithModes)}
                   esac
                 '');

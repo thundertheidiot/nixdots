@@ -69,14 +69,14 @@
     # '';
 
     # nvidia drivers for nvidia systems
-    hardware.graphics.enable = true;
-    services.xserver.videoDrivers = ["nvidia" "modesetting"];
+    # hardware.graphics.enable = true;
+    # services.xserver.videoDrivers = ["nvidia" "modesetting"];
 
-    hardware.nvidia = {
-      modesettings.enable = true;
-      open = false;
-      package = cnfig.boot.kernelPackages.nvidiaPackages.beta;
-    };
+    # hardware.nvidia = {
+    #   modesettings.enable = true;
+    #   open = false;
+    #   package = config.boot.kernelPackages.nvidiaPackages.beta;
+    # };
 
     home-manager.sharedModules = [
       {
