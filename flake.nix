@@ -68,8 +68,6 @@
 
     rust-overlay.url = "github:oxalica/rust-overlay";
 
-    # screenshot.url = "./pkgs/screenshot";
-
     naersk.url = "github:nix-community/naersk";
 
     hyprland = {
@@ -84,7 +82,7 @@
 
     hyprlux.url = "github:amadejkastelic/Hyprlux";
 
-    # waybar.url = "github:Alexays/Waybar";
+    niri.url = "github:sodiboo/niri-flake";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 

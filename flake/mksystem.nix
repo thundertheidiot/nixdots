@@ -27,6 +27,7 @@ in {
             inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default
             inputs.hyprland.nixosModules.default
+            inputs.niri.nixosModules.niri
             inputs.stylix.nixosModules.stylix
             inputs.authentik-nix.nixosModules.default
             ({...}: {

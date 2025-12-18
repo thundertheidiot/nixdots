@@ -14,7 +14,7 @@
   dm = config.meow.workstation.displayManager;
 in {
   options = {
-    meow.workstation.environment = mkOpt (listOf (enum ["hyprland"])) ["hyprland"] {
+    meow.workstation.environment = mkOpt (listOf (enum ["hyprland" "niri"])) [] {
       description = "The list of environments to configure and install.";
     };
 
@@ -28,6 +28,7 @@ in {
   };
   imports = [
     ./hyprland
+    ./niri.nix
   ];
 
   config = mkIf cfg (mkMerge [
