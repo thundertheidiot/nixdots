@@ -1,19 +1,17 @@
 {
   config,
-  pkgs,
   lib,
   mlib,
   ...
 }: let
   cfg = config.meow.emacs;
 
-  inherit (mlib) mkEnOpt homeModule;
+  inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 in {
   options = {
     meow.emacs = {
       enable = mkEnOpt "Install and configure emacs.";
-      exwm = mkEnOpt "Install and configure EXWM.";
 
       # TODO: move all this shit to modules/langs or something
       lang = {
@@ -34,24 +32,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # TODO no exwm yet
-    # services.xserver.displayManager.session = lib.mkIf cfg.exwm [
-    #   {
-    #     manage = "desktop";
-    #     name = "EXWM";
-    #     start = ''
-    #       export EMACS_ENABLE_EXWM=1
-    #       export _JAVA_AWT_WM_NONREPARENTING=1
-    #       exec ${pkgs.dbus}/bin/dbus-launch --exit-with-session emacs -mm &
-    #       waitPID=$!
-    #     '';
-    #   }
-    # ];
-
-    # services.xserver.enable = lib.mkDefault cfg.exwm;
-    # services.xserver.displayManager.startx.enable = cfg.exwm;
-
     meow.searx.enable = true;
+    # search for llms
 
     home-manager.sharedModules = [
       {

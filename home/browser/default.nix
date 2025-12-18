@@ -17,17 +17,8 @@ in {
         enable = mkEnOpt "Firefox";
         defaults = mkEnOptTrue "Default tweaks";
       };
-
-      zen = {
-        enable = mkEnOpt "Zen";
-        defaults = mkEnOptTrue "Default tweaks";
-      };
     };
   };
-
-  imports = [
-    inputs.zen-browser.homeModules.default
-  ];
 
   config = let
     defaultExtensions = import ./extensions.nix;
@@ -63,27 +54,6 @@ in {
       inherit engines;
     };
   in (mkMerge [
-    (mkIf cfg.zen.enable {
-      programs.zen-browser = {
-        enable = true;
-        nativeMessagingHosts = [pkgs.firefoxpwa];
-
-        policies = commonPolicies;
-
-        profiles."nix-managed" = {
-          id = 0;
-        };
-      };
-    })
-    (mkIf cfg.zen.defaults {
-      programs.zen-browser = {
-        inherit policies;
-
-        profiles."nix-managed" = {
-          inherit search;
-        };
-      };
-    })
     (mkIf cfg.firefox.enable {
       programs.firefox = {
         enable = true;

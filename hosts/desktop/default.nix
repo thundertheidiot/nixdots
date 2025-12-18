@@ -126,8 +126,6 @@
       };
     };
 
-    workstation.flatpak.graphicalStore = true;
-
     gaming.enable = true;
     gaming.emulation = true;
     gaming.games = ["duckgame" "minecraft"];
