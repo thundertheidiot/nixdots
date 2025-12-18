@@ -5,14 +5,13 @@
   pkgs,
   ...
 }: let
-  inherit (mlib) mkEnOpt mkEnOptTrue;
+  inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 
   cfg = config.meow.workstation.flatpak;
 in {
   options = {
     meow.workstation.flatpak.enable = mkEnOpt "Enable flatpaks";
-    meow.workstation.flatpak.graphicalStore = mkEnOpt "Enable store for flatpaks";
   };
 
   # FIXME search broken, install broken

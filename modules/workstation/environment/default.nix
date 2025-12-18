@@ -14,7 +14,7 @@
   dm = config.meow.workstation.displayManager;
 in {
   options = {
-    meow.workstation.environment = mkOpt (listOf (enum ["hyprland" "gnome" "plasma"])) ["plasma"] {
+    meow.workstation.environment = mkOpt (listOf (enum ["hyprland"])) ["hyprland"] {
       description = "The list of environments to configure and install.";
     };
 
@@ -28,8 +28,6 @@ in {
   };
   imports = [
     ./hyprland
-    ./plasma
-    ./gnome.nix
   ];
 
   config = mkIf cfg (mkMerge [
@@ -37,13 +35,8 @@ in {
       xdg.portal = {
         enable = true;
         xdgOpenUsePortal = true;
-
-        # extraPortals = lib.mkIf (!builtins.elem "gnome" config.meow.workstation.environment) [pkgs.xdg-desktop-portal-gtk];
-
-        # config.common.default = lib.mkForce [];
       };
     }
-    # FIXME: possibly needed separate nvidia config (disable wayland), need to investigate?
     (mkIf (dm == "sddm") {
       services.displayManager.sddm = {
         enable = true;
