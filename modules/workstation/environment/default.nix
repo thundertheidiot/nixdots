@@ -38,6 +38,9 @@ in {
         xdgOpenUsePortal = true;
       };
     }
+    {
+      programs.niri.enable = lib.mkDefault false;
+    }
     (mkIf (dm == "sddm") {
       services.displayManager.sddm = {
         enable = true;

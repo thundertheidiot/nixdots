@@ -126,9 +126,16 @@ in {
 
             extraConfig = cfg.extraConfig;
 
+            plugins = [pkgs.hyprsplit];
+
             settings = {
               "$mod" = "SUPER";
               "$shiftmod" = "SUPER_SHIFT";
+
+              plugin.hyprsplit = {
+                num_workspaces = 9;
+                persistent_workspaces = true;
+              };
 
               debug.disable_logs = false;
               # fix gamescope
@@ -294,6 +301,26 @@ in {
                 "$mod, comma, focusmonitor, l"
                 "$shiftmod, period, movewindow, mon:r"
                 "$shiftmod, comma, movewindow, mon:l"
+
+                "$mod, 1, split:workspace, 1"
+                "$mod, 2, split:workspace, 2"
+                "$mod, 3, split:workspace, 3"
+                "$mod, 4, split:workspace, 4"
+                "$mod, 5, split:workspace, 5"
+                "$mod, 6, split:workspace, 6"
+                "$mod, 7, split:workspace, 7"
+                "$mod, 8, split:workspace, 8"
+                "$mod, 9, split:workspace, 9"
+
+                "$shiftmod, 1, split:movetoworkspacesilent, 1"
+                "$shiftmod, 2, split:movetoworkspacesilent, 2"
+                "$shiftmod, 3, split:movetoworkspacesilent, 3"
+                "$shiftmod, 4, split:movetoworkspacesilent, 4"
+                "$shiftmod, 5, split:movetoworkspacesilent, 5"
+                "$shiftmod, 6, split:movetoworkspacesilent, 6"
+                "$shiftmod, 7, split:movetoworkspacesilent, 7"
+                "$shiftmod, 8, split:movetoworkspacesilent, 8"
+                "$shiftmod, 9, split:movetoworkspacesilent, 9"
               ];
             };
           };

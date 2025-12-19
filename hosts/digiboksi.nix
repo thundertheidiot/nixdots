@@ -23,13 +23,10 @@
     workstation.enable = true;
     workstation.environment = ["hyprland"];
 
-    monitors = [
-      {
-        name = "HDMI-A-1";
-        width = 1360;
-        height = 768;
-      }
-    ];
+    monitors."HDMI-A-1" = {
+      width = 1360;
+      height = 768;
+    };
 
     gpu = "intel";
 

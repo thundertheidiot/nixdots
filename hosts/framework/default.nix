@@ -104,16 +104,13 @@
     boot.efi = true;
     displaylink = true;
 
-    monitors = [
-      {
-        name = "eDP-1";
-        width = "2880";
-        height = "1920";
-        refresh = 120;
-        primary = true;
-        scale = "1.5";
-      }
-    ];
+    monitors."eDP-1" = {
+      width = 2880;
+      height = 1920;
+      refresh = 120.0;
+      primary = true;
+      scale = 1.5;
+    };
   };
 
   boot.loader.grub.enable = true;

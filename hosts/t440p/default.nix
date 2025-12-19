@@ -100,13 +100,10 @@
       devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
     };
 
-    monitors = [
-      {
-        name = "eDP-1";
-        width = "1920";
-        height = "1080";
-      }
-    ];
+    monitors."eDP-1" = {
+      width = "1920";
+      height = "1080";
+    };
   };
 
   boot.loader.grub.enable = true;

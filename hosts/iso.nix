@@ -23,6 +23,9 @@
     # networking.wireless.enable = true;
 
     boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    boot.supportedFilesystems = {
+      zfs = false;
+    };
 
     services.displayManager.sddm = {
       settings = {
@@ -86,8 +89,7 @@
 
         home.packages = with pkgs; [
           stress-ng
-          glxinfo
-          unigine-heaven
+          mesa-demos
         ];
       }
     ];
