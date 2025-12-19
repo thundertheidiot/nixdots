@@ -142,76 +142,70 @@
     keyboard.enable = false;
     keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];
 
-    monitors = [
-      {
-        name = "DP-3";
+    monitors = {
+      "DP-3" = {
         width = 2560;
         height = 1440;
-        refresh = 144;
+        refresh = 144.0;
+        disableVrr = true;
         x = 1920;
-        hyprlandExtra = "vrr, 0";
         primary = true;
-        xorgModeline = ''Modeline "2560x1440x143.9"  592.00  2560 2568 2600 2666  1440 1465 1473 1543 +hsync -vsync'';
-      }
-      {
-        name = "DP-1";
+      };
+      "DP-1" = {
         width = 1920;
         height = 1080;
-        refresh = 144;
-        hyprlandExtra = "vrr, 0";
-        xorgModeline = ''Modeline "1920x1080x144.0"  325.08  1920 1944 1976 2056  1080 1083 1088 1098 +hsync +vsync'';
-      }
-      {
-        name = "HDMI-A-1";
-        hyprlandExclude = true;
+        disableVrr = true;
+        refresh = 144.0;
+      };
+      "HDMI-A-1" = {
         x = 4480;
-        y = 0;
         xorgName = "HDMI-1";
+        hyprlandExclude = false;
         edid = ./crt-edited.bin;
         customModes = [
           {
-            real = "512x448@120.00";
-            display = "SNES 512x448";
+            mode = "512x448@120.00";
+            name = "SNES 512x448";
           }
           {
-            real = "640x480@120.01";
-            display = "EMU 640x480@120";
+            mode = "640x480@120.01";
+            name = "EMU 640x480@120";
           }
           {
-            real = "640x528@120.02";
-            display = "GC 640x528@120";
+            mode = "640x528@120.02";
+            name = "GC 640x528@120";
           }
           {
-            real = "480x320@120.00";
-            display = "GBA 480x320@120";
+            mode = "480x320@120.00";
+            name = "GBA 480x320@120";
           }
           {
-            real = "640x480@144.87";
-            display = "640x480@144";
+            mode = "640x480@144.87";
+            name = "640x480@144";
           }
           {
-            real = "800x600@112.51";
-            display = "800x600@112";
+            mode = "800x600@112.51";
+            name = "800x600@112";
           }
           {
-            real = "1024x768@90.57";
-            display = "1024x768@90";
+            mode = "1024x768@90.57";
+            name = "1024x768@90";
           }
           {
-            real = "1280x1024@67.02Hz";
-            display = "1280x1024@67";
+            mode = "1280x1024@67.02Hz";
+            name = "1280x1024@67";
           }
           {
-            real = "960x540@128.00";
-            display = "WIDE 960x540@128";
+            mode = "960x540@128.00";
+            name = "WIDE 960x540@128";
           }
           {
-            real = "1280x720@96.00Hz";
-            display = "WIDE 1280x720@96";
+            mode = "1280x720@96.00Hz";
+            name = "WIDE 1280x720@96";
           }
         ];
-      }
-    ];
+      };
+    };
   };
 
   hardware.keyboard.qmk.enable = true;

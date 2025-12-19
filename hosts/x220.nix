@@ -38,13 +38,10 @@
     impermanence.enable = true;
     impermanence.persist = "/persist";
 
-    monitors = [
-      {
-        name = "LVDS-1";
-        width = 1366;
-        height = 768;
-      }
-    ];
+    monitors."LVDS-1" = {
+      width = 1366;
+      height = 768;
+    };
 
     keyboard = {
       enable = true;
