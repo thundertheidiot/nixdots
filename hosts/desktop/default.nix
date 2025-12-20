@@ -91,7 +91,7 @@
 
     user = "thunder";
 
-    workstation.environment = ["hyprland"];
+    workstation.environment = ["hyprland" "niri"];
     # workstation.plasma.opinionatedConfig = true;
     workstation.hyprland.extraAutostart = [
       "${pkgs.ckb-next}/bin/ckb-next -b"
@@ -146,7 +146,6 @@
       "DP-3" = {
         width = 2560;
         height = 1440;
-        refresh = 144.0;
         disableVrr = true;
         x = 1920;
         primary = true;
@@ -155,7 +154,6 @@
         width = 1920;
         height = 1080;
         disableVrr = true;
-        refresh = 144.0;
       };
       "HDMI-A-1" = {
         x = 4480;

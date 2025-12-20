@@ -7,7 +7,7 @@
   ...
 }: let
   inherit (lib) mkIf mkMerge mkOption;
-  inherit (lib.attrsets) attrValues listToAttrs;
+  inherit (lib.attrsets) attrValues listToAttrs mapAttrs';
   inherit (lib.lists) head length elem filter sublist;
   inherit (lib.strings) splitString concatStrings concatStringsSep;
   inherit (mlib) homeModule mkOpt;
@@ -58,8 +58,8 @@ in {
           };
 
           refresh = mkOption {
-            type = float;
-            default = 60.0;
+            type = nullOr float;
+            default = null;
             description = "Refresh rate of the monitor";
           };
 
@@ -103,6 +103,12 @@ in {
             type = bool;
             default = false;
             description = "Exclude from hyprland config";
+          };
+
+          niriCustom = mkOption {
+            type = bool;
+            default = false;
+            description = "Declare mode as custom in niri";
           };
 
           customModes = mkOption {
@@ -175,6 +181,50 @@ in {
         (attrValues cfg);
       }
       (
+        mkIf (elem "niri" config.meow.workstation.environment) {
+          meow.workstation.extraNiriConfig = map (mon: let
+            inherit (mon) name width height scale x y;
+
+            ifElseEmpty = t: v:
+              if t
+              then v
+              else "";
+
+            ifNotNull = t: ifElseEmpty (t != null);
+
+            refresh = ifNotNull mon.refresh "@${toString mon.refresh}";
+          in ''
+            output "${name}" {
+              mode ${ifElseEmpty mon.niriCustom "custom=true"} "${toString width}x${toString height}${refresh}"
+              ${ifNotNull mon.primary "focus-at-startup"}
+              scale ${toString scale}
+              position x=${toString x} y=${toString y}
+              ${ifElseEmpty (!mon.disableVrr) "variable-refresh-rate"}
+            }
+          '') (attrValues cfg);
+
+          # programs.niri.settings = {
+          #   outputs =
+          #     mapAttrs' (_: m: {
+          #       inherit (m) name;
+          #       value = {
+          #         mode = {
+          #           inherit (m) width height refresh;
+          #         };
+          #         inherit (m) scale;
+          #         position = {
+          #           inherit (m) x y;
+          #         };
+          #         focus-at-startup = m.primary;
+          #         variable-refresh-rate = !m.disableVrr;
+          #       };
+          #     })
+          #     cfg;
+          # };
+        }
+      )
+
+      (
         mkIf (elem "hyprland" config.meow.workstation.environment)
         (
           homeModule
@@ -218,7 +268,11 @@ in {
                 monitor = mkIf (cfg != {}) (map (m:
                   with m;
                     mkIf (!hyprlandExclude)
-                    "${name}, ${toString width}x${toString height}@${toString refresh}, ${toString x}x${toString y}, ${toString scale}${
+                    "${name}, ${
+                      if refresh != null
+                      then "${toString width}x${toString height}@${toString refresh}"
+                      else "highrr"
+                    }, ${toString x}x${toString y}, ${toString scale}${
                       if disableVrr
                       then ", vrr, 0"
                       else ""

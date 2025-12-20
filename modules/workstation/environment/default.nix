@@ -28,7 +28,7 @@ in {
   };
   imports = [
     ./hyprland
-    ./niri.nix
+    ./niri
   ];
 
   config = mkIf cfg (mkMerge [
