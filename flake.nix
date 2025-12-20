@@ -82,8 +82,6 @@
 
     hyprlux.url = "github:amadejkastelic/Hyprlux";
 
-    niri.url = "github:sodiboo/niri-flake";
-
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     nur.url = "github:nix-community/NUR";
