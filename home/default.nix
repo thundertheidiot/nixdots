@@ -2,6 +2,7 @@
 {...}: {
   imports = [
     ./languages
+    ./programs
     ./browser
     ./media.nix
     ./cleanup.nix

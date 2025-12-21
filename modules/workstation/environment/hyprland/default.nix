@@ -24,12 +24,10 @@ in {
       };
     };
   };
-
   imports = [
     ./waybar.nix
     ./nsxiv.nix
     ./hyprlock.nix
-    ./swaync.nix
     ./anyrun.nix
   ];
 
@@ -87,6 +85,8 @@ in {
             }))
             file-roller
           ];
+
+          services.swaync.enable = true;
 
           programs.hyprlux = {
             enable = true;

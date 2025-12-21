@@ -101,7 +101,6 @@
 
       workstation.enable = true;
       workstation.environment = ["hyprland"];
-      workstation.plasma.opinionatedConfig = true;
       workstation.flatpak.enable = false;
 
       gaming.enable = false;
