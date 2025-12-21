@@ -70,6 +70,7 @@
       home.stateVersion = "24.05";
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
+      mHome.lang.haskell = false;
       meowEmacs.enable = true;
 
       gtk.gtk3.bookmarks = [
