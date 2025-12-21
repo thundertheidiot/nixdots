@@ -25,6 +25,9 @@ in {
 
     meow.home.modules = [
       {
+        services.swaync.enable = true;
+        services.vicinae.enable = true;
+
         xdg.configFile."niri/config.kdl".text = let
           colors = config.lib.stylix.colors.withHashtag;
 
@@ -124,6 +127,8 @@ in {
             Mod+Semicolon { spawn-sh "emacsclient -c -a ''' -e '(meow/eshell)'"; }
             Mod+W { spawn "firefox"; }
             Print { screenshot; }
+
+            Mod+D { spawn-sh "vicinae open"; }
 
             XF86AudioPlay { spawn-sh "mpc toggle"; }
             XF86AudioNext { spawn-sh "mpc next"; }

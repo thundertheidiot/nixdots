@@ -36,7 +36,6 @@ in {
 
   imports = [
     ./discord
-    ./alacritty.nix
     ./sets.nix
   ];
 

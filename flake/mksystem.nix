@@ -34,7 +34,6 @@ in {
               imports = import "${root}/modules";
               nixpkgs = {
                 overlays = [
-                  inputs.emacs-overlay.overlay
                   inputs.rust-overlay.overlays.default
                   inputs.nixpkgs-xr.overlays.default
                 ];
@@ -43,8 +42,8 @@ in {
                 extraSpecialArgs = {inherit inputs mlib;};
                 sharedModules = [
                   inputs.hyprlux.homeManagerModules.default
-                  inputs.plasma-manager.homeModules.plasma-manager
                   inputs.emacs.homeModules.default
+                  inputs.vicinae.homeManagerModules.default
                 ];
               };
             })

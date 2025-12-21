@@ -64,32 +64,6 @@ in {
           "gtk-4.0/gtk-dark.css" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
         };
       })
-      (mkIf (builtins.elem "plasma" config.meow.workstation.environment) (let
-        qtPackage = pkgs.catppuccin-kde.override {
-          accents = ["mauve"];
-          flavour = ["mocha"];
-        };
-      in {
-        home.packages = with pkgs; [
-          qtPackage
-          cfg.iconTheme.package
-        ];
-
-        programs.plasma = let
-          V = val: {
-            value = val;
-            immutable = true;
-          };
-        in {
-          configFile = {
-            "auroraerc"."CatppuccinMocha-Modern"."ButtonSize" = V 0;
-            "kdeglobals"."KDE"."LookAndFeelPackage" = V "Catppuccin-Mocha-Mauve";
-            "kdeglobals"."Icons"."Theme" = V cfg.iconTheme.name;
-            "kdedefaults/kdeglobals"."Icons"."Theme" = V cfg.iconTheme.name;
-            "kdedefaults/kdeglobals"."General"."ColorScheme" = V "CatppuccinMochaMauve";
-          };
-        };
-      }))
     ];
   };
 }
