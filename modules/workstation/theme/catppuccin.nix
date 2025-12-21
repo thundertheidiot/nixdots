@@ -36,13 +36,13 @@ in {
           };
         };
 
-        qt = {
-          enable = true;
-          platformTheme.name = lib.mkForce "kde";
-          style = {
-            # name = "kvantum";
-          };
-        };
+        # qt = {
+        #   enable = true;
+        #   # platformTheme.name = lib.mkForce "kde";
+        #   style = {
+        #     # name = "kvantum";
+        #   };
+        # };
 
         xdg.dataFile."Kvantum/catppuccin-mocha-mauve" = {
           source = "${(pkgs.catppuccin-kvantum.override {

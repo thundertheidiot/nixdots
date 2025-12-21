@@ -20,7 +20,8 @@ in {
         mHome.lang.python = true;
 
         home.packages = with pkgs; [
-          vscode-fhs # 🤮
+          # not actually required as of now
+          # vscode-fhs # 🤮
           lmath # math editor
           (stdenvNoCC.mkDerivation {
             name = "tmc-cli";

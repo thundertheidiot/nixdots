@@ -110,14 +110,15 @@ in {
         ];
       };
 
-      # NOTE temp qt fix
-      qt.platformTheme = lib.mkForce "kde";
+      stylix.targets.qt.enable = true;
+
+      qt = {
+        enable = true;
+        platformTheme = "qt5ct";
+        style = null;
+      };
 
       meow.home.modules = [
-        {
-          # NOTE temp qt fix
-          qt.platformTheme.name = lib.mkForce "kde";
-        }
         {
           home.packages = [cfg.iconTheme.package];
 
@@ -126,6 +127,7 @@ in {
             kde.enable = false;
             hyprpaper.enable = lib.mkForce false;
             waybar.enable = false;
+            qt.enable = true;
           };
 
           fonts.fontconfig = {
@@ -138,38 +140,38 @@ in {
             gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
           };
 
-          xdg.configFile."qt5ct/qt5ct.conf".text = lib.generators.toINI {} {
-            Appearance = {
-              standard_dialogs = "default";
-              style = "kvantum";
-              icon_theme = cfg.iconTheme.name;
-            };
-            Fonts = {
-              #        name,   size, ?,?, ?,?,?,?,?,?
-              fixed = "Monospace,10,-1,5,50,0,0,0,0,0";
-              general = "Sans Serif,12,-1,5,50,0,0,0,0,0";
-            };
-            Interface = {
-              activate_item_on_single_click = 0;
-            };
-          };
+          # xdg.configFile."qt5ct/qt5ct.conf".text = lib.generators.toINI {} {
+          #   Appearance = {
+          #     standard_dialogs = "default";
+          #     style = "kvantum";
+          #     icon_theme = cfg.iconTheme.name;
+          #   };
+          #   Fonts = {
+          #     #        name,   size, ?,?, ?,?,?,?,?,?
+          #     fixed = "Monospace,10,-1,5,50,0,0,0,0,0";
+          #     general = "Sans Serif,12,-1,5,50,0,0,0,0,0";
+          #   };
+          #   Interface = {
+          #     activate_item_on_single_click = 0;
+          #   };
+          # };
 
           # TODO: qt6 titlebars broken, test
-          xdg.configFile."qt6ct/qt6ct.conf".text = lib.generators.toINI {} {
-            Appearance = {
-              standard_dialogs = "default";
-              style = "kvantum";
-              icon_theme = cfg.iconTheme.name;
-            };
-            Fonts = {
-              #        name,   size, ?,?, ?,?,?,?,?,?
-              fixed = "Monospace,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-              general = "Sans Serif,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-            };
-            Interface = {
-              activate_item_on_single_click = 0;
-            };
-          };
+          # xdg.configFile."qt6ct/qt6ct.conf".text = lib.generators.toINI {} {
+          #   Appearance = {
+          #     standard_dialogs = "default";
+          #     style = "kvantum";
+          #     icon_theme = cfg.iconTheme.name;
+          #   };
+          #   Fonts = {
+          #     #        name,   size, ?,?, ?,?,?,?,?,?
+          #     fixed = "Monospace,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+          #     general = "Sans Serif,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+          #   };
+          #   Interface = {
+          #     activate_item_on_single_click = 0;
+          #   };
+          # };
         })
       ];
 

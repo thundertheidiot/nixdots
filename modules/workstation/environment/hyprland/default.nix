@@ -75,18 +75,11 @@ in {
             splash = false
           '';
 
-          home.packages = with pkgs; [
-            swayosd
-
-            gparted
-            blueberry
-            (pkgs.nemo-with-extensions.overrideAttrs (final: prev: {
-              extensions = with pkgs; [nemo-fileroller];
-            }))
-            file-roller
+          home.packages = [
+            pkgs.blueberry
+            pkgs.nautilus
+            pkgs.file-roller
           ];
-
-          services.swaync.enable = true;
 
           programs.hyprlux = {
             enable = true;
@@ -110,7 +103,8 @@ in {
           };
 
           programs.waybar.enable = true;
-          programs.alacritty.enable = lib.mkDefault true;
+          programs.alacritty.enable = true;
+          services.swaync.enable = true;
 
           xdg.configFile."swappy/config".text = ''
             [Default]
@@ -168,7 +162,7 @@ in {
 
                 # "EDITOR,emacsclient -c -a ''"
 
-                "QT_QPA_PLATFORMTHEME,qt5ct"
+                # "QT_QPA_PLATFORMTHEME,qt5ct"
 
                 # "WLR_DRM_NO_ATOMIC,1"
               ];

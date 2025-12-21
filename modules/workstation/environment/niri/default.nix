@@ -27,6 +27,13 @@ in {
       {
         services.swaync.enable = true;
         services.vicinae.enable = true;
+        programs.alacritty.enable = true;
+
+        home.packages = [
+          pkgs.nautilus
+          pkgs.file-roller
+          pkgs.blueberry
+        ];
 
         xdg.configFile."niri/config.kdl".text = let
           colors = config.lib.stylix.colors.withHashtag;
@@ -120,6 +127,8 @@ in {
           spawn-at-startup "${waybar}"
           spawn-at-startup "${swayosd}"
           spawn-at-startup "${swww}"
+
+          recent-windows { off; }
 
           binds {
             Mod+E { spawn-sh "emacsclient -c -a '''"; }

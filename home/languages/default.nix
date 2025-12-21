@@ -6,7 +6,7 @@
   ...
 }: let
   inherit (mlib) mkEnOpt;
-  inherit (lib) genAttrs mkMerge mkIf listToAttrs;
+  inherit (lib) genAttrs mkMerge mkIf listToAttrs mkDefault;
 
   mkLangs = l: genAttrs l (n: mkEnOpt "Enable support for ${n}");
 
@@ -33,7 +33,7 @@ in {
     enAll = list:
       listToAttrs (map (i: {
           name = i;
-          value = true;
+          value = mkDefault true;
         })
         list);
   in
@@ -60,8 +60,9 @@ in {
               alejandra # fmt
             ])
             (mkIf cfg.rust [
-              rust-bin.stable.latest.default
-              rust-bin.stable.latest.rust-analyzer
+              # rust-bin.stable.latest.default
+              # rust-bin.stable.latest.rust-analyzer
+              rustup
             ])
             (mkIf cfg.haskell [
               (haskellPackages.ghcWithPackages (pkgs: []))
@@ -71,7 +72,11 @@ in {
               lua-language-server
             ])
             (mkIf cfg.latex [
-              texlive.combined.scheme-full
+              texlive.combined.scheme-small
+              texlivePackages.amsmath
+              texlivePackages.amsfonts
+              texlivePackages.mathtools
+              texlivePackages.picture
             ])
             (mkIf cfg.c_cxx [
               clang-tools
