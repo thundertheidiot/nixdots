@@ -19,6 +19,7 @@ in {
   options = {
     meow.monitors = mkOption {
       description = "monitors";
+      default = {};
       type = attrsOf (submodule ({name, ...}: {
         options = {
           name = mkOption {
