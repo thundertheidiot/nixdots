@@ -137,6 +137,8 @@ in {
             Mod+W { spawn "firefox"; }
             Print { screenshot; }
 
+            End { spawn-sh "mumble rpc togglemute"; }
+
             Mod+D { spawn-sh "vicinae open"; }
 
             XF86AudioPlay { spawn-sh "mpc toggle"; }
