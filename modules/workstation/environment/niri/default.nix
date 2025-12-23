@@ -171,6 +171,16 @@ in {
             Mod+Shift+Ctrl+H { move-column-to-first; }
             Mod+Shift+Ctrl+L { move-column-to-last; }
 
+            Mod+Alt+J { focus-workspace-down; }
+            Mod+Alt+K { focus-workspace-up; }
+            Mod+Alt+Ctrl+J { focus-workspace 99; }
+            Mod+Alt+Ctrl+K { focus-workspace 1; }
+
+            Mod+Alt+Shift+J { move-window-to-workspace-down; }
+            Mod+Alt+Shift+K { move-window-to-workspace-up; }
+            Mod+Alt+Ctrl+Shift+J { move-window-to-workspace 1; }
+            Mod+Alt+Ctrl+Shift+K { move-window-to-workspace 99; }
+
             Mod+Comma { focus-monitor-left; }
             Mod+Period { focus-monitor-right; }
             Mod+Shift+Comma { move-window-to-monitor-left; }
