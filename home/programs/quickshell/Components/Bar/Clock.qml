@@ -4,9 +4,9 @@ import QtQuick
 Text {
     SystemClock {
 	id: clock
-	precision: SystemClock.Seconds
+	precision: SystemClock.Minutes
     }
 
-    text: Qt.formatDateTime(clock.date, "yyyy-MM-dd hh:mm:ss")
+    text: Qt.formatDateTime(clock.date, "yyyy-MM-dd hh:mm")
     anchors.centerIn: parent
 }

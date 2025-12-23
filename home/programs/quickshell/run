@@ -1,0 +1,7 @@
+#! /usr/bin/env nix
+#! nix shell nixpkgs#quickshell github:imiric/qml-niri nixpkgs#bash --command bash
+
+export QML_IMPORT_PATH="$(nix build --print-out-paths github:imiric/qml-niri)/lib/qt-6/qml/"
+echo $QML_IMPORT_PATH
+
+qs -p shell.qml
