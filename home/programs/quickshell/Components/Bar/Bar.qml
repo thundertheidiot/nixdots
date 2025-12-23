@@ -4,8 +4,12 @@ import Quickshell.Services.SystemTray
 import QtQuick
 import QtQuick.Layouts
 import "Clock"
+import "Audio"
 
 PanelWindow {
+    required property var modelData
+    screen: modelData
+
     anchors {
 	top: true
 	left: true
@@ -24,12 +28,12 @@ PanelWindow {
 	    spacing: 7
 	
 	Text {
-	    text: niri.focusedWindow?.title ?? "no wndow"
+	    text: niri.focusedWindow?.title ?? ""
 	anchors.verticalCenter: parent.verticalCenter
 	}
 
 	Text {
-	    text: niri.focusedWindow?.title ?? "no wndow"
+	    text: niri.focusedWindow?.title ?? ""
 	anchors.verticalCenter: parent.verticalCenter
 	}
     }
@@ -44,6 +48,8 @@ PanelWindow {
 
 	height: parent.height
 
+	Audio {}
+
 	RowLayout {
 	    anchors.centerIn: parent
 	    spacing: 7
@@ -52,7 +58,6 @@ PanelWindow {
 		model: SystemTray.items
 
 		delegate: Rectangle {
-		    id: sysItem
 		    required property var modelData
 		    Layout.alignment: Qt.AlignCenter
 

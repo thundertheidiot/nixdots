@@ -3,10 +3,9 @@ import QtQuick
 import Niri 0.1
 
 import "Components/Bar"
+import qs.Services
 
 ShellRoot {
-    id: root
-
     property color colBase: "#1e1e2e"
 
     Niri {
@@ -18,7 +17,14 @@ ShellRoot {
 
     LazyLoader {
 	active: true
-	component: Bar {}
+	component: Variants {
+	    model: Quickshell.screens;
+
+	    delegate: Component {
+		Bar {}
+	    }
+	}
+
     }
 }
 
