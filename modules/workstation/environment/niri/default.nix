@@ -178,8 +178,8 @@ in {
 
             Mod+Alt+Shift+J { move-window-to-workspace-down; }
             Mod+Alt+Shift+K { move-window-to-workspace-up; }
-            Mod+Alt+Ctrl+Shift+J { move-window-to-workspace 1; }
-            Mod+Alt+Ctrl+Shift+K { move-window-to-workspace 99; }
+            Mod+Alt+Ctrl+Shift+J { move-window-to-workspace 99; }
+            Mod+Alt+Ctrl+Shift+K { move-window-to-workspace 1; }
 
             Mod+Comma { focus-monitor-left; }
             Mod+Period { focus-monitor-right; }
