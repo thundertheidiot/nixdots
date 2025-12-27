@@ -18,6 +18,11 @@ in {
         proxyPass = "http://127.0.0.1:${toString config.services.icecast.listen.port}";
         recommendedProxySettings = true;
       };
+
+      locations."/status-json.xsl" = {
+        proxyPass = "http://127.0.0.1:${toString config.services.icecast.listen.port}";
+        recommendedProxySettings = true;
+      };
     };
 
     services.icecast = {
@@ -44,6 +49,13 @@ in {
         set("log.stdout", true)
 
         files = playlist(mode="randomize", "${config.meow.impermanence.persist}/radio")
+
+        def filename_title(m) =
+          filename = m["filename"]
+          [("title", "#{filename}")]
+        end
+
+        files = metadata.map(filename_title, files)
 
         output.icecast(
           %vorbis(samplerate=44100, channels=2, quality=0.6),
