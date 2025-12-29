@@ -1317,11 +1317,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1767009455,
-        "narHash": "sha256-tluyrwc9R9M+eZRT7e5MTIhmTWYb2cWI4jbrrR6b024=",
+        "lastModified": 1767020025,
+        "narHash": "sha256-ALA3FVfgmvnGweHJu9ROScljK4WcnsY/zuFB7bpIUiE=",
         "owner": "thundertheidiot",
         "repo": "leptos-kotiboksi",
-        "rev": "e053a417994ec2598d5ea48a40b1e7f9ef10029e",
+        "rev": "af971432dc6cf4dd443db0df7c161c44ea23600d",
         "type": "github"
       },
       "original": {
