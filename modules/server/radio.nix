@@ -50,12 +50,12 @@ in {
 
         files = playlist(mode="randomize", "${config.meow.impermanence.persist}/radio")
 
-        def filename_title(m) =
-          filename = m["filename"]
+        def update_metadata(m) =
+          filename = path.remove_extension(path.basename(m["filename"]))
           [("title", "#{filename}")]
         end
 
-        files = metadata.map(filename_title, files)
+        files = metadata.map(update_metadata, files)
 
         output.icecast(
           %vorbis(samplerate=44100, channels=2, quality=0.6),
