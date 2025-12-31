@@ -48,7 +48,7 @@ in {
           "c_sharp"
           "python"
           "bash"
-          "web"
+          # "web"
           # "latex"
         ];
       })
