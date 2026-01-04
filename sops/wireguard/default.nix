@@ -17,6 +17,17 @@ in {
       // shared;
   };
 
+  bighome = {
+    sops.secrets =
+      {
+        wg_private = {
+          sopsFile = ./bighome-wg-privkey;
+          format = "binary";
+        };
+      }
+      // shared;
+  };
+
   vps = {
     sops.secrets =
       {
@@ -29,5 +40,6 @@ in {
   };
 
   pubkeyHome = ./home-wg-pubkey;
+  pubkeyBigHome = ./bighome-wg-pubkey;
   pubkeyVps = ./vps-wg-pubkey;
 }

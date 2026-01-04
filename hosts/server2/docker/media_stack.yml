@@ -1,0 +1,181 @@
+---
+name: "media"
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 127.0.0.1:8080:8080 # qbittorrent
+      - 127.0.0.1:5030:5030 # slskd
+      - 127.0.0.1:7878:7878 # radarr
+      - 127.0.0.1:8989:8989 # sonarr
+      - 127.0.0.1:8686:8686 # lidarr
+      - 127.0.0.1:6767:6767 # bazarr
+      - 127.0.0.1:9696:9696 # prowlarr
+      - 127.0.0.1:3000:3000 # firefox
+    env_file:
+      - path: /run/torrent_stack.env
+        # This file is actually a requirement, but compose2nix checks that the docker config is functional'
+        required: false
+    environment:
+      - VPN_SERVICE_PROVIDER=airvpn
+      - VPN_TYPE=wireguard
+      - SERVER_COUNTRIES=Sweden
+      - TZ=Europe/Helsinki
+      - FIREWALL_VPN_INPUT_PORTS=3865 # torrent
+    restart: unless-stopped
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    network_mode: "service:gluetun"
+    container_name: qbittorrent
+    depends_on:
+      - gluetun
+    volumes:
+      - /mnt/storage/torrent_stack/config/qbittorrent:/config
+      - /mnt/storage/media/downloads/torrents:/downloads
+    environment:
+      - TZ=Europe/Helsinki
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=3865
+      - PUID=1000
+      - PGID=1000
+    restart: unless-stopped
+
+  slskd:
+    image: slskd/slskd
+    network_mode: "service:gluetun"
+    container_name: slskd
+    depends_on:
+      - gluetun
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+      - UID=1000
+      - GID=1000
+    volumes:
+      - /mnt/storage/torrent_stack/config/slskd:/app
+      - /mnt/storage/media/downloads/soulseek/incomplete:/app/incomplete
+      - /mnt/storage/media/downloads/soulseek:/app/downloads
+      - /mnt/storage/media:/media
+    restart: unless-stopped
+
+  firefox:
+    image: lscr.io/linuxserver/firefox:latest
+    network_mode: "service:gluetun"
+    container_name: firefox
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      - /mnt/storage/torrent_stack/config/firefox:/config
+    environment:
+      - PASSWORD=
+    shm_size: "1gb"
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    network_mode: "service:gluetun"
+    container_name: radarr
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /mnt/storage/torrent_stack/config/radarr:/config
+      - /mnt/storage/media/downloads/torrents:/downloads
+      - /mnt/storage/media:/media
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    network_mode: "service:gluetun"
+    container_name: sonarr
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /mnt/storage/torrent_stack/config/sonarr:/config
+      - /mnt/storage/media/downloads/torrents:/downloads
+      - /mnt/storage/media:/media
+    restart: unless-stopped
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    network_mode: "service:gluetun"
+    container_name: lidarr
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /mnt/storage/torrent_stack/config/lidarr:/config
+      - /mnt/storage/media/downloads/torrents:/downloads
+      - /mnt/storage/media:/media
+    restart: unless-stopped
+
+  soularr:
+    image: mrusse08/soularr:latest
+    network_mode: "service:gluetun"
+    container_name: soularr
+    depends_on:
+      - gluetun
+    labels:
+      - "compose2nix.settings.autoStart=false"
+    user: "1000:1000"
+    environment:
+      - TZ=Europe/Helsinki
+      - SCRIPT_INTERVAL=1; exit
+    volumes:
+      - /mnt/storage/torrent_stack/config/soularr:/data
+      - /mnt/storage/media/downloads/soulseek:/downloads
+      - /mnt/storage/media/downloads/soulseek:/mnt/storage/media/downloads/soulseek
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    network_mode: "service:gluetun"
+    container_name: bazarr
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /mnt/storage/torrent_stack/config/bazarr:/config
+      - /mnt/storage/media/downloads/torrents:/downloads
+      - /mnt/storage/media:/media
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    network_mode: "service:gluetun"
+    environment:
+      - LOG_LEVEL=info
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    network_mode: "service:gluetun"
+    container_name: prowlarr
+    depends_on:
+      - gluetun
+    environment:
+      - TZ=Europe/Helsinki
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /mnt/storage/torrent_stack/config/prowlarr:/config
+      - /mnt/storage/media/downloads/torrents:/downloads
+      - /mnt/storage/media:/media
+    restart: unless-stopped

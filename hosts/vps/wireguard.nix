@@ -23,6 +23,12 @@ in {
           publicKey = builtins.readFile keys.pubkeyHome;
           presharedKeyFile = config.sops.secrets.wg_psk.path;
         }
+        # Homeserver 2 - port forward
+        {
+          allowedIPs = ["10.100.0.3/32"];
+          publicKey = builtins.readFile keys.pubkeyBigHome;
+          presharedKeyFile = config.sops.secrets.wg_psk.path;
+        }
       ];
     };
 
