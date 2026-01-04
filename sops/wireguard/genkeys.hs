@@ -26,4 +26,4 @@ main = do
   pskey <- genpsk
   encrypt pskey >>= writeFile "wg-pskey"
   
-  mapM_ makeKeys ["home", "vps"]
+  mapM_ makeKeys ["home", "bighome", "vps"]

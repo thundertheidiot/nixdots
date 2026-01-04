@@ -5,7 +5,7 @@
 }: let
   keys = import "${inputs.self.outPath}/sops/wireguard";
 in {
-  imports = [keys.home];
+  imports = [keys.bighome];
 
   config = {
     networking.wg-quick.interfaces.wg0 = {

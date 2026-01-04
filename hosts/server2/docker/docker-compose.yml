@@ -1,0 +1,5 @@
+name: "server2"
+include:
+  - ./media_stack.yml
+  - ./watchtower.yml
+

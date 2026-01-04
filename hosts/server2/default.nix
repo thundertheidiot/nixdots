@@ -10,18 +10,15 @@
 in {
   options = {
     # here for easier changing in case of router change etc.
-    server.addr = mkOpt str "192.168.101.101" {};
+    server.addr = mkOpt str "192.168.101.111" {};
   };
 
   imports = [
     # local self signed certificates
     (import ../../certs).module
-    ./authentik.nix
-    ./camera.nix
     ./disko.nix
     ./dns.nix
     ./docker
-    ./forgejo.nix
     ./home-assistant
     ./homepage.nix
     ./jellyfin.nix
@@ -31,9 +28,9 @@ in {
   ];
 
   config = {
-    system.stateVersion = "24.11";
+    system.stateVersion = "26.05";
     time.timeZone = "Europe/Helsinki";
-    networking.hostName = "uwu";
+    networking.hostName = "server2";
 
     powerManagement.powertop.enable = true;
 
@@ -56,13 +53,10 @@ in {
       workstation.enable = false;
       home.enable = false;
 
+      boot.efi = true;
+
       impermanence.enable = true;
       impermanence.persist = "/nix/persist";
-      impermanence.directories = [
-        {
-          path = "/var/lib/rancher";
-        }
-      ];
 
       gpu = "intel";
 

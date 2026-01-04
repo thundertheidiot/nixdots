@@ -1,0 +1,7 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash compose2nix
+
+compose2nix --output=generated.nix \
+	    --runtime=docker \
+	    --include_env_files=true
+	    
