@@ -106,11 +106,17 @@
     "/nix".neededForBoot = true;
     "/tmp".neededForBoot = true;
 
+    "/mnt/2tb" = {
+      device = "/dev/disk/by-uuid/6c29f48d-d7de-4745-960e-8a241c638fee";
+      fsType = "btrfs";
+    };
+
     "/mnt/storage" = {
       fsType = "fuse.mergerfs";
-      device = "/mnt/4tb:/mnt/ssd1:/mnt/ssd2";
+      device = "/mnt/4tb:/mnt/2tb:/mnt/ssd1:/mnt/ssd2";
       depends = [
         "/mnt/4tb"
+        "/mnt/2tb"
         "/mnt/ssd1"
         "/mnt/ssd2"
       ];
