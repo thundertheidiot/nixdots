@@ -66,6 +66,10 @@
 
         python313Packages.python
       ];
+
+      services.syncthing = {
+        enable = true;
+      };
     }
   ];
 
