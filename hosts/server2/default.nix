@@ -3,6 +3,7 @@
   config,
   lib,
   mlib,
+  inputs,
   ...
 }: let
   inherit (mlib) mkOpt;
@@ -25,6 +26,7 @@ in {
     ./redlib.nix
     ./secrets
     ./wireguard.nix
+    inputs.autoaspm.nixosModules.default
   ];
 
   config = {
@@ -33,6 +35,8 @@ in {
     networking.hostName = "server2";
 
     powerManagement.powertop.enable = true;
+
+    services.autoaspm.enable = true;
 
     hardware.graphics.enable = true;
     hardware.graphics.extraPackages = with pkgs; [
