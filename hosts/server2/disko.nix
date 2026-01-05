@@ -123,7 +123,7 @@
       options = [
         "cache.files=auto-full"
         "dropcacheonclose=true"
-        "category.create=mfs"
+        "category.create=epmfs"
       ];
     };
   };
