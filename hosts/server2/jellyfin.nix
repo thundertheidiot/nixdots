@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
   config = {
     services.jellyfin = {
       enable = true;
@@ -21,8 +25,11 @@
     ];
 
     services.nginx.virtualHosts."jellyfin.local" = {
-      root = "/fake";
       serverAliases = ["jellyfin.home"];
+
+      forceSSL = true;
+      sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
+      sslCertificateKey = config.sops.secrets.localKey.path;
 
       # recommendedTlsSettings = false;
       locations = {
