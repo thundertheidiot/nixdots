@@ -121,9 +121,12 @@
         "/mnt/ssd2"
       ];
       options = [
-        "cache.files=auto-full"
-        "dropcacheonclose=true"
-        "category.create=epmfs"
+        # https://trapexit.github.io/mergerfs/latest/quickstart
+        # > linux 6.6
+        "cache.files=off"
+        "func.getattr=newest"
+        "dropcacheonclose=false"
+        "category.create=msppfrd"
       ];
     };
   };
