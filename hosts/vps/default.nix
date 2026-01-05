@@ -24,6 +24,7 @@ in {
   config = {
     _module.args = rec {
       server.homeServer = "10.100.0.2";
+      server.homeServer2 = "10.100.0.3";
     };
 
     networking.hostName = "vps";

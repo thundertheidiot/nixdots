@@ -9,7 +9,7 @@ in {
 
   config = {
     networking.wg-quick.interfaces.wg0 = {
-      address = ["10.100.0.2/24"];
+      address = ["10.100.0.3/24"];
       privateKeyFile = config.sops.secrets.wg_private.path;
 
       peers = [
