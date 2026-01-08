@@ -117,6 +117,26 @@
         "type": "github"
       }
     },
+    "autoaspm": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767432031,
+        "narHash": "sha256-ttfgUpC0C5XizuAD3lUE5fda5IeXvbedNcGtG2364IM=",
+        "ref": "refs/heads/main",
+        "rev": "11e921446423582836fb5b290e053fc7c6643efe",
+        "revCount": 11,
+        "type": "git",
+        "url": "https://git.notthebe.ee/notthebee/AutoASPM"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.notthebe.ee/notthebee/AutoASPM"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -2025,6 +2045,7 @@
       "inputs": {
         "actions": "actions",
         "authentik-nix": "authentik-nix",
+        "autoaspm": "autoaspm",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
         "emacs": "emacs",
