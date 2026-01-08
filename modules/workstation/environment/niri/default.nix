@@ -23,6 +23,10 @@ in {
     environment.systemPackages = [pkgs.xwayland-satellite pkgs.swww];
     programs.niri.enable = true;
 
+    xdg.portal.config = {
+      common."org.freedesktop.impl.portal.OpenURI" = ["gtk"];
+    };
+
     meow.home.modules = [
       {
         services.swaync.enable = true;
