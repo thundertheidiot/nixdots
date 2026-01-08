@@ -1,7 +1,6 @@
 {
-  pkgs,
-  lib,
   config,
+  inputs,
   ...
 }: let
   # vpnAddress = config.vpnNamespaces."airvpn".namespaceAddress;
@@ -16,7 +15,9 @@ in {
     services.nginx.virtualHosts = {
       "homepage.local" = {
         serverAliases = ["homepage.home"];
-        root = "/fake";
+        addSSL = true;
+        sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
+        sslCertificateKey = config.sops.secrets.localKey.path;
         locations = {
           "/" = {
             proxyPass = "http://127.0.0.1:8082";
