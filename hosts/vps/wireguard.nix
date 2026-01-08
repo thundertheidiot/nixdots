@@ -46,9 +46,13 @@ in {
         server 10.100.0.2:22;
       }
 
+      upstream home2_ssh {
+        server 10.100.0.3:22;
+      }
+
       server {
         listen 2222;
-        proxy_pass home_ssh;
+        proxy_pass home2_ssh;
       }
     '';
 
