@@ -27,7 +27,7 @@
     services.nginx.virtualHosts."jellyfin.local" = {
       serverAliases = ["jellyfin.home"];
 
-      forceSSL = true;
+      addSSL = true;
       sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
       sslCertificateKey = config.sops.secrets.localKey.path;
 
