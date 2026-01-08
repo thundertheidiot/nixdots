@@ -65,6 +65,13 @@ in {
         enable = true;
         wayland = true;
       };
+
+      meow.impermanence.directories = [
+        {
+          path = "/var/lib/gdm";
+          permissions = "755";
+        }
+      ];
     })
     (mkIf (builtins.elem "hyprland" envir) {
       services.gvfs.enable = true;

@@ -18,6 +18,7 @@
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "framework";
 
+  # networking.wireless.enable = false;
   # networking.networkmanager.wifi.backend = "iwd";
 
   users.users.thunder = {
