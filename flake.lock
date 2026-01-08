@@ -2169,11 +2169,11 @@
         "rust-overlay": "rust-overlay_4"
       },
       "locked": {
-        "lastModified": 1762341809,
-        "narHash": "sha256-Y8Q/Qsgi8vGja7xggwvZG/qkWoHb7s9ktTgIEM79b0s=",
+        "lastModified": 1767893553,
+        "narHash": "sha256-yLc3gbCH3+ze98tFTLTsYmp1N9BuCMQbqdwyopY3k7E=",
         "owner": "thundertheidiot",
         "repo": "sodexobot",
-        "rev": "27d8c3a2cba3e1a252f590d746d3fb41971955d7",
+        "rev": "08f4206c2ee64fd0010964982323134b8a05f6ce",
         "type": "github"
       },
       "original": {
