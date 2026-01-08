@@ -72,6 +72,7 @@ in {
       permittedInsecurePackages = [
         "libsoup-2.74.3"
         "mbedtls-2.28.10" # TODO insecure check why
+        "ciscoPacketTracer8-8.2.2"
       ];
     };
 

@@ -14,6 +14,22 @@ in {
   options.meow.school.enable = mkEnOpt "Enable school stuff";
 
   config = mkIf cfg.enable {
+    programs.firejail = {
+      enable = true;
+      wrappedBinaries = {
+        packettracer8 = {
+          executable = lib.getExe pkgs.ciscoPacketTracer8;
+          desktop = "${pkgs.ciscoPacketTracer8}/share/applications/cisco-pt8.desktop.desktop";
+
+          extraArgs = [
+            "--net=none"
+            "--noprofile"
+            ''--env=QT_STYLE_OVERRIDE=""''
+          ];
+        };
+      };
+    };
+
     meow.home.modules = [
       {
         mHome.lang.c_sharp = true;
