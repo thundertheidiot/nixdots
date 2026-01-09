@@ -81,7 +81,7 @@
   meow = {
     fullSetup = true;
     workstation.enable = true;
-    workstation.environment = ["niri" "hyprland"];
+    workstation.environment = ["niri"];
     workstation.displayManager = "gdm";
 
     impermanence.enable = true;
