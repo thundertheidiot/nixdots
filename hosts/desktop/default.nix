@@ -70,7 +70,6 @@
       home.stateVersion = "24.05";
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
-      mHome.lang.haskell = false;
       meowEmacs.enable = true;
 
       gtk.gtk3.bookmarks = [
@@ -229,10 +228,6 @@
 
     orca-slicer
   ];
-
-  programs.adb.enable = true;
-  # boot.binfmt.emulatedSystems = ["aarch64-linux"];
-  users.users."${config.meow.user}".extraGroups = ["adbusers"];
 
   hardware.ckb-next.enable = true;
 

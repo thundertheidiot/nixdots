@@ -28,7 +28,7 @@ in {
     };
   };
 
-  config = mkIf (work && elem "hyprland" env) (homeModule {
+  config = mkIf (work && (elem "hyprland" env) || (elem "niri" env)) (homeModule {
     programs.waybar.settings = let
       diskName = name:
         if name == null

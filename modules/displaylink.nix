@@ -24,8 +24,6 @@ in {
         config.boot.kernelPackages.evdi
       ];
 
-      kernelPackages = mkForce pkgs.linuxKernel.packages.linux_6_17;
-
       initrd.kernelModules = ["evdi"];
     };
   };

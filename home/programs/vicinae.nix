@@ -1,6 +1,7 @@
 {...}: {
   services.vicinae = {
-    autoStart = true;
+    systemd.enable = true;
+
     settings = {
       font.size = 12;
       window = {
