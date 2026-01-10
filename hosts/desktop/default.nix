@@ -208,8 +208,6 @@
   hardware.keyboard.qmk.enable = true;
 
   environment.systemPackages = with pkgs; [
-    lmath
-
     distrobox
 
     easyeffects
@@ -227,6 +225,8 @@
     android-tools
 
     orca-slicer
+
+    electrum-ltc
   ];
 
   hardware.ckb-next.enable = true;
