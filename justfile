@@ -11,8 +11,6 @@ _build host:
 cached_hosts := "framework server2 vps"
 cache:
   #!/usr/bin/env bash
-  just prefetch
-
   for h in {{cached_hosts}}; do
     echo $h
     just _build $h | cachix push meowos
@@ -29,7 +27,6 @@ boot host="":
 
 yeet host target="":
   #!/usr/bin/env bash
-  just prefetch
   if [[ "{{target}}" = "" ]]; then
     nh os switch -H {{host}} --target-host {{host}} . -- --accept-flake-config --show-trace
   else
@@ -38,7 +35,6 @@ yeet host target="":
 
 _nh command host:
   #!/usr/bin/env bash
-  just prefetch
   if [[ "{{host}}" = "" ]]; then
     nh os {{command}} . -- --accept-flake-config --show-trace
   else

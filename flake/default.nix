@@ -31,5 +31,12 @@
         cachix
       ];
     };
+
+    devShells.genkeys = pkgs.mkShell {
+      packages = with pkgs; [
+        (sbcl.withPackages
+          (ps: with ps; [shasht]))
+      ];
+    };
   };
 }

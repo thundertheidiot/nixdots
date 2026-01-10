@@ -7,7 +7,7 @@
   root = inputs.self.outPath;
   keys = import "${root}/sops/wireguard";
 in {
-  imports = [keys.vps];
+  imports = [keys.vps.module];
 
   config = {
     networking.wg-quick.interfaces.wg0 = {
@@ -20,14 +20,14 @@ in {
         # Homeserver - port forward
         {
           allowedIPs = ["10.100.0.2/32"];
-          publicKey = builtins.readFile keys.pubkeyHome;
-          presharedKeyFile = config.sops.secrets.wg_psk.path;
+          publicKey = keys.home.pubkey;
+          presharedKeyFile = config.sops.secrets.wg_preshared.path;
         }
         # Homeserver 2 - port forward
         {
           allowedIPs = ["10.100.0.3/32"];
-          publicKey = builtins.readFile keys.pubkeyBigHome;
-          presharedKeyFile = config.sops.secrets.wg_psk.path;
+          publicKey = keys.home2.pubkey;
+          presharedKeyFile = config.sops.secrets.wg_preshared.path;
         }
       ];
     };
