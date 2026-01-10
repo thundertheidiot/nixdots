@@ -1,45 +1,24 @@
 let
-  shared = {
-    wg_psk = {
-      sopsFile = ./wg-pskey;
-      format = "binary";
+  inherit (builtins) fromJSON readFile mapAttrs;
+
+  publicKeys = fromJSON (readFile ./public-keys.json);
+
+  mkWg = name: pubkey: {
+    inherit pubkey;
+    module = {
+      sops.secrets = {
+        wg_private = {
+          sopsFile = ./private-keys.json;
+          format = "json";
+          key = name;
+        };
+
+        wg_preshared = {
+          sopsFile = ./preshared-key;
+          format = "binary";
+        };
+      };
     };
   };
-in {
-  home = {
-    sops.secrets =
-      {
-        wg_private = {
-          sopsFile = ./home-wg-privkey;
-          format = "binary";
-        };
-      }
-      // shared;
-  };
-
-  bighome = {
-    sops.secrets =
-      {
-        wg_private = {
-          sopsFile = ./bighome-wg-privkey;
-          format = "binary";
-        };
-      }
-      // shared;
-  };
-
-  vps = {
-    sops.secrets =
-      {
-        wg_private = {
-          sopsFile = ./vps-wg-privkey;
-          format = "binary";
-        };
-      }
-      // shared;
-  };
-
-  pubkeyHome = ./home-wg-pubkey;
-  pubkeyBigHome = ./bighome-wg-pubkey;
-  pubkeyVps = ./vps-wg-pubkey;
-}
+in
+  mapAttrs mkWg publicKeys
