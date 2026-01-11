@@ -17,7 +17,6 @@ in {
   imports = [
     # local self signed certificates
     (import ../../certs).module
-    ./change.nix
     ./disko.nix
     ./dns.nix
     ./docker
@@ -26,6 +25,7 @@ in {
     ./jellyfin.nix
     ./redlib.nix
     ./secrets
+    ./urlwatch.nix
     ./wireguard.nix
     inputs.autoaspm.nixosModules.default
   ];

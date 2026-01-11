@@ -16,15 +16,16 @@
         format = "yaml";
       };
 
-      notify_provider_config = {
-        sopsFile = ./notify.yaml;
+      urlwatch_urls = {
+        sopsFile = ./urlwatch_urls.yaml;
         format = "yaml";
         key = "";
       };
 
-      notify_links = {
-        sopsFile = ./notify_links.txt;
-        format = "binary";
+      urlwatch_config = {
+        sopsFile = ./urlwatch_config.yaml;
+        format = "yaml";
+        key = "";
       };
     };
   };
