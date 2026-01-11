@@ -4,7 +4,7 @@
   ...
 }: {
   meow.impermanence.directories = [
-    {path = "/var/lib/notifier";}
+    {path = "/var/lib/urlwatch";}
   ];
 
   users.users.urlwatch.isSystemUser = true;
