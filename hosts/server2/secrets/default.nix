@@ -15,6 +15,17 @@
         sopsFile = ./home-assistant.yaml;
         format = "yaml";
       };
+
+      notify_provider_config = {
+        sopsFile = ./notify.yaml;
+        format = "yaml";
+        key = "";
+      };
+
+      notify_links = {
+        sopsFile = ./notify_links.txt;
+        format = "binary";
+      };
     };
   };
 }

@@ -17,6 +17,7 @@ in {
   imports = [
     # local self signed certificates
     (import ../../certs).module
+    ./change.nix
     ./disko.nix
     ./dns.nix
     ./docker
