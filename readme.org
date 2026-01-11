@@ -1,6 +1,6 @@
 * MeowOS
 
-Welcome to my very complicated NixOS configuration. This mess currently runs on my desktop (=desktop=), laptop (=framework=), optiplex homeserver (=uwu=) and vps (=vps=). I am very creative with naming things. It's a slowly moving flake of theseus, infinitely going through small refactoring. The original commits in this repo date back to when i first got started with [[https://github.com/nix-community/home-manager/][home-manager]].
+Welcome to my very complicated NixOS configuration. This mess currently runs on my desktop (=desktop=), laptop (=framework=), two homeservers and a vps (=vps=). I am very creative with naming things. It's a slowly moving flake of theseus, infinitely going through small refactoring. The original commits in this repo date back to when i first got started with [[https://github.com/nix-community/home-manager/][home-manager]].
 
 This is obviously a *personal* configuration repository, feel free to take inspiration but this is not a general purpose operating system, and you should not run this on your own systems. The commit messages are borderline useless spam, you should not rely on them to gather information.
 
