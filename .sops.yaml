@@ -18,6 +18,12 @@ creation_rules:
           - *desk
           - *framework
           - *server
+  - path_regex: hosts/server2/secrets/[^/]+$
+    key_groups:
+      - age:
+          - *desk
+          - *framework
+          - *server
   - path_regex: hosts/vps/secrets/[^/]+$
     key_groups:
       - age:
