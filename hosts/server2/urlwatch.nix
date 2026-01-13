@@ -15,7 +15,6 @@
   sops.secrets.urlwatch_config.owner = "urlwatch";
 
   systemd.services."urlwatch" = {
-    enable = true;
     description = "Notify of website changes";
     environment = {
       PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
@@ -35,6 +34,7 @@
   };
 
   systemd.timers.urlwatch = {
+    enable = false;
     wantedBy = ["timers.target"];
     partOf = ["urlwatch.service"];
     timerConfig = {
