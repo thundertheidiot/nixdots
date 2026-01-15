@@ -29,6 +29,7 @@ in {
 
     meow.home.modules = [
       {
+        programs.waybar.enable = true;
         services.swaync.enable = true;
         services.vicinae.enable = true;
         programs.alacritty.enable = true;
