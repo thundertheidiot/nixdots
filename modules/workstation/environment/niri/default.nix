@@ -162,6 +162,8 @@ in {
             Mod+Q { close-window; }
             Mod+Shift+Q { quit; }
 
+            Mod+N { spawn-sh "swaync-client -d"; }
+
             Mod+T { toggle-column-tabbed-display; }
 
             Mod+F { maximize-column; }
