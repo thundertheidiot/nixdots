@@ -52,6 +52,26 @@ in {
           waybar = getExe pkgs.waybar;
           swww = getExe' pkgs.swww "swww-daemon";
           xwayland-satellite = getExe pkgs.xwayland-satellite;
+
+          panic = getExe (pkgs.writeShellApplication {
+            name = "panic";
+            runtimeInputs = [
+              pkgs.niri
+              pkgs.swaynotificationcenter
+              pkgs.jq
+              pkgs.playerctl
+            ];
+            text = ''
+              swaync-client -dn
+              playerctl --all-players pause
+
+              for mon in $(niri msg -j outputs | jq -r '.[].name'); do
+                niri msg action focus-monitor "$mon"
+                niri msg action focus-workspace 99
+                sleep 0.02
+              done
+            '';
+          });
         in ''
           input {
             keyboard {
@@ -115,8 +135,8 @@ in {
             background-color "${colors.base00}"
 
             struts {
-              left 0
-              right 0
+              left -10
+              right -10
               top 0
               bottom 0
             }
@@ -127,6 +147,10 @@ in {
               inactive-color "${border}"
               urgent-color "${warn}"
             }
+          }
+
+          animations {
+            workspace-switch { off; }
           }
 
           spawn-at-startup "${waybar}"
@@ -162,7 +186,7 @@ in {
             Mod+Q { close-window; }
             Mod+Shift+Q { quit; }
 
-            Mod+N { spawn-sh "swaync-client -d"; }
+            Mod+S { spawn "${panic}"; }
 
             Mod+T { toggle-column-tabbed-display; }
 
