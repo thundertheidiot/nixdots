@@ -226,7 +226,7 @@
 
     orca-slicer
 
-    electrum-ltc
+    # electrum-ltc
   ];
 
   hardware.ckb-next.enable = true;
