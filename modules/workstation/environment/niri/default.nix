@@ -87,6 +87,7 @@ in {
 
             touchpad {
               tap
+              dwt
               natural-scroll
             }
 

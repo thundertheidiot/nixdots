@@ -67,8 +67,8 @@
 
         python313Packages.python
 
-        electrum-ltc
-        monero-gui
+        # electrum-ltc
+        # monero-gui
       ];
 
       services.syncthing = {
