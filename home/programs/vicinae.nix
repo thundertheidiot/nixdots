@@ -7,6 +7,10 @@
       window = {
         csd = true;
       };
+      theme.dark = {
+        name = "catppuccin-mocha";
+        icon_theme = "default";
+      };
     };
   };
 }

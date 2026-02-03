@@ -1,5 +1,5 @@
 {
-  inputs,
+  config,
   pkgs,
   mlib,
   lib,
@@ -37,6 +37,9 @@ in {
       };
     };
 
+    # cursor
+    environment.variables.XCURSOR_SIZE = 24;
+
     # plymouth
     catppuccin.plymouth.enable = false;
     boot = {
@@ -47,7 +50,7 @@ in {
           (plymouth-blahaj-theme.overrideAttrs (prev: {
             postPatch = ''
               substituteInPlace "blahaj.plymouth" \
-                --replace "=0x000000" "=0x313244"
+                --replace "=0x000000" "=0x${config.meow.workstation.theme.palette.hex.base01}"
             '';
           }))
         ];
