@@ -91,7 +91,7 @@
 
     user = "thunder";
 
-    workstation.environment = ["hyprland" "niri"];
+    workstation.environment = ["niri"];
     workstation.hyprland.extraAutostart = [
       "${pkgs.ckb-next}/bin/ckb-next -b"
     ];
