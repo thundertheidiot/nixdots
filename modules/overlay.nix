@@ -9,18 +9,20 @@
         };
         firefox-addons = nur.repos.rycee.firefox-addons;
         ataraxiasjel = nur.repos.ataraxiasjel;
-        hyprsplit = inputs.hyprsplit.packages.${final.system}.default;
+        hyprsplit = inputs.hyprsplit.packages.${final.stdenv.hostPlatform.system}.default;
 
-        sodexobot = inputs.sodexobot.packages.${final.system}.default;
-        leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.system}.default;
-        meowdzbot = inputs.meowdzbot.packages.${final.system}.default;
+        sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;
+        leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
+        meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;
 
         "2505" = import inputs.nixpkgs-25-05 {
-          inherit (final) system config;
+          inherit (final) config;
+          system = final.stdenv.hostPlatform.system;
         };
 
         unstable = import inputs.nixpkgs-unstable {
-          inherit (final) system config;
+          inherit (final) config;
+          system = final.stdenv.hostPlatform.system;
         };
 
         # unstable-small occasionally results in electron rebuilds
