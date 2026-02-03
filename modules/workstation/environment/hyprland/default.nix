@@ -37,7 +37,7 @@ in {
     programs.hyprland.withUWSM = true;
 
     services.displayManager.sessionPackages = let
-      hypr = inputs.hyprland.packages.${pkgs.system};
+      hypr = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system};
     in [
       hypr.hyprland
     ];
