@@ -34,7 +34,7 @@ in {
 
           "blender"
           "obs"
-          "kdenlive"
+          # "kdenlive"
           # "godot"
           "gimp"
 

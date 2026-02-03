@@ -27,9 +27,8 @@ in {
             inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default
             inputs.hyprland.nixosModules.default
-            # inputs.niri.nixosModules.niri
-            inputs.stylix.nixosModules.stylix
             inputs.authentik-nix.nixosModules.default
+            inputs.catppuccin.nixosModules.default
             ({...}: {
               imports = import "${root}/modules";
               nixpkgs = {
@@ -44,6 +43,7 @@ in {
                   inputs.hyprlux.homeManagerModules.default
                   inputs.emacs.homeModules.default
                   inputs.vicinae.homeManagerModules.default
+                  inputs.catppuccin.homeModules.default
                 ];
               };
             })

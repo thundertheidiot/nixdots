@@ -41,7 +41,7 @@ in {
         ];
 
         xdg.configFile."niri/config.kdl".text = let
-          colors = config.lib.stylix.colors.withHashtag;
+          colors = config.meow.workstation.theme.palette.withHashtag;
 
           border = colors.base02;
           borderFocus = colors.base03;

@@ -9,33 +9,14 @@
 
   cfg = config.meow.rice;
 in {
-  imports = [
-    ./firefox.nix
-  ];
-
   config = mkIf (cfg == "glass") {
     meow.home.modules = [
       {
+        catppuccin.waybar.enable = false;
         programs.waybar.style = let
-          colors = config.lib.stylix.colors.withHashtag;
+          colors = config.meow.workstation.theme.palette.withHashtag;
         in
           replaceVars ./waybar.css {
-            accent = colors.base0D;
-
-            fg = colors.base05;
-            border = colors.base02;
-            borderHover = colors.base03;
-            muted = colors.base04;
-            warn = colors.base0A;
-            danger = colors.base08;
-
-            inherit (colors) base00 base01 base02;
-          };
-
-        services.swaync.style = let
-          colors = config.lib.stylix.colors.withHashtag;
-        in
-          replaceVars ./swaync.css {
             accent = colors.base0D;
 
             fg = colors.base05;
@@ -90,7 +71,7 @@ in {
         };
 
         programs.anyrun.extraCss = let
-          colors = config.lib.stylix.colors.withHashtag;
+          colors = config.meow.workstation.theme.palette.withHashtag;
         in ''
           /* AnyRun CSS styled to match your Waybar look */
 

@@ -1,7 +1,5 @@
 {...}: {
   config = {
-    stylix.targets.swaync.enable = false;
-
     services.swaync = {
       settings = {
         positionX = "right";
