@@ -9,51 +9,21 @@
         };
         firefox-addons = nur.repos.rycee.firefox-addons;
         ataraxiasjel = nur.repos.ataraxiasjel;
-        hyprsplit = inputs.hyprsplit.packages.${final.system}.default;
+        hyprsplit = inputs.hyprsplit.packages.${final.stdenv.hostPlatform.system}.default;
 
-        sodexobot = inputs.sodexobot.packages.${final.system}.default;
-        leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.system}.default;
-        meowdzbot = inputs.meowdzbot.packages.${final.system}.default;
-
-        "2505" = import inputs.nixpkgs-25-05 {
-          inherit (final) system config;
-        };
+        sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;
+        leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
+        meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;
 
         unstable = import inputs.nixpkgs-unstable {
-          inherit (final) system config;
+          inherit (final) config;
+          system = final.stdenv.hostPlatform.system;
         };
 
         # unstable-small occasionally results in electron rebuilds
-        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc;
+        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc kdenlive;
 
         mpkgs = (import "${inputs.self.outPath}/pkgs") {pkgs = final;};
-
-        avrdude = prev.avrdude.overrideAttrs (old: {
-          src = old.src.override {
-            repo = "avrdude";
-          };
-        });
-
-        xrizer = prev.xrizer.overrideAttrs {
-          patches = [];
-        };
-
-        ckb-next = prev.ckb-next.override {
-          libdbusmenu = final."2505".libsForQt5.libdbusmenu;
-        };
-
-        gnome2 =
-          prev.gnome2
-          // {
-            # ???????????????
-            libglade = final."2505".gnome2.libglade;
-          };
-
-        mpd = final."2505".mpd;
-
-        vulkan-validation-layers = prev.vulkan-validation-layers.overrideAttrs (old: {
-          buildInputs = old.buildInputs ++ [final.spirv-tools];
-        });
 
         # functionality fixes
         gajim = prev.gajim.overrideAttrs (old: {
