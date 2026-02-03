@@ -6,8 +6,7 @@
 }: let
   inherit (builtins) readDir;
   inherit (lib.strings) removeSuffix;
-  inherit (lib) isFunction isList;
-  inherit (lib.attrsets) mapAttrs' isAttrs;
+  inherit (lib.attrsets) mapAttrs';
 in {
   flake.nixosConfigurations = let
     getName = rec {
