@@ -25,6 +25,8 @@ jobs:
       run: nix build --accept-flake-config .#nixosConfigurations.framework.config.system.build.toplevel
     - name: Build iso
       run: nix build --accept-flake-config .#nixosConfigurations.iso.config.system.build.toplevel
+    - name: Build server2
+      run: nix build --accept-flake-config .#nixosConfigurations.server2.config.system.build.toplevel
     - name: Build t440p
       run: nix build --accept-flake-config .#nixosConfigurations.t440p.config.system.build.toplevel
     - name: Build uwu
