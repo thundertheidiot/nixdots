@@ -203,25 +203,6 @@ in {
               ${ifElseEmpty (!mon.disableVrr) "variable-refresh-rate"}
             }
           '') (attrValues cfg);
-
-          # programs.niri.settings = {
-          #   outputs =
-          #     mapAttrs' (_: m: {
-          #       inherit (m) name;
-          #       value = {
-          #         mode = {
-          #           inherit (m) width height refresh;
-          #         };
-          #         inherit (m) scale;
-          #         position = {
-          #           inherit (m) x y;
-          #         };
-          #         focus-at-startup = m.primary;
-          #         variable-refresh-rate = !m.disableVrr;
-          #       };
-          #     })
-          #     cfg;
-          # };
         }
       )
 

@@ -30,6 +30,7 @@ in {
       in
         with pkgs; [
           lutris
+          heroic
           mangohud
 
           # wine-ge

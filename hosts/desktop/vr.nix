@@ -100,7 +100,7 @@ in {
     # wlx-overlay-s
     (homeModule {
       home.packages = with pkgs; [
-        wlx-overlay-s
+        wayvr
       ];
 
       # xdg.configFile."wlxoverlay/openxr_actions.json5".text = lib.generators.toJSON [
