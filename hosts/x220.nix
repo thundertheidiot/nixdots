@@ -21,9 +21,6 @@
   # users.users.thunder.group = "thunder";
   # users.groups.thunder = {};
 
-  # stylix.enable = false;
-  # stylix.autoEnable = false;
-
   meow = {
     ssh.key = false;
     ssh.rootKey = true;

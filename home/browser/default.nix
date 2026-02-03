@@ -59,7 +59,7 @@ in {
         enable = true;
 
         policies = recursiveUpdate commonPolicies {
-          # firefox color for stylix
+          # firefox color for style
           ExtensionSettings."FirefoxColor@mozilla.com" = {
             installation_mode = "force_installed";
             install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-color/addon-4757633-latest.xpi";
@@ -79,9 +79,6 @@ in {
           extensions.force = true;
         };
       };
-
-      stylix.targets.firefox.profileNames = ["nix-managed"];
-      stylix.targets.firefox.colorTheme.enable = true;
     })
     (mkIf cfg.firefox.defaults {
       programs.firefox = {

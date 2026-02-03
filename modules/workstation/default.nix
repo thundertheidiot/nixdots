@@ -33,7 +33,6 @@ in {
       }) [
         "audio"
         "network"
-        "theming"
         "flatpak"
         "gnomeKeyring"
       ]);

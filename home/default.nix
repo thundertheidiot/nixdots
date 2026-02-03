@@ -8,5 +8,6 @@
     ./cleanup.nix
     ./shell.nix
     ./base.nix
+    ./theme.nix
   ];
 }

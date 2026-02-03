@@ -18,7 +18,7 @@ in {
       };
 
       # userChrome = let
-      #   colors = config.lib.stylix.colors.withHashtag;
+      #   colors = config.meow.workstation.theme.palette.withHashtag;
 
       #   inherit (colors) base01;
       # in ''

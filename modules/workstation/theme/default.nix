@@ -1,219 +1,74 @@
 {
-  config,
-  pkgs,
-  lib,
-  mlib,
   inputs,
+  pkgs,
+  mlib,
+  lib,
   ...
 }: let
-  inherit (mlib) mkEnOpt mkOpt;
-  inherit (lib) mkIf mkMerge;
-  inherit (lib.types) str anything;
-
-  cfg = config.meow.workstation.theming;
-
-  extraFonts = with pkgs; [
-    nerd-fonts.symbols-only
-  ];
+  inherit (mlib) mkOpt;
+  inherit (lib.types) attrs;
 in {
-  options = {
-    meow.workstation.theming.enable = mkEnOpt "Theming";
-    meow.workstation.theme = mkOpt str "catppuccin-mocha" {
-      description = "Theme to use";
+  options.meow.workstation.theme.palette = mkOpt attrs (import ./mocha.nix) {};
+
+  config = {
+    catppuccin = {
+      enable = true;
+      flavor = "mocha";
+      accent = "mauve";
     };
-    meow.workstation.theming.iconTheme = {
-      package = mkOpt anything pkgs.papirus-icon-theme {
-        description = "Icon theme package";
+
+    # fonts
+    fonts = {
+      packages = with pkgs; [
+        nerd-fonts.symbols-only
+        pkgs.cantarell-fonts
+        pkgs.maple-mono.NF-CN
+        pkgs.noto-fonts-color-emoji
+      ];
+
+      fontconfig = {
+        enable = true;
+        useEmbeddedBitmaps = true;
+        defaultFonts = {
+          serif = ["Cantarell" "Noto Color Emoji"];
+          sansSerif = ["Cantarell" "Noto Color Emoji"];
+          monospace = ["Maple Mono NF CN" "Noto Color Emoji"];
+        };
       };
-      name = mkOpt str "Papirus-Dark" {};
+    };
+
+    # plymouth
+    catppuccin.plymouth.enable = false;
+    boot = {
+      plymouth = {
+        enable = true;
+
+        themePackages = with pkgs; [
+          (plymouth-blahaj-theme.overrideAttrs (prev: {
+            postPatch = ''
+              substituteInPlace "blahaj.plymouth" \
+                --replace "=0x000000" "=0x313244"
+            '';
+          }))
+        ];
+
+        theme = "blahaj";
+      };
+
+      loader.timeout = 0;
+
+      consoleLogLevel = 0;
+      initrd.verbose = false;
+
+      kernelParams = [
+        "quiet"
+        "splash"
+        "boot.shell_on_fail"
+        "loglevel=3"
+        "rd.systemd.show_status=false"
+        "rd.udev.log_level=3"
+        "udev.log_priority=3"
+      ];
     };
   };
-
-  imports = [
-    ./catppuccin.nix
-    ./misc.nix
-  ];
-
-  config = mkIf cfg.enable (mkMerge [
-    {
-      fonts.packages = extraFonts;
-
-      fonts.fontconfig = {
-        enable = true;
-        includeUserConf = true;
-      };
-
-      stylix.targets.plymouth.enable = false;
-
-      boot = {
-        plymouth = {
-          enable = true;
-
-          themePackages = with pkgs; [
-            plymouth-blahaj-theme
-          ];
-
-          theme = "blahaj";
-        };
-
-        loader.timeout = 0;
-
-        consoleLogLevel = 0;
-        initrd.verbose = false;
-
-        kernelParams = [
-          "quiet"
-          "splash"
-          "boot.shell_on_fail"
-          "loglevel=3"
-          "rd.systemd.show_status=false"
-          "rd.udev.log_level=3"
-          "udev.log_priority=3"
-        ];
-      };
-
-      environment.systemPackages = [
-        # SDDM theme
-        ((pkgs.sddm-astronaut.override {
-            themeConfig = let
-              colors = config.lib.stylix.colors.withHashtag;
-            in {
-              Font = config.stylix.fonts.serif.name;
-              FontSize = "12";
-
-              Background = "background.jpg";
-
-              HighlightColor = colors.base05;
-              PlaceholderColor = colors.base04;
-              SystemButtonsIconColor = colors.base04;
-              BackgroundColor = colors.base00;
-              TextColor = colors.base01;
-            };
-          })
-            .overrideAttrs
-          (prev: {
-            installPhase =
-              prev.installPhase
-              # TODO: make a system
-              + ''
-                cp ${./background.jpg} $out/share/sddm/themes/sddm-astronaut-theme/background.jpg
-              '';
-          }))
-      ];
-
-      services.displayManager.sddm = {
-        theme = "sddm-astronaut-theme";
-        extraPackages = [
-          pkgs.kdePackages.qt5compat
-          pkgs.kdePackages.qtmultimedia
-          pkgs.libsForQt5.phonon
-        ];
-      };
-
-      stylix.targets.qt.enable = true;
-
-      qt = {
-        enable = true;
-        platformTheme = "qt5ct";
-        style = null;
-      };
-
-      meow.home.modules = [
-        {
-          home.packages = [cfg.iconTheme.package];
-
-          stylix.targets = {
-            emacs.enable = false;
-            kde.enable = false;
-            hyprpaper.enable = lib.mkForce false;
-            waybar.enable = false;
-            qt.enable = true;
-          };
-
-          fonts.fontconfig = {
-            enable = true;
-          };
-        }
-        ({config, ...}: {
-          gtk = {
-            enable = true;
-            gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
-          };
-
-          # xdg.configFile."qt5ct/qt5ct.conf".text = lib.generators.toINI {} {
-          #   Appearance = {
-          #     standard_dialogs = "default";
-          #     style = "kvantum";
-          #     icon_theme = cfg.iconTheme.name;
-          #   };
-          #   Fonts = {
-          #     #        name,   size, ?,?, ?,?,?,?,?,?
-          #     fixed = "Monospace,10,-1,5,50,0,0,0,0,0";
-          #     general = "Sans Serif,12,-1,5,50,0,0,0,0,0";
-          #   };
-          #   Interface = {
-          #     activate_item_on_single_click = 0;
-          #   };
-          # };
-
-          # TODO: qt6 titlebars broken, test
-          # xdg.configFile."qt6ct/qt6ct.conf".text = lib.generators.toINI {} {
-          #   Appearance = {
-          #     standard_dialogs = "default";
-          #     style = "kvantum";
-          #     icon_theme = cfg.iconTheme.name;
-          #   };
-          #   Fonts = {
-          #     #        name,   size, ?,?, ?,?,?,?,?,?
-          #     fixed = "Monospace,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-          #     general = "Sans Serif,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-          #   };
-          #   Interface = {
-          #     activate_item_on_single_click = 0;
-          #   };
-          # };
-        })
-      ];
-
-      stylix.targets = {
-        fish.enable = false;
-        # qt.platform = "kde";
-      };
-
-      stylix.enable = true;
-      stylix.autoEnable = true;
-
-      stylix.base16Scheme = "${inputs.tt-schemes}/base16/${config.meow.workstation.theme}.yaml";
-      stylix.image = ./background.jpg;
-
-      stylix.cursor = {
-        package = pkgs.adwaita-icon-theme;
-        name = "Adwaita";
-        size = 24;
-      };
-
-      stylix.fonts = {
-        serif = {
-          package = pkgs.cantarell-fonts;
-          name = "Cantarell";
-        };
-        sansSerif = {
-          package = pkgs.cantarell-fonts;
-          name = "Cantarell";
-        };
-        monospace = {
-          package = pkgs.maple-mono.NF-CN;
-          name = "Maple Mono NF CN";
-        };
-        emoji = {
-          package = pkgs.noto-fonts-color-emoji;
-          name = "Noto Color Emoji";
-        };
-
-        sizes = {
-          terminal = 11;
-        };
-      };
-    }
-  ]);
 }

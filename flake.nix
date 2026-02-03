@@ -52,12 +52,7 @@
     emacs.url = "github:thundertheidiot/emacs";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
 
-    stylix.url = "github:danth/stylix";
-    # stylix.inputs.home-manager.follows = "home-manager";
-    tt-schemes = {
-      url = "github:tinted-theming/schemes";
-      flake = false;
-    };
+    catppuccin.url = "github:catppuccin/nix";
 
     nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
 
