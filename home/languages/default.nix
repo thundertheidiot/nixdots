@@ -49,7 +49,7 @@ in {
           "python"
           "bash"
           # "web"
-          # "latex"
+          "latex"
         ];
       })
       {
