@@ -26,6 +26,7 @@ in {
 
     # gtk
     gtk = {
+      enable = true;
       theme = {
         package = pkgs.catppuccin-gtk.override {
           accents = ["mauve"];
@@ -33,13 +34,6 @@ in {
           variant = "mocha";
         };
         name = "catppuccin-mocha-mauve-compact";
-      };
-
-      iconTheme = {
-        package = pkgs.catppuccin-papirus-folders.override {
-          inherit (config.catppuccin) flavor accent;
-        };
-        name = "Papirus-Dark";
       };
     };
 
