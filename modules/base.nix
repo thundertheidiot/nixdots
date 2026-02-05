@@ -44,6 +44,9 @@ in {
       DefaultTimeoutStopSec = "3s";
     };
 
+    # i'm too brainrotted, i'll reach for a search engine first
+    documentation.nixos.enable = false;
+
     security.sudo.enable = lib.mkForce false;
     security.sudo-rs.enable = true;
 
