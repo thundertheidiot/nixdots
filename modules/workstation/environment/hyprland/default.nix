@@ -79,6 +79,7 @@ in {
           home.packages = [
             pkgs.blueberry
             pkgs.nautilus
+            pkgs.eog
             pkgs.file-roller
           ];
 
