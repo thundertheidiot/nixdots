@@ -72,11 +72,7 @@ in {
               lua-language-server
             ])
             (mkIf cfg.latex [
-              texlive.combined.scheme-small
-              texlivePackages.amsmath
-              texlivePackages.amsfonts
-              texlivePackages.mathtools
-              texlivePackages.picture
+              texliveFull
             ])
             (mkIf cfg.c_cxx [
               clang-tools

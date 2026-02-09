@@ -44,7 +44,7 @@ in {
       style.name = "kvantum";
     };
 
-    catppuccin.kvantum.enable = false;
+    catppuccin.kvantum.enable = true;
 
     xdg.dataFile."Kvantum/catppuccin-mocha-mauve" = {
       source = "${(pkgs.catppuccin-kvantum.override {
