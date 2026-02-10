@@ -101,19 +101,27 @@ in {
 
     mailserver.stateVersion = 3;
 
-    networking.enableIPv6 = true;
-    networking.interfaces.enp1s0.ipv6.addresses = [
-      {
-        address = "2a01:4f9:c010:9973::1";
-        prefixLength = 64;
-      }
-    ];
-    networking.defaultGateway6 = {
-      address = "fe80::1";
-      interface = "enp1s0";
+    networking.useNetworkd = true;
+    systemd.network.enable = true;
+    systemd.network.networks."30-wan" = {
+      matchConfig.Name = "enp1s0";
+      networkConfig.DHCP = "no";
+      address = [
+        "95.216.151.56/32"
+        "2a01:4f9:c010:9973::/64"
+      ];
+      routes = [
+        {
+          Gateway = "172.31.1.1";
+          GatewayOnLink = true;
+        }
+        {
+          Gateway = "fe80::1";
+        }
+      ];
     };
-    networking.networkmanager.enable = false;
-    networking.useDHCP = true;
+
+    networking.enableIPv6 = true;
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
     programs.nh.clean.extraArgs = mkForce "--keep 3";
