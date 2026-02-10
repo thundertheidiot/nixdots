@@ -49,6 +49,11 @@ in {
     networking.networkmanager.enable = true;
     networking.firewall.allowedTCPPorts = [80 443];
 
+    systemd.targets.sleep.enable = false;
+    systemd.targets.suspend.enable = false;
+    systemd.targets.hibernate.enable = false;
+    systemd.targets.hybrid-sleep.enable = false;
+
     services.nginx = {
       enable = true;
       logError = "stderr debug";
