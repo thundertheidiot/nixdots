@@ -1,8 +1,5 @@
-((nix-mode .
-	   ((eval
-	     . (setq-local eglot-workspace-configuration
-			   `(:nixd (:options
-				    (:nixos (:expr ,(format "(builtins.getFlake \"%s\").nixosConfigurations.desktop.options"
-							    (or (projectile-project-root)
-								(vc-root-dir)
-								default-directory)))))))))))
+((nil . ((eglot-workspace-configuration .
+					(:nixd (:options (:nixos (:expr
+								  "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.desktop.options"))
+							 (:home-manager (:expr
+									 "(builtins.getFlake (builtins.ToString ./.)).nixosConfigurations.desktop.options.home-manager.users.type.getSubOptions []"))))))))

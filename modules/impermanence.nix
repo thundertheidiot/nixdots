@@ -88,6 +88,7 @@ in {
         }
         "/root/.cache/nix"
         "/var/lib/systemd"
+        "/var/lib/fprint"
         "/etc/NetworkManager/system-connections"
         "/var/lib/fwupd"
         "/var/cache/fwupd"
