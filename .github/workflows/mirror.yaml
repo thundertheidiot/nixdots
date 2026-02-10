@@ -1,0 +1,14 @@
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - name: Push
+      run: |-
+        echo "${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+        chmod 600 ~/deploykey
+
+        GIT_SSH_COMMAND="ssh -i ~/deploykey -o StrictHostKeyChecking=no" git push git@tangled.org:thundertheidiot.bsky.social/nixdots main
+name: Mirror repository for other forges
+'on':
+  push: {}
