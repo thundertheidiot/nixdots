@@ -78,13 +78,13 @@ in {
         #   domain = "git.kotiboksi.xyz";
         # };
 
-        domains = ["kotiboksi.xyz" "gooptyland.xyz" "saatana.xyz"];
+        domains = ["kotiboksi.xyz" "meowcloud.net" "gooptyland.xyz" "saatana.xyz"];
         mainDomain = "kotiboksi.xyz";
         reverseProxy = {
           "img.${config.meow.server.mainDomain}" = "http://${server.homeServer}:2283";
         };
 
-        certificates = ["kotiboksi.xyz"];
+        certificates = ["kotiboksi.xyz" "meowcloud.net"];
         xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];
         coturn = true;
         mumble = true;
