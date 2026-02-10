@@ -159,6 +159,7 @@
 
         on.push = {};
         jobs.push.steps = [
+          blocks.checkout
           {
             name = "Push";
             run = ''

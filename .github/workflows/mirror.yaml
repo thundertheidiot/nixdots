@@ -2,6 +2,7 @@ jobs:
   push:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v5
     - name: Push
       run: |-
         echo "${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
