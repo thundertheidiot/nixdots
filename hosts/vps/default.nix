@@ -88,7 +88,7 @@ in {
         xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];
         coturn = true;
         mumble = true;
-        radio = true;
+        radio.enable = true;
         vaultwarden = true;
       };
     };
