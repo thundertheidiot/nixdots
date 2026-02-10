@@ -13,6 +13,10 @@ in {
   };
 
   config = mkIf cfg {
+    meow.impermanence.directories = [
+      "/var/lib/bluetooth"
+    ];
+
     hardware.bluetooth = {
       enable = true;
       powerOnBoot = true;

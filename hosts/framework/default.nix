@@ -88,6 +88,10 @@
     workstation.displayManager = "gdm";
 
     impermanence.enable = true;
+    impermanence.directories = [
+      "/var/lib/fwupd"
+      "/var/cache/fwupd"
+    ];
 
     user = "thunder";
 
