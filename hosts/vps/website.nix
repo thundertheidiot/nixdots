@@ -9,8 +9,10 @@
 
   meow.server.reverseProxy = {
     "${config.meow.server.mainDomain}" = "http://127.0.0.1:3005";
-    "meowcloud.net" = "http://127.0.0.1:3005";
+    "thunder.meowcloud.net" = "http://127.0.0.1:3005";
   };
+
+  meow.server.radio.domains = ["thunder.meowcloud.net"];
 
   systemd.services."leptos-kotiboksi" = {
     enable = true;

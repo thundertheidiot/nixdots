@@ -5,25 +5,31 @@
   pkgs,
   ...
 }: let
-  inherit (mlib) mkEnOpt;
-  inherit (lib) mkIf;
+  inherit (mlib) mkEnOpt mkOpt;
+  inherit (lib) mkIf listToAttrs;
+  inherit (lib.types) listOf str;
 
-  cfg = config.meow.server;
+  cfg = config.meow.server.radio;
 in {
-  options.meow.server.radio = mkEnOpt "Radio";
+  options.meow.server.radio.enable = mkEnOpt "Radio";
+  options.meow.server.radio.domains = mkOpt (listOf str) [config.meow.server.mainDomain] {};
 
-  config = mkIf cfg.radio {
-    services.nginx.virtualHosts."${config.meow.server.mainDomain}" = {
-      locations."/radio.ogg" = {
-        proxyPass = "http://127.0.0.1:${toString config.services.icecast.listen.port}";
-        recommendedProxySettings = true;
-      };
+  config = mkIf cfg.enable {
+    services.nginx.virtualHosts = listToAttrs (map (name: {
+        inherit name;
+        value = {
+          locations."/radio.ogg" = {
+            proxyPass = "http://127.0.0.1:${toString config.services.icecast.listen.port}";
+            recommendedProxySettings = true;
+          };
 
-      locations."/status-json.xsl" = {
-        proxyPass = "http://127.0.0.1:${toString config.services.icecast.listen.port}";
-        recommendedProxySettings = true;
-      };
-    };
+          locations."/status-json.xsl" = {
+            proxyPass = "http://127.0.0.1:${toString config.services.icecast.listen.port}";
+            recommendedProxySettings = true;
+          };
+        };
+      })
+      cfg.domains);
 
     services.icecast = {
       enable = true;
@@ -34,7 +40,7 @@ in {
       # should only be listening on localhost
       admin.password = "icecast";
 
-      extraConf = ''
+      extraConfig = ''
         <authentication>
           <source-password>icecast</source-password>
           <relay-password>icecast</relay-password>
