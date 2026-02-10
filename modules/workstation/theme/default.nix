@@ -6,11 +6,12 @@
   ...
 }: let
   inherit (mlib) mkOpt;
+  inherit (lib) mkIf;
   inherit (lib.types) attrs;
 in {
   options.meow.workstation.theme.palette = mkOpt attrs (import ./mocha.nix) {};
 
-  config = {
+  config = mkIf config.meow.workstation.enable {
     catppuccin = {
       enable = true;
       flavor = "mocha";
