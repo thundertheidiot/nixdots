@@ -31,6 +31,15 @@
               "[STATUS] == 200"
             ];
           }
+          {
+            name = "MeowDZBot";
+            group = "VPS";
+            url = "http://127.0.0.1:8080/health";
+            interval = "30s";
+            conditions = [
+              "[STATUS] == 200"
+            ];
+          }
         ];
       };
     };
