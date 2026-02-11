@@ -13,6 +13,7 @@ in {
     (modulesPath + "/profiles/qemu-guest.nix")
     ./authentik.nix
     ./disko.nix
+    ./gatus.nix
     ./jellyfin.nix
     ./meowdzbot.nix
     ./secrets
