@@ -102,7 +102,7 @@ in {
       xmppComplianceSuite = false;
 
       package = pkgs.prosody.override {
-        withCommunityModules = ["http_altconnect"];
+        withCommunityModules = ["http_altconnect" "http_health"];
       };
 
       virtualHosts = listToAttrs (map (name: {
@@ -154,7 +154,10 @@ in {
             "csi_simple"
             "bosh"
             "websocket"
+            "http_health"
           ];
+
+          http_health_allow_ips = ["::1" "127.0.0.1"];
 
           trusted_proxies = ["127.0.0.1" "::1"];
 

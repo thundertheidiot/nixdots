@@ -15,10 +15,20 @@
         endpoints = [
           {
             name = "homeserver";
+            group = "home";
             url = "icmp://${server.homeServer2}";
             interval = "30s";
             conditions = [
               "[CONNECTED] == true"
+            ];
+          }
+          {
+            name = "Prosody";
+            group = "VPS";
+            url = "http://127.0.0.1:5280";
+            interval = "30s";
+            conditions = [
+              "[STATUS] == 200"
             ];
           }
         ];
