@@ -154,23 +154,23 @@
         jobs.update-vps.steps = [blocks.vpsDeploy];
       };
 
-      ".github/workflows/mirror.yaml" = {
-        name = "Mirror repository for other forges";
+      # ".github/workflows/mirror.yaml" = {
+      #   name = "Mirror repository for other forges";
 
-        on.push = {};
-        jobs.push.steps = [
-          blocks.checkout
-          {
-            name = "Push";
-            run = ''
-              echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
-              chmod 600 ~/deploykey
+      #   on.push = {};
+      #   jobs.push.steps = [
+      #     blocks.checkout
+      #     {
+      #       name = "Push";
+      #       run = ''
+      #         echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+      #         chmod 600 ~/deploykey
 
-              GIT_SSH_COMMAND="ssh -i ~/deploykey -o StrictHostKeyChecking=no" git push git@tangled.org:thundertheidiot.bsky.social/nixdots main
-            '';
-          }
-        ];
-      };
+      #         GIT_SSH_COMMAND="ssh -i ~/deploykey -o StrictHostKeyChecking=no" git push git@tangled.org:thundertheidiot.bsky.social/nixdots main
+      #       '';
+      #     }
+      #   ];
+      # };
 
       ".github/workflows/update-flake.yaml" = {
         name = "Update flake.lock";
