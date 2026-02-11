@@ -25,7 +25,7 @@
           {
             name = "Prosody";
             group = "VPS";
-            url = "http://127.0.0.1:5280";
+            url = "http://127.0.0.1:5280/health";
             interval = "30s";
             conditions = [
               "[STATUS] == 200"
