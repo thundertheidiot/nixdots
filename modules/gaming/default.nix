@@ -77,13 +77,13 @@ in {
               gperftools # steamvr home symlink libtcmalloc_minimal.so.0
 
               # far cry mod installer
-              xorg.libSM
+              libsm
             ];
 
           extraLibraries = pkgs:
             with pkgs; [
               gperftools
-              xorg.libxcb
+              libxcb
             ];
 
           extraEnv = {
