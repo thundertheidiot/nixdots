@@ -49,6 +49,15 @@
             ];
           }
           {
+            name = "VaultWarden";
+            group = "VPS";
+            url = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}/alive";
+            interval = "30s";
+            conditions = [
+              "[STATUS] == 200"
+            ];
+          }
+          {
             name = "Prosody";
             group = "VPS";
             url = "http://127.0.0.1:5280/health";
