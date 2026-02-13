@@ -51,10 +51,11 @@ in {
             allow_registration = true;
             registration_token_file = config.sops.secrets."matrix_registration_token".path;
 
+            allow_federation = true;
             trusted_servers = ["matrix.org"];
 
-            well-known = {
-              client = "https://matrix.${cfg.domain}";
+            well_known = {
+              client = "https://${cfg.domain}";
               server = "${cfg.domain}:443";
             };
           };
@@ -71,7 +72,7 @@ in {
       ];
     };
 
-    networking.firewall.allowedTCPPorts = [8448];
+    # networking.firewall.allowedTCPPorts = [8448];
 
     services.nginx.clientMaxBodySize = "60M";
     services.nginx.virtualHosts."${cfg.domain}" = {
