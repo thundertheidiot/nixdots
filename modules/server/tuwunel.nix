@@ -123,8 +123,6 @@ in {
     };
 
     # web interface
-    services.nginx.virtualHosts."matrix.${cfg.domain}" = {
-      root = pkgs.cinny;
-    };
+    services.nginx.virtualHosts."matrix.${cfg.domain}".root = pkgs.cinny;
   };
 }

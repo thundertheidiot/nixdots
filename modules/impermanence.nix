@@ -109,8 +109,8 @@ in {
           type = "none";
           options = "bind,X-fstrim.notrim,x-gvfs-hidden";
 
-          before = ["graphical.target"] ++ before;
-          wantedBy = ["graphical.target"] ++ wantedBy;
+          before = ["default.target"] ++ before;
+          wantedBy = ["default.target"] ++ wantedBy;
         })
       cfg.directories;
 
@@ -141,7 +141,7 @@ in {
           in {
             inherit name;
             value = {
-              wantedBy = ["graphical.target"];
+              wantedBy = ["default.target"];
               path = [pkgs.util-linux];
               unitConfig.defaultDependencies = true;
               serviceConfig = {
