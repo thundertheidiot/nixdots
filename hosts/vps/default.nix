@@ -82,7 +82,10 @@ in {
         mainDomain = "kotiboksi.xyz";
         reverseProxy = {
           "img.${config.meow.server.mainDomain}" = "http://${server.homeServer}:2283";
+          "vw.meowcloud.net" = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
         };
+
+        jellyfinDomains = ["jellyfin.kotiboksi.xyz" "jellyfin.meowcloud.net"];
 
         certificates = ["kotiboksi.xyz" "meowcloud.net"];
         xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];
