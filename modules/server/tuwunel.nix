@@ -72,47 +72,12 @@ in {
       ];
     };
 
-    # networking.firewall.allowedTCPPorts = [8448];
-
     services.nginx.clientMaxBodySize = "60M";
     services.nginx.virtualHosts."${cfg.domain}" = {
-      listen = [
-        {
-          addr = "0.0.0.0";
-          port = 80;
-        }
-        {
-          addr = "[::]";
-          port = 80;
-        }
-        {
-          addr = "0.0.0.0";
-          port = 443;
-          ssl = true;
-        }
-        {
-          addr = "[::]";
-          port = 443;
-          ssl = true;
-        }
-        {
-          addr = "0.0.0.0";
-          port = 8448;
-          ssl = true;
-        }
-        {
-          addr = "[::]";
-          port = 8448;
-          ssl = true;
-        }
-      ];
-
-      forceSSL = true;
-
       locations = listToAttrs (map (name: {
         inherit name;
         value = {
-          proxyPass = "http://127.0.0.1:${toString (head config.services.matrix-tuwunel.settings.global.port)}${name}";
+          proxyPass = "http://127.0.0.1:${toString (head config.services.matrix-tuwunel.settings.global.port)}";
           recommendedProxySettings = false; # manual control
           extraConfig = ''
             proxy_set_header Host $host;
