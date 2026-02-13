@@ -12,7 +12,7 @@
     "thunder.meowcloud.net" = "http://127.0.0.1:3005";
   };
 
-  meow.server.radio.domains = ["thunder.meowcloud.net"];
+  meow.server.radio.domains = [config.meow.server.mainDomain "thunder.meowcloud.net"];
 
   systemd.services."leptos-kotiboksi" = {
     enable = true;

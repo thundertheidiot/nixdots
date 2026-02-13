@@ -88,6 +88,9 @@ in {
 
         jellyfinDomains = ["jellyfin.kotiboksi.xyz" "jellyfin.meowcloud.net"];
 
+        matrix.enable = true;
+        matrix.domain = "meowcloud.net";
+
         certificates = ["kotiboksi.xyz" "meowcloud.net"];
         xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];
         coturn = true;
