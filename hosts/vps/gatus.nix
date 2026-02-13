@@ -58,9 +58,18 @@
             ];
           }
           {
-            name = "Prosody";
+            name = "Prosody (XMPP)";
             group = "VPS";
             url = "http://127.0.0.1:5280/health";
+            interval = "30s";
+            conditions = [
+              "[STATUS] == 200"
+            ];
+          }
+          {
+            name = "Tuwunel (Matrix)";
+            group = "VPS";
+            url = "http://127.0.0.1:8008/_tuwunel/server_version";
             interval = "30s";
             conditions = [
               "[STATUS] == 200"
