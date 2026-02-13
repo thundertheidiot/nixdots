@@ -18,8 +18,16 @@ in {
     };
 
     meow.impermanence.directories = [
-      {path = "/var/lib/vaultwarden";}
-      {path = "/var/backup/vaultwarden";}
+      {
+        path = "/var/lib/vaultwarden";
+        user = config.systemd.services.vaultwarden.serviceConfig.User;
+        group = config.systemd.services.vaultwarden.serviceConfig.Group;
+      }
+      {
+        path = "/var/backup/vaultwarden";
+        user = config.systemd.services.vaultwarden.serviceConfig.User;
+        group = config.systemd.services.vaultwarden.serviceConfig.Group;
+      }
     ];
 
     services.vaultwarden = {

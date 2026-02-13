@@ -62,7 +62,10 @@ in {
         (mkIf config.meow.server.coturn {
           global = {
             turn_secret_file = config.sops.secrets."coturn_secret".path;
-            turn_uris = ["turns:${config.services.coturn.realm}"];
+            turn_uris = [
+              "turns:${config.services.coturn.realm}?transport=udp"
+              "turns:${config.services.coturn.realm}?transport=tcp"
+            ];
           };
         })
       ];
