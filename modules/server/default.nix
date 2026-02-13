@@ -23,6 +23,7 @@ in {
     ./prosody
     ./radio.nix
     ./ssh.nix
+    ./tuwunel.nix
     ./vaultwarden.nix
     ./webserver.nix
   ];

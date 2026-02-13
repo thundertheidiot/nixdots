@@ -17,6 +17,11 @@
       #   format = "binary";
       # };
 
+      matrix_registration_token = {
+        sopsFile = ./matrix_registration_token;
+        format = "binary";
+      };
+
       sodexobot_env = {
         sopsFile = ./sodexobot.env;
         format = "dotenv";
