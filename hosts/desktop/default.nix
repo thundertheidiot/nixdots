@@ -141,6 +141,29 @@
     keyboard.enable = false;
     keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];
 
+    workstation.extraNiriConfig = [
+      ''
+        workspace "chat" {
+          open-on-output "DP-1"
+        }
+
+        window-rule {
+          match at-startup=true app-id="vesktop"
+          match at-startup=true app-id="signal"
+          match at-startup=true app-id="cinny"
+          match at-startup=true app-id=r#"^org\.gajim\.Gajim$"#
+
+          open-on-workspace "chat"
+          open-maximized true
+        }
+
+        spawn-at-startup "vesktop"
+        spawn-at-startup "signal-desktop"
+        spawn-at-startup "gajim"
+        spawn-at-startup "in.cinny.Cinny"
+      ''
+    ];
+
     monitors = {
       "DP-3" = {
         width = 2560;
