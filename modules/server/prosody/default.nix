@@ -38,7 +38,7 @@ in {
 
     users.users."${config.services.prosody.user}".extraGroups = ["acme" "turnserver"];
 
-    networking.firewall.allowedTCPPorts = config.services.prosody.settings.c2s_direct_tls_ports;
+    networking.firewall.allowedTCPPorts = config.services.prosody.settings.c2s_direct_tls_ports ++ config.services.prosody.settings.s2s_direct_tls_ports;
 
     services.nginx.virtualHosts =
       {
@@ -155,6 +155,7 @@ in {
             "bosh"
             "websocket"
             "http_health"
+            "dialback"
           ];
 
           http_health_allow_ips = ["::1" "127.0.0.1"];
@@ -173,7 +174,12 @@ in {
             database = "prosody.sqlite";
           };
 
+          c2s_require_encryption = true;
+          s2s_require_encryption = true;
+
           c2s_direct_tls_ports = [5223];
+          s2s_direct_tls_ports = [5270];
+          s2s_secure_auth = false;
 
           # if this is not set it tries to search a nonexistent directory and prosodyctl crashes
           certificates = "/var/lib/acme";
