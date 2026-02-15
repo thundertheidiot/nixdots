@@ -93,6 +93,16 @@ in {
         "/var/lib/fwupd"
         "/var/cache/fwupd"
         "/var/db/sudo"
+        {
+          path = "/var/lib/docker";
+          persistPath = "${cfg.persist}/docker";
+          permissions = "710";
+        }
+        {
+          path = "/var/lib/containers";
+          persistPath = "${cfg.persist}/containers";
+          permissions = "710";
+        }
       ];
 
       meow.impermanence.files = [
