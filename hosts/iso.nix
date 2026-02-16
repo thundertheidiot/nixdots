@@ -30,7 +30,7 @@
     services.displayManager.sddm = {
       settings = {
         Autologin = {
-          Session = "hyprland.desktop";
+          Session = "niri.desktop";
           User = "nixos";
         };
       };
@@ -100,7 +100,7 @@
       user = "nixos";
 
       workstation.enable = true;
-      workstation.environment = ["hyprland"];
+      workstation.environment = ["niri"];
       workstation.flatpak.enable = false;
 
       gaming.enable = false;

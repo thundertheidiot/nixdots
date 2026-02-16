@@ -78,7 +78,7 @@
     ];
   };
   virtualisation.oci-containers.containers."gluetun" = {
-    image = "qmcgaw/gluetun";
+    image = "ghcr.io/qdm12/gluetun";
     environment = {
       "FIREWALL_VPN_INPUT_PORTS" = "3865";
       "SERVER_COUNTRIES" = "Sweden";
