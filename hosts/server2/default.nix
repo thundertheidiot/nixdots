@@ -63,7 +63,7 @@ in {
       workstation.enable = false;
       home.enable = false;
 
-      boot.efi = true;
+      boot.enable = false;
 
       impermanence.enable = true;
       impermanence.persist = "/nix/persist";

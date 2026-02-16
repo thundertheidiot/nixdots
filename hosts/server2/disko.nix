@@ -1,4 +1,15 @@
 {pkgs, ...}: {
+  boot.loader = {
+    grub = {
+      enable = true;
+      efiSupport = true;
+      devices = ["/dev/disk/by-id/ata-SAMSUNG_MZHPV256HDGL-00000_S1X2NYAH700146"];
+    };
+
+    efi.canTouchEfiVariables = true;
+    efi.efiSysMountPoint = "/boot";
+  };
+
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";

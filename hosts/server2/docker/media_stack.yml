@@ -2,7 +2,7 @@
 name: "media"
 services:
   gluetun:
-    image: qmcgaw/gluetun
+    image: ghcr.io/qdm12/gluetun
     container_name: gluetun
     cap_add:
       - NET_ADMIN
