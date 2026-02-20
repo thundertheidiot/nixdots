@@ -320,11 +320,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771527859,
-        "narHash": "sha256-HVdKMt+Ky/AHsixM/oNJhulou1c32MnxsWxP67sB70o=",
+        "lastModified": 1771564823,
+        "narHash": "sha256-5bcnMNoqHm4e2sa8ngib7a1GdBl0m2+cmqtUrSYq+aI=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "84e36a4f85db8e15def6b76c3f60edf33a5c815b",
+        "rev": "a19a9361f0ca5ac08dcc9a947787bac963f839e6",
         "type": "github"
       },
       "original": {
