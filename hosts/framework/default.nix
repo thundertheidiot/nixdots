@@ -30,9 +30,37 @@
   powerManagement.enable = true;
   powerManagement.powertop.enable = true;
 
-  services.power-profiles-daemon.enable = true;
+  services.power-profiles-daemon.enable = lib.mkForce false;
   boot.kernelParams = ["amd_pstate=active"];
   services.autoaspm.enable = true;
+
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_MIN_PERF_ON_AC = 0;
+      CPU_MAX_PERF_ON_AC = 100;
+
+      CPU_MIN_PERF_ON_BAT = 0;
+      CPU_MAX_PERF_ON_BAT = 100;
+
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 1;
+
+      PLATFORM_PROFILE_ON_AC = "performance";
+      PLATFORM_PROFILE_ON_BAT = "balanced";
+      PLATFORM_PROFILE_ON_SAV = "low-power";
+
+      CPU_DRIVER_OPMODE_ON_BAT = "active";
+
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+
+      RUNTIME_PM_ON_AC = "";
+      RUNTIME_PM_ON_BAT = "";
+    };
+  };
 
   services.fprintd = {
     enable = true;

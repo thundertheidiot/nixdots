@@ -69,7 +69,7 @@ in {
 
           "group/system" = {
             orientation = "horizontal";
-            modules = ["hyprland/language" "idle_inhibitor" "custom/swaync" "pulseaudio" "battery" "tray"];
+            modules = ["hyprland/language" "power-profiles-daemon" "idle_inhibitor" "custom/swaync" "pulseaudio" "battery" "tray"];
           };
 
           modules-right =
@@ -139,6 +139,18 @@ in {
             "on-click" = "swaync-client -t -sw";
             "on-click-right" = "swaync-client -d -sw";
             escape = true;
+          };
+
+          power-profiles-daemon = {
+            format = " {icon} ";
+            tooltip-format = "Profile: {profile}\nDriver: {driver}";
+            tooltip = true;
+            format-icons = {
+              default = "󰚥";
+              performance = "󰚥";
+              balanced = "";
+              power-saver = "";
+            };
           };
 
           network = {
