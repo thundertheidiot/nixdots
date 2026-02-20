@@ -116,7 +116,7 @@
     };
 
     boot.efi = true;
-    displaylink = true;
+    # displaylink = true;
 
     monitors."eDP-1" = {
       width = 2880;
