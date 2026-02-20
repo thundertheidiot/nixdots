@@ -163,8 +163,8 @@ in {
 
           binds {
             Mod+E { spawn-sh "emacsclient -c -a '''"; }
-            Mod+Return { spawn "alacritty"; }
-            Mod+Semicolon { spawn-sh "emacsclient -c -a ''' -e '(meow/eshell)'"; }
+            Mod+Return { spawn "emacsclient -c -a ''' -e '(meow/eshell)'"; }
+            Mod+Semicolon { spawn-sh "alacritty"; }
             Mod+W { spawn "firefox"; }
             Print { screenshot; }
 
