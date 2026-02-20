@@ -8,6 +8,7 @@
       "https://nix-community.cachix.org"
       "https://meowos.cachix.org" # meowos binary cache
       "https://vicinae.cachix.org"
+      "https://attic.xuyh0120.win/lantian" # cachyos kernel
     ];
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" # default nixos TODO useless?
@@ -15,6 +16,7 @@
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" # nix-community
       "meowos.cachix.org-1:QOXuuFPMN5TszgX8+nqd8X+BZG84toh5wK8j1IBBDH4="
       "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
   };
 
@@ -41,6 +43,8 @@
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
 
     deploy-rs.url = "github:serokell/deploy-rs";
 
