@@ -1,6 +1,7 @@
 {inputs, ...}: {
   config = {
     nixpkgs.overlays = [
+      inputs.nix-cachyos-kernel.overlays.pinned
       (final: prev: rec {
         # TODO organize, break up
         nur = import inputs.nur {

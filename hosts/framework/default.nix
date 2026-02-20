@@ -33,6 +33,8 @@
     enable = true;
   };
 
+  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-zen4;
+
   services.power-profiles-daemon.enable = lib.mkForce false;
   services.tlp = {
     enable = true;
