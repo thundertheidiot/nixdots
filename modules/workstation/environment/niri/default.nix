@@ -169,6 +169,8 @@ in {
             Mod+W { spawn "firefox"; }
             Print { screenshot; }
 
+            Mod+M { spawn-sh "emacsclient -c -a ''' -e '(simple-mpc-view-current-playlist)'"; }
+
             End { spawn-sh "mumble rpc togglemute"; }
 
             Mod+D { spawn-sh "vicinae open"; }
