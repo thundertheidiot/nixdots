@@ -90,6 +90,7 @@ in {
         "/var/lib/systemd"
         "/var/lib/fprint"
         "/etc/NetworkManager/system-connections"
+        "/var/cache/man"
         "/var/lib/fwupd"
         "/var/cache/fwupd"
         "/var/db/sudo"

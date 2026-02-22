@@ -47,16 +47,7 @@ in {
         nvtopPackages.amd
       ];
 
-      systemd.services.lactd = {
-        enable = true;
-        description = "Lact daemon";
-        wantedBy = ["multi-user.target"];
-        after = ["multi-user.target"];
-        serviceConfig = {
-          ExecStart = "${pkgs.lact}/bin/lact daemon";
-          Nice = -10;
-        };
-      };
+      services.lact.enable = true;
 
       hardware.enableRedistributableFirmware = lib.mkForce true;
 
