@@ -235,6 +235,9 @@
   environment.systemPackages = with pkgs; [
     distrobox
 
+    gnuplot
+    gh
+
     easyeffects
     deepfilternet
 
