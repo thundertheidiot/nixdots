@@ -7,11 +7,11 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkForce head;
+  inherit (lib) mkForce;
 in {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
-    ./authentik.nix
+    # ./authentik.nix
     ./disko.nix
     ./gatus.nix
     ./jellyfin.nix
