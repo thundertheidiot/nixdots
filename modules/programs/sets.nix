@@ -35,7 +35,7 @@ in {
           "blender"
           "obs"
           # "kdenlive"
-          # "godot"
+          "godot"
           "gimp"
 
           # "freetube"

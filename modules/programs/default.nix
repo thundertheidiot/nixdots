@@ -53,7 +53,7 @@ in {
       (mkIf cfg.blender pkgs.blender)
       (mkIf cfg.obs obs-studio)
       (mkIf cfg.kdenlive kdePackages.kdenlive)
-      (mkIf cfg.godot godot_4)
+      (mkIf cfg.godot godot)
       (mkIf cfg.gimp gimp3)
 
       (mkIf cfg.libreoffice libreoffice)
