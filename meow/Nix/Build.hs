@@ -72,7 +72,3 @@ nixBuild args inEmacs = do
             case exitCode of
                 ExitSuccess -> return $ Just output
                 ExitFailure _ -> return Nothing
-
-main = do
-    out <- nixBuild [".#nixosConfigurations.ooo.config.system.build.toplevel"] False
-    putStrLn $ "ligm " ++ show out ++ "   a"

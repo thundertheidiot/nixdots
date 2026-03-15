@@ -29,6 +29,7 @@ in {
             inputs.hyprland.nixosModules.default
             inputs.authentik-nix.nixosModules.default
             inputs.catppuccin.nixosModules.default
+            inputs.emacs.nixosModules.ewm
             ({...}: {
               imports = import "${root}/modules";
               nixpkgs = {

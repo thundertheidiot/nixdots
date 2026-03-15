@@ -12,6 +12,7 @@ in {
   options = {
     meow.emacs = {
       enable = mkEnOpt "Install and configure emacs.";
+      ewm.enable = mkEnOpt "Configure ewm.";
 
       # TODO: move all this shit to modules/langs or something
       lang = {
@@ -32,8 +33,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    meow.searx.enable = true;
     # search for llms
+    meow.searx.enable = true;
+
+    programs.ewm.enable = cfg.ewm.enable;
 
     home-manager.sharedModules = [
       {
