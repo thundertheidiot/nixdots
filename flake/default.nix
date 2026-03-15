@@ -38,5 +38,15 @@
           (ps: with ps; [shasht]))
       ];
     };
+
+    devShells.meow = pkgs.mkShell {
+      packages = [
+        (pkgs.haskellPackages.ghcWithPackages (p:
+          with p; [
+            aeson
+            haskell-language-server
+          ]))
+      ];
+    };
   };
 }
