@@ -181,6 +181,7 @@ in {
           })
         (attrValues cfg);
       }
+
       (
         mkIf (elem "niri" config.meow.workstation.environment) {
           meow.workstation.extraNiriConfig = map (mon: let
@@ -203,6 +204,24 @@ in {
               ${ifElseEmpty (!mon.disableVrr) "variable-refresh-rate"}
             }
           '') (attrValues cfg);
+        }
+      )
+
+      (
+        mkIf (config.meow.emacs.ewm.enable) {
+          meow.home.modules = [
+            {
+              xdg.configFile."emacs/ewm.el".text = ''
+                (setq ewm-output-config '(${concatStringsSep "\n" (map (mon: let
+                  inherit (mon) name width height scale x y;
+                in ''
+                  ("${name} :width ${toString width} :height ${toString height}
+                            :scale ${toString scale}
+                            :x ${toString x}
+                            :y ${toString y}")'') (attrValues cfg))}))
+              ''; # no vrr support yet
+            }
+          ];
         }
       )
 
