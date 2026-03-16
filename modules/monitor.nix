@@ -14,6 +14,13 @@
 
   inherit (lib.types) attrsOf attrs listOf submodule str int float bool nullOr path;
 
+  ifElseEmpty = t: v:
+    if t
+    then v
+    else "";
+
+  ifNotNull = t: ifElseEmpty (t != null);
+
   cfg = config.meow.monitors;
 in {
   options = {
@@ -187,13 +194,6 @@ in {
           meow.workstation.extraNiriConfig = map (mon: let
             inherit (mon) name width height scale x y;
 
-            ifElseEmpty = t: v:
-              if t
-              then v
-              else "";
-
-            ifNotNull = t: ifElseEmpty (t != null);
-
             refresh = ifNotNull mon.refresh "@${toString mon.refresh}";
           in ''
             output "${name}" {
@@ -215,10 +215,11 @@ in {
                 (setq ewm-output-config '(${concatStringsSep "\n" (map (mon: let
                   inherit (mon) name width height scale x y;
                 in ''
-                  ("${name} :width ${toString width} :height ${toString height}
-                            :scale ${toString scale}
-                            :x ${toString x}
-                            :y ${toString y}")'') (attrValues cfg))}))
+                  ("${name}" :width ${toString width} :height ${toString height}
+                             :scale ${toString scale}
+                             :x ${toString x}
+                             ${ifNotNull mon.refresh ":refresh ${toString mon.refresh}"}
+                             :y ${toString y})'') (attrValues cfg))}))
               ''; # no vrr support yet
             }
           ];
