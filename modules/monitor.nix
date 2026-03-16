@@ -211,7 +211,7 @@ in {
         mkIf (config.meow.emacs.ewm.enable) {
           meow.home.modules = [
             {
-              xdg.configFile."emacs/ewm.el".text = ''
+              xdg.configFile."emacs/ewm-local.el".text = ''
                 (setq ewm-output-config '(${concatStringsSep "\n" (map (mon: let
                   inherit (mon) name width height scale x y;
                 in ''
