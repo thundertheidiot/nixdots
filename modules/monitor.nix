@@ -6,7 +6,7 @@
   inputs,
   ...
 }: let
-  inherit (lib) mkIf mkMerge mkOption;
+  inherit (lib) mkIf mkMerge mkOption floor;
   inherit (lib.attrsets) attrValues listToAttrs mapAttrs';
   inherit (lib.lists) head length elem filter sublist;
   inherit (lib.strings) splitString concatStrings concatStringsSep;
@@ -218,7 +218,7 @@ in {
                   ("${name}" :width ${toString width} :height ${toString height}
                              :scale ${toString scale}
                              :x ${toString x}
-                             ${ifNotNull mon.refresh ":refresh ${toString mon.refresh}"}
+                             ${ifNotNull mon.refresh ":refresh ${toString (floor mon.refresh)}"}
                              :y ${toString y})'') (attrValues cfg))}))
               ''; # no vrr support yet
             }
