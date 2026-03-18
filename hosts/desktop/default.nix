@@ -181,6 +181,7 @@
         disableVrr = true;
       };
       "HDMI-A-1" = {
+        enable = false;
         x = 4480;
         xorgName = "HDMI-1";
         hyprlandExclude = false;
