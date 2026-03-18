@@ -35,6 +35,12 @@ in {
             description = "Monitor name";
           };
 
+          enable = mkOption {
+            type = bool;
+            default = true;
+            description = "Enable this output";
+          };
+
           xorgName = mkOption {
             type = str;
             default = name;
@@ -214,12 +220,18 @@ in {
               xdg.configFile."emacs/ewm-local.el".text = ''
                 (setq ewm-output-config '(${concatStringsSep "\n" (map (mon: let
                   inherit (mon) name width height scale x y;
+
+                  emacsBool = bool:
+                    if bool
+                    then "t"
+                    else "nil";
                 in ''
                   ("${name}" :width ${toString width} :height ${toString height}
                              :scale ${toString scale}
                              :x ${toString x}
                              ${ifNotNull mon.refresh ":refresh ${toString (floor mon.refresh)}"}
-                             :y ${toString y})'') (attrValues cfg))}))
+                             :y ${toString y}
+                             :enabled ${emacsBool mon.enable})'') (attrValues cfg))}))
               ''; # no vrr support yet
             }
           ];
