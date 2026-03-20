@@ -33,7 +33,6 @@ jobs:
         target:
         - nixosConfigurations.vps.pkgs.meowdzbot nixosConfigurations.vps.pkgs.sodexobot
         - nixosConfigurations.vps.pkgs.leptos-kotiboksi
-        - nixosConfigurations.framework.pkgs.krita nixosConfigurations.framework.pkgs.blender
   update:
     needs:
     - build-matrix
