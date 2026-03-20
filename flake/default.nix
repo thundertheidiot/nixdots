@@ -41,6 +41,7 @@
 
     devShells.meow = pkgs.mkShell {
       packages = [
+        (pkgs.callPackage ../pkgs/meow.nix {})
         (pkgs.haskellPackages.ghcWithPackages (p:
           with p; [
             aeson

@@ -2,6 +2,7 @@
   lib,
   haskellPackages,
   stdenv,
+  nix-output-monitor,
 }:
 stdenv.mkDerivation {
   name = "meow";
@@ -14,6 +15,10 @@ stdenv.mkDerivation {
       with p; [
         aeson
       ]))
+  ];
+
+  propagatedNativeBuildInputs = [
+    nix-output-monitor
   ];
 
   buildPhase = ''

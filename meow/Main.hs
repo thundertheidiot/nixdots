@@ -5,6 +5,8 @@ module Main where
 import Distribution.Simple.Utils
 import System.Environment
 
+import Cli
+import Data.List
 import Nix.Build
 import Wireguard
 
@@ -15,6 +17,9 @@ inEmacs =
         Just _ -> return True
         Nothing -> return False
 
+-- safeTail :: [a] -> Maybe [a]
+-- safeTail = fmap snd . uncons
+
 main :: IO ()
 main = do
     emacs <- inEmacs
@@ -22,10 +27,11 @@ main = do
 
     case safeHead args of
         Just "wg" -> do
-            showKeys "sops/wireguard"
+            wgArgs $ safeTail args
         Just "build" -> do
             Just out <- nixBuild [".#nixosConfigurations." ++ (head . tail $ args) ++ ".config.system.build.toplevel"] emacs
             putStrLn out
-        _ -> putStrLn "ligma"
+    --   putStrLn "build"
+    -- _ -> putStrLn "ligma"
 
     putStrLn $ "Emacs: " ++ show emacs

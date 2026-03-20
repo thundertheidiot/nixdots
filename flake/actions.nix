@@ -212,13 +212,12 @@
 
               vpsPackage = hostPackage "vps";
               vpsPkgs = map vpsPackage;
-
-              frameworkPackage = hostPackage "framework";
-              fwPkgs = map frameworkPackage;
+              # frameworkPackage = hostPackage "framework";
+              # fwPkgs = map frameworkPackage;
             in [
               (join (vpsPkgs ["meowdzbot" "sodexobot"]))
               (vpsPackage "leptos-kotiboksi")
-              (join (fwPkgs ["krita" "blender"]))
+              # (join (fwPkgs ["krita" "blender"]))
             ];
           }
           // mkBasicNix [

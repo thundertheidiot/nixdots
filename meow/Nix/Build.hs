@@ -34,7 +34,7 @@ nixBuild args inEmacs = do
     (_, _, _, nix) <-
         createProcess
             ( proc "nix" $
-                ["build", "--print-out-paths"]
+                ["build", "--print-out-paths", "--accept-flake-config", "--no-warn-dirty"]
                     ++ ( if inEmacs
                             then []
                             else ["--log-format", "internal-json", "-v"]
