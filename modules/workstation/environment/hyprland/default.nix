@@ -77,7 +77,7 @@ in {
           '';
 
           home.packages = [
-            pkgs.blueman-manager
+            pkgs.blueman
             pkgs.nautilus
             pkgs.eog
             pkgs.file-roller

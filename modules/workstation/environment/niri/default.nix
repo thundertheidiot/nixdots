@@ -38,7 +38,7 @@ in {
           pkgs.nautilus
           pkgs.eog
           pkgs.file-roller
-          pkgs.blueman-manager
+          pkgs.blueman
         ];
 
         xdg.configFile."niri/config.kdl".text = let
