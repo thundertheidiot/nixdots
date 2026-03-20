@@ -353,11 +353,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773954771,
-        "narHash": "sha256-9f0RMHsIIsiG1zTPM6Xkx8EtG0RiWoo05wlQ6Qkfnlo=",
+        "lastModified": 1773996905,
+        "narHash": "sha256-kX4TEpFl/TNuwiH+VCBtDX+o1sGIRxHwYgsFA/YBf2s=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "f000f755413ef6e7b2cc4c2d41df7f1810dd94b4",
+        "rev": "4bd51ac9d84dd98a71055bdd63ffd4599555f4b5",
         "type": "github"
       },
       "original": {
@@ -406,11 +406,11 @@
         "nixpkgs": "nixpkgs_7"
       },
       "locked": {
-        "lastModified": 1773954185,
-        "narHash": "sha256-WFWtNFFLwyB1we0XCh+mc9gru3lTAqxOxzW/i1olxqA=",
+        "lastModified": 1773996649,
+        "narHash": "sha256-fLwSdJtZ9oSl21iMBc6OpDz/VeaKmkXQ3p+YkjYvYpI=",
         "ref": "dev",
-        "rev": "5d08c422c361d17fef7f428b86f55e9c9199aaae",
-        "revCount": 384,
+        "rev": "c85cf68362624243b3cffc1b2e9ba8879e863111",
+        "revCount": 386,
         "type": "git",
         "url": "https://codeberg.org/thundertheidiot/ewm.git"
       },
