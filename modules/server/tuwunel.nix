@@ -59,6 +59,15 @@ in {
                 client = "https://${cfg.domain}";
                 server = "${cfg.domain}:443";
               };
+
+              url_preview_domain_explicit_allowlist = [
+                "tenor.com"
+                "giphy.com"
+                "imgflip.com"
+                "cdn.discordapp.com"
+                "images-ext-1.discordapp.net"
+                "i.makeagif.com"
+              ];
             };
           }
           (mkIf config.meow.server.coturn {
@@ -138,7 +147,7 @@ in {
       ];
 
       services.nginx.virtualHosts."${cfg.domain}".locations = {
-        "~ ^/livekit/(jwt|sfu/get|get_token|healthz)" = {
+        "~ ^/livekit/(sfu/get|get_token|healthz)" = {
           priority = 400;
           proxyPass = "http://[::1]:${toString config.services.lk-jwt-service.port}";
           extraConfig = ''
