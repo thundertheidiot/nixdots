@@ -90,8 +90,12 @@ in {
               python313Packages.python
             ])
             (mkIf cfg.web [
+              rassumfrassum # lsp multiplexer
               nodejs
               typescript-language-server
+              nodePackages.eslint
+              nodePackages.eslint_d
+              vscode-langservers-extracted
               nodePackages.prettier
             ])
           ];
