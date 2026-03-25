@@ -67,6 +67,8 @@ in {
                 "cdn.discordapp.com"
                 "images-ext-1.discordapp.net"
                 "i.makeagif.com"
+                "pbs.twimg.com"
+                "fixupx.com"
               ];
             };
           }
