@@ -103,8 +103,6 @@
       workstation.environment = ["niri"];
       workstation.flatpak.enable = false;
 
-      gaming.enable = false;
-
       emacs.enable = true;
       shell.enable = true;
 

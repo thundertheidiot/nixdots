@@ -63,8 +63,6 @@ in {
       zip
       unzip
       p7zip
-      rar
-      unrar
 
       yt-dlp
       # python3
