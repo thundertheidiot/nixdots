@@ -69,6 +69,8 @@ in {
                 "i.makeagif.com"
                 "pbs.twimg.com"
                 "fixupx.com"
+                "github.com"
+                "wikipedia.org"
               ];
             };
           }
