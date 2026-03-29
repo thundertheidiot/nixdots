@@ -39,7 +39,7 @@
                   mountpoint = "/nix";
                 };
                 "/persist" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = ["compress=zstd" "autodefrag"];
                   mountpoint = "/nix/persist";
                 };
                 "/tmp" = {
