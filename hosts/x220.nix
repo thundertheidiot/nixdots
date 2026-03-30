@@ -6,38 +6,44 @@
   modulesPath,
   ...
 }: {
-  system.stateVersion = "23.05";
+  system.stateVersion = "26.05";
 
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "x220";
 
   home-manager.sharedModules = [
     {
-      home.stateVersion = "24.05";
+      home.stateVersion = "26.05";
+
+      mHome.browser.firefox.enable = true;
+      mHome.setup.fullLanguages = true;
     }
   ];
 
-  # users.users.thunder.isSystemUser = true;
-  # users.users.thunder.group = "thunder";
-  # users.groups.thunder = {};
+  nixpkgs.config.allowUnfree = lib.mkForce false;
 
   meow = {
-    ssh.key = false;
+    ssh.key = true;
     ssh.rootKey = true;
 
-    # old-tv.enable = true;
-    tv.enable = true;
-    workstation.enable = false;
-    home.enable = false;
+    workstation.enable = true;
+    workstation.displayManager = "gdm";
+    home.enable = true;
+    user = "ella";
+
+    emacs.enable = true;
+    emacs.ewm.enable = true;
+    shell.enable = true;
 
     gpu = "intel";
 
     impermanence.enable = true;
-    impermanence.persist = "/persist";
+    impermanence.persist = "/nix/persist";
 
     monitors."LVDS-1" = {
       width = 1366;
       height = 768;
+      primary = true;
     };
 
     keyboard = {
@@ -46,10 +52,12 @@
     };
   };
 
-  # users.users.thunder.initialPassword = "password";
+  users.users.ella.initialPassword = "password";
 
   boot.loader.grub.enable = true;
   # boot.loader.grub.device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
+
+  boot.kernelParams = ["iomem=relaxed"];
 
   boot.initrd.availableKernelModules = ["ehci_pci" "ahci" "usb_storage" "sd_mod" "sdhci_pci"];
   boot.initrd.kernelModules = [];
@@ -97,7 +105,7 @@
                 };
                 "/persist" = {
                   mountOptions = ["compress=zstd"];
-                  mountpoint = "/persist";
+                  mountpoint = "/nix/persist";
                 };
                 "/nix" = {
                   mountOptions = ["compress=zstd" "noatime"];
@@ -116,7 +124,7 @@
 
   fileSystems = {
     "/nix".neededForBoot = true;
-    "/persist".neededForBoot = true;
+    "/nix/persist".neededForBoot = true;
     "/tmp".neededForBoot = true;
   };
 

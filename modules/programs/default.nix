@@ -51,7 +51,6 @@ in {
       (mkIf cfg.discord vesktop)
 
       (mkIf cfg.blender pkgs.blender)
-      (mkIf cfg.obs obs-studio)
       (mkIf cfg.kdenlive kdePackages.kdenlive)
       (mkIf cfg.godot godot)
       (mkIf cfg.gimp gimp3)
@@ -62,5 +61,15 @@ in {
       (mkIf cfg.freetube freetube)
       (mkIf cfg.ansel ansel)
     ];
+
+    programs.obs-studio = {
+      enable = cfg.obs;
+      plugins = with pkgs.obs-studio-plugins; [
+        droidcam-obs
+        obs-vaapi
+        obs-vkcapture
+        obs-pipewire-audio-capture
+      ];
+    };
   };
 }
