@@ -72,7 +72,7 @@
 
   home-manager.sharedModules = [
     {
-      home.stateVersion = "25.05";
+      home.stateVersion = "26.05";
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
 

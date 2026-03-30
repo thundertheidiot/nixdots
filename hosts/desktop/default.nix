@@ -25,7 +25,7 @@
     "video=1920x1080-32"
     "video=DP-3:D"
     "video=DP-1:D"
-    "video=HDMI-A-1:D"
+    # "video=HDMI-A-1:D"
     # "amdgpu.ppfeaturemask=0xffffffff"
   ];
 
@@ -69,7 +69,7 @@
 
   home-manager.sharedModules = [
     {
-      home.stateVersion = "24.05";
+      home.stateVersion = "26.05";
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
       meowEmacs.enable = true;
@@ -183,51 +183,54 @@
       "HDMI-A-1" = {
         enable = false;
         x = 4480;
-        xorgName = "HDMI-1";
-        hyprlandExclude = false;
-        edid = ./crt-edited.bin;
-        customModes = [
-          {
-            mode = "512x448@120.00";
-            name = "SNES 512x448";
-          }
-          {
-            mode = "640x480@120.01";
-            name = "EMU 640x480@120";
-          }
-          {
-            mode = "640x528@120.02";
-            name = "GC 640x528@120";
-          }
-          {
-            mode = "480x320@120.00";
-            name = "GBA 480x320@120";
-          }
-          {
-            mode = "640x480@144.87";
-            name = "640x480@144";
-          }
-          {
-            mode = "800x600@112.51";
-            name = "800x600@112";
-          }
-          {
-            mode = "1024x768@90.57";
-            name = "1024x768@90";
-          }
-          {
-            mode = "1280x1024@67.02Hz";
-            name = "1280x1024@67";
-          }
-          {
-            mode = "960x540@128.00";
-            name = "WIDE 960x540@128";
-          }
-          {
-            mode = "1280x720@96.00Hz";
-            name = "WIDE 1280x720@96";
-          }
-        ];
+        width = 1920;
+        height = 1080;
+        # crt
+        # xorgName = "HDMI-1";
+        # hyprlandExclude = false;
+        # edid = ./crt-edited.bin;
+        # customModes = [
+        #   {
+        #     mode = "512x448@120.00";
+        #     name = "SNES 512x448";
+        #   }
+        #   {
+        #     mode = "640x480@120.01";
+        #     name = "EMU 640x480@120";
+        #   }
+        #   {
+        #     mode = "640x528@120.02";
+        #     name = "GC 640x528@120";
+        #   }
+        #   {
+        #     mode = "480x320@120.00";
+        #     name = "GBA 480x320@120";
+        #   }
+        #   {
+        #     mode = "640x480@144.87";
+        #     name = "640x480@144";
+        #   }
+        #   {
+        #     mode = "800x600@112.51";
+        #     name = "800x600@112";
+        #   }
+        #   {
+        #     mode = "1024x768@90.57";
+        #     name = "1024x768@90";
+        #   }
+        #   {
+        #     mode = "1280x1024@67.02Hz";
+        #     name = "1280x1024@67";
+        #   }
+        #   {
+        #     mode = "960x540@128.00";
+        #     name = "WIDE 960x540@128";
+        #   }
+        #   {
+        #     mode = "1280x720@96.00Hz";
+        #     name = "WIDE 1280x720@96";
+        #   }
+        # ];
       };
     };
   };
