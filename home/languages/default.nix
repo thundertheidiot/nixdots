@@ -83,7 +83,7 @@ in {
               csharpier # fmt
             ])
             (mkIf cfg.bash [
-              nodePackages.bash-language-server
+              bash-language-server
             ])
             (mkIf cfg.python [
               basedpyright
@@ -93,10 +93,10 @@ in {
               rassumfrassum # lsp multiplexer
               nodejs
               typescript-language-server
-              nodePackages.eslint
-              nodePackages.eslint_d
+              eslint
+              eslint_d
               vscode-langservers-extracted
-              nodePackages.prettier
+              prettier
             ])
           ];
       }
