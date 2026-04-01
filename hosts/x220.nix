@@ -27,12 +27,12 @@
     ssh.rootKey = true;
 
     workstation.enable = true;
+    workstation.environment = ["niri"];
     workstation.displayManager = "gdm";
     home.enable = true;
     user = "ella";
 
     emacs.enable = true;
-    emacs.ewm.enable = true;
     shell.enable = true;
 
     gpu = "intel";
@@ -54,8 +54,21 @@
 
   users.users.ella.initialPassword = "password";
 
-  boot.loader.grub.enable = true;
-  # boot.loader.grub.device = "/dev/disk/by-uuid/d53a7434-16f0-4193-b057-4286168aea61";
+  boot.loader.grub = {
+    enable = true;
+    enableCryptodisk = true;
+    device = "nodev";
+    # mirroredBoots = lib.mkForce [
+    #   {
+    #     devices = ["/dev/disk/by-id/ata-Samsung_SSD_860_EVO_250GB_S3YJNF0K236870M"];
+    #     path = "/boot";
+    #   }
+    # ];
+  };
+
+  boot.initrd.luks.devices."cryptroot" = {
+    device = "/dev/disk/by-partlabel/luks";
+  };
 
   boot.kernelParams = ["iomem=relaxed"];
 
@@ -74,45 +87,53 @@
       ];
     };
     disk.ssd = {
-      device = "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_250GB_S3YJNF0K236870M";
       type = "disk";
+      device = "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_250GB_S3YJNF0K236870M";
       content = {
         type = "gpt";
         partitions = {
           boot = {
-            name = "boot";
+            # this was a grub mbr thing, but it's not needed
             size = "1M";
-            type = "EF02";
           };
-          efi = {
-            size = "500M";
-            type = "EF00";
-            content = {
-              type = "filesystem";
-              format = "vfat";
-              mountpoint = "/boot";
-            };
-          };
-          main = {
-            name = "main";
+          # libreboot with grub payload
+          luks = {
             size = "100%";
+            label = "luks";
             content = {
-              type = "btrfs";
-              subvolumes = {
-                "/home" = {
-                  mountOptions = ["compress=zstd"];
-                  mountpoint = "/home";
-                };
-                "/persist" = {
-                  mountOptions = ["compress=zstd"];
-                  mountpoint = "/nix/persist";
-                };
-                "/nix" = {
-                  mountOptions = ["compress=zstd" "noatime"];
-                  mountpoint = "/nix";
-                };
-                "/tmp" = {
-                  mountpoint = "/tmp";
+              type = "luks";
+              name = "cryptroot";
+              settings = {
+                allowDiscards = true;
+                keyFile = "/tmp/disk.key";
+              };
+              extraOpenArgs = [
+                # https://haseebmajid.dev/posts/2024-07-30-how-i-setup-btrfs-and-luks-on-nixos-using-disko/
+                "--perf-no_read_workqueue"
+                "--perf-no_write_workqueue"
+              ];
+              content = {
+                type = "btrfs";
+
+                subvolumes = {
+                  "/boot" = {
+                    mountpoint = "/boot";
+                  };
+                  "@home" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/home";
+                  };
+                  "@nix" = {
+                    mountOptions = ["compress=zstd" "noatime"];
+                    mountpoint = "/nix";
+                  };
+                  "@persist" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/nix/persist";
+                  };
+                  "@tmp" = {
+                    mountpoint = "/tmp";
+                  };
                 };
               };
             };
