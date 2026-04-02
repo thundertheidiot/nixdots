@@ -4,14 +4,13 @@
 # TODO: get rid of the home module
 {
   lib,
-  pkgs,
   config,
   mlib,
   ...
 }: let
   inherit (mlib) mkOpt mkEnOptTrue;
   inherit (lib) mkIf;
-  inherit (lib.types) bool listOf raw attrs str;
+  inherit (lib.types) listOf raw attrs str;
   inherit (lib.options) literalExpression;
 
   cfg = config.meow.home;

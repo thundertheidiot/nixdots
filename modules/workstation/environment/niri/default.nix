@@ -20,7 +20,7 @@ in {
   };
 
   config = mkIf (work && elem "niri" env) {
-    environment.systemPackages = [pkgs.xwayland-satellite pkgs.swww];
+    environment.systemPackages = [pkgs.xwayland-satellite pkgs.awww];
     programs.niri.enable = true;
 
     xdg.portal.config = {
@@ -51,7 +51,7 @@ in {
           swayosd = getExe' pkgs.swayosd "swayosd-server";
           swayosdc = getExe' pkgs.swayosd "swayosd-client";
           waybar = getExe pkgs.waybar;
-          swww = getExe' pkgs.swww "swww-daemon";
+          awww = getExe' pkgs.awww "swww-daemon";
           xwayland-satellite = getExe pkgs.xwayland-satellite;
 
           panic = getExe (pkgs.writeShellApplication {
@@ -158,7 +158,7 @@ in {
 
           spawn-at-startup "${waybar}"
           spawn-at-startup "${swayosd}"
-          spawn-at-startup "${swww}"
+          spawn-at-startup "${awww}"
 
           recent-windows { off; }
 

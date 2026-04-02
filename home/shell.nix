@@ -29,10 +29,6 @@ in {
       ];
     };
 
-    home.sessionVariables = {
-      STUBBORN_HOME = "${config.mHome.stubbornHomeDirectory}";
-    };
-
     programs.fish = {
       enable = true;
       shellAliases = {

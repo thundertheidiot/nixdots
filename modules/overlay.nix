@@ -1,7 +1,14 @@
-{inputs, ...}: {
+{
+  inputs,
+  lib,
+  ...
+}: let
+  inherit (lib) listToAttrs;
+in {
   config = {
     nixpkgs.overlays = [
       inputs.nix-cachyos-kernel.overlays.pinned
+
       (final: prev: rec {
         # TODO organize, break up
         nur = import inputs.nur {
@@ -49,6 +56,28 @@
             ["wrapProgram $out/bin/mumble --set QT_QPA_PLATFORM xcb"] # Run with xwayland to make keybindings work
             
             old.postFixup;
+        });
+      })
+
+      (final: prev: let
+        wrapHome = pkg: {
+          name ? pkg.meta.name or pkg.name,
+          executable ? pkg.meta.mainProgram or pkg.name,
+        }:
+          final.symlinkJoin {
+            name = "${name}-wrapped-home";
+            paths = [pkg];
+            buildInputs = [final.makeWrapper];
+
+            postBuild = "wrapProgram $out/bin/${executable} --run 'export HOME=\"\${STUBBORN_HOME:-$HOME}\"'";
+          };
+      in {
+        lmath = wrapHome prev.lmath {};
+        cloudflared = wrapHome prev.cloudflared {};
+        android-tools = wrapHome prev.android-tools {executable = "adb";};
+        signal-desktop = wrapHome prev.signal-desktop {};
+        dotnetCorePackages = prev.dotnetCorePackages.overrideScope (final: prev: {
+          sdk_8_0-bin = wrapHome prev.sdk_8_0-bin {};
         });
       })
     ];
