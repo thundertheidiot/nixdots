@@ -51,7 +51,7 @@ in {
           swayosd = getExe' pkgs.swayosd "swayosd-server";
           swayosdc = getExe' pkgs.swayosd "swayosd-client";
           waybar = getExe pkgs.waybar;
-          awww = getExe' pkgs.awww "swww-daemon";
+          awww = getExe' pkgs.awww "awww-daemon";
           xwayland-satellite = getExe pkgs.xwayland-satellite;
 
           panic = getExe (pkgs.writeShellApplication {
