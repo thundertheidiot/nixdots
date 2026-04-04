@@ -10,7 +10,7 @@ in {
     ./waybar.nix
   ];
 
-  config = mkIf (cfg == "glass") {
+  config = mkIf (cfg == "minimal") {
     meow.home.modules = [
       {
         programs.alacritty.settings = {
