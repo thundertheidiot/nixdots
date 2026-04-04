@@ -37,19 +37,6 @@ in {
           height = 36;
           spacing = 8;
 
-          "hyprland/workspaces" = {
-            format = "{icon}";
-            format-icons = {
-              urgent = "";
-              active = "";
-              visible = "";
-              default = "";
-              empty = "";
-            };
-          };
-          "hyprland/language" = {
-            format = " {short}";
-          };
           "idle_inhibitor" = {
             format = "{icon}";
             format-icons = {

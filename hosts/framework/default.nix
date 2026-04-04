@@ -76,8 +76,6 @@
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
 
-      wayland.windowManager.hyprland.settings.xwayland.force_zero_scaling = true;
-
       home.packages = with pkgs; [
         distrobox
 

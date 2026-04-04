@@ -1,18 +1,15 @@
 {
   config,
-  mlib,
   lib,
   pkgs,
-  inputs,
   ...
 }: let
   inherit (lib) mkIf mkMerge mkOption floor;
-  inherit (lib.attrsets) attrValues listToAttrs mapAttrs';
-  inherit (lib.lists) head length elem filter sublist;
+  inherit (lib.attrsets) attrValues;
+  inherit (lib.lists) length elem filter sublist;
   inherit (lib.strings) splitString concatStrings concatStringsSep;
-  inherit (mlib) homeModule mkOpt;
 
-  inherit (lib.types) attrsOf attrs listOf submodule str int float bool nullOr path;
+  inherit (lib.types) attrsOf listOf submodule str int float bool nullOr path;
 
   ifElseEmpty = t: v:
     if t
@@ -107,18 +104,6 @@ in {
             description = "Custom edid binary";
           };
 
-          hyprlandExtra = mkOption {
-            type = str;
-            default = "";
-            description = "Extra config for hyprland";
-          };
-
-          hyprlandExclude = mkOption {
-            type = bool;
-            default = false;
-            description = "Exclude from hyprland config";
-          };
-
           niriCustom = mkOption {
             type = bool;
             default = false;
@@ -163,10 +148,6 @@ in {
             s: with s; "drm.edid_firmware=${name}:edid/${name}.bin"
           )
           edids;
-
-        # environment.systemPackages = [
-        #   pkgs.mpkgs.cru
-        # ];
       })
       {
         services.xserver.xrandrHeads = map (m:
@@ -236,74 +217,6 @@ in {
             }
           ];
         }
-      )
-
-      (
-        mkIf (elem "hyprland" config.meow.workstation.environment)
-        (
-          homeModule
-          ({
-            lib,
-            pkgs,
-            ...
-          }: let
-            monitorsWithModes = filter (m: m.customModes != null) (attrValues cfg);
-
-            modeSwitcher =
-              pkgs.writers.writeBash "modemenu"
-              (let
-                monitorSwitchScripts = listToAttrs (map
-                  (m: rec {
-                    inherit (m) name x y customModes;
-
-                    value = pkgs.writers.writeBash "${name}_modemenu" ''
-                      pos=${toString x}x${toString y}
-
-                      case $(echo -e "Disable\n${concatStringsSep "\n" (map (mode: mode.name) customModes)}" | ${lib.getExe pkgs.tofi} --prompt-text "Select mode: ") in
-                        "Disable")
-                          hyprctl keyword monitor "${name}, disabled"
-                          ;;
-                        ${concatStringsSep "\n" (map (m: ''"${m.name}") hyprctl keyword monitor "${name}, ${m.mode}, $pos, 1" ;;'') customModes)}
-                      esac
-                    '';
-                  })
-                  monitorsWithModes);
-              in
-                if (length monitorsWithModes == 1)
-                then "${monitorSwitchScripts."${(head monitorsWithModes).name}"}"
-                else ''
-                  case $(echo -e "${concatStringsSep "\n" (map (m: m.name) monitorsWithModes)}" | ${lib.getExe pkgs.tofi} --prompt-text "Select monitor: ") in
-                  ${concatStringsSep "\n" (map (m: with m; "\"${name}\") ${monitorSwitchScripts.${name}} ;;") monitorsWithModes)}
-                  esac
-                '');
-          in {
-            wayland.windowManager.hyprland = {
-              settings = {
-                monitor = mkIf (cfg != {}) (map (m:
-                  with m;
-                    mkIf (!hyprlandExclude)
-                    "${name}, ${
-                      if refresh != null
-                      then "${toString width}x${toString height}@${toString refresh}"
-                      else "highrr"
-                    }, ${toString x}x${toString y}, ${toString scale}${
-                      if disableVrr
-                      then ", vrr, 0"
-                      else ""
-                    }${
-                      if (hyprlandExtra != "")
-                      then ", ${hyprlandExtra}"
-                      else ""
-                    }")
-                (attrValues cfg));
-
-                bind = [
-                  (mkIf (length monitorsWithModes > 0) "$mod, C, exec, ${modeSwitcher}")
-                ];
-              };
-            };
-          })
-        )
       )
     ];
 }

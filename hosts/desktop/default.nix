@@ -95,9 +95,6 @@
     user = "thunder";
 
     workstation.environment = ["niri"];
-    workstation.hyprland.extraAutostart = [
-      "${pkgs.ckb-next}/bin/ckb-next -b"
-    ];
 
     workstation.extraWaybarModules = {
       "custom/qbittorrent" = let
@@ -188,7 +185,6 @@
         height = 1080;
         # crt
         # xorgName = "HDMI-1";
-        # hyprlandExclude = false;
         # edid = ./crt-edited.bin;
         # customModes = [
         #   {

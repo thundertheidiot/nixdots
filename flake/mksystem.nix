@@ -26,7 +26,6 @@ in {
             inputs.home-manager.nixosModules.home-manager
             inputs.sops-nix.nixosModules.default
             inputs.disko.nixosModules.default
-            inputs.hyprland.nixosModules.default
             inputs.authentik-nix.nixosModules.default
             inputs.catppuccin.nixosModules.default
             inputs.emacs.nixosModules.ewm
@@ -41,7 +40,6 @@ in {
               home-manager = {
                 extraSpecialArgs = {inherit inputs mlib;};
                 sharedModules = [
-                  inputs.hyprlux.homeManagerModules.default
                   inputs.emacs.homeModules.default
                   inputs.vicinae.homeManagerModules.default
                   inputs.catppuccin.homeModules.default

@@ -21,7 +21,7 @@
 
     home.enable = true;
     workstation.enable = true;
-    workstation.environment = ["hyprland"];
+    workstation.environment = ["niri"];
 
     monitors."HDMI-A-1" = {
       width = 1360;

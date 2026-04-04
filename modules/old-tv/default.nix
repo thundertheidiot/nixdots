@@ -100,7 +100,7 @@ in {
         '';
       };
 
-      hyprland = builtins.elem "hyprland" config.meow.workstation.environment;
+      hyprland = builtins.elem "hyprland" true;
     in [
       ({
         config,

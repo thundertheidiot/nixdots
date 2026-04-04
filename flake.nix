@@ -4,7 +4,6 @@
   nixConfig = {
     substituters = [
       "https://cache.nixos.org"
-      "https://hyprland.cachix.org"
       "https://nix-community.cachix.org"
       "https://meowos.cachix.org" # meowos binary cache
       "https://vicinae.cachix.org"
@@ -12,7 +11,6 @@
     ];
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" # default nixos TODO useless?
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" # hyprland
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" # nix-community
       "meowos.cachix.org-1:QOXuuFPMN5TszgX8+nqd8X+BZG84toh5wK8j1IBBDH4="
       "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
@@ -63,18 +61,6 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
 
     naersk.url = "github:nix-community/naersk";
-
-    hyprland = {
-      url = "github:hyprwm/Hyprland/v0.51.1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprsplit = {
-      url = "github:shezdy/hyprsplit/v0.51.1";
-      inputs.hyprland.follows = "hyprland";
-    };
-
-    hyprlux.url = "github:amadejkastelic/Hyprlux";
 
     vicinae.url = "github:vicinaehq/vicinae";
 
