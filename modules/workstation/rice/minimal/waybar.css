@@ -1,0 +1,55 @@
+@define-color fg @fg@;
+@define-color bg @bg@;
+@define-color inactive @inactive@;
+@define-color accent @accent@;
+
+* {
+	border: none;
+	border-radius: 0;
+	font-family: monospace, "Symbols Nerd Font", sans-serif;
+	font-size: 13px;
+	font-weight: normal;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	box-shadow: none;
+}
+
+window#waybar {
+	background: @bg;
+	color: @fg;
+}
+
+widget > * {
+	background: transparent;
+}
+
+/* Window title formatting */
+#window {
+	background: @accent;
+	color: @bg;
+	padding: 0 8px;
+}
+
+/* Remove the colored highlight if there is no active window */
+#window.empty {
+	background: transparent;
+	padding: 0;
+}
+
+.modules-right > widget > * {
+	padding: 0;
+}
+
+#tray {
+	padding: 0 4px;
+}
+
+tooltip {
+	background: @bg;
+	border: 1px solid @inactive;
+	border-radius: 0;
+}
+tooltip label {
+	color: @fg;
+}

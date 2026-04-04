@@ -26,7 +26,6 @@ in {
     };
   };
   imports = [
-    ./waybar.nix
     ./nsxiv.nix
     ./hyprlock.nix
     ./anyrun.nix

@@ -138,7 +138,7 @@
       height = 1920;
       refresh = 120.0;
       primary = true;
-      scale = 1.5;
+      scale = 1.6;
     };
   };
 

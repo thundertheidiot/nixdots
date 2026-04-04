@@ -21,14 +21,11 @@ in {
     meow.workstation.displayManager = mkOpt (enum ["sddm" "gdm"]) "sddm" {
       description = "Display manager (login screen) to install.";
     };
-
-    # meow.workstation.xdgPortals = mkOpt (listOf package) [] {
-    #   description = "Do not touch, internal way of passing values.";
-    # };
   };
   imports = [
     ./hyprland
     ./niri
+    ./waybar.nix
   ];
 
   config = mkIf cfg (mkMerge [
@@ -47,7 +44,6 @@ in {
         package = lib.mkForce pkgs.kdePackages.sddm;
         wayland = {
           enable = true;
-          # compositor = lib.mkForce "weston";
         };
       };
 
@@ -73,7 +69,7 @@ in {
         }
       ];
     })
-    (mkIf (builtins.elem "hyprland" envir) {
+    (mkIf (builtins.elem "niri" envir) {
       services.gvfs.enable = true;
 
       systemd.user.services.polkit-gnome-authentication-agent-1 = {

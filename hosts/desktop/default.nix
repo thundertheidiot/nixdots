@@ -88,6 +88,7 @@
   meow = {
     fullSetup = true;
     workstation.enable = true;
+    rice = "minimal";
 
     boot.efi = true;
 

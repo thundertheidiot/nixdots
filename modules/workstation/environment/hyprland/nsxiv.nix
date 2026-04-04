@@ -4,8 +4,7 @@
   config,
   ...
 }: let
-  inherit (lib) mkIf;
-  inherit (builtins) elem;
+  inherit (lib) mkIf elem listToAttrs;
 
   work = config.meow.workstation.enable;
   env = config.meow.workstation.environment;
@@ -51,7 +50,7 @@ in {
         };
         xdg.mimeApps = {
           enable = true;
-          defaultApplications = builtins.listToAttrs (builtins.map
+          defaultApplications = listToAttrs (map
             (mime: {
               name = mime;
               value = ["nsxiv.desktop"];

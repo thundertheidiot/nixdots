@@ -36,7 +36,7 @@ in {
 
         home.packages = [
           pkgs.nautilus
-          pkgs.eog
+          pkgs.loupe
           pkgs.file-roller
           pkgs.blueman
         ];

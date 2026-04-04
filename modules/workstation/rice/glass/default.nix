@@ -1,34 +1,18 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: let
   inherit (lib) mkIf mkForce;
-  inherit (pkgs) replaceVars;
-
   cfg = config.meow.rice;
 in {
+  imports = [
+    ./waybar.nix
+  ];
+
   config = mkIf (cfg == "glass") {
     meow.home.modules = [
       {
-        catppuccin.waybar.enable = false;
-        programs.waybar.style = let
-          colors = config.meow.workstation.theme.palette.withHashtag;
-        in
-          replaceVars ./waybar.css {
-            accent = colors.base0D;
-
-            fg = colors.base05;
-            border = colors.base02;
-            borderHover = colors.base03;
-            muted = colors.base04;
-            warn = colors.base0A;
-            danger = colors.base08;
-
-            inherit (colors) base00 base01 base02;
-          };
-
         programs.alacritty.settings = {
           window = {
             opacity = mkForce 0.88;
