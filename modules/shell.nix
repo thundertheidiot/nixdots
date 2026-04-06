@@ -44,6 +44,11 @@ in {
       interactiveShellInit = ''
         set fish_greeting
 
+        bind up history-search-backward
+        bind down history-search-forward
+        bind \e\[A history-search-backward
+        bind \e\[B history-search-forward
+
         function fish_prompt
           if test -n "$IN_NIX_SHELL"
             echo -n "<nix-shell> "
