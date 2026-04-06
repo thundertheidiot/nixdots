@@ -58,7 +58,7 @@ services:
       - GID=1000
     volumes:
       - /mnt/storage/torrent_stack/config/slskd:/app
-      - /mnt/storage/media/downloads/soulseek/incomplete:/app/incomplete
+      - /mnt/storage/media/downloads/soulseek_incomplete:/app/incomplete
       - /mnt/storage/media/downloads/soulseek:/app/downloads
       - /mnt/storage/media:/media
     restart: unless-stopped

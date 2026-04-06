@@ -423,7 +423,7 @@
     volumes = [
       "/mnt/storage/media:/media:rw"
       "/mnt/storage/media/downloads/soulseek:/app/downloads:rw"
-      "/mnt/storage/media/downloads/soulseek/incomplete:/app/incomplete:rw"
+      "/mnt/storage/media/downloads/soulseek_incomplete:/app/incomplete:rw"
       "/mnt/storage/torrent_stack/config/slskd:/app:rw"
     ];
     dependsOn = [

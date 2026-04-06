@@ -30,6 +30,8 @@
     "bazarr.home"
     "immich.home"
     "homeassistant.home"
+    "navidrome.home"
+    "soulbeet.home"
   ];
 
   "local.crt" = ./local.crt;
