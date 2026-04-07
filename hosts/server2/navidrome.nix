@@ -47,9 +47,12 @@ in {
       "/" = {
         proxyPass = "http://127.0.0.1:9765";
         recommendedProxySettings = true;
+        proxyWebsockets = true;
         extraConfig = ''
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "Upgrade";
+          proxy_read_timeout 3600s;
+          proxy_send_timeout 3600s;
         '';
       };
     };
@@ -64,10 +67,12 @@ in {
       "DATABASE_URL" = "sqlite:/data/soulbeet.db";
       "DOWNLOAD_PATH" = "/downloads";
       "NAVIDROME_URL" = "http://host.docker.internal:${toString config.services.navidrome.settings.Port}";
+      "BEETS_ALBUM_MODE" = "true";
     };
     environmentFiles = [config.sops.secrets.soulbeet_env.path];
     volumes = [
       "/mnt/storage/media:/mnt/storage/media:rw"
+      "/mnt/storage/media/my_music:/music:rw"
       "/nix/persist/soulbeet:/data"
       "/mnt/storage/media/downloads/soulseek:/downloads"
     ];
