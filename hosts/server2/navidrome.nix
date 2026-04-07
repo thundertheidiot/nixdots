@@ -36,6 +36,13 @@ in {
       Address = "0.0.0.0";
       MusicFolder = "/mnt/storage/media/music";
       DataFolder = "${config.meow.impermanence.persist}/navidrome";
+      BaseUrl = "https://navidrome.meowcloud.net";
+
+      Agents = "deezer,lastfm,listenbrainz";
+
+      LastFM.Enabled = true;
+      Deezer.Enabled = true;
+      ListenBrainz.Enabled = true;
     };
   };
 
