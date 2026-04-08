@@ -24,7 +24,7 @@ in {
           extraArgs = [
             "--net=none"
             "--noprofile"
-            "--home=${config.meow.home.stubbornHomeDirectory}/packettracer"
+            "--private=${config.meow.home.stubbornHomeDirectory}/packettracer"
             ''--env=QT_STYLE_OVERRIDE=""''
           ];
         };
