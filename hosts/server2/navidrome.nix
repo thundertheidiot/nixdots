@@ -27,6 +27,8 @@ in {
   };
 
   systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = ["/mnt/storage/media"];
+  systemd.services.navidrome.environment.TMPDIR = "${config.meow.impermanence.persist}/navidrome/tmp";
+  systemd.tmpfiles.rules = ["d ${config.meow.impermanence.persist}/navidrome/tmp 0700 navidrome navidrome -"];
 
   services.navidrome = {
     enable = true;
