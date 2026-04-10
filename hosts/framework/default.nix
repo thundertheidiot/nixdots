@@ -100,6 +100,7 @@
     workstation.enable = true;
     workstation.environment = ["niri"];
     workstation.displayManager = "gdm";
+    rice = "minimal";
 
     impermanence.enable = true;
     impermanence.directories = [
