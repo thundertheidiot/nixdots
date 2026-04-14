@@ -15,7 +15,7 @@ jobs:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
         install_options: --no-daemon
     - name: Cachix
-      uses: cachix/cachix-action@v16
+      uses: cachix/cachix-action@v17
       with:
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
         name: meowos
@@ -51,7 +51,7 @@ jobs:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
         install_options: --no-daemon
     - name: Cachix
-      uses: cachix/cachix-action@v16
+      uses: cachix/cachix-action@v17
       with:
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
         name: meowos
@@ -70,7 +70,7 @@ jobs:
     - name: Build framework
       run: nix build --accept-flake-config .#nixosConfigurations.framework.config.system.build.toplevel
     - name: Commit
-      uses: stefanzweifel/git-auto-commit-action@v5
+      uses: stefanzweifel/git-auto-commit-action@v7
       with:
         branch: main
         commit_author: Flake Bot Update <actions@github.com>

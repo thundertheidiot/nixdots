@@ -60,7 +60,7 @@
 
         cachix = {
           name = "Cachix";
-          uses = "cachix/cachix-action@v16";
+          uses = "cachix/cachix-action@v17";
           "with" = {
             name = "meowos";
             authToken = "\${{ secrets.CACHIX_AUTH_TOKEN }}";
@@ -258,7 +258,7 @@
             buildAllHosts
             {
               name = "Commit";
-              uses = "stefanzweifel/git-auto-commit-action@v5";
+              uses = "stefanzweifel/git-auto-commit-action@v7";
               "with" = {
                 commit_message = "chore(deps): bump flake.lock";
                 commit_user_name = "Flake Bot Update";
