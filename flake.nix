@@ -70,7 +70,7 @@
 
     # server
     authentik-nix.url = "github:nix-community/authentik-nix";
-    nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
+    nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/main";
     autoaspm = {
       url = "git+https://git.notthebe.ee/notthebee/AutoASPM";
       inputs.nixpkgs.follows = "nixpkgs";
