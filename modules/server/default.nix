@@ -18,7 +18,7 @@ in {
     ./coturn.nix
     ./deploy.nix
     ./forgejo.nix
-    ./mail.nix
+    # ./mail.nix
     ./mumble.nix
     ./prosody
     ./radio.nix

@@ -74,6 +74,27 @@
       mHome.lang.latex = true;
       meowEmacs.enable = true;
 
+      # services.mpd.enable = lib.mkForce false;
+      # services.mopidy = {
+      #   enable = true;
+      #   extensionPackages = with pkgs; [mopidy-mpd mopidy-local mopidy-subidy];
+
+      #   extraConfigFiles = ["/home/thunder/.config/mopidy/navidrome.conf"];
+
+      #   settings = {
+      #     file.media_dirs = ["~/Music/mpd|Music"];
+
+      #     verbosity.logging = 2;
+
+      #     mpd.enabled = true;
+      #     subidy.enabled = true;
+      #     subidy.url = "https://navidrome.home";
+      #     subidy.api_version = 1.14;
+
+      #     audio.output = "pipewiresink";
+      #   };
+      # };
+
       gtk.gtk3.bookmarks = [
         # "file:///mnt/4tb"
         "file:///mnt/1tb_nvme"
