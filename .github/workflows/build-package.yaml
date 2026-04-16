@@ -28,7 +28,7 @@ jobs:
           nix build .#$i --print-build-logs --accept-flake-config
         done
     - name: Commit
-      uses: stefanzweifel/git-auto-commit-action@v5
+      uses: stefanzweifel/git-auto-commit-action@v7
       with:
         branch: main
         commit_author: Flake Bot Update <actions@github.com>

@@ -129,7 +129,7 @@
             }
             {
               name = "Commit";
-              uses = "stefanzweifel/git-auto-commit-action@v5";
+              uses = "stefanzweifel/git-auto-commit-action@v7";
               "with" = {
                 commit_message = "chore(deps): update \${{ github.event.inputs.flake-input }}";
                 commit_user_name = "Flake Bot Update";
