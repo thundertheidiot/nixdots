@@ -107,7 +107,7 @@ in {
       MaxFileSec=7day
     '';
 
-    mailserver.stateVersion = 3;
+    # mailserver.stateVersion = 3;
 
     networking.useNetworkd = true;
     systemd.network.enable = true;
