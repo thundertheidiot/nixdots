@@ -163,6 +163,12 @@
     keyboard.enable = false;
     keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];
 
+    workstation.extraNiriBinds = [
+      ''
+        Mod+C { spawn "displaytoggle"; }
+      ''
+    ];
+
     workstation.extraNiriConfig = [
       ''
         workspace "chat" {
@@ -278,6 +284,8 @@
     orca-slicer
 
     # electrum-ltc
+
+    (callPackage ./displaytoggle.nix {})
   ];
 
   hardware.ckb-next.enable = true;

@@ -14,9 +14,11 @@
   env = config.meow.workstation.environment;
 
   conf = config.meow.workstation.extraNiriConfig;
+  binds = config.meow.workstation.extraNiriBinds;
 in {
   options = {
     meow.workstation.extraNiriConfig = mkOpt (listOf str) [] {};
+    meow.workstation.extraNiriBinds = mkOpt (listOf str) [] {};
   };
 
   config = mkIf (work && elem "niri" env) {
@@ -241,6 +243,7 @@ in {
             Mod+Shift+7 { move-window-to-workspace 7; }
             Mod+Shift+8 { move-window-to-workspace 8; }
             Mod+Shift+9 { move-window-to-workspace 9; }
+            ${concatStrings binds}
           }
 
           ${concatStrings conf}

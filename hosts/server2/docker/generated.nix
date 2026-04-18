@@ -388,44 +388,6 @@
       Restart = lib.mkOverride 90 "no";
     };
   };
-  virtualisation.oci-containers.containers."watchtower" = {
-    image = "containrrr/watchtower:latest";
-    environment = {
-      "TZ" = "Europe/Helsinki";
-    };
-    volumes = [
-      "/var/run/docker.sock:/var/run/docker.sock:rw"
-    ];
-    ports = [
-      "8081:8080/tcp"
-    ];
-    cmd = [ "--interval" "480" "--no-restart" "--http-api-metrics" "--http-api-token" "token" ];
-    log-driver = "journald";
-    extraOptions = [
-      "--network-alias=watchtower"
-      "--network=server2_default"
-    ];
-  };
-  systemd.services."docker-watchtower" = {
-    serviceConfig = {
-      Restart = lib.mkOverride 90 "always";
-      RestartMaxDelaySec = lib.mkOverride 90 "1m";
-      RestartSec = lib.mkOverride 90 "100ms";
-      RestartSteps = lib.mkOverride 90 9;
-    };
-    after = [
-      "docker-network-server2_default.service"
-    ];
-    requires = [
-      "docker-network-server2_default.service"
-    ];
-    partOf = [
-      "docker-compose-server2-root.target"
-    ];
-    wantedBy = [
-      "docker-compose-server2-root.target"
-    ];
-  };
 
   # Networks
   systemd.services."docker-network-server2_default" = {
