@@ -15,7 +15,7 @@ in {
     ./disko.nix
     ./gatus.nix
     ./jellyfin.nix
-    ./meowdzbot.nix
+    # ./meowdzbot.nix
     ./secrets
     ./sodexobot.nix
     ./website.nix
