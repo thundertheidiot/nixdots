@@ -922,11 +922,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1767021794,
-        "narHash": "sha256-sIH79ikMKnv63+2yyxSlZuiTtA1jGKTMVDiZrAfGQfw=",
+        "lastModified": 1776634842,
+        "narHash": "sha256-4hNQKS+0WWHZaaR3qw3W1N2w8ZnS63DaUksGen+EVkU=",
         "owner": "thundertheidiot",
         "repo": "leptos-kotiboksi",
-        "rev": "8d94c626352a9f2c81f8f51f37b4d7d7d8b0d233",
+        "rev": "c76adf08b25bbaa06b2e9969a125145c87cf66fb",
         "type": "github"
       },
       "original": {
