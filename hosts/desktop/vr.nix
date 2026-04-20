@@ -10,6 +10,21 @@
   inherit (mlib) homeModule;
 in {
   config = lib.mkMerge [
+    # mesa rdna2 fix
+    # {
+    #   nixpkgs.overlays = [
+    #     (final: prev: {
+    #       mesa = prev.mesa.overrideAttrs (prev: {
+    #         patches = [
+    #           (final.fetchpatch2 {
+    #             url = "https://aur.archlinux.org/cgit/aur.git/plain/0001-Revert-wsi-display-pass-the-plane-s-modifiers-to-the.patch?h=mesa-rdna2vr";
+    #             sha256 = "sha256-Vy/symhMl5Mupmct7zv/sgrOcYoQfT4QkDrcLcF6z0Q=";
+    #           })
+    #         ];
+    #       });
+    #     })
+    #   ];
+    # }
     # SteamVR
     {
       # NOTE: "Security" concern
@@ -135,7 +150,7 @@ in {
       #   }
       # ];
 
-      xdg.configFile."wlxoverlay/conf.d/config.yaml".source = (pkgs.formats.yaml {}).generate "config.yaml" {
+      xdg.configFile."wayvr/conf.d/config.yaml".source = (pkgs.formats.yaml {}).generate "config.yaml" {
         desktop_view_scale = 2.0;
       };
     })
@@ -166,24 +181,39 @@ in {
           ];
 
           text = let
-            card = "card0";
+            enable_vr_mode = pkgs.writeShellApplication {
+              name = "enable_vr_mode";
+              runtimeInputs = [
+                pkgs.fd
+              ];
+              text = ''
+                # find card with the power performance file (skips igpu)
+                card="$(fd --absolute-path --type symlink 'card[0-9]$' /sys/class/drm -x sh -c 'test -f "{}/device/pp_power_profile_mode" && echo "{}"' | head -n 1)"
 
-            enable_vr_mode = pkgs.writeShellScript "enable_vr_mode" ''
-              card="$(${pkgs.fd}/bin/fd --absolute-path --type symlink 'card[0-9]$' /sys/class/drm)"
 
-              [ "$(cat $card/device/power_dpm_force_performance_level)" = "manual" ] && \
-                [ "$(grep ' VR\*' $card/device/pp_power_profile_mode)" ] && exit 0
+                [ "$(cat "$card/device/power_dpm_force_performance_level")" = "manual" ] && \
+                  grep -q ' VR\*' "$card/device/pp_power_profile_mode" && exit 0
 
-              echo "manual" > /sys/class/drm/${card}/device/power_dpm_force_performance_level
+                echo "manual" > "/sys/class/drm/$card/device/power_dpm_force_performance_level"
 
-              vr_profile=$(cat /sys/class/drm/${card}/device/pp_power_profile_mode | grep ' VR ' | awk '{ print $1; }')
-              echo $vr_profile > /sys/class/drm/${card}/device/pp_power_profile_mode
-            '';
+                vr_profile=$(cat "/sys/class/drm/$card/device/pp_power_profile_mode" | grep ' VR ' | awk '{ print $1; }')
+                echo "$vr_profile" > "/sys/class/drm/$card/device/pp_power_profile_mode"
+              '';
+            };
 
-            disable_vr_mode = pkgs.writeShellScript "disable_vr_mode" ''
-              echo "auto" > /sys/class/drm/${card}/device/power_dpm_force_performance_level
-              echo 0 > /sys/class/drm/${card}/device/pp_power_profile_mode
-            '';
+            disable_vr_mode = pkgs.writeShellApplication {
+              name = "enable_vr_mode";
+              runtimeInputs = [
+                pkgs.fd
+              ];
+              text = ''
+                # find card with the power performance file (skips igpu)
+                card="$(fd --absolute-path --type symlink 'card[0-9]$' /sys/class/drm -x sh -c 'test -f "{}/device/pp_power_profile_mode" && echo "{}"' | head -n 1)"
+
+                echo "auto" > "/sys/class/drm/$card/device/power_dpm_force_performance_level"
+                echo 0 > "/sys/class/drm/$card/device/pp_power_profile_mode"
+              '';
+            };
           in ''
             [ -z "$1" ] && { echo "provide argument"; exit 1; }
 
@@ -192,9 +222,9 @@ in {
                 shift 1
 
                 exec env PRESSURE_VESSEL_FILESYSTEMS_RW="$XDG_RUNTIME_DIR/monado_comp_ipc" \
-                         U_PACING_APP_USE_MIN_FRAME_PERIOD=1 \
-                         U_PACING_COMP_MIN_TIME_MS=4 \
+                         PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1 \
                          XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
+                         -u TZ \
                          "$@"
                 ;;
               steam)
@@ -207,15 +237,13 @@ in {
               monado)
                 sudo "${enable_vr_mode}" || true
                 ln -f "$XDG_CONFIG_HOME/openxr/1/monado_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.json"
-                if [ -n "$2" ]; then
-                  ln -f "$XDG_CONFIG_HOME/openvr/monado_xrizer_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
-                else
+                if [ -z "''${2:-}" ]; then
                   ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                else
+                  ln -f "$XDG_CONFIG_HOME/openvr/monado_xrizer_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
                 fi
 
-                # { sleep 3; pkexec renice -20 -p $(pgrep monado); } &
-
-                { sleep 10; wlx-overlay-s; } &
+                { sleep 10; wayvr; } &
 
                 # steam is placed in stubbornHome, this needs to be set so monado can find the steamvr stuff
                 env HOME=${config.meow.home.stubbornHomeDirectory} \
