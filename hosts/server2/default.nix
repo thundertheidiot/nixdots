@@ -23,6 +23,7 @@ in {
     ./home-assistant
     ./homepage.nix
     ./jellyfin.nix
+    ./metube.nix
     ./navidrome.nix
     ./redlib.nix
     ./secrets

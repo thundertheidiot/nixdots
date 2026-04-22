@@ -32,6 +32,7 @@
     "homeassistant.home"
     "navidrome.home"
     "soulbeet.home"
+    "metube.home"
   ];
 
   "local.crt" = ./local.crt;
