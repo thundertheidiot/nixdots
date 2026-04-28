@@ -1,6 +1,7 @@
 # Incredible resource
 # https://lvra.gitlab.io
 {
+  inputs,
   config,
   lib,
   mlib,
@@ -8,6 +9,20 @@
   ...
 }: let
   inherit (mlib) homeModule;
+  inherit (lib) getExe;
+
+  monadoI686 =
+    (pkgs.pkgsi686Linux.monado.overrideAttrs (old: {
+      cmakeFlags =
+        (old.cmakeFlags or [])
+        ++ [
+          "-DXRT_MODULE_MERCURY_HANDTRACKING=OFF"
+          "-DXRT_BUILD_DRIVER_HANDTRACKING=OFF"
+          "-DXRT_HAVE_ONNXRUNTIME=OFF"
+        ];
+    })).override {
+      onnxruntime = pkgs.pkgsi686Linux.hello;
+    };
 in {
   config = lib.mkMerge [
     # mesa rdna2 fix
@@ -21,6 +36,21 @@ in {
     #             sha256 = "sha256-Vy/symhMl5Mupmct7zv/sgrOcYoQfT4QkDrcLcF6z0Q=";
     #           })
     #         ];
+    #       });
+    #     })
+    #   ];
+    # }
+    #
+    # xrizer override
+    # {
+    #   nixpkgs.overlays = [
+    #     (final: prev: {
+    #       xrizer = prev.xrizer.overrideAttrs (prev: {
+    #         version = "git";
+    #         src = inputs.xrizer;
+    #         cargoDeps = final.rustPlatform.importCargoLock {
+    #           lockFile = "${inputs.xrizer}/Cargo.lock";
+    #         };
     #       });
     #     })
     #   ];
@@ -227,20 +257,30 @@ in {
                          "$@"
                 ;;
               steam)
-                sudo ${enable_vr_mode}
+                sudo "${getExe enable_vr_mode}" || true
                 ln -f "$XDG_CONFIG_HOME/openxr/1/steamvr_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.json"
                 ln -f "$XDG_CONFIG_HOME/openvr/steamvr_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
 
                 steam steam://rungameid/250820
                 ;;
               monado)
-                sudo "${enable_vr_mode}" || true
+                sudo "${getExe enable_vr_mode}" || true
                 ln -f "$XDG_CONFIG_HOME/openxr/1/monado_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.json"
-                if [ -z "''${2:-}" ]; then
-                  ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
-                else
-                  ln -f "$XDG_CONFIG_HOME/openvr/monado_xrizer_openvrpaths.vrpath" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
-                fi
+                ln -f "$XDG_CONFIG_HOME/openxr/1/monado32_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.i686.json"
+                case "''${2:-}" in
+                  "")
+                    ln -f "$XDG_CONFIG_HOME/openvr/monado_xrizer_openvrpaths.vrpath" \
+                          "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                    ;;
+                  open32)
+                    ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite32_openvrpaths.vrpath" \
+                          "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                    ;;
+                  *)
+                    ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite_openvrpaths.vrpath" \
+                          "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                    ;;
+                esac
 
                 { sleep 10; wayvr; } &
 
@@ -276,6 +316,14 @@ in {
         };
       };
 
+      xdg.configFile."openxr/1/monado32_active_runtime.json".text = builtins.toJSON {
+        file_format_version = "1.0.0";
+        runtime = {
+          name = "Monado";
+          library_path = "${monadoI686}/lib/libopenxr_monado.so";
+        };
+      };
+
       xdg.configFile."openxr/1/steamvr_active_runtime.json".text = builtins.toJSON {
         file_format_version = "1.0.0";
         runtime = {
@@ -295,7 +343,26 @@ in {
           "${config.xdg.dataHome}/Steam/logs"
         ];
         runtime = [
-          "${pkgs.opencomposite}/lib/opencomposite"
+          "${pkgs.opencomposite.overrideAttrs (old: {
+            postInstall = ''
+              cp ${pkgs.pkgsi686Linux.opencomposite}/lib/opencomposite/bin/vrclient.so $out/lib/opencomposite/bin
+            '';
+          })}/lib/opencomposite"
+        ];
+        version = 1;
+      };
+
+      xdg.configFile."openvr/monado_opencomposite32_openvrpaths.vrpath".text = builtins.toJSON {
+        config = [
+          "${config.xdg.dataHome}/Steam/config"
+        ];
+        external_drivers = null;
+        jsonid = "vrpathreg";
+        log = [
+          "${config.xdg.dataHome}/Steam/logs"
+        ];
+        runtime = [
+          "${pkgs.pkgsi686Linux.opencomposite}/lib/opencomposite"
         ];
         version = 1;
       };
@@ -310,7 +377,16 @@ in {
           "${config.xdg.dataHome}/Steam/logs"
         ];
         runtime = [
-          "${pkgs.xrizer}/lib/xrizer"
+          "${pkgs.xrizer.overrideAttrs (old: {
+            postInstall =
+              lib.strings.concatStrings
+              [
+                old.postInstall
+                ''
+                  cp ${pkgs.pkgsi686Linux.xrizer}/lib/xrizer/bin/vrclient.so $out/lib/xrizer/bin
+                ''
+              ];
+          })}/lib/xrizer"
         ];
         version = 1;
       };

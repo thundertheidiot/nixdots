@@ -35,6 +35,7 @@ in {
       AUDIO_DOWNLOAD_DIR = "/audio_downloads";
 
       OUTPUT_TEMPLATE = "%(uploader)s/%(title)s.%(ext)s";
+      OUTPUT_TEMPLATE_CHAPTER = "%(uploader)/%(title)s - %(section_number)s %(section_title)s.%(ext)s";
 
       YTDL_OPTIONS = builtins.toJSON {
         writethumbnail = false;
@@ -45,6 +46,10 @@ in {
             key = "FFmpegExtractAudio";
             preferredcodec = "mp3";
             preferredquality = "0"; # VBR best quality
+          }
+          {
+            key = "FFmpegSplitChapters";
+            force_keyframes = false;
           }
           {
             key = "EmbedThumbnail";

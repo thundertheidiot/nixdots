@@ -264,6 +264,9 @@
   environment.systemPackages = with pkgs; [
     distrobox
 
+    wineWow64Packages.staging
+    gdb
+
     gnuplot
     gh
 

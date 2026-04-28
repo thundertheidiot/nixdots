@@ -51,6 +51,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    xrizer = {
+      url = "github:thundertheidiot/xrizer/alien-isolation-fix";
+      flake = false;
+    };
+
     emacs.url = "github:thundertheidiot/emacs";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
 
