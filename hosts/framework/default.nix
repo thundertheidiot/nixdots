@@ -113,7 +113,6 @@
     gaming.enable = true;
 
     emacs.enable = true;
-    emacs.ewm.enable = true;
     shell.enable = true;
 
     school.enable = true;

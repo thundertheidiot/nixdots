@@ -7,7 +7,7 @@
   ...
 }: let
   inherit (mlib) mkEnOpt;
-  inherit (lib) mkIf mkDefault;
+  inherit (lib) mkIf mkForce mkDefault;
   inherit (builtins) listToAttrs;
 
   cfg = config.meow.workstation;
@@ -50,7 +50,7 @@ in {
     };
 
     programs.command-not-found.enable = true;
-    programs.command-not-found.dbPath = "${pkgs.path}/programs.sqlite";
+    programs.command-not-found.dbPath = mkForce "${pkgs.path}/programs.sqlite";
 
     environment.systemPackages = with pkgs; [
       pulsemixer
