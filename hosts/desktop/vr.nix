@@ -182,6 +182,13 @@ in {
 
       xdg.configFile."wayvr/conf.d/config.yaml".source = (pkgs.formats.yaml {}).generate "config.yaml" {
         desktop_view_scale = 2.0;
+        timezones = ["Europe/Helsinki"];
+        notification_topics = {
+          System = "Center";
+          DesktopNotification = "Hide";
+          XSNotification = "Hide";
+          IpdChange = "Center";
+        };
       };
     })
     {
