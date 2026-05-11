@@ -57,15 +57,17 @@ in {
       QMK_HOME = "${config.home.homeDirectory}/Documents/qmk";
       LESSHISTFILE = "-";
       NPM_CONFIG_USERCONFIG = "${x.configHome}/npm/npmrc";
+      NODE_REPL_HISTORY = "${x.stateHome}/node_repl_history";
       WINEPREFIX = "${x.dataHome}/wineprefixes/default";
       LESSKEY = "${x.configHome}/less/lesskey";
       ICEAUTHORITY = "${x.cacheHome}/ICEauthority";
       DVDCSS_CACHE = "${x.dataHome}/dvdcss";
+      GDBHISTFILE = "${x.configHome}/gdb/gdb_history";
 
       DOCKER_CONFIG = "${x.configHome}/docker";
       MACHINE_STORAGE_PATH = "${x.dataHome}/docker-machine";
 
-      "_JAVA_OPTIONS" = "-Djava.util.prefs.userRoot=${x.configHome}/java -Djavafx.cachedir=${x.cacheHome}/openjfx";
+      _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${x.configHome}/java -Djavafx.cachedir=${x.cacheHome}/openjfx";
       RUSTUP_HOME = "${x.dataHome}/rustup";
       KDEHOME = "${x.configHome}/kde";
       PYTHONPYCACHEPREFIX = "${x.cacheHome}/python";

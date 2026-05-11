@@ -24,8 +24,7 @@ in {
       enable = true;
       openFirewall = true;
 
-      sslKey = "/var/lib/acme/${cfg.mainDomain}/key.pem";
-      sslCert = "/var/lib/acme/${cfg.mainDomain}/fullchain.pem";
+      tls.useACMEHost = cfg.mainDomain;
       bandwidth = 96000;
     };
 

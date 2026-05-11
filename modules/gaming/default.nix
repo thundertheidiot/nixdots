@@ -29,7 +29,6 @@ in {
         inherit (builtins) elem;
       in
         with pkgs; [
-          lutris
           heroic
           mangohud
 
@@ -46,13 +45,6 @@ in {
     })
     (lib.mkIf (cfg.enable && cfg.emulation) {
       environment.systemPackages = with pkgs; [
-        # (callPackage retroarch {
-        #   cores = with libretro; [
-        #     snes9x
-        #     bsnes
-        #     parallel-n64
-        #   ];
-        # })
         retroarch-full
         protontricks
       ];
