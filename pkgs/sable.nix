@@ -9,13 +9,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "sable";
-  version = "1.15.3";
+  version = "1.16.1";
 
   src = fetchFromGitHub {
     owner = "SableClient";
     repo = "Sable";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-KxTpV1XKjeEhTJEWKdcOkEwATs1RzfoGP1vro6xHP5U=";
+    hash = "sha256-4CJ9a6EUtT70G6iWnaaSlC3DWqF1zQrkeH9PTu8xyC8=";
   };
 
   pnpmDeps = fetchPnpmDeps {
