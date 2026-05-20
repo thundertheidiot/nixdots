@@ -42,6 +42,7 @@ in {
 
           (defalias
             base (layer-switch base)
+            qwerty (layer-switch qwerty)
             nrm (layer-switch normal)
             raise (layer-while-held raise))
 
@@ -58,6 +59,15 @@ in {
 
             ;; home row mods
             a (tap-hold-release 150 150 a lmet)
+            r (tap-hold-release 150 150 r lalt)
+            s (tap-hold-release 150 150 s lsft)
+            t (tap-hold-release 150 150 t lctl)
+
+            n (tap-hold-release 150 150 n lctl)
+            e (tap-hold-release 150 150 e rsft)
+            i (tap-hold-release 150 150 i ralt)
+            o (tap-hold-release 150 150 o rmet)
+
             s (tap-hold-release 150 150 s lalt)
             d (tap-hold-release 150 150 d lsft)
             f (tap-hold-release 150 150 f lctl)
@@ -91,6 +101,16 @@ in {
             )
 
           (deflayer base
+            esc
+            grv  1    2    3    4    5    6    7    8    9    0    -     =    bspc
+            tab  q    w    f    p    b    j    l    u    y    ;    [     ]    ret
+            @esc @a   @r   @s   @t   g    m    @n   @e   @i   @o   '     \
+            lsft 102d @z    x    c    d    v    k    h    ,    .    @/     rsft
+            lctl lmet lalt           @spc           @raise @base up
+                                                              left down rght
+          )
+
+          (deflayer qwerty
             esc
             grv  1    2    3    4    5    6    7    8    9    0    -     =    bspc
             tab  q    w    e    r    t    y    u    i    o    p    [     ]    ret
@@ -133,7 +153,7 @@ in {
           (deflayer raise
             XX
             XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX    XX    XX
-            XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   pp   XX    XX    XX
+            XX   @qwerty @base XX XX XX   XX   XX   XX   XX   pp   XX    XX    XX
             XX   XX   prnt XX   XX   @nrm XX   XX   XX   XX   XX   XX    XX
             XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX    XX
             XX   XX   XX             XX             XX   XX   XX

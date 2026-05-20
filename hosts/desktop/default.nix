@@ -21,6 +21,9 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
+  # temporary
+  programs.nh.clean.enable = lib.mkForce false;
+
   boot.kernelParams = [
     "video=1920x1080-32"
     "video=DP-3:D"
