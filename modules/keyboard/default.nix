@@ -68,7 +68,6 @@ in {
             i (tap-hold-release 150 150 i ralt)
             o (tap-hold-release 150 150 o rmet)
 
-            s (tap-hold-release 150 150 s lalt)
             d (tap-hold-release 150 150 d lsft)
             f (tap-hold-release 150 150 f lctl)
 
