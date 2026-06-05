@@ -59,7 +59,7 @@ in {
         theme = "blahaj";
       };
 
-      loader.timeout = 0;
+      loader.timeout = 5;
 
       consoleLogLevel = 0;
       initrd.verbose = false;

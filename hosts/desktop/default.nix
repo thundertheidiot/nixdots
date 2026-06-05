@@ -24,14 +24,6 @@
   # temporary
   programs.nh.clean.enable = lib.mkForce false;
 
-  boot.kernelParams = [
-    "video=1920x1080-32"
-    "video=DP-3:D"
-    "video=DP-1:D"
-    # "video=HDMI-A-1:D"
-    # "amdgpu.ppfeaturemask=0xffffffff"
-  ];
-
   boot.supportedFilesystems = [
     "ntfs"
     "e2fs"
@@ -198,6 +190,7 @@
       "DP-3" = {
         width = 2560;
         height = 1440;
+        refresh = 143.912;
         disableVrr = true;
         x = 1920;
         primary = true;
@@ -205,6 +198,7 @@
       "DP-1" = {
         width = 1920;
         height = 1080;
+        refresh = 144.001;
         disableVrr = true;
       };
       "HDMI-A-1" = {
