@@ -14,6 +14,7 @@ in {
   config = mkIf config.meow.workstation.enable {
     catppuccin = {
       enable = true;
+      autoEnable = true;
       flavor = "mocha";
       accent = "mauve";
     };

@@ -23,14 +23,6 @@ in {
         leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
         meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;
 
-        unstable = import inputs.nixpkgs-unstable {
-          inherit (final) config;
-          system = final.stdenv.hostPlatform.system;
-        };
-
-        # unstable-small occasionally results in electron rebuilds
-        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc kdenlive;
-
         mpkgs = (import "${inputs.self.outPath}/pkgs") {pkgs = final;};
 
         # functionality fixes
