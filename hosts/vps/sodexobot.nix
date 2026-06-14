@@ -8,7 +8,7 @@
   ];
 
   systemd.services."sodexobot" = {
-    enable = true;
+    enable = false;
     description = "Sodexobot";
     unitConfig = {
       Type = "simple";
