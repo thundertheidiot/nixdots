@@ -140,12 +140,6 @@
     tryHljs = "SECONDARY";
     useDevIcon = "GREYSCALE";
   };
-
-  ShowHiddenChannels = {
-    enabled = true;
-    hideUnreads = true;
-    showMode = 0;
-  };
   TypingIndicator = {
     enabled = true;
     includeBlockedUsers = false;
