@@ -172,7 +172,6 @@
         window-rule {
           match at-startup=true app-id="vesktop"
           match at-startup=true app-id="signal"
-          match at-startup=true app-id="cinny"
           match at-startup=true app-id=r#"^org\.gajim\.Gajim$"#
 
           open-on-workspace "chat"
@@ -182,7 +181,6 @@
         spawn-at-startup "vesktop"
         spawn-at-startup "signal-desktop"
         spawn-at-startup "gajim"
-        spawn-at-startup "in.cinny.Cinny"
       ''
     ];
 
