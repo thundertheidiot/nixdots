@@ -68,9 +68,6 @@ in {
         cloudflared = wrapHome prev.cloudflared {};
         android-tools = wrapHome prev.android-tools {executable = "adb";};
         signal-desktop = wrapHome prev.signal-desktop {};
-        dotnetCorePackages = prev.dotnetCorePackages.overrideScope (final: prev: {
-          sdk_8_0-bin = wrapHome prev.sdk_8_0-bin {};
-        });
       })
     ];
   };

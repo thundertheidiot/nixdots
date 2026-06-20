@@ -20,7 +20,6 @@
     enabled = true;
   };
 
-  AlwaysAnimate.enabled = true;
   AlwaysTrust = {
     domain = true;
     enabled = true;

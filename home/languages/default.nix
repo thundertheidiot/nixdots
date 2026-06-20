@@ -78,9 +78,14 @@ in {
               clang-tools
             ])
             (mkIf cfg.c_sharp [
-              dotnetCorePackages.sdk_8_0-bin
+              (
+                with dotnetCorePackages; (combinePackages [
+                  sdk_10_0
+                  sdk_8_0
+                ])
+              )
               omnisharp-roslyn # lsp
-              csharpier # fmt
+              csharpier
             ])
             (mkIf cfg.bash [
               bash-language-server
