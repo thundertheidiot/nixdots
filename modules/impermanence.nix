@@ -108,6 +108,7 @@ in {
 
       meow.impermanence.files = [
         "/etc/localtime"
+        "/etc/machine-id"
       ];
     })
 
@@ -180,12 +181,12 @@ in {
     })
 
     # machine id
-    (mkIf cfg.enable {
-      environment.etc = listToAttrs (map (loc: {
-        name = loc;
-        value = {source = "${cfg.persist}/rootfs/etc/${loc}";};
-      }) ["machine-id"]);
-    })
+    # (mkIf cfg.enable {
+    #   environment.etc = listToAttrs (map (loc: {
+    #     name = loc;
+    #     value = {source = "${cfg.persist}/rootfs/etc/${loc}";};
+    #   }) ["machine-id"]);
+    # })
 
     # /etc/shadow (passwords)
     # cannot be handled through files, must run before user setup

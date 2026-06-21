@@ -57,6 +57,7 @@ in {
     (mkIf cfg.firefox.enable {
       programs.firefox = {
         enable = true;
+        package = pkgs.firefox-bin; # miya advice, double check
 
         policies = recursiveUpdate commonPolicies {
           # firefox color for style

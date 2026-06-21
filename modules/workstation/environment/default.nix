@@ -14,16 +14,17 @@
   dm = config.meow.workstation.displayManager;
 in {
   options = {
-    meow.workstation.environment = mkOpt (listOf (enum ["niri"])) [] {
+    meow.workstation.environment = mkOpt (listOf (enum ["niri" "plasma"])) [] {
       description = "The list of environments to configure and install.";
     };
 
-    meow.workstation.displayManager = mkOpt (enum ["sddm" "gdm"]) "sddm" {
+    meow.workstation.displayManager = mkOpt (enum ["sddm" "plm" "gdm"]) "sddm" {
       description = "Display manager (login screen) to install.";
     };
   };
   imports = [
     ./niri
+    ./plasma
     ./waybar.nix
   ];
 
@@ -55,10 +56,23 @@ in {
         }
       ];
     })
+    (mkIf (dm == "plm") {
+      services.displayManager.plasma-login-manager = {
+        enable = true;
+      };
+
+      meow.impermanence.directories = [
+        {
+          path = "/var/lib/plasmalogin";
+          permissions = "777";
+          # user = "plasmalogin";
+          # group = "plasmalogin";
+        }
+      ];
+    })
     (mkIf (dm == "gdm") {
       services.displayManager.gdm = {
         enable = true;
-        wayland = true;
       };
 
       meow.impermanence.directories = [
@@ -67,23 +81,6 @@ in {
           permissions = "755";
         }
       ];
-    })
-    (mkIf (builtins.elem "niri" envir) {
-      services.gvfs.enable = true;
-
-      systemd.user.services.polkit-gnome-authentication-agent-1 = {
-        description = "polkit-gnome-authentication-agent-1";
-        wantedBy = ["graphical-session.target"];
-        wants = ["graphical-session.target"];
-        after = ["graphical-session.target"];
-        serviceConfig = {
-          Type = "simple";
-          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-          Restart = "on-failure";
-          RestartSec = 1;
-          TimeoutStopSec = 10;
-        };
-      };
     })
     {
       # services.cpupower-gui.enable = true;

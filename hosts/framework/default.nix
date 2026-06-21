@@ -66,7 +66,7 @@
     enable = true;
   };
 
-  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-zen4;
+  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-lto-zen4;
 
   virtualisation.docker.enable = true;
 
@@ -93,14 +93,16 @@
 
   services.cpupower-gui.enable = true;
 
-  # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+  services.xserver.xkb.variant = "colemak_dh_ortho,";
+  console.useXkbConfig = true;
+  console.earlySetup = true;
 
   meow = {
     fullSetup = true;
     workstation.enable = true;
-    workstation.environment = ["niri"];
-    workstation.displayManager = "gdm";
-    rice = "minimal";
+    workstation.environment = ["plasma"];
+    workstation.displayManager = "plm";
+    # rice = "minimal";
 
     impermanence.enable = true;
     impermanence.directories = [
@@ -136,7 +138,7 @@
       height = 1920;
       refresh = 120.0;
       primary = true;
-      scale = 1.6;
+      scale = 1.8;
     };
   };
 

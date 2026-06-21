@@ -34,7 +34,6 @@ in {
         "audio"
         "network"
         "flatpak"
-        "gnomeKeyring"
       ]);
 
     security.polkit.enable = true;

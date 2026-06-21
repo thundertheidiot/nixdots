@@ -19,6 +19,13 @@ in {
         ataraxiasjel = nur.repos.ataraxiasjel;
         hyprsplit = inputs.hyprsplit.packages.${final.stdenv.hostPlatform.system}.default;
 
+        unstable = import inputs.nixpkgs-unstable {
+          inherit (final) config;
+          system = final.stdenv.hostPlatform.system;
+        };
+
+        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc kdenlive blender krita firefox;
+
         sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;
         leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
         meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;

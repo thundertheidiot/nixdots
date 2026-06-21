@@ -24,9 +24,26 @@ in {
   config = mkIf (work && elem "niri" env) {
     environment.systemPackages = [pkgs.xwayland-satellite pkgs.awww];
     programs.niri.enable = true;
+    meow.workstation.gnomeKeyring.enable = true;
 
     xdg.portal.config = {
       common."org.freedesktop.impl.portal.OpenURI" = ["gtk"];
+    };
+
+    services.gvfs.enable = true;
+
+    systemd.user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
     };
 
     meow.home.modules = [
@@ -248,51 +265,6 @@ in {
 
           ${concatStrings conf}
         '';
-
-        # programs.niri.package = pkgs.niri;
-        # programs.niri = {
-        #   settings = {
-        #     environment = {
-        #       NIXOS_OZONE_WL = "1";
-        #     };
-
-        #     screenshot-path = "~/Pictures/screenshots/%Y-%m-%d_%H-%M-%S.png";
-        #     prefer-no-csd = true;
-
-        #     cursor.size = 24;
-
-        #     input = {
-        #       keyboard = {
-        #         xkb = {
-        #           layout = "us,fi";
-        #           options = "grp:win_space_toggle";
-        #         };
-
-        #         repeat-delay = 300;
-        #         repeat-rate = 50;
-        #       };
-
-        #       touchpad.tap = true;
-        #       touchpad.tap-button-map = "left-right-middle";
-
-        #       mouse.accel-profile = "flat";
-
-        #       focus-follows-mouse.enable = true;
-        #       warp-mouse-to-focus.enable = true;
-        #     };
-
-        #     gestures.hot-corners.enable = true;
-
-        #     binds = {
-        #       "Mod+W".action.spawn = "firefox";
-        #       "Mod+Return".action.spawn = "alacritty";
-        #       "Mod+E".action.spawn-sh = "emacsclient -c -a ''";
-        #       "Mod+Semicolon".action.spawn-sh = "emacsclient -c -a '' -e '(meow/eshell)'";
-
-        #       "Print".action.screenshot = {};
-        #     };
-        #   };
-        # };
       }
     ];
   };

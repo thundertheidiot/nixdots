@@ -56,8 +56,6 @@
     }
   ];
 
-  systemd.user.extraConfig = "DefaultLimitNOFILE=200000:200000";
-
   systemd.settings.Manager = {
     DefaultLimitNOFILE = "200000:200000";
   };

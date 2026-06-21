@@ -3,7 +3,7 @@
     nodev."/" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=10M"
+        "size=2048M"
         "defaults"
         "mode=755"
       ];
@@ -16,7 +16,7 @@
         type = "gpt";
         partitions = {
           boot = {
-            size = "500M";
+            size = "1024M";
             type = "EF00";
             content = {
               type = "filesystem";
@@ -24,33 +24,45 @@
               mountpoint = "/boot";
             };
           };
-          main = {
-            name = "ssd";
+          luks = {
             size = "100%";
             content = {
-              type = "btrfs";
-              subvolumes = {
-                "@storage" = {
-                  mountOptions = ["compress=zstd"];
-                  mountpoint = "/mnt/storage";
-                };
-                "@persist" = {
-                  mountOptions = ["compress=zstd"];
-                  mountpoint = "/nix/persist";
-                };
-                "@nix" = {
-                  mountOptions = ["compress=zstd" "noatime"];
-                  mountpoint = "/nix";
-                };
-                "@tmp" = {
-                  mountpoint = "/tmp";
-                };
-                "@var_tmp" = {
-                  mountpoint = "/var/tmp";
-                };
-                "@home" = {
-                  mountOptions = ["compress=zstd"];
-                  mountpoint = "/home";
+              type = "luks";
+              name = "ssd";
+              settings = {
+                allowDiscards = true;
+              };
+              extraOpenArgs = [
+                # https://haseebmajid.dev/posts/2024-07-30-how-i-setup-btrfs-and-luks-on-nixos-using-disko/
+                "--perf-no_read_workqueue"
+                "--perf-no_write_workqueue"
+              ];
+              content = {
+                type = "btrfs";
+
+                subvolumes = {
+                  "@storage" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/mnt/storage";
+                  };
+                  "@persist" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/nix/persist";
+                  };
+                  "@nix" = {
+                    mountOptions = ["compress=zstd" "noatime"];
+                    mountpoint = "/nix";
+                  };
+                  "@tmp" = {
+                    mountpoint = "/tmp";
+                  };
+                  "@var_tmp" = {
+                    mountpoint = "/var/tmp";
+                  };
+                  "@home" = {
+                    mountOptions = ["compress=zstd"];
+                    mountpoint = "/home";
+                  };
                 };
               };
             };
