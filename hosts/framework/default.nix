@@ -93,10 +93,6 @@
 
   services.cpupower-gui.enable = true;
 
-  services.xserver.xkb.variant = "colemak_dh_ortho,";
-  console.useXkbConfig = true;
-  console.earlySetup = true;
-
   meow = {
     fullSetup = true;
     workstation.enable = true;

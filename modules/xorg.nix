@@ -19,13 +19,6 @@ in {
   };
 
   config = mkMerge [
-    (mkIf cfg.enable {
-      services.xserver = {
-        xkb.layout = cfg.xkb.layout;
-        xkb.options = cfg.xkb.options;
-      };
-    })
-
     (mkIf cfg.opinionatedMouseConfig {
       services.xserver.config = lib.mkAfter ''
         Section "InputClass"
