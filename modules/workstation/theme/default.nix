@@ -23,9 +23,9 @@ in {
     fonts = {
       packages = with pkgs; [
         nerd-fonts.symbols-only
-        pkgs.cantarell-fonts
-        pkgs.maple-mono.NF-CN
-        pkgs.noto-fonts-color-emoji
+        cantarell-fonts
+        maple-mono.NF-CN
+        noto-fonts-color-emoji
       ];
 
       fontconfig = {
@@ -34,7 +34,7 @@ in {
         defaultFonts = {
           serif = ["Cantarell" "Noto Color Emoji"];
           sansSerif = ["Cantarell" "Noto Color Emoji"];
-          monospace = ["Maple Mono NF CN" "Noto Color Emoji"];
+          monospace = ["Maple Mono NF CN" "Noto Color Emoji" "Symbols Nerd Font"];
         };
       };
     };
