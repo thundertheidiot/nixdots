@@ -22,8 +22,9 @@ in {
     # fonts
     fonts = {
       packages = with pkgs; [
+        inter-nerdfont
         nerd-fonts.symbols-only
-        cantarell-fonts
+        # cantarell-fonts
         maple-mono.NF-CN
         noto-fonts-color-emoji
       ];
@@ -32,9 +33,10 @@ in {
         enable = true;
         useEmbeddedBitmaps = true;
         defaultFonts = {
-          serif = ["Cantarell" "Noto Color Emoji"];
-          sansSerif = ["Cantarell" "Noto Color Emoji"];
-          monospace = ["Maple Mono NF CN" "Noto Color Emoji" "Symbols Nerd Font"];
+          serif = ["Inter Nerd Font"];
+          sansSerif = ["Inter Nerd Font"];
+          monospace = ["Maple Mono NF CN" "Symbols Nerd Font"];
+          emoji = ["Noto Color Emoji"];
         };
       };
     };
