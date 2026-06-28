@@ -19,7 +19,7 @@ in {
 
   config = mkIf cfg.enable {
     environment.shellAliases = {
-      "e" = "setsid -f emacsclient -c";
+      "e" = "exit";
     };
 
     # stuff on nixos often requires additional per-project configuration

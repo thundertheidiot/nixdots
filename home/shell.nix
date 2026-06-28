@@ -32,7 +32,7 @@ in {
     programs.fish = {
       enable = true;
       shellAliases = {
-        "e" = "setsid -f emacsclient -c";
+        "e" = "exit";
         "m" = "mpv --no-video --loop=yes";
       };
       interactiveShellInit =

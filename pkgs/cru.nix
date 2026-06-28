@@ -4,7 +4,7 @@
   fetchzip,
   buildFHSEnv,
 }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   name = "custom-resolution-utility";
 
   src = fetchzip {
