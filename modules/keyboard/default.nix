@@ -31,6 +31,19 @@ in {
     console.useXkbConfig = true;
     console.earlySetup = true;
 
+    meow.workstation.niriKeyboardXkb = ''
+      variant "colemak_dh_ortho"
+    '';
+
+    meow.home.modules = [
+      {
+        xdg.configFile."emacs/ewm/keyboard.el".text = ''
+          (setf (alist-get 'keyboard ewm-input-config)
+          	(cons :xkb-variants (cons "colemak_dh_ortho" (alist-get 'keyboard ewm-input-config))))
+        '';
+      }
+    ];
+
     services.kanata = {
       enable = true;
 

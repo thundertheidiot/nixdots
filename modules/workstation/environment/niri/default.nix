@@ -15,9 +15,11 @@
 
   conf = config.meow.workstation.extraNiriConfig;
   binds = config.meow.workstation.extraNiriBinds;
+  xkb = config.meow.workstation.niriKeyboardXkb;
 in {
   options = {
     meow.workstation.extraNiriConfig = mkOpt (listOf str) [] {};
+    meow.workstation.niriKeyboardXkb = mkOpt str "" {};
     meow.workstation.extraNiriBinds = mkOpt (listOf str) [] {};
   };
 
@@ -98,6 +100,7 @@ in {
               xkb {
                 layout "us,fi"
                 options "grp:win_space_toggle"
+                ${xkb}
               }
 
               repeat-delay 300
