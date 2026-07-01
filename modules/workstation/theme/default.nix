@@ -9,13 +9,13 @@
   inherit (lib) mkIf;
   inherit (lib.types) attrs;
 in {
-  options.meow.workstation.theme.palette = mkOpt attrs (import ./latte.nix) {};
+  options.meow.workstation.theme.palette = mkOpt attrs (import ./mocha.nix) {};
 
   config = mkIf config.meow.workstation.enable {
     catppuccin = {
       enable = true;
       autoEnable = true;
-      flavor = "latte";
+      flavor = "mocha";
       accent = "mauve";
     };
 
