@@ -10,6 +10,9 @@
 
   qt = config.mHome.themeQt;
   gtk = config.mHome.themeGtk;
+
+  flavor = config.catppuccin.flavor;
+  accent = config.catppuccin.accent;
 in {
   options.mHome.themeQt = mkEnOptTrue "qt";
   options.mHome.themeGtk = mkEnOptTrue "gtk";
@@ -19,7 +22,7 @@ in {
       catppuccin = {
         enable = true;
         autoEnable = true;
-        flavor = "mocha";
+        flavor = "latte";
         accent = "mauve";
       };
 
@@ -40,11 +43,11 @@ in {
         enable = true;
         theme = {
           package = pkgs.catppuccin-gtk.override {
-            accents = ["mauve"];
+            accents = [accent];
             size = "compact";
-            variant = "mocha";
+            variant = flavor;
           };
-          name = "catppuccin-mocha-mauve-compact";
+          name = "catppuccin-${flavor}-${accent}-compact";
         };
       };
 
@@ -65,18 +68,18 @@ in {
 
       catppuccin.kvantum.enable = true;
 
-      xdg.dataFile."Kvantum/catppuccin-mocha-mauve" = {
+      xdg.dataFile."Kvantum/catppuccin-${flavor}-${accent}" = {
         source = "${(pkgs.catppuccin-kvantum.override {
-          accent = "mauve";
-          variant = "mocha";
-        })}/share/Kvantum/catppuccin-mocha-mauve";
+          inherit accent;
+          variant = flavor;
+        })}/share/Kvantum/catppuccin-${flavor}-${accent}";
         recursive = true;
       };
 
       xdg.configFile = {
         "Kvantum/kvantum.kvconfig".text = ''
           [General]
-          theme=catppuccin-mocha-mauve
+          theme=catppuccin-${flavor}-${accent}
         '';
       };
     })

@@ -198,8 +198,8 @@ in {
         mkIf (config.meow.emacs.ewm.enable) {
           meow.home.modules = [
             {
-              xdg.configFile."emacs/ewm/monitor.el".text = ''
-                (setq ewm-output-config '(${concatStringsSep "\n" (map (mon: let
+              xdg.configFile."emacs/ewm/pre/monitor.el".text = ''
+                (setopt ewm-output-config '(${concatStringsSep "\n" (map (mon: let
                   inherit (mon) name width height scale x y;
 
                   emacsBool = bool:

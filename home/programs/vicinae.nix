@@ -1,4 +1,6 @@
-{...}: {
+{config, ...}: let
+  flavor = config.catppuccin.flavor;
+in {
   services.vicinae = {
     systemd = {
       enable = true;
@@ -12,7 +14,7 @@
         csd = true;
       };
       theme.dark = {
-        name = "catppuccin-mocha";
+        name = "catppuccin-${flavor}";
         icon_theme = "default";
       };
     };

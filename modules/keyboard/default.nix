@@ -37,7 +37,7 @@ in {
 
     meow.home.modules = [
       {
-        xdg.configFile."emacs/ewm/keyboard.el".text = ''
+        xdg.configFile."emacs/ewm/post/keyboard.el".text = ''
           (setf (alist-get 'keyboard ewm-input-config)
           	(cons :xkb-variants (cons "colemak_dh_ortho" (alist-get 'keyboard ewm-input-config))))
         '';

@@ -57,7 +57,7 @@ in {
       useQuickCss = true;
       disableMinSize = true;
       themeLinks = [
-        "https://catppuccin.github.io/discord/dist/catppuccin-mocha.theme.css"
+        "https://catppuccin.github.io/discord/dist/catppuccin-${config.catppuccin.flavor}.theme.css"
       ];
     };
 
