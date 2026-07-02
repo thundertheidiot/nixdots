@@ -70,11 +70,14 @@
 
   virtualisation.docker.enable = true;
 
+  meowEmacs.package = "emacsCrazy";
   home-manager.sharedModules = [
     {
       home.stateVersion = "26.05";
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
+
+      meowEmacs.package = "emacsCrazy";
 
       home.packages = with pkgs; [
         distrobox

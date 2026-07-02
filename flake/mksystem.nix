@@ -28,7 +28,7 @@ in {
             inputs.disko.nixosModules.default
             inputs.authentik-nix.nixosModules.default
             inputs.catppuccin.nixosModules.default
-            inputs.emacs.nixosModules.ewm
+            inputs.emacs.nixosModules.default
             ({...}: {
               imports = import "${root}/modules";
               nixpkgs = {

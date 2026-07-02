@@ -60,12 +60,15 @@
     DefaultLimitNOFILE = "200000:200000";
   };
 
+  meowEmacs.package = "emacsCrazy";
+
   home-manager.sharedModules = [
     {
       home.stateVersion = "26.05";
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
       meowEmacs.enable = true;
+      meowEmacs.package = "emacsCrazy";
 
       # services.mpd.enable = lib.mkForce false;
       # services.mopidy = {
@@ -144,6 +147,7 @@
     gaming.games = ["duckgame" "minecraft"];
 
     emacs.enable = true;
+    emacs.ewm.enable = true;
     shell.enable = true;
 
     school.enable = true;
@@ -153,7 +157,6 @@
     virtualization.enable = true;
 
     keyboard.enable = false;
-    keyboard.devices = ["/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd"];
 
     workstation.extraNiriBinds = [
       ''
@@ -198,7 +201,6 @@
         disableVrr = true;
       };
       "HDMI-A-1" = {
-        enable = false;
         x = 4480;
         width = 1920;
         height = 1080;
