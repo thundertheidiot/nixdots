@@ -99,9 +99,9 @@
   meow = {
     fullSetup = true;
     workstation.enable = true;
-    workstation.environment = ["plasma"];
-    workstation.displayManager = "plm";
-    # rice = "minimal";
+    workstation.environment = ["niri"];
+    workstation.displayManager = "gdm";
+    rice = "minimal";
 
     impermanence.enable = true;
     impermanence.directories = [

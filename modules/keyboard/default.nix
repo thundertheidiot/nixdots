@@ -40,6 +40,7 @@ in {
         xdg.configFile."emacs/ewm/post/keyboard.el".text = ''
           (setf (alist-get 'keyboard ewm-input-config)
           	(cons :xkb-variants (cons "colemak_dh_ortho" (alist-get 'keyboard ewm-input-config))))
+          (setopt ewm-input-config ewm-input-config)
         '';
       }
     ];
