@@ -86,7 +86,7 @@ in {
 
             j (tap-hold-release 150 150 j lctl)
             k (tap-hold-release 150 150 k rsft)
-            l (tap-hold-release 150 150 l ralt)
+            l (tap-hold-release 150 150 l lalt)
             ; (tap-hold-release 150 150 ; rmet))
 
           (defalias
