@@ -1,7 +1,7 @@
 {config, ...}: let
   flavor = config.catppuccin.flavor;
 in {
-  services.vicinae = {
+  programs.vicinae = {
     systemd = {
       enable = true;
       autoStart = true;

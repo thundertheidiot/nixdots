@@ -294,6 +294,7 @@
         "eglot-booster": "eglot-booster",
         "emacs-overlay": "emacs-overlay",
         "emsg-blame": "emsg-blame",
+        "evil-motion-trainer": "evil-motion-trainer",
         "ewm": "ewm",
         "flake-parts": "flake-parts_4",
         "home-manager": "home-manager",
@@ -302,11 +303,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783088010,
-        "narHash": "sha256-avpIwPl4COXalavOYocRu8AWtTrahBz3JAv9Oef3Zgc=",
+        "lastModified": 1783100438,
+        "narHash": "sha256-8xloJ22+dwiyhk+aTXfk7wZUcNtZbvEFU6DQy9feEkQ=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "9b12505bd54ab79c17663c468c1673e330eac5ac",
+        "rev": "f186c6028a3f92a81532e4f1cc190f02cfef1aa7",
         "type": "github"
       },
       "original": {
@@ -347,6 +348,22 @@
       "original": {
         "owner": "ISouthRain",
         "repo": "emsg-blame",
+        "type": "github"
+      }
+    },
+    "evil-motion-trainer": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1628339295,
+        "narHash": "sha256-FsbSS+WdtjqjDIYRY0f/45OTVDFuZRswp29yfw/1O58=",
+        "owner": "martinbaillie",
+        "repo": "evil-motion-trainer",
+        "rev": "32472acace6be6d99af1ab16cecaaea4344471ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "martinbaillie",
+        "repo": "evil-motion-trainer",
         "type": "github"
       }
     },
