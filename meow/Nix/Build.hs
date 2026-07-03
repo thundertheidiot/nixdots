@@ -64,7 +64,7 @@ nixBuild args inEmacs = do
 
             output <- lastLineWithAction' read "" $ hPutStrLn nomStdin
 
-            putStrLn =<< hGetContents nomStdout
+            -- putStrLn =<< hGetContents nomStdout
 
             exitCode <- waitForProcess nix
             _ <- waitForProcess nom
