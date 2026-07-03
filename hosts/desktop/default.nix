@@ -60,15 +60,12 @@
     DefaultLimitNOFILE = "200000:200000";
   };
 
-  meowEmacs.package = "emacsIgcOpt";
-
   home-manager.sharedModules = [
     {
       home.stateVersion = "26.05";
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
       meowEmacs.enable = true;
-      meowEmacs.package = "emacsIgcOpt";
 
       # services.mpd.enable = lib.mkForce false;
       # services.mopidy = {

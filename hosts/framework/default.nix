@@ -70,14 +70,11 @@
 
   virtualisation.docker.enable = true;
 
-  meowEmacs.package = "emacsIgcOpt";
   home-manager.sharedModules = [
     {
       home.stateVersion = "26.05";
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
-
-      meowEmacs.package = "emacsIgcOpt";
 
       home.packages = with pkgs; [
         distrobox
