@@ -12,10 +12,11 @@ in {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     # ./authentik.nix
+    # ./meowdzbot.nix
     ./disko.nix
+    ./freshrss.nix
     ./gatus.nix
     ./jellyfin.nix
-    # ./meowdzbot.nix
     ./secrets
     ./sodexobot.nix
     ./website.nix

@@ -2,11 +2,10 @@
   config,
   mlib,
   lib,
-  pkgs,
   ...
 }: let
   inherit (mlib) mkEnOpt;
-  inherit (lib) mkIf head;
+  inherit (lib) mkIf;
 
   cfg = config.meow.server;
 in {
@@ -15,7 +14,7 @@ in {
   config = mkIf cfg.mumble {
     meow.impermanence.directories = [
       {path = config.services.murmur.stateDir;}
-      {path = "/var/lib/botamusique";}
+      # {path = "/var/lib/botamusique";}
     ];
 
     users.users."murmur".extraGroups = ["acme"];
@@ -28,18 +27,18 @@ in {
       bandwidth = 96000;
     };
 
-    services.botamusique = {
-      enable = false;
-      package = pkgs.botamusique.overrideAttrs (prev: {
-        pythonPath = prev.pythonPath ++ [pkgs.python313Packages.audioop-lts];
-      });
-      settings = {
-        bot.music_folder = "music/";
-        bot.admin = "thunder";
+    # services.botamusique = {
+    #   enable = false;
+    #   package = pkgs.botamusique.overrideAttrs (prev: {
+    #     pythonPath = prev.pythonPath ++ [pkgs.python313Packages.audioop-lts];
+    #   });
+    #   settings = {
+    #     bot.music_folder = "music/";
+    #     bot.admin = "thunder";
 
-        commands.play = "p, play";
-        commands.yt_search = "ys";
-      };
-    };
+    #     commands.play = "p, play";
+    #     commands.yt_search = "ys";
+    #   };
+    # };
   };
 }

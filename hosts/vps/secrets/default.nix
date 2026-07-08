@@ -17,6 +17,11 @@
       #   format = "binary";
       # };
 
+      freshrss_db_password = {
+        sopsFile = ./freshrss;
+        format = "binary";
+      };
+
       matrix_registration_token = {
         sopsFile = ./matrix_registration_token;
         format = "binary";
