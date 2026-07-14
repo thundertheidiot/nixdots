@@ -33,6 +33,7 @@
     "navidrome.home"
     "soulbeet.home"
     "metube.home"
+    "syncthing.server"
   ];
 
   "local.crt" = ./local.crt;

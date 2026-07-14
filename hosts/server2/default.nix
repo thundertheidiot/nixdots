@@ -27,6 +27,7 @@ in {
     ./navidrome.nix
     ./redlib.nix
     ./secrets
+    ./syncthing.nix
     ./urlwatch.nix
     ./wireguard.nix
     inputs.autoaspm.nixosModules.default
