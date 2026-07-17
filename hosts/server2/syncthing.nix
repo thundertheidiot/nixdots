@@ -3,7 +3,11 @@
 in {
   config = {
     meow.impermanence.directories = [
-      config.services.syncthing.dataDir
+      {
+        path = config.services.syncthing.dataDir;
+        user = config.services.syncthing.user;
+        permissions = "774";
+      }
     ];
 
     server.domains = [

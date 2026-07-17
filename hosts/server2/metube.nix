@@ -37,6 +37,8 @@ in {
       OUTPUT_TEMPLATE = "%(uploader)s/%(title)s.%(ext)s";
       OUTPUT_TEMPLATE_CHAPTER = "%(uploader)/%(title)s - %(section_number)s %(section_title)s.%(ext)s";
 
+      CORS_ALLOWED_ORIGINS = "*";
+
       YTDL_OPTIONS = builtins.toJSON {
         writethumbnail = false;
         embedthumbnail = true;
