@@ -276,20 +276,20 @@
         "eglot-booster": "eglot-booster",
         "emacs-overlay": "emacs-overlay",
         "emsg-blame": "emsg-blame",
-        "evil-motion-trainer": "evil-motion-trainer",
         "ewm": "ewm",
         "flake-parts": "flake-parts_4",
+        "ghostel": "ghostel",
         "home-manager": "home-manager",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1784386633,
-        "narHash": "sha256-wChsn/pSCaOZ8ukMlB45tWmJ/h06SSKQQ9yPSUIXsag=",
+        "lastModified": 1784401524,
+        "narHash": "sha256-Mt0cm43EV8sZJu/Xq8K6a0Fj9tZ2JAmcilbIjr/y78U=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "5c8a32f4a59aea9512ebca5676f5eb61de8585d3",
+        "rev": "9836af90a549764fad36cf975878034f1f2fca19",
         "type": "github"
       },
       "original": {
@@ -330,22 +330,6 @@
       "original": {
         "owner": "ISouthRain",
         "repo": "emsg-blame",
-        "type": "github"
-      }
-    },
-    "evil-motion-trainer": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1628339295,
-        "narHash": "sha256-FsbSS+WdtjqjDIYRY0f/45OTVDFuZRswp29yfw/1O58=",
-        "owner": "martinbaillie",
-        "repo": "evil-motion-trainer",
-        "rev": "32472acace6be6d99af1ab16cecaaea4344471ec",
-        "type": "github"
-      },
-      "original": {
-        "owner": "martinbaillie",
-        "repo": "evil-motion-trainer",
         "type": "github"
       }
     },
@@ -694,6 +678,22 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "ghostel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784066329,
+        "narHash": "sha256-Bjp6xSAm2x4Soqk4CkKf18vyB6xhpM24ux3iQIjrUwQ=",
+        "owner": "dakra",
+        "repo": "ghostel",
+        "rev": "f00d73563524dec28c458b1b22eb1b7ae721e822",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dakra",
+        "repo": "ghostel",
         "type": "github"
       }
     },
