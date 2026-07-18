@@ -19,10 +19,10 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       meow.impermanence.directories = [
-        "/var/lib/private/tuwunel"
+        "/var/lib/private/continuwuity"
         {
-          path = config.services.matrix-tuwunel.settings.global.database_backup_path;
-          inherit (config.services.matrix-tuwunel) user group;
+          path = config.services.matrix-continuwuity.settings.global.database_backup_path;
+          inherit (config.services.matrix-continuwuity) user group;
         }
       ];
 
@@ -32,14 +32,14 @@ in {
       ];
 
       sops.secrets."matrix_registration_token" = {
-        owner = config.services.matrix-tuwunel.user;
-        group = config.services.matrix-tuwunel.group;
+        owner = config.services.matrix-continuwuity.user;
+        group = config.services.matrix-continuwuity.group;
         mode = "0440";
       };
 
-      users.users."${config.services.matrix-tuwunel.user}".extraGroups = ["turnserver"];
+      users.users."${config.services.matrix-continuwuity.user}".extraGroups = ["turnserver"];
 
-      services.matrix-tuwunel = {
+      services.matrix-continuwuity = {
         enable = true;
         settings = mkMerge [
           {
@@ -47,7 +47,7 @@ in {
               server_name = cfg.domain;
               port = [8008];
               address = ["127.0.0.1" "::1"];
-              database_backup_path = "/opt/tuwunel-backups";
+              database_backup_path = "/opt/continuwuity-backups";
 
               allow_registration = true;
               registration_token_file = config.sops.secrets."matrix_registration_token".path;
@@ -91,7 +91,7 @@ in {
         locations = listToAttrs (map (name: {
           inherit name;
           value = {
-            proxyPass = "http://127.0.0.1:${toString (head config.services.matrix-tuwunel.settings.global.port)}";
+            proxyPass = "http://127.0.0.1:${toString (head config.services.matrix-continuwuity.settings.global.port)}";
             recommendedProxySettings = false; # manual control
             extraConfig = ''
               proxy_set_header Host $host;
@@ -102,7 +102,7 @@ in {
               proxy_send_timeout 300s;
             '';
           };
-        }) ["/_matrix" "/_tuwunel" "/.well-known/matrix"]);
+        }) ["/_matrix" "/_continuwuity" "/.well-known/matrix"]);
       };
     }
     # livekit (matrixrtc and element call)
@@ -143,7 +143,7 @@ in {
         unitConfig.ConditionPathExists = "!${config.services.livekit.keyFile}";
       };
 
-      services.matrix-tuwunel.settings.global.well_known.rtc_transports = [
+      services.matrix-continuwuity.settings.global.well_known.rtc_transports = [
         {
           type = "livekit";
           livekit_service_url = "https://${cfg.domain}/livekit";

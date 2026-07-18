@@ -20,10 +20,10 @@ in {
     ./forgejo.nix
     # ./mail.nix
     ./mumble.nix
+    ./matrix.nix
     ./prosody
     ./radio.nix
     ./ssh.nix
-    ./tuwunel.nix
     ./vaultwarden.nix
     ./webserver.nix
   ];
