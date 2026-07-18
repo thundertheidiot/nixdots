@@ -9,20 +9,20 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "sable";
-  version = "1.19.2";
+  version = "1.20.0";
 
   src = fetchFromGitHub {
     owner = "SableClient";
     repo = "Sable";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-aiM8QSGn3rE5SWASpvnGEJbQJmgAIIJDZV9wosQi8NI=";
+    hash = "sha256-ams6Uwblo5mUzah9hlCPCUMXtrLtiUtRWwwKH4uabmk=";
   };
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
     pnpm = pnpm_10;
     fetcherVersion = 3;
-    hash = "sha256-b6+j893Ltg2880YVOIwPnSH3diJdNZdmhZSwsMnJKtU=";
+    hash = "sha256-iBvtMeYUHWhsz1DnKjTzydAt3cGPaisUhaagoaZRg1M=";
   };
 
   nativeBuildInputs = [
