@@ -143,7 +143,7 @@ in {
         unitConfig.ConditionPathExists = "!${config.services.livekit.keyFile}";
       };
 
-      services.matrix-continuwuity.settings.global.well_known.rtc_transports = [
+      services.matrix-continuwuity.settings.global.matrix_rtc.foci = [
         {
           type = "livekit";
           livekit_service_url = "https://${cfg.domain}/livekit";
