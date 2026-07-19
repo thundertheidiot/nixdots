@@ -67,9 +67,9 @@
             ];
           }
           {
-            name = "Tuwunel (Matrix)";
+            name = "Continuwuity (Matrix)";
             group = "VPS";
-            url = "http://127.0.0.1:8008/_tuwunel/server_version";
+            url = "http://127.0.0.1:8008/_continuwuity/server_version";
             interval = "30s";
             conditions = [
               "[STATUS] == 200"
