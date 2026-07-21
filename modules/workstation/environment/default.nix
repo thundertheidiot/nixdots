@@ -7,7 +7,7 @@
 }: let
   inherit (mlib) mkOpt;
   inherit (lib.types) enum listOf;
-  inherit (lib) mkIf mkMerge;
+  inherit (lib) mkIf mkMerge getExe;
 
   cfg = config.meow.workstation.enable;
   envir = config.meow.workstation.environment;
@@ -18,7 +18,7 @@ in {
       description = "The list of environments to configure and install.";
     };
 
-    meow.workstation.displayManager = mkOpt (enum ["sddm" "plm" "gdm"]) "sddm" {
+    meow.workstation.displayManager = mkOpt (enum ["sddm" "plm" "gdm" "tuigreet"]) "sddm" {
       description = "Display manager (login screen) to install.";
     };
   };
@@ -38,6 +38,16 @@ in {
     {
       programs.niri.enable = lib.mkDefault false;
     }
+    (mkIf (dm == "tuigreet") {
+      services.greetd = {
+        enable = true;
+        useTextGreeter = true;
+        settings.default_session = {
+          command = "${getExe pkgs.tuigreet} --time --remember --remember-user-session --asterisks";
+          user = "greeter";
+        };
+      };
+    })
     (mkIf (dm == "sddm") {
       services.displayManager.sddm = {
         enable = true;
@@ -65,8 +75,8 @@ in {
         {
           path = "/var/lib/plasmalogin";
           permissions = "777";
-          # user = "plasmalogin";
-          # group = "plasmalogin";
+          user = "plasmalogin";
+          group = "plasmalogin";
         }
       ];
     })

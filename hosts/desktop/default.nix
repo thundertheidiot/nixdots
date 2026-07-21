@@ -112,6 +112,7 @@
     user = "thunder";
 
     workstation.environment = ["niri"];
+    workstation.displayManager = "tuigreet";
 
     workstation.extraWaybarModules = {
       "custom/qbittorrent" = let
