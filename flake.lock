@@ -282,14 +282,15 @@
         "home-manager": "home-manager",
         "nixpkgs": [
           "nixpkgs"
-        ]
+        ],
+        "org-defblock": "org-defblock"
       },
       "locked": {
-        "lastModified": 1784709121,
-        "narHash": "sha256-/KZ2CkbcDjsjTCCoFyI0LzJ23DVUZwYk1L+yO9X5HdU=",
+        "lastModified": 1784734785,
+        "narHash": "sha256-IDdxd1j9j7g73Qsjw2Kb3t5gB1RmcvxGFkEZiiUkLC8=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "665f4be9c873dea24f67b62d652175a15b039b77",
+        "rev": "456b6f63dce8ad83d5240b55f925a9da1e2698d1",
         "type": "github"
       },
       "original": {
@@ -1516,6 +1517,22 @@
         "owner": "Red-M",
         "repo": "nvfetcher",
         "rev": "a84b3ce67f1d7acd85b3aa2b9967ab91ed6e7a71",
+        "type": "github"
+      }
+    },
+    "org-defblock": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766240506,
+        "narHash": "sha256-VlQMjncIXBce4v7MNmRy0PCgSL3JpYb5MwgbMnPaVyo=",
+        "owner": "cashpw",
+        "repo": "org-defblock",
+        "rev": "45f0e9c734d350022ea1aad9db41e0441c4a26ea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cashpw",
+        "repo": "org-defblock",
         "type": "github"
       }
     },
