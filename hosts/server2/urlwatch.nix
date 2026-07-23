@@ -34,7 +34,7 @@
   };
 
   systemd.timers.urlwatch = {
-    enable = false;
+    enable = true;
     wantedBy = ["timers.target"];
     partOf = ["urlwatch.service"];
     timerConfig = {
