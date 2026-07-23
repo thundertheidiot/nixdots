@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (mlib) mkOpt;
-  inherit (lib) head;
+  inherit (lib) head mkForce;
   inherit (lib.types) listOf str;
 in {
   options.meow.server = {
@@ -27,4 +27,8 @@ in {
     ./vaultwarden.nix
     ./webserver.nix
   ];
+
+  config = {
+    nix.registry = mkForce {};
+  };
 }

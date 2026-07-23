@@ -27,7 +27,15 @@
       WorkingDirectory = "/var/lib/urlwatch";
       StateDirectory = "urlwatch";
     };
-    path = with pkgs; [urlwatch];
+    path = with pkgs; [
+      (urlwatch.override {
+        python3Packages = python3Packages.overrideScope (final: prev: {
+          playwright = prev.playwright.override {
+            playwright-driver = playwright-driver.browsers-chromium;
+          };
+        });
+      })
+    ];
     script = ''
       urlwatch --cache cache.db --urls ${config.sops.secrets.urlwatch_urls.path} --config ${config.sops.secrets.urlwatch_config.path}
     '';

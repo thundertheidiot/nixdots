@@ -32,7 +32,7 @@ in {
 
       fd
       ripgrep
-      ncdu
+      gdu
       killall
       which
 
