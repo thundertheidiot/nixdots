@@ -21,6 +21,7 @@ in {
     ./sodexobot.nix
     ./website.nix
     ./wireguard.nix
+    ./urlwatch.nix
   ];
 
   config = {
@@ -97,7 +98,7 @@ in {
         xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];
         coturn = true;
         mumble = true;
-        radio.enable = true;
+        radio.enable = false;
         vaultwarden = true;
       };
     };

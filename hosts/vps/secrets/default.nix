@@ -46,6 +46,18 @@
         sopsFile = ./meowdzbot.env;
         format = "dotenv";
       };
+
+      urlwatch_urls = {
+        sopsFile = ./urlwatch_urls.yaml;
+        format = "yaml";
+        key = "";
+      };
+
+      urlwatch_config = {
+        sopsFile = ./urlwatch_config.yaml;
+        format = "yaml";
+        key = "";
+      };
     };
   };
 }

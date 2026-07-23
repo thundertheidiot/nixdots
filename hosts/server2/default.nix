@@ -28,7 +28,7 @@ in {
     ./redlib.nix
     ./secrets
     ./syncthing.nix
-    ./urlwatch.nix
+    # ./urlwatch.nix
     ./wireguard.nix
     inputs.autoaspm.nixosModules.default
   ];
