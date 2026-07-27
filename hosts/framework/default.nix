@@ -79,6 +79,9 @@
       home.packages = with pkgs; [
         distrobox
 
+        mpkgs.glide
+        mpkgs.helium
+
         python313Packages.python
 
         # electrum-ltc
