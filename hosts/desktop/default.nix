@@ -195,7 +195,7 @@
         x = 1920;
         primary = true;
       };
-      "DP-1" = {
+      "DP-2" = {
         width = 1920;
         height = 1080;
         refresh = 144.001;
@@ -258,6 +258,8 @@
 
   environment.systemPackages = with pkgs; [
     distrobox
+
+    mpkgs.helium
 
     wineWow64Packages.staging
     gdb
