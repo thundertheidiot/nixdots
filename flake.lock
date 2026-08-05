@@ -271,11 +271,11 @@
         "org-defblock": "org-defblock"
       },
       "locked": {
-        "lastModified": 1785711018,
-        "narHash": "sha256-rfz1WsHPGb9adEhHWDL33ZXxGD518r/zfleFfMIsIr4=",
+        "lastModified": 1785923695,
+        "narHash": "sha256-WjpaxeoelWXRCcAXPIdsCvSxAalc7bOeF3lSkldYO2U=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "daa1d59a442f4b0354e506524116c0ae2b886f58",
+        "rev": "8daa300ca4a774a40dd0b9eca8e1d6dc0f394c74",
         "type": "github"
       },
       "original": {
