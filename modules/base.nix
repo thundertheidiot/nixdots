@@ -79,7 +79,7 @@ in {
         "ilmbase-2.5.10" # TODO insecure check why
         # "cisco-packet-tracer-8.2.2"
         # "ciscoPacketTracer8-8.2.2"
-        "python3.13-ecdsa-0.19.1"
+        "python3.14-ecdsa-0.19.2"
       ];
     };
 

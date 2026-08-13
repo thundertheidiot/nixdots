@@ -24,7 +24,7 @@ in {
           system = final.stdenv.hostPlatform.system;
         };
 
-        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc kdenlive blender krita firefox;
+        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc kdenlive blender krita firefox ananicy-cpp;
 
         sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;
         leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
