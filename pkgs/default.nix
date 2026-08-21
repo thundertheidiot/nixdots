@@ -3,6 +3,7 @@ with pkgs; {
   cru = callPackage ./cru.nix {};
   dgr = callPackage ./dgr.nix {};
   sable = callPackage ./sable.nix {};
+  sable-desktop = callPackage ./sable-desktop.nix {};
   helium = callPackage ./helium.nix {};
   glide = callPackage ./glide.nix {};
   kodi = callPackage ./kodi {};

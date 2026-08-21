@@ -183,6 +183,7 @@
         spawn-at-startup "vesktop"
         spawn-at-startup "signal-desktop"
         spawn-at-startup "gajim"
+        spawn-at-startup "sable"
       ''
     ];
 
@@ -260,6 +261,7 @@
     distrobox
 
     mpkgs.helium
+    mpkgs.sable-desktop
 
     wineWow64Packages.staging
     gdb
