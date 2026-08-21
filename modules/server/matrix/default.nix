@@ -16,6 +16,10 @@ in {
     meow.server.matrix.domain = mkOpt str config.meow.server.mainDomain {};
   };
 
+  imports = [
+    ./whatsapp.nix
+  ];
+
   config = mkIf cfg.enable (mkMerge [
     {
       meow.impermanence.directories = [
@@ -207,7 +211,7 @@ in {
     # web interface
     {
       services.nginx.virtualHosts."matrix.${cfg.domain}" = {
-        root = pkgs.mpkgs.sable;
+        root = pkgs.sable;
 
         locations."/".extraConfig = ''
           rewrite ^/config.json$ /config.json break;

@@ -93,6 +93,7 @@ in {
 
         matrix.enable = true;
         matrix.domain = "meowcloud.net";
+        matrix.whatsapp.enable = true;
 
         certificates = ["kotiboksi.xyz" "meowcloud.net"];
         xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];

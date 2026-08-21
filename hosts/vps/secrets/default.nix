@@ -27,6 +27,11 @@
         format = "binary";
       };
 
+      mautrix_whatsapp_env = {
+        sopsFile = ./mautrix_whatsapp.env;
+        format = "dotenv";
+      };
+
       sodexobot_env = {
         sopsFile = ./sodexobot.env;
         format = "dotenv";

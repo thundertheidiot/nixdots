@@ -19,7 +19,7 @@ in {
     ./coturn.nix
     ./deploy.nix
     ./forgejo.nix
-    ./matrix.nix
+    ./matrix
     ./mumble.nix
     ./prosody
     ./radio.nix

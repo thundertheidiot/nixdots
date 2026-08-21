@@ -8,7 +8,7 @@
 }: let
   inherit (mlib) mkOpt;
 
-  inherit (lib.types) bool str;
+  inherit (lib.types) bool str listOf;
   inherit (lib) mkIf mkDefault;
 
   en = config.meow.base;
@@ -17,6 +17,8 @@ in {
     meow.base = mkOpt bool true {
       description = "Base setup for every machine, including servers.";
     };
+
+    meow.permittedInsecurePackages = mkOpt (listOf str) "permitted insecure packages" {};
 
     meow.timeZone = mkOpt str "Europe/Helsinki" {};
     meow.hostName = mkOpt str "meow" {};
@@ -73,14 +75,16 @@ in {
       allowUnfree = true;
 
       # TODO check this
-      permittedInsecurePackages = [
-        "libsoup-2.74.3"
-        "mbedtls-2.28.10" # TODO insecure check why
-        "ilmbase-2.5.10" # TODO insecure check why
-        # "cisco-packet-tracer-8.2.2"
-        # "ciscoPacketTracer8-8.2.2"
-        "python3.14-ecdsa-0.19.2"
-      ];
+      permittedInsecurePackages =
+        [
+          "libsoup-2.74.3"
+          "mbedtls-2.28.10" # TODO insecure check why
+          "ilmbase-2.5.10" # TODO insecure check why
+          # "cisco-packet-tracer-8.2.2"
+          # "ciscoPacketTracer8-8.2.2"
+          "python3.14-ecdsa-0.19.2"
+        ]
+        ++ config.meow.permittedInsecurePackages;
     };
 
     # nh provides store cleanup, so it is good to have here even on servers
