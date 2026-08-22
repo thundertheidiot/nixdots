@@ -87,6 +87,7 @@ in
                 "fixupx.com"
                 "github.com"
                 "wikipedia.org"
+                "cdn.lesbian.ee" # kaya image server
               ];
             };
           }
