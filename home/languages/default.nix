@@ -57,7 +57,7 @@ in {
           mkMerge [
             (mkIf cfg.nix [
               nixd # lsp
-              alejandra # fmt
+              nixfmt
             ])
             (mkIf cfg.rust [
               # rust-bin.stable.latest.default
