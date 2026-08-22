@@ -4,7 +4,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   imports = [
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-base.nix"
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
@@ -100,7 +101,7 @@
       user = "nixos";
 
       workstation.enable = true;
-      workstation.environment = ["niri"];
+      workstation.environment = [ "niri" ];
       workstation.flatpak.enable = false;
 
       emacs.enable = true;

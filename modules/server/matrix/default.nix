@@ -4,16 +4,25 @@
   mlib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt mkEnOpt;
   inherit (lib.types) str;
-  inherit (lib) mkIf mkMerge listToAttrs head mkForce getExe;
+  inherit (lib)
+    mkIf
+    mkMerge
+    listToAttrs
+    head
+    mkForce
+    getExe
+    ;
 
   cfg = config.meow.server.matrix;
-in {
+in
+{
   options = {
     meow.server.matrix.enable = mkEnOpt "Matrix";
-    meow.server.matrix.domain = mkOpt str config.meow.server.mainDomain {};
+    meow.server.matrix.domain = mkOpt str config.meow.server.mainDomain { };
   };
 
   imports = [
@@ -41,7 +50,7 @@ in {
         mode = "0440";
       };
 
-      users.users."${config.services.matrix-continuwuity.user}".extraGroups = ["turnserver"];
+      users.users."${config.services.matrix-continuwuity.user}".extraGroups = [ "turnserver" ];
 
       services.matrix-continuwuity = {
         enable = true;
@@ -49,15 +58,18 @@ in {
           {
             global = {
               server_name = cfg.domain;
-              port = [8008];
-              address = ["127.0.0.1" "::1"];
+              port = [ 8008 ];
+              address = [
+                "127.0.0.1"
+                "::1"
+              ];
               database_backup_path = "/opt/continuwuity-backups";
 
               allow_registration = true;
               registration_token_file = config.sops.secrets."matrix_registration_token".path;
 
               allow_federation = true;
-              trusted_servers = ["matrix.org"];
+              trusted_servers = [ "matrix.org" ];
 
               well_known = {
                 client = "https://${cfg.domain}";
@@ -92,21 +104,29 @@ in {
 
       services.nginx.clientMaxBodySize = "60M";
       services.nginx.virtualHosts."${cfg.domain}" = {
-        locations = listToAttrs (map (name: {
-          inherit name;
-          value = {
-            proxyPass = "http://127.0.0.1:${toString (head config.services.matrix-continuwuity.settings.global.port)}";
-            recommendedProxySettings = false; # manual control
-            extraConfig = ''
-              proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $remote_addr;
-              proxy_set_header X-Forwarded-Proto https;
+        locations = listToAttrs (
+          map
+            (name: {
+              inherit name;
+              value = {
+                proxyPass = "http://127.0.0.1:${toString (head config.services.matrix-continuwuity.settings.global.port)}";
+                recommendedProxySettings = false; # manual control
+                extraConfig = ''
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Forwarded-For $remote_addr;
+                  proxy_set_header X-Forwarded-Proto https;
 
-              proxy_read_timeout 300s;
-              proxy_send_timeout 300s;
-            '';
-          };
-        }) ["/_matrix" "/_continuwuity" "/.well-known/matrix"]);
+                  proxy_read_timeout 300s;
+                  proxy_send_timeout 300s;
+                '';
+              };
+            })
+            [
+              "/_matrix"
+              "/_continuwuity"
+              "/.well-known/matrix"
+            ]
+        );
       };
     }
     # livekit (matrixrtc and element call)
@@ -135,9 +155,16 @@ in {
       systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = cfg.domain;
 
       systemd.services.generate-livekit-key = {
-        before = ["lk-jwt-service.service" "livekit.service"];
-        wantedBy = ["multi-user.target"];
-        path = with pkgs; [livekit coreutils gawk];
+        before = [
+          "lk-jwt-service.service"
+          "livekit.service"
+        ];
+        wantedBy = [ "multi-user.target" ];
+        path = with pkgs; [
+          livekit
+          coreutils
+          gawk
+        ];
         script = ''
           echo "Key missing, generating key"
           echo "lk-jwt-service: $(livekit-server generate-keys | tail -1 | awk '{print $3}')" > "${config.services.livekit.keyFile}"
@@ -192,20 +219,18 @@ in {
 
       systemd.services.livekit = {
         serviceConfig.RuntimeDirectory = "livekit";
-        serviceConfig.LoadCredential = ["turn-secret:${config.sops.secrets.coturn_secret.path}"];
+        serviceConfig.LoadCredential = [ "turn-secret:${config.sops.secrets.coturn_secret.path}" ];
 
         # inject coturn secret at startup
         preStart = ''
           ${getExe pkgs.jq} \
             --arg sec "$(cat "$CREDENTIALS_DIRECTORY/turn-secret")" \
             '.rtc.turn_servers[0].secret = $sec' \
-            ${(pkgs.formats.json {}).generate "livekit.json" config.services.livekit.settings} \
+            ${(pkgs.formats.json { }).generate "livekit.json" config.services.livekit.settings} \
             > "$RUNTIME_DIRECTORY/livekit.json"
         '';
 
-        serviceConfig.ExecStart =
-          mkForce
-          ''${getExe pkgs.livekit} --config=''${RUNTIME_DIRECTORY}/livekit.json --key-file ''${CREDENTIALS_DIRECTORY}/livekit-secrets'';
+        serviceConfig.ExecStart = mkForce "${getExe pkgs.livekit} --config=\${RUNTIME_DIRECTORY}/livekit.json --key-file \${CREDENTIALS_DIRECTORY}/livekit-secrets";
       };
     })
     # web interface

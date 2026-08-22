@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = {
     hardware.framework.enableKmod = false;
 

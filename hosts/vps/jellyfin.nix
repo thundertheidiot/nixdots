@@ -4,21 +4,24 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib.types) listOf str;
   inherit (lib) listToAttrs;
 
   addr = "http://${server.homeServer2}:8096";
-in {
+in
+{
   options = {
-    meow.server.jellyfinDomains = mkOpt (listOf str) [] {};
+    meow.server.jellyfinDomains = mkOpt (listOf str) [ ] { };
   };
 
   config = {
     meow.server.certificates = config.meow.server.jellyfinDomains;
 
-    services.nginx.virtualHosts = listToAttrs (map (name: {
+    services.nginx.virtualHosts = listToAttrs (
+      map (name: {
         inherit name;
         value = {
           locations = {
@@ -66,7 +69,7 @@ in {
             add_header Content-Security-Policy "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
           '';
         };
-      })
-      config.meow.server.jellyfinDomains);
+      }) config.meow.server.jellyfinDomains
+    );
   };
 }

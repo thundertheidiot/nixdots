@@ -4,11 +4,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOptTrue;
   inherit (lib) mkIf;
   cfg = config.mHome.desktop.common.media;
-in {
+in
+{
   options = {
     mHome.desktop.common.media.enable = mkEnOptTrue "Set up media players";
   };

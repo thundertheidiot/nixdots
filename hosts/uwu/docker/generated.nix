@@ -171,7 +171,21 @@
     volumes = [
       "/mnt/storage/immich/database:/var/lib/postgresql/data:rw"
     ];
-    cmd = [ "postgres" "-c" "shared_preload_libraries=vectors.so" "-c" "search_path=\"$user\", public, vectors" "-c" "logging_collector=on" "-c" "max_wal_size=2GB" "-c" "shared_buffers=512MB" "-c" "wal_compression=on" ];
+    cmd = [
+      "postgres"
+      "-c"
+      "shared_preload_libraries=vectors.so"
+      "-c"
+      "search_path=\"$user\", public, vectors"
+      "-c"
+      "logging_collector=on"
+      "-c"
+      "max_wal_size=2GB"
+      "-c"
+      "shared_buffers=512MB"
+      "-c"
+      "wal_compression=on"
+    ];
     log-driver = "journald";
     extraOptions = [
       "--health-cmd=pg_isready --dbname=\"\${POSTGRES_DB}\" --username=\"\${POSTGRES_USER}\" || exit 1; Chksum=\"$(psql --dbname=\"\${POSTGRES_DB}\" --username=\"\${POSTGRES_USER}\" --tuples-only --no-align --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')\"; echo \"checksum failure count is $Chksum\"; [ \"$Chksum\" = '0' ] || exit 1"
@@ -548,7 +562,14 @@
     ports = [
       "8081:8080/tcp"
     ];
-    cmd = [ "--interval" "480" "--no-restart" "--http-api-metrics" "--http-api-token" "token" ];
+    cmd = [
+      "--interval"
+      "480"
+      "--no-restart"
+      "--http-api-metrics"
+      "--http-api-token"
+      "token"
+    ];
     log-driver = "journald";
     extraOptions = [
       "--network-alias=watchtower"

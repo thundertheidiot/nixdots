@@ -2,11 +2,13 @@
   fetchgit,
   fetchzip,
   kodiPackages,
-}: let
+}:
+let
   addonDir = "/share/kodi/addons";
   pins = import ./npins;
   p = name: "${pins.${name}}";
-in [
+in
+[
   (p "plugin.video.yleareena.jade")
   (p "plugin.video.youtube")
   (p "script.module.pvr.artwork")
@@ -29,22 +31,26 @@ in [
   })
   "${kodiPackages.websocket}${addonDir}/script.module.websocket"
   "${kodiPackages.six}${addonDir}/script.module.six"
-  "${(kodiPackages.inputstream-adaptive.overrideAttrs (prev: {
-    # remove extraInstallPhase which links a nonexistent so file
-    installPhase = let
-      n = "inputstream.adaptive";
-      version = prev.version;
-    in ''
-      runHook preInstall
+  "${
+    (kodiPackages.inputstream-adaptive.overrideAttrs (prev: {
+      # remove extraInstallPhase which links a nonexistent so file
+      installPhase =
+        let
+          n = "inputstream.adaptive";
+          version = prev.version;
+        in
+        ''
+          runHook preInstall
 
-      make install
+          make install
 
-      [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
-      [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
+          [[ -f $out/lib/addons/${n}/${n}.so ]] && ln -s $out/lib/addons/${n}/${n}.so $out${addonDir}/${n}/${n}.so || true
+          [[ -f $out/lib/addons/${n}/${n}.so.${version} ]] && ln -s $out/lib/addons/${n}/${n}.so.${version} $out${addonDir}/${n}/${n}.so.${version} || true
 
-      runHook postInstall
-    '';
-  }))}${addonDir}/inputstream.adaptive"
+          runHook postInstall
+        '';
+    }))
+  }${addonDir}/inputstream.adaptive"
   "${kodiPackages.inputstreamhelper}${addonDir}/script.module.inputstreamhelper"
   "${kodiPackages.netflix}${addonDir}/plugin.video.netflix"
   "${kodiPackages.jellyfin}${addonDir}/plugin.video.jellyfin"

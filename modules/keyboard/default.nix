@@ -3,22 +3,24 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   cfg = config.meow.keyboard;
   inherit (mlib) mkOpt mkEnOpt;
   inherit (lib) mkIf;
 
   inherit (lib.types) listOf path str;
-in {
+in
+{
   options = {
     meow.keyboard = {
       enable = mkEnOpt "Enable keyboard configuration through kanata";
-      devices = mkOpt (listOf str) {} {
+      devices = mkOpt (listOf str) { } {
         example = lib.options.literalExpression ''[ "/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd" ]'';
         description = "Devices to apply kanata to";
       };
 
-      layout = mkOpt str "" {};
+      layout = mkOpt str "" { };
     };
   };
 

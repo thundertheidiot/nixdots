@@ -3,12 +3,14 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 
   cfg = config.meow.server;
-in {
+in
+{
   options.meow.server.coturn = mkEnOpt "Coturn";
 
   config = mkIf cfg.coturn {
@@ -34,7 +36,7 @@ in {
       pkey = "/var/lib/acme/${realm}/key.pem";
     };
 
-    users.users.turnserver.extraGroups = ["acme"];
+    users.users.turnserver.extraGroups = [ "acme" ];
 
     networking.firewall = {
       allowedUDPPortRanges = with config.services.coturn; [
@@ -44,8 +46,14 @@ in {
         }
       ];
 
-      allowedUDPPorts = [3478 5349];
-      allowedTCPPorts = [3478 5349];
+      allowedUDPPorts = [
+        3478
+        5349
+      ];
+      allowedTCPPorts = [
+        3478
+        5349
+      ];
     };
   };
 }

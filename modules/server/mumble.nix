@@ -3,21 +3,23 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 
   cfg = config.meow.server;
-in {
+in
+{
   options.meow.server.mumble = mkEnOpt "Mumble";
 
   config = mkIf cfg.mumble {
     meow.impermanence.directories = [
-      {path = config.services.murmur.stateDir;}
+      { path = config.services.murmur.stateDir; }
       # {path = "/var/lib/botamusique";}
     ];
 
-    users.users."murmur".extraGroups = ["acme"];
+    users.users."murmur".extraGroups = [ "acme" ];
 
     services.murmur = {
       enable = true;

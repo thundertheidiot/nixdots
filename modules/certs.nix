@@ -4,17 +4,19 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOptTrue;
   inherit (lib) mkIf;
 
   cfg = config.meow.certificates;
-in {
+in
+{
   options = {
     meow.certificates = mkEnOptTrue "Enable self signed certificates for local server.";
   };
 
   config = mkIf config.meow.certificates {
-    security.pki.certificateFiles = [../certs/rootCA.pem];
+    security.pki.certificateFiles = [ ../certs/rootCA.pem ];
   };
 }

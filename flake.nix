@@ -18,7 +18,7 @@
     ];
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} {imports = [./flake];};
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } { imports = [ ./flake ]; };
 
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.xz";

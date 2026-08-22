@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = {
     sops.secrets."authentik_env".mode = "0644";
 
@@ -16,14 +17,16 @@
       "auth.home"
     ];
 
-    services.nginx.virtualHosts."auth.home" = let
-      certs = import ../../certs;
-    in {
-      forceSSL = lib.mkForce true;
+    services.nginx.virtualHosts."auth.home" =
+      let
+        certs = import ../../certs;
+      in
+      {
+        forceSSL = lib.mkForce true;
 
-      sslCertificate = certs."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
-    };
+        sslCertificate = certs."local.crt";
+        sslCertificateKey = config.sops.secrets.localKey.path;
+      };
 
     services.authentik = {
       enable = false;

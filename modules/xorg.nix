@@ -3,17 +3,19 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf mkMerge;
   inherit (mlib) mkEnOptTrue mkOpt;
   inherit (lib.types) str;
   cfg = config.meow.x11;
-in {
+in
+{
   options = {
     # Configuring this doesn't necessarily enable the xserver, so this is fine to do by default
     meow.x11.enable = mkEnOptTrue "xserver configuration";
-    meow.x11.xkb.layout = mkOpt str "us" {};
-    meow.x11.xkb.options = mkOpt str "eurosign:e" {};
+    meow.x11.xkb.layout = mkOpt str "us" { };
+    meow.x11.xkb.options = mkOpt str "eurosign:e" { };
 
     meow.x11.opinionatedMouseConfig = mkEnOptTrue "opinionated pointer device configuration for x11";
   };

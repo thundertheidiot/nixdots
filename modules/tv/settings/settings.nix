@@ -6,7 +6,8 @@
   kodiSettings,
   mlib,
   ...
-}: let
+}:
+let
   inherit (builtins) toString;
   inherit (lib) mapAttrsToList;
   inherit (lib.strings) toJSON concatStringsSep;
@@ -27,33 +28,32 @@
   #       end)
   #   );'';
 
-  createXml =
-    mapAttrsToList (
-      name: value: let
-        file = "${kodiHome}/${name}";
-      in
-        # ''
-        #   if [ ! -f "${file}" ]; then
-        #     mkdir -p "$(dirname "${file}")"
-        #     echo -e "<settings>\n</settings>" > "${file}"
-        #   fi
-        #   xq --argjson nix_settings '${toJSON value}' '${jqDeepmerge} deepmerge({}; [., $nix_settings])' --xml-output < "${file}" > "${file}.tmp"
-        #   mv "${file}.tmp" "${file}"
-        #   echo Applied settings for "${file}"
-        # ''
-        jqMergeFileWithValue {
-          jq = "xq";
-          inherit file value;
-        }
-    )
-    kodiSettings;
+  createXml = mapAttrsToList (
+    name: value:
+    let
+      file = "${kodiHome}/${name}";
+    in
+    # ''
+    #   if [ ! -f "${file}" ]; then
+    #     mkdir -p "$(dirname "${file}")"
+    #     echo -e "<settings>\n</settings>" > "${file}"
+    #   fi
+    #   xq --argjson nix_settings '${toJSON value}' '${jqDeepmerge} deepmerge({}; [., $nix_settings])' --xml-output < "${file}" > "${file}.tmp"
+    #   mv "${file}.tmp" "${file}"
+    #   echo Applied settings for "${file}"
+    # ''
+    jqMergeFileWithValue {
+      jq = "xq";
+      inherit file value;
+    }
+  ) kodiSettings;
 in
-  writeShellApplication {
-    name = "create_settings";
+writeShellApplication {
+  name = "create_settings";
 
-    excludeShellChecks = ["SC2016"];
+  excludeShellChecks = [ "SC2016" ];
 
-    runtimeInputs = [yq];
+  runtimeInputs = [ yq ];
 
-    text = concatStringsSep "\n" createXml;
-  }
+  text = concatStringsSep "\n" createXml;
+}

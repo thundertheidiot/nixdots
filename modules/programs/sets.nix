@@ -3,23 +3,28 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   en = config.meow.fullSetup;
-in {
+in
+{
   options = {
     meow.fullSetup = mlib.mkEnOpt "Enable all the bells and whistles.";
     meow.baseSetup = mlib.mkEnOpt "Enable commonly needed things, but leave out some heavier ones.";
   };
 
-  config = let
-    inherit (lib) listToAttrs mkIf mkMerge;
-    enAll = list:
-      listToAttrs (map (i: {
-          name = i;
-          value = true;
-        })
-        list);
-  in
+  config =
+    let
+      inherit (lib) listToAttrs mkIf mkMerge;
+      enAll =
+        list:
+        listToAttrs (
+          map (i: {
+            name = i;
+            value = true;
+          }) list
+        );
+    in
     mkMerge [
       (mkIf config.meow.fullSetup {
         meow.program = enAll [

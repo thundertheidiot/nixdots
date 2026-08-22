@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   certs = import ../../certs;
-in {
+in
+{
   server.domains = [
     "metube.home"
   ];
@@ -23,7 +25,7 @@ in {
 
   virtualisation.oci-containers.containers.metube = {
     image = "ghcr.io/alexta69/metube:latest";
-    ports = ["8081:8081"];
+    ports = [ "8081:8081" ];
 
     volumes = [
       "/mnt/storage/media/youtube/videos:/downloads"

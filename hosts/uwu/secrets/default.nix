@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   config = {
     sops.secrets = {
       torrent_stack_env = {

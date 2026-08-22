@@ -1,12 +1,14 @@
-{...}: {
+{ ... }: {
   config = {
     meow = {
-      old-browser.enable = ["firedragon"];
+      old-browser.enable = [ "firedragon" ];
 
       old-browser.firefoxConfig.firedragon = {
         policies = {
-          "idcac-pub@guus.ninja" = "https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/addon-17568914-latest.xpi";
-          "{446900e4-71c2-419f-a6a7-df9c091e268b}" = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/addon-12533945-latest.xpi";
+          "idcac-pub@guus.ninja" =
+            "https://addons.mozilla.org/firefox/downloads/latest/istilldontcareaboutcookies/addon-17568914-latest.xpi";
+          "{446900e4-71c2-419f-a6a7-df9c091e268b}" =
+            "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/addon-12533945-latest.xpi";
         };
 
         profiles."nix-managed" = {

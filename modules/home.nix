@@ -7,39 +7,47 @@
   config,
   mlib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt mkEnOptTrue;
   inherit (lib) mkIf;
-  inherit (lib.types) listOf raw attrs str;
+  inherit (lib.types)
+    listOf
+    raw
+    attrs
+    str
+    ;
   inherit (lib.options) literalExpression;
 
   cfg = config.meow.home;
-in {
+in
+{
   options = {
     meow.home = {
       enable = mkEnOptTrue "Enable home-manager.";
 
-      stateVersion = mkOpt str "25.05" {};
+      stateVersion = mkOpt str "25.05" { };
 
-      extraSpecialArgs = mkOpt attrs {inherit mlib;} {
+      extraSpecialArgs = mkOpt attrs { inherit mlib; } {
         example = literalExpression "{ inherit inputs; }";
       };
 
-      sharedModules = mkOpt (listOf raw) [] {};
-      modules = mkOpt (listOf raw) [] {};
+      sharedModules = mkOpt (listOf raw) [ ] { };
+      modules = mkOpt (listOf raw) [ ] { };
 
-      user = mkOpt str config.meow.user {};
-      directory = mkOpt str "/home/${cfg.user}" {};
+      user = mkOpt str config.meow.user { };
+      directory = mkOpt str "/home/${cfg.user}" { };
 
-      file = mkOpt attrs {} {description = "Files to place in $HOME";};
-      configFile = mkOpt attrs {} {description = "Files to place in $XDG_CONFIG_HOME";};
-      dataFile = mkOpt attrs {} {description = "Files to place in $XDG_DATA_HOME";};
+      file = mkOpt attrs { } { description = "Files to place in $HOME"; };
+      configFile = mkOpt attrs { } { description = "Files to place in $XDG_CONFIG_HOME"; };
+      dataFile = mkOpt attrs { } { description = "Files to place in $XDG_DATA_HOME"; };
 
-      stubbornHomeDirectory = mkOpt str "${config.meow.home.directory}/.local/state/home" {};
+      stubbornHomeDirectory = mkOpt str "${config.meow.home.directory}/.local/state/home" { };
     };
   };
   config = mkIf cfg.enable {
-    meow.home.stubbornHomeDirectory = config.home-manager.users."${cfg.user}".mHome.stubbornHomeDirectory;
+    meow.home.stubbornHomeDirectory =
+      config.home-manager.users."${cfg.user}".mHome.stubbornHomeDirectory;
 
     home-manager = {
       useGlobalPkgs = true;
@@ -52,7 +60,7 @@ in {
           homeDirectory = cfg.directory;
         };
 
-        imports = cfg.modules ++ [../home];
+        imports = cfg.modules ++ [ ../home ];
 
         home.file = cfg.file;
         xdg.configFile = cfg.configFile;

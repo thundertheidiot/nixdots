@@ -4,18 +4,21 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt mkOpt;
   inherit (lib) mkIf listToAttrs;
   inherit (lib.types) listOf str;
 
   cfg = config.meow.server.radio;
-in {
+in
+{
   options.meow.server.radio.enable = mkEnOpt "Radio";
-  options.meow.server.radio.domains = mkOpt (listOf str) [config.meow.server.mainDomain] {};
+  options.meow.server.radio.domains = mkOpt (listOf str) [ config.meow.server.mainDomain ] { };
 
   config = mkIf cfg.enable {
-    services.nginx.virtualHosts = listToAttrs (map (name: {
+    services.nginx.virtualHosts = listToAttrs (
+      map (name: {
         inherit name;
         value = {
           locations."/radio.ogg" = {
@@ -28,8 +31,8 @@ in {
             recommendedProxySettings = true;
           };
         };
-      })
-      cfg.domains);
+      }) cfg.domains
+    );
 
     services.icecast = {
       enable = true;
@@ -48,7 +51,7 @@ in {
       '';
     };
 
-    systemd.services.radio.wants = ["network-online.target"];
+    systemd.services.radio.wants = [ "network-online.target" ];
 
     services.liquidsoap.streams = {
       radio = pkgs.writeText "radio.liq" ''

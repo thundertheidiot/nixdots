@@ -4,13 +4,15 @@
   pkgs,
   mlib,
   ...
-}: let
+}:
+let
   cfg = config.meow.searx.enable;
 
   inherit (lib) mkIf;
 
   inherit (mlib) mkEnOpt;
-in {
+in
+{
   options = {
     meow.searx.enable = mkEnOpt "Enable searx";
   };
@@ -25,7 +27,10 @@ in {
         server.bind_address = "127.0.0.1";
         server.secret_key = "unimportant_because_this_is_local_lol";
 
-        search.formats = ["html" "json"];
+        search.formats = [
+          "html"
+          "json"
+        ];
         server.public_instance = false;
       };
     };

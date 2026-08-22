@@ -2,9 +2,10 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   meow.impermanence.directories = [
-    {path = "/var/lib/sodexobot";}
+    { path = "/var/lib/sodexobot"; }
   ];
 
   systemd.services."sodexobot" = {
@@ -19,6 +20,6 @@
       WorkingDirectory = "/var/lib/sodexobot";
       StateDirectory = "sodexobot";
     };
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
   };
 }

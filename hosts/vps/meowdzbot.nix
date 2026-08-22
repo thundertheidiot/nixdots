@@ -2,9 +2,10 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   meow.impermanence.directories = [
-    {path = "/var/lib/meowdzbot";}
+    { path = "/var/lib/meowdzbot"; }
   ];
 
   meow.server.reverseProxy = {
@@ -19,8 +20,8 @@
       Type = "simple";
     };
 
-    after = ["network-online.target"];
-    wants = ["network-online.target"];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
 
     environment = {
       DATABASE_URL = "/var/lib/meowdzbot/database.db";
@@ -32,6 +33,6 @@
       WorkingDirectory = "${pkgs.meowdzbot}";
       StateDirectory = "meowdzbot";
     };
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
   };
 }

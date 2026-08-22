@@ -2,9 +2,10 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   meow.impermanence.directories = [
-    {path = "/var/lib/kotiboksi";}
+    { path = "/var/lib/kotiboksi"; }
   ];
 
   meow.server.reverseProxy = {
@@ -12,7 +13,10 @@
     "thunder.meowcloud.net" = "http://127.0.0.1:3005";
   };
 
-  meow.server.radio.domains = [config.meow.server.mainDomain "thunder.meowcloud.net"];
+  meow.server.radio.domains = [
+    config.meow.server.mainDomain
+    "thunder.meowcloud.net"
+  ];
 
   systemd.services."leptos-kotiboksi" = {
     enable = true;
@@ -31,6 +35,6 @@
       WorkingDirectory = "/var/lib/kotiboksi";
       StateDirectory = "kotiboksi";
     };
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
   };
 }

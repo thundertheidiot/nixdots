@@ -3,12 +3,14 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   cfg = config.meow.emacs;
 
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
-in {
+in
+{
   options = {
     meow.emacs = {
       enable = mkEnOpt "Install and configure emacs.";

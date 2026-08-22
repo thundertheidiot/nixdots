@@ -3,11 +3,13 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf mkForce;
   cfg = config.meow.workstation.audio.enable;
-in {
+in
+{
   options = {
     meow.workstation.audio.enable = mkEnOpt "Enable audio configuration.";
   };

@@ -2,10 +2,12 @@
   config,
   inputs,
   ...
-}: let
+}:
+let
   inherit (builtins) mapAttrs;
   certs = import "${inputs.self.outPath}/certs";
-in {
+in
+{
   imports = [
     ./generated.nix
   ];
@@ -29,32 +31,34 @@ in {
   ];
 
   services.nginx.virtualHosts =
-    mapAttrs (_: port: {
-      root = "/fake";
+    mapAttrs
+      (_: port: {
+        root = "/fake";
 
-      addSSL = true;
-      sslCertificate = certs."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
+        addSSL = true;
+        sslCertificate = certs."local.crt";
+        sslCertificateKey = config.sops.secrets.localKey.path;
 
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:${toString port}";
-          recommendedProxySettings = true;
-          extraConfig = ''
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "Upgrade";
-          '';
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:${toString port}";
+            recommendedProxySettings = true;
+            extraConfig = ''
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "Upgrade";
+            '';
+          };
         };
-      };
-    }) {
-      "torrent.home" = 8080;
-      "radarr.home" = 7878;
-      "sonarr.home" = 8989;
-      "lidarr.home" = 8686;
-      "bazarr.home" = 6767;
-      "prowlarr.home" = 9696;
-      "homeassistant.home" = 8123;
-    }
+      })
+      {
+        "torrent.home" = 8080;
+        "radarr.home" = 7878;
+        "sonarr.home" = 8989;
+        "lidarr.home" = 8686;
+        "bazarr.home" = 6767;
+        "prowlarr.home" = 9696;
+        "homeassistant.home" = 8123;
+      }
     // {
       "immich.home" = {
         addSSL = true;

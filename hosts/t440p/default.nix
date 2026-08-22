@@ -5,7 +5,8 @@
   modulesPath,
   mlib,
   ...
-}: {
+}:
+{
   imports = [
     # ./desktop/firedragon.nix
     ./disko.nix
@@ -22,7 +23,7 @@
 
   users.users.thunder = {
     initialPassword = "password";
-    extraGroups = ["docker"];
+    extraGroups = [ "docker" ];
   };
 
   virtualisation.docker.enable = true;
@@ -50,7 +51,7 @@
   meow = {
     fullSetup = true;
     workstation.enable = true;
-    workstation.environment = ["niri"];
+    workstation.environment = [ "niri" ];
 
     user = "thunder";
 
@@ -69,7 +70,7 @@
 
     keyboard = {
       enable = true;
-      devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
+      devices = [ "/dev/input/by-path/platform-i8042-serio-0-event-kbd" ];
     };
 
     monitors."eDP-1" = {
@@ -80,10 +81,18 @@
 
   boot.loader.grub.enable = true;
 
-  boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc"];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ehci_pci"
+    "ahci"
+    "usb_storage"
+    "sd_mod"
+    "sr_mod"
+    "rtsx_pci_sdmmc"
+  ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
 
   networking.useDHCP = lib.mkDefault true;
 

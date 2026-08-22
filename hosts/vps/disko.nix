@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";
@@ -35,11 +35,17 @@
               type = "btrfs";
               subvolumes = {
                 "/nix" = {
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                   mountpoint = "/nix";
                 };
                 "/persist" = {
-                  mountOptions = ["compress=zstd" "autodefrag"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "autodefrag"
+                  ];
                   mountpoint = "/nix/persist";
                 };
                 "/tmp" = {
@@ -49,7 +55,7 @@
                   mountpoint = "/tmp";
                 };
                 "/storage" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/mnt/storage";
                 };
               };

@@ -1,6 +1,7 @@
 let
   inherit (builtins) mapAttrs;
-in rec {
+in
+rec {
   hex = {
     base00 = "eff1f5"; # base
     base01 = "e6e9ef"; # mantle

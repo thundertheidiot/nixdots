@@ -3,12 +3,14 @@
   mlib,
   config,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt mkEnOptTrue;
   inherit (lib) mkIf mkMerge mkDefault;
 
   cfg = config.meow.boot;
-in {
+in
+{
   options = {
     meow.boot = {
       enable = mkEnOptTrue "Grub as bootloader + other tweaks";
@@ -26,7 +28,7 @@ in {
       boot.loader = {
         grub = {
           efiSupport = true;
-          devices = ["nodev"];
+          devices = [ "nodev" ];
         };
 
         efi.canTouchEfiVariables = mkDefault true;

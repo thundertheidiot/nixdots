@@ -4,12 +4,14 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOptTrue;
   inherit (lib) mkIf;
 
   cfg = config.mHome.shell;
-in {
+in
+{
   options = {
     mHome.shell.enable = mkEnOptTrue "Configure fish shell.";
   };
@@ -35,25 +37,24 @@ in {
         "e" = "exit";
         "m" = "mpv --no-video --loop=yes";
       };
-      interactiveShellInit =
-        ''
-          set fish_greeting
+      interactiveShellInit = ''
+        set fish_greeting
 
-          function fish_prompt
-            if test -n "$IN_NIX_SHELL"
-              echo -n "<nix-shell> "
-            end
-
-            if [ "$TERM" = "dumb" ]
-              echo $USER'@'(uname -n) (pwd) '> '
-            else
-              echo (set_color purple)$USER(set_color normal)'@'(set_color blue)(uname -n)(set_color normal) (pwd) '> '
-            end
+        function fish_prompt
+          if test -n "$IN_NIX_SHELL"
+            echo -n "<nix-shell> "
           end
-        ''
-        + (
-          if config.meowEmacs.enable
-          then ''
+
+          if [ "$TERM" = "dumb" ]
+            echo $USER'@'(uname -n) (pwd) '> '
+          else
+            echo (set_color purple)$USER(set_color normal)'@'(set_color blue)(uname -n)(set_color normal) (pwd) '> '
+          end
+        end
+      ''
+      + (
+        if config.meowEmacs.enable then
+          ''
              function vterm_printf;
                 if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
                     # tell tmux to pass the escape sequences through
@@ -66,8 +67,9 @@ in {
                 end
             end
           ''
-          else ""
-        );
+        else
+          ""
+      );
     };
   };
 }

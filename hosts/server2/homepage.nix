@@ -2,10 +2,12 @@
   config,
   inputs,
   ...
-}: let
+}:
+let
   # vpnAddress = config.vpnNamespaces."airvpn".namespaceAddress;
   vpnAddress = "127.0.0.1";
-in {
+in
+{
   config = {
     server.domains = [
       "homepage.local"
@@ -14,7 +16,7 @@ in {
 
     services.nginx.virtualHosts = {
       "homepage.local" = {
-        serverAliases = ["homepage.home"];
+        serverAliases = [ "homepage.home" ];
         addSSL = true;
         sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
         sslCertificateKey = config.sops.secrets.localKey.path;
@@ -39,7 +41,7 @@ in {
     services.homepage-dashboard = {
       enable = true;
 
-      environmentFiles = [config.sops.secrets."homepage_env".path];
+      environmentFiles = [ config.sops.secrets."homepage_env".path ];
       settings = {
         title = "Homepage";
       };

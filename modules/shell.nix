@@ -5,12 +5,14 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.meow.shell;
 
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
-in {
+in
+{
   options = {
     meow.shell = {
       enable = mkEnOpt "Configure shell.";

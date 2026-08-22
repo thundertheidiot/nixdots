@@ -4,44 +4,64 @@
   mlib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib.types) listOf str;
 
-  inherit (lib) mkIf mkMerge head length listToAttrs;
+  inherit (lib)
+    mkIf
+    mkMerge
+    head
+    length
+    listToAttrs
+    ;
 
   cfg = config.meow.server;
-in {
+in
+{
   # https://github.com/NixOS/nixpkgs/pull/260006
-  disabledModules = ["services/networking/prosody.nix"];
-  imports = [./prosody.nix];
+  disabledModules = [ "services/networking/prosody.nix" ];
+  imports = [ ./prosody.nix ];
 
-  options.meow.server.xmppDomains = mkOpt (listOf str) [] {};
+  options.meow.server.xmppDomains = mkOpt (listOf str) [ ] { };
 
-  config = mkIf (length cfg.xmppDomains > 0) (let
-    mainDomain = head cfg.xmppDomains;
-    subd = d: s: "${s}.${d}";
-    msubd = subd mainDomain;
-  in {
-    meow.server.certificates = cfg.xmppDomains;
+  config = mkIf (length cfg.xmppDomains > 0) (
+    let
+      mainDomain = head cfg.xmppDomains;
+      subd = d: s: "${s}.${d}";
+      msubd = subd mainDomain;
+    in
+    {
+      meow.server.certificates = cfg.xmppDomains;
 
-    security.acme.certs."${mainDomain}" = {
-      extraDomainNames = map msubd ["chat" "share" "proxy"];
-    };
+      security.acme.certs."${mainDomain}" = {
+        extraDomainNames = map msubd [
+          "chat"
+          "share"
+          "proxy"
+        ];
+      };
 
-    # hack for cert discovery
-    systemd.tmpfiles.rules = map (d: "L+ /var/lib/acme/${d}/privkey.pem - - - - /var/lib/acme/${d}/key.pem") cfg.xmppDomains;
+      # hack for cert discovery
+      systemd.tmpfiles.rules = map (
+        d: "L+ /var/lib/acme/${d}/privkey.pem - - - - /var/lib/acme/${d}/key.pem"
+      ) cfg.xmppDomains;
 
-    meow.impermanence.directories = [
-      {path = config.services.prosody.dataDir;}
-    ];
+      meow.impermanence.directories = [
+        { path = config.services.prosody.dataDir; }
+      ];
 
-    users.users."${config.services.prosody.user}".extraGroups = ["acme" "turnserver"];
+      users.users."${config.services.prosody.user}".extraGroups = [
+        "acme"
+        "turnserver"
+      ];
 
-    networking.firewall.allowedTCPPorts = config.services.prosody.settings.c2s_direct_tls_ports ++ config.services.prosody.settings.s2s_direct_tls_ports;
+      networking.firewall.allowedTCPPorts =
+        config.services.prosody.settings.c2s_direct_tls_ports
+        ++ config.services.prosody.settings.s2s_direct_tls_ports;
 
-    services.nginx.virtualHosts =
-      {
+      services.nginx.virtualHosts = {
         "${mainDomain}" = {
           locations."/http-bind" = {
             proxyPass = "http://127.0.0.1:5280/http-bind";
@@ -73,7 +93,8 @@ in {
           };
         };
       }
-      // listToAttrs (map (name: {
+      // listToAttrs (
+        map (name: {
           inherit name;
           value = {
             locations."/.well-known/host-meta" = {
@@ -92,114 +113,137 @@ in {
               '';
             };
           };
-        })
-        cfg.xmppDomains);
+        }) cfg.xmppDomains
+      );
 
-    services.prosody = {
-      enable = true;
-      openFirewall = true;
-      # requires http_upload instead of http_file_share
-      xmppComplianceSuite = false;
+      services.prosody = {
+        enable = true;
+        openFirewall = true;
+        # requires http_upload instead of http_file_share
+        xmppComplianceSuite = false;
 
-      package = pkgs.prosody.override {
-        withCommunityModules = ["http_altconnect" "http_health"];
-      };
+        package = pkgs.prosody.override {
+          withCommunityModules = [
+            "http_altconnect"
+            "http_health"
+          ];
+        };
 
-      virtualHosts = listToAttrs (map (name: {
-          inherit name;
-          value = {
+        virtualHosts = listToAttrs (
+          map (name: {
+            inherit name;
+            value = {
+              settings = {
+                inherit (config.services.prosody.settings) disco_items;
+              };
+            };
+          }) cfg.xmppDomains
+        );
+
+        components = {
+          "share.${mainDomain}" = {
+            module = "http_file_share";
             settings = {
-              inherit (config.services.prosody.settings) disco_items;
+              http_file_share_access = cfg.xmppDomains;
+
+              http_file_share_size_limit = 100 * 1024 * 1024;
+              http_file_share_daily_quota = 1024 * 1024 * 1024;
+              http_file_share_global_quota = 1024 * 1024 * 2048;
+
+              # http_host = "${mainDomain}";
+              # http_external_url = "https://${mainDomain}";
             };
           };
-        })
-        cfg.xmppDomains);
 
-      components = {
-        "share.${mainDomain}" = {
-          module = "http_file_share";
-          settings = {
-            http_file_share_access = cfg.xmppDomains;
-
-            http_file_share_size_limit = 100 * 1024 * 1024;
-            http_file_share_daily_quota = 1024 * 1024 * 1024;
-            http_file_share_global_quota = 1024 * 1024 * 2048;
-
-            # http_host = "${mainDomain}";
-            # http_external_url = "https://${mainDomain}";
+          "chat.${mainDomain}" = {
+            module = "muc";
+            settings = {
+              restrict_room_creation = "local";
+              muc_room_default_public = false;
+              muc_room_default_members_only = true;
+            };
           };
         };
 
-        "chat.${mainDomain}" = {
-          module = "muc";
-          settings = {
-            restrict_room_creation = "local";
-            muc_room_default_public = false;
-            muc_room_default_members_only = true;
-          };
-        };
-      };
+        settings = mkMerge [
+          (mkIf cfg.coturn {
+            turn_external_host = mainDomain;
+            turn_external_port = config.services.coturn.listening-port;
+            modules_enabled = [
+              "turn_external"
+              "external_services"
+            ];
+          })
+          {
+            prosodyctl_service_warnings = false;
 
-      settings = mkMerge [
-        (mkIf cfg.coturn {
-          turn_external_host = mainDomain;
-          turn_external_port = config.services.coturn.listening-port;
-          modules_enabled = ["turn_external" "external_services"];
-        })
-        {
-          prosodyctl_service_warnings = false;
+            modules_enabled = [
+              "admin_shell"
+              "csi_simple"
+              "bosh"
+              "websocket"
+              "http_health"
+              "dialback"
+            ];
 
-          modules_enabled = [
-            "admin_shell"
-            "csi_simple"
-            "bosh"
-            "websocket"
-            "http_health"
-            "dialback"
-          ];
+            http_health_allow_ips = [
+              "::1"
+              "127.0.0.1"
+            ];
 
-          http_health_allow_ips = ["::1" "127.0.0.1"];
+            trusted_proxies = [
+              "127.0.0.1"
+              "::1"
+            ];
 
-          trusted_proxies = ["127.0.0.1" "::1"];
+            disco_items = [
+              [
+                "chat.${mainDomain}"
+                "multi user chat"
+              ]
+              [
+                "share.${mainDomain}"
+                "file upload"
+              ]
+              [
+                "proxy.${mainDomain}"
+                "proxy"
+              ]
+            ];
 
-          disco_items = [
-            ["chat.${mainDomain}" "multi user chat"]
-            ["share.${mainDomain}" "file upload"]
-            ["proxy.${mainDomain}" "proxy"]
-          ];
+            default_storage = "sql";
+            sql = {
+              driver = "SQLite3";
+              database = "prosody.sqlite";
+            };
 
-          default_storage = "sql";
-          sql = {
-            driver = "SQLite3";
-            database = "prosody.sqlite";
-          };
+            c2s_require_encryption = true;
+            s2s_require_encryption = true;
 
-          c2s_require_encryption = true;
-          s2s_require_encryption = true;
+            c2s_direct_tls_ports = [ 5223 ];
+            s2s_direct_tls_ports = [ 5270 ];
+            s2s_secure_auth = false;
 
-          c2s_direct_tls_ports = [5223];
-          s2s_direct_tls_ports = [5270];
-          s2s_secure_auth = false;
+            # if this is not set it tries to search a nonexistent directory and prosodyctl crashes
+            certificates = "/var/lib/acme";
+          }
+        ];
 
-          # if this is not set it tries to search a nonexistent directory and prosodyctl crashes
-          certificates = "/var/lib/acme";
-        }
-      ];
-
-      extraConfig = mkIf cfg.coturn ''
-        local function read_file(path)
-          local file = io.open(path, "r")
-          if not file then
-            return nil, "Could not open file: " .. path
+        extraConfig = mkIf cfg.coturn ''
+          local function read_file(path)
+            local file = io.open(path, "r")
+            if not file then
+              return nil, "Could not open file: " .. path
+            end
+            local content = file:read("*a")
+            file:close()
+            return content
           end
-          local content = file:read("*a")
-          file:close()
-          return content
-        end
 
-        turn_external_secret = read_file("${config.sops.secrets.coturn_secret.path}")
-        external_service_secret = read_file("${config.sops.secrets.coturn_secret.path}")
-      '';
-    };
-  });
+          turn_external_secret = read_file("${config.sops.secrets.coturn_secret.path}")
+          external_service_secret = read_file("${config.sops.secrets.coturn_secret.path}")
+        '';
+      };
+    }
+  );
 }

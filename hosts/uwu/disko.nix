@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";
@@ -35,11 +35,14 @@
               type = "btrfs";
               subvolumes = {
                 "/home" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/home";
                 };
                 "/nix" = {
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                   mountpoint = "/nix";
                 };
                 "/tmp" = {
@@ -49,7 +52,7 @@
                   mountpoint = "/tmp";
                 };
                 "/storage" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/mnt/msata";
                 };
               };
@@ -70,11 +73,11 @@
             type = "btrfs";
             subvolumes = {
               "/persist" = {
-                mountOptions = ["compress=zstd"];
+                mountOptions = [ "compress=zstd" ];
                 mountpoint = "/nix/persist";
               };
               "/storage" = {
-                mountOptions = ["compress=zstd"];
+                mountOptions = [ "compress=zstd" ];
                 mountpoint = "/mnt/1tb";
               };
             };
@@ -84,7 +87,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [mergerfs];
+  environment.systemPackages = with pkgs; [ mergerfs ];
 
   fileSystems = {
     "/nix".neededForBoot = true;

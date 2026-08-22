@@ -1,6 +1,7 @@
 let
   inherit (builtins) mapAttrs;
-in rec {
+in
+rec {
   hex = {
     base00 = "1e1e2e"; # base
     base01 = "313244"; # surface0

@@ -4,12 +4,14 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 
   cfg = config.meow.server.matrix;
-in {
+in
+{
   options = {
     meow.server.matrix.whatsapp.enable = mkEnOpt "Mautrix Whatsapp";
   };
@@ -36,7 +38,7 @@ in {
     services.postgresql = {
       enable = true;
 
-      ensureDatabases = ["mautrix-whatsapp"];
+      ensureDatabases = [ "mautrix-whatsapp" ];
       ensureUsers = [
         {
           name = "mautrix-whatsapp";
@@ -48,7 +50,7 @@ in {
     services.mautrix-whatsapp = {
       enable = true;
       environmentFile = config.sops.secrets."mautrix_whatsapp_env".path;
-      serviceDependencies = ["continuwuity.service"];
+      serviceDependencies = [ "continuwuity.service" ];
 
       settings = {
         homeserver.address = "http://127.0.0.1:8008";

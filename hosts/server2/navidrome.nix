@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   certs = import ../../certs;
-in {
+in
+{
   server.domains = [
     "navidrome.home"
     "soulbeet.home"
@@ -26,9 +28,11 @@ in {
     owner = config.services.navidrome.user;
   };
 
-  systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = ["/mnt/storage/media"];
+  systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [ "/mnt/storage/media" ];
   systemd.services.navidrome.environment.TMPDIR = "${config.meow.impermanence.persist}/navidrome/tmp";
-  systemd.tmpfiles.rules = ["d ${config.meow.impermanence.persist}/navidrome/tmp 0700 navidrome navidrome -"];
+  systemd.tmpfiles.rules = [
+    "d ${config.meow.impermanence.persist}/navidrome/tmp 0700 navidrome navidrome -"
+  ];
 
   services.navidrome = {
     enable = true;
@@ -78,7 +82,7 @@ in {
       "NAVIDROME_URL" = "http://host.docker.internal:${toString config.services.navidrome.settings.Port}";
       "BEETS_ALBUM_MODE" = "true";
     };
-    environmentFiles = [config.sops.secrets.soulbeet_env.path];
+    environmentFiles = [ config.sops.secrets.soulbeet_env.path ];
     volumes = [
       "/mnt/storage/media:/mnt/storage/media:rw"
       "/mnt/storage/media/my_music:/music:rw"
@@ -86,6 +90,9 @@ in {
       "/mnt/storage/media/downloads/soulseek:/downloads"
     ];
 
-    extraOptions = ["--add-host=host.docker.internal:host-gateway" "--network=server2_default"];
+    extraOptions = [
+      "--add-host=host.docker.internal:host-gateway"
+      "--network=server2_default"
+    ];
   };
 }

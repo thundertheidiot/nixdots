@@ -3,14 +3,22 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib.types) listOf str;
-  inherit (lib) mkIf length unique listToAttrs mkDefault;
+  inherit (lib)
+    mkIf
+    length
+    unique
+    listToAttrs
+    mkDefault
+    ;
 
   cfg = config.meow.server;
-in {
-  options.meow.server.certificates = mkOpt (listOf str) [] {};
+in
+{
+  options.meow.server.certificates = mkOpt (listOf str) [ ] { };
 
   config = mkIf (length cfg.certificates > 0) {
     security.acme = {
@@ -24,27 +32,29 @@ in {
       # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
     };
 
-    users.users."${config.services.nginx.user}".extraGroups = ["acme"];
+    users.users."${config.services.nginx.user}".extraGroups = [ "acme" ];
 
-    security.acme.certs = listToAttrs (map (name: {
+    security.acme.certs = listToAttrs (
+      map (name: {
         inherit name;
         value = {
           group = "acme";
         };
-      })
-      (unique cfg.certificates));
+      }) (unique cfg.certificates)
+    );
 
-    services.nginx.virtualHosts = listToAttrs (map (name: {
+    services.nginx.virtualHosts = listToAttrs (
+      map (name: {
         inherit name;
         value = {
           forceSSL = mkDefault true;
           enableACME = mkDefault true;
         };
-      })
-      (unique cfg.certificates));
+      }) (unique cfg.certificates)
+    );
 
     meow.impermanence.directories = [
-      {path = "/var/lib/acme";}
+      { path = "/var/lib/acme"; }
     ];
   };
 }

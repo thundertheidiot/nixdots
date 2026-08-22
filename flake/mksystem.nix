@@ -3,61 +3,70 @@
   config,
   inputs,
   ...
-}
-: let
-  inherit (lib) isAttrs isFunction isList evalModules mkOption;
+}:
+let
+  inherit (lib)
+    isAttrs
+    isFunction
+    isList
+    evalModules
+    mkOption
+    ;
   inherit (lib.types) listOf str;
 
   root = inputs.self.outPath;
-in {
-  flake.mkSystem = {modules}:
+in
+{
+  flake.mkSystem =
+    { modules }:
     assert isList modules;
-      lib.nixosSystem (let
+    lib.nixosSystem (
+      let
         # mlib = import "${root}/lib" {inherit lib;};
         mlib = inputs.self.lib;
-      in {
+      in
+      {
         specialArgs = {
           inherit inputs mlib;
         };
-        modules =
-          modules
-          ++ [
-            "${root}/sops"
-            inputs.home-manager.nixosModules.home-manager
-            inputs.sops-nix.nixosModules.default
-            inputs.disko.nixosModules.default
-            inputs.authentik-nix.nixosModules.default
-            inputs.catppuccin.nixosModules.default
-            inputs.emacs.nixosModules.default
-            ({...}: {
-              imports = import "${root}/modules";
-              nixpkgs = {
-                overlays = [
-                  inputs.rust-overlay.overlays.default
-                  inputs.nixpkgs-xr.overlays.default
-                  (final: prev: {
-                    xrizer = prev.xrizer.overrideAttrs (prev: {
-                      version = "git";
-                      src = inputs.xrizer;
-                      cargoDeps = final.rustPlatform.importCargoLock {
-                        lockFile = "${inputs.xrizer}/Cargo.lock";
-                        outputHashes = {
-                          "openxr-0.19.0" = "sha256-mljVBbQTq/k7zd/WcE1Sd3gibaJiZ+t7td964clWHd8=";
-                        };
+        modules = modules ++ [
+          "${root}/sops"
+          inputs.home-manager.nixosModules.home-manager
+          inputs.sops-nix.nixosModules.default
+          inputs.disko.nixosModules.default
+          inputs.authentik-nix.nixosModules.default
+          inputs.catppuccin.nixosModules.default
+          inputs.emacs.nixosModules.default
+          ({ ... }: {
+            imports = import "${root}/modules";
+            nixpkgs = {
+              overlays = [
+                inputs.rust-overlay.overlays.default
+                inputs.nixpkgs-xr.overlays.default
+                (final: prev: {
+                  xrizer = prev.xrizer.overrideAttrs (prev: {
+                    version = "git";
+                    src = inputs.xrizer;
+                    cargoDeps = final.rustPlatform.importCargoLock {
+                      lockFile = "${inputs.xrizer}/Cargo.lock";
+                      outputHashes = {
+                        "openxr-0.19.0" = "sha256-mljVBbQTq/k7zd/WcE1Sd3gibaJiZ+t7td964clWHd8=";
                       };
-                    });
-                  })
-                ];
-              };
-              home-manager = {
-                extraSpecialArgs = {inherit inputs mlib;};
-                sharedModules = [
-                  inputs.emacs.homeModules.default
-                  inputs.vicinae.homeManagerModules.default
-                  inputs.catppuccin.homeModules.default
-                ];
-              };
-            })
-          ];
-      });
+                    };
+                  });
+                })
+              ];
+            };
+            home-manager = {
+              extraSpecialArgs = { inherit inputs mlib; };
+              sharedModules = [
+                inputs.emacs.homeModules.default
+                inputs.vicinae.homeManagerModules.default
+                inputs.catppuccin.homeModules.default
+              ];
+            };
+          })
+        ];
+      }
+    );
 }

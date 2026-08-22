@@ -3,10 +3,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   # vpnAddress = config.vpnNamespaces."airvpn".namespaceAddress;
   vpnAddress = "127.0.0.1";
-in {
+in
+{
   config = {
     server.domains = [
       "homepage.local"
@@ -15,7 +17,7 @@ in {
 
     services.nginx.virtualHosts = {
       "homepage.local" = {
-        serverAliases = ["homepage.home"];
+        serverAliases = [ "homepage.home" ];
         root = "/fake";
         locations = {
           "/" = {

@@ -6,7 +6,8 @@
   mlib,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     ./disko.nix
     inputs.nixos-hardware.nixosModules.framework-13-7040-amd
@@ -24,14 +25,14 @@
 
   users.users.thunder = {
     initialPassword = "password";
-    extraGroups = ["docker"];
+    extraGroups = [ "docker" ];
   };
 
   powerManagement.enable = true;
   powerManagement.powertop.enable = true;
 
   services.power-profiles-daemon.enable = lib.mkForce false;
-  boot.kernelParams = ["amd_pstate=active"];
+  boot.kernelParams = [ "amd_pstate=active" ];
   services.autoaspm.enable = true;
 
   services.tlp = {
@@ -99,7 +100,7 @@
   meow = {
     fullSetup = true;
     workstation.enable = true;
-    workstation.environment = ["niri"];
+    workstation.environment = [ "niri" ];
     workstation.displayManager = "gdm";
     rice = "minimal";
 
@@ -127,7 +128,7 @@
 
     keyboard = {
       enable = true;
-      devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
+      devices = [ "/dev/input/by-path/platform-i8042-serio-0-event-kbd" ];
     };
 
     boot.efi = true;

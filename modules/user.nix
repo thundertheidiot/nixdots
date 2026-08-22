@@ -4,15 +4,22 @@
   config,
   options,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
-  inherit (lib.types) str listOf attrs submodule;
+  inherit (lib.types)
+    str
+    listOf
+    attrs
+    submodule
+    ;
 
   inherit (builtins) removeAttrs;
   inherit (lib) genAttrs;
   inherit (lib) mkOption;
   inherit (lib.attrsets) mergeAttrsList;
-in {
+in
+{
   options = {
     meow.user = mkOpt str "thunder" {
       description = "Username";

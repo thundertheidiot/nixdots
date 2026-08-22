@@ -2,9 +2,11 @@
   inputs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) listToAttrs;
-in {
+in
+{
   config = {
     nixpkgs.overlays = [
       inputs.nix-cachyos-kernel.overlays.pinned
@@ -24,24 +26,32 @@ in {
           system = final.stdenv.hostPlatform.system;
         };
 
-        inherit (final.unstable) element-desktop libreoffice qmk avr-gcc kdenlive blender krita firefox ananicy-cpp;
+        inherit (final.unstable)
+          element-desktop
+          libreoffice
+          qmk
+          avr-gcc
+          kdenlive
+          blender
+          krita
+          firefox
+          ananicy-cpp
+          ;
 
         sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;
         leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
         meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;
 
-        mpkgs = (import "${inputs.self.outPath}/pkgs") {pkgs = final;};
+        mpkgs = (import "${inputs.self.outPath}/pkgs") { pkgs = final; };
 
         # functionality fixes
         gajim = prev.gajim.overrideAttrs (old: {
-          nativeBuildInputs = old.nativeBuildInputs ++ [final.makeWrapper];
+          nativeBuildInputs = old.nativeBuildInputs ++ [ final.makeWrapper ];
 
           # fix gnome-keyring on kde
-          postInstall =
-            old.postInstall
-            + ''
-              wrapProgram $out/bin/gajim --set XDG_CURRENT_DESKTOP GNOME
-            '';
+          postInstall = old.postInstall + ''
+            wrapProgram $out/bin/gajim --set XDG_CURRENT_DESKTOP GNOME
+          '';
         });
 
         rathole = prev.rathole.overrideAttrs (old: {
@@ -51,31 +61,37 @@ in {
         mumble = prev.mumble.overrideAttrs (old: {
           postFixup =
             builtins.replaceStrings
-            ["wrapProgram $out/bin/mumble"]
-            ["wrapProgram $out/bin/mumble --set QT_QPA_PLATFORM xcb"] # Run with xwayland to make keybindings work
-            
-            old.postFixup;
+              [ "wrapProgram $out/bin/mumble" ]
+              [ "wrapProgram $out/bin/mumble --set QT_QPA_PLATFORM xcb" ] # Run with xwayland to make keybindings work
+
+              old.postFixup;
         });
       })
 
-      (final: prev: let
-        wrapHome = pkg: {
-          name ? pkg.meta.name or pkg.name,
-          executable ? pkg.meta.mainProgram or pkg.name,
-        }:
-          final.symlinkJoin {
-            name = "${name}-wrapped-home";
-            paths = [pkg];
-            buildInputs = [final.makeWrapper];
+      (
+        final: prev:
+        let
+          wrapHome =
+            pkg:
+            {
+              name ? pkg.meta.name or pkg.name,
+              executable ? pkg.meta.mainProgram or pkg.name,
+            }:
+            final.symlinkJoin {
+              name = "${name}-wrapped-home";
+              paths = [ pkg ];
+              buildInputs = [ final.makeWrapper ];
 
-            postBuild = "wrapProgram $out/bin/${executable} --run 'export HOME=\"\${STUBBORN_HOME:-$HOME}\"'";
-          };
-      in {
-        lmath = wrapHome prev.lmath {};
-        cloudflared = wrapHome prev.cloudflared {};
-        android-tools = wrapHome prev.android-tools {executable = "adb";};
-        signal-desktop = wrapHome prev.signal-desktop {};
-      })
+              postBuild = "wrapProgram $out/bin/${executable} --run 'export HOME=\"\${STUBBORN_HOME:-$HOME}\"'";
+            };
+        in
+        {
+          lmath = wrapHome prev.lmath { };
+          cloudflared = wrapHome prev.cloudflared { };
+          android-tools = wrapHome prev.android-tools { executable = "adb"; };
+          signal-desktop = wrapHome prev.signal-desktop { };
+        }
+      )
     ];
   };
 }

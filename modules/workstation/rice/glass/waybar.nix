@@ -3,21 +3,24 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (pkgs) replaceVars;
   inherit (lib) mkIf;
 
   cfg = config.meow.rice;
-in {
+in
+{
   config = mkIf (cfg == "glass") {
     meow.workstation.waybarDiskFormat = " {path} {free}";
 
     meow.home.modules = [
       {
         catppuccin.waybar.enable = false;
-        programs.waybar.style = let
-          colors = config.meow.workstation.theme.palette.withHashtag;
-        in
+        programs.waybar.style =
+          let
+            colors = config.meow.workstation.theme.palette.withHashtag;
+          in
           replaceVars ./waybar.css {
             accent = colors.base0D;
 
@@ -72,7 +75,13 @@ in {
             format-muted = "󰝟 Muted";
             format-bluetooth = "{icon} {volume}% ";
             format-bluetooth-muted = " Muted ";
-            format-icons = {default = ["" "" ""];};
+            format-icons = {
+              default = [
+                ""
+                ""
+                ""
+              ];
+            };
           };
 
           power-profiles-daemon = {
@@ -91,7 +100,13 @@ in {
             format = "{icon} {capacity}% ({time})";
             format-charging = " {capacity}% ({time})";
             format-plugged = " {capacity}%";
-            format-icons = ["" "" "" "" ""];
+            format-icons = [
+              ""
+              ""
+              ""
+              ""
+              ""
+            ];
           };
         };
       }

@@ -3,28 +3,33 @@
   lib,
   inputs,
   ...
-}: let
+}:
+let
   inherit (builtins) readDir;
   inherit (lib.strings) removeSuffix;
   inherit (lib.attrsets) mapAttrs';
-in {
-  flake.nixosConfigurations = let
-    getName = rec {
-      regular = name:
-        removeSuffix ".nix" name;
+in
+{
+  flake.nixosConfigurations =
+    let
+      getName = rec {
+        regular = name: removeSuffix ".nix" name;
 
-      directory = name: name;
+        directory = name: name;
 
-      symlink = regular;
-      unknown = name: throw "${name} is of file type unknown, aborting";
-    };
-  in
+        symlink = regular;
+        unknown = name: throw "${name} is of file type unknown, aborting";
+      };
+    in
     mapAttrs' (n: v: {
       name = getName.${v} n;
-      value = config.flake.mkSystem (let
-        cfg = import "${inputs.self.outPath}/hosts/${n}";
-      in {
-        modules = [cfg];
-      });
+      value = config.flake.mkSystem (
+        let
+          cfg = import "${inputs.self.outPath}/hosts/${n}";
+        in
+        {
+          modules = [ cfg ];
+        }
+      );
     }) (readDir "${inputs.self.outPath}/hosts");
 }

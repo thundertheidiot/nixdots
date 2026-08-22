@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   disko.devices = {
     nodev."/" = {
       fsType = "tmpfs";
@@ -42,15 +42,18 @@
 
                 subvolumes = {
                   "@storage" = {
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                     mountpoint = "/mnt/storage";
                   };
                   "@persist" = {
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                     mountpoint = "/nix/persist";
                   };
                   "@nix" = {
-                    mountOptions = ["compress=zstd" "noatime"];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                     mountpoint = "/nix";
                   };
                   "@tmp" = {
@@ -60,7 +63,7 @@
                     mountpoint = "/var/tmp";
                   };
                   "@home" = {
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                     mountpoint = "/home";
                   };
                 };

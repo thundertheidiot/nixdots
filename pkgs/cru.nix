@@ -13,28 +13,30 @@ stdenv.mkDerivation {
     stripRoot = false;
   };
 
-  installPhase = let
-    fhs = buildFHSEnv {
-      name = "cru_fhs";
-      targetPkgs = pkgs:
-        with pkgs; [
-          glibc.bin
-          wineWowPackages.stagingFull
-        ];
-    };
-  in ''
-    mkdir -p $out/bin
-    cp CRU.exe $out/CRU.exe
-    echo "#!/bin/sh
-    ${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
-    chmod +x $out/bin/cru
-  '';
+  installPhase =
+    let
+      fhs = buildFHSEnv {
+        name = "cru_fhs";
+        targetPkgs =
+          pkgs: with pkgs; [
+            glibc.bin
+            wineWowPackages.stagingFull
+          ];
+      };
+    in
+    ''
+      mkdir -p $out/bin
+      cp CRU.exe $out/CRU.exe
+      echo "#!/bin/sh
+      ${fhs}/bin/cru_fhs wine $out/CRU.exe" > $out/bin/cru
+      chmod +x $out/bin/cru
+    '';
 
   meta = with lib; {
     description = "Custom Resolution Utility (CRU) is an EDID editor that focuses on custom resolutions.";
     homepage = "https://www.monitortests.com/forum/Thread-Custom-Resolution-Utility-CRU";
     license = licenses.mit;
-    maintainers = [];
+    maintainers = [ ];
     platforms = with platforms; linux;
   };
 }

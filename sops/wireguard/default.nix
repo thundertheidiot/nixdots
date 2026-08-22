@@ -21,4 +21,4 @@ let
     };
   };
 in
-  mapAttrs mkWg publicKeys
+mapAttrs mkWg publicKeys

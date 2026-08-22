@@ -5,7 +5,8 @@
   modulesPath,
   mlib,
   ...
-}: {
+}:
+{
   # TODO resetup digiboksi completely
   time.timeZone = "Europe/Helsinki";
   networking.hostName = "digiboksi";
@@ -21,7 +22,7 @@
 
     home.enable = true;
     workstation.enable = true;
-    workstation.environment = ["niri"];
+    workstation.environment = [ "niri" ];
 
     monitors."HDMI-A-1" = {
       width = 1360;
@@ -38,10 +39,18 @@
 
   system.stateVersion = "23.11";
 
-  boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ehci_pci"
+    "ahci"
+    "nvme"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+  ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
 
   boot.loader.grub = {
     enable = true;
@@ -54,7 +63,7 @@
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/721918a3-0d55-4b0b-b531-484b224568a1";
     fsType = "btrfs";
-    options = ["subvol=@"];
+    options = [ "subvol=@" ];
   };
 
   fileSystems."/boot" = {
@@ -62,7 +71,7 @@
     fsType = "ext4";
   };
 
-  swapDevices = [];
+  swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
 

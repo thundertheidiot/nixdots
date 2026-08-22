@@ -4,16 +4,23 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt mkEnOpt;
   inherit (lib) mkForce;
 
   cfg = config.meow.gaming;
-in {
+in
+{
   options = {
     meow.gaming = {
       enable = mkEnOpt "Enable gaming module";
-      games = mkOpt (lib.types.listOf (lib.types.enum ["duckgame" "minecraft"])) [] {};
+      games = mkOpt (lib.types.listOf (
+        lib.types.enum [
+          "duckgame"
+          "minecraft"
+        ]
+      )) [ ] { };
       emulation = mkEnOpt "Enable configuration for emulation.";
     };
   };
@@ -24,11 +31,13 @@ in {
 
   config = lib.mkMerge [
     (lib.mkIf (cfg.enable) {
-      environment.systemPackages = let
-        # inherit (pkgs.ataraxiasjel) proton-ge wine-ge;
-        inherit (builtins) elem;
-      in
-        with pkgs; [
+      environment.systemPackages =
+        let
+          # inherit (pkgs.ataraxiasjel) proton-ge wine-ge;
+          inherit (builtins) elem;
+        in
+        with pkgs;
+        [
           heroic
           mangohud
 
@@ -58,8 +67,8 @@ in {
         extest.enable = true;
 
         package = pkgs.steam.override {
-          extraPkgs = pkgs:
-            with pkgs; [
+          extraPkgs =
+            pkgs: with pkgs; [
               # apex legends maybe   rip :(
               libkrb5
               keyutils
@@ -72,8 +81,8 @@ in {
               libsm
             ];
 
-          extraLibraries = pkgs:
-            with pkgs; [
+          extraLibraries =
+            pkgs: with pkgs; [
               gperftools
               libxcb
             ];

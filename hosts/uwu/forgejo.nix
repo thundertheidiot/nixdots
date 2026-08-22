@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = {
     server.domains = [
       "git.local"
@@ -11,7 +12,7 @@
     ];
 
     services.nginx.virtualHosts."git.local" = {
-      serverAliases = ["git.home"];
+      serverAliases = [ "git.home" ];
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:${toString config.services.forgejo.settings.server.HTTP_PORT}";
@@ -24,23 +25,25 @@
       };
     };
 
-    environment.systemPackages = let
-      cfg = config.services.forgejo;
-      forgejo-cli = pkgs.writeScriptBin "forgejo-cli" ''
-        #!${pkgs.runtimeShell}
-        cd ${cfg.stateDir}
-        sudo=exec
-        if [[ "$USER" != forgejo ]]; then
-          sudo='exec /run/wrappers/bin/sudo -u ${cfg.user} -g ${cfg.group} --preserve-env=GITEA_WORK_DIR --preserve-env=GITEA_CUSTOM'
-        fi
-        # Note that these variable names will change
-        export GITEA_WORK_DIR=${cfg.stateDir}
-        export GITEA_CUSTOM=${cfg.customDir}
-        $sudo ${lib.getExe cfg.package} "$@"
-      '';
-    in [
-      forgejo-cli
-    ];
+    environment.systemPackages =
+      let
+        cfg = config.services.forgejo;
+        forgejo-cli = pkgs.writeScriptBin "forgejo-cli" ''
+          #!${pkgs.runtimeShell}
+          cd ${cfg.stateDir}
+          sudo=exec
+          if [[ "$USER" != forgejo ]]; then
+            sudo='exec /run/wrappers/bin/sudo -u ${cfg.user} -g ${cfg.group} --preserve-env=GITEA_WORK_DIR --preserve-env=GITEA_CUSTOM'
+          fi
+          # Note that these variable names will change
+          export GITEA_WORK_DIR=${cfg.stateDir}
+          export GITEA_CUSTOM=${cfg.customDir}
+          $sudo ${lib.getExe cfg.package} "$@"
+        '';
+      in
+      [
+        forgejo-cli
+      ];
 
     # services.gitea-actions-runner = {
     #   package = pkgs.forgejo-actions-runner;

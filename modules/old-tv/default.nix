@@ -5,167 +5,183 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   cfg = config.meow.old-tv;
   inherit (mlib) mkEnOpt;
-in {
+in
+{
   options = {
     meow.old-tv.enable = mkEnOpt "Enable configuration for a \"smart tv\" system.";
   };
 
-  config = lib.mkIf cfg.enable (let
-    inherit (pkgs) callPackage;
+  config = lib.mkIf cfg.enable (
+    let
+      inherit (pkgs) callPackage;
 
-    kodiPackage = pkgs.mpkgs.kodi;
-    kodiHome = "${config.meow.home.directory}/.local/share/kodi";
-    kodiExecutable = "${kodiPackage}/bin/kodi_with_addons";
+      kodiPackage = pkgs.mpkgs.kodi;
+      kodiHome = "${config.meow.home.directory}/.local/share/kodi";
+      kodiExecutable = "${kodiPackage}/bin/kodi_with_addons";
 
-    kodiSettings = callPackage ./kodi/settings.nix {
-      inherit kodiHome;
-    };
-  in {
-    # TODO stop assuming hyprland
-    services.displayManager.sddm = {
-      settings = {
-        Autologin = {
-          Session = "hyprland.desktop";
-          User = config.meow.user;
+      kodiSettings = callPackage ./kodi/settings.nix {
+        inherit kodiHome;
+      };
+    in
+    {
+      # TODO stop assuming hyprland
+      services.displayManager.sddm = {
+        settings = {
+          Autologin = {
+            Session = "hyprland.desktop";
+            User = config.meow.user;
+          };
         };
       };
-    };
 
-    systemd.services."ir-client" = let
-      naersk = pkgs.callPackage inputs.naersk {};
-      ir-client = naersk.buildPackage {
-        src = ./ir-client;
-      };
-    in {
-      enable = true;
-      description = "Use tv remote as an input.";
-      unitConfig = {
-        Type = "simple";
-      };
-      serviceConfig = {
-        ExecStart = "${ir-client}/bin/ir-client";
-      };
-      wantedBy = ["multi-user.target"];
-    };
-
-    meow.home.dataFile."kodi/addons" = {
-      enable = true;
-      source = "${kodiPackage}/addons";
-      recursive = true;
-    };
-
-    meow.sops.enableSecrets = ["youtube_api_keys"];
-    meow.sops.secrets."youtube_api_keys" = {
-      path = "${config.meow.home.directory}/.local/share/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
-      mode = "0644";
-      owner = config.meow.home.user;
-    };
-
-    meow.home.modules = let
-      kodiLauncher = pkgs.writeShellScriptBin "kodi" ''
-        ${kodiSettings}/bin/create_kodi_settings
-        export HOME=${config.meow.home.stubbornHomeDirectory} # hide log files
-        export KODI_DATA=${kodiHome}
-        exec "${kodiExecutable}" --audio-backend=pulseaudio "$@" # using pulseaudio fixes some weird pipewire issues
-      '';
-
-      specialWorkspace = "special:tv";
-
-      openInKiosk = bin: url:
-        pkgs.writeShellScriptBin "${bin}" ''
-          kill -s SIGUSR1 $(pidof waybar)
-          ${pkgs.hyprland}/bin/hyprctl dispatch togglespecialworkspace ${specialWorkspace}
-          ${pkgs.hyprland}/bin/hyprctl dispatch exec "[fullscreen] ${pkgs.firefox}/bin/firefox -P tv --new-window "${url}" --fullscreen"
-          kill -s SIGUSR1 $(pidof waybar)
-        '';
-
-      tvScripts = pkgs.stdenv.mkDerivation rec {
-        name = "tv_scripts";
-
-        unpackPhase = "true";
-
-        youtubeTv = openInKiosk "youtube_tv" "https://youtube.com/tv";
-        areenaTv = openInKiosk "areena_tv" "https://areena.yle.fi";
-        firefoxTv = openInKiosk "firefox_tv" "";
-
-        installPhase = ''
-          mkdir --parents "$out/bin"
-
-          cp ${youtubeTv}/bin/youtube_tv "$out/bin/youtube_tv"
-          cp ${areenaTv}/bin/areena_tv "$out/bin/areena_tv"
-          cp ${firefoxTv}/bin/firefox_tv "$out/bin/firefox_tv"
-        '';
-      };
-
-      hyprland = builtins.elem "hyprland" true;
-    in [
-      ({
-        config,
-        lib,
-        ...
-      }: {
-        home.packages = [kodiLauncher tvScripts];
-
-        wayland.windowManager.hyprland.settings = lib.mkIf hyprland {
-          workspace = [
-            "${specialWorkspace},rounding:false,border:false,shadow:false,gapsin:0,gapsout:0"
-          ];
-          windowrulev2 = ["fullscreen,class:(Kodi)"];
-          exec-once = [
-            "${kodiLauncher}/bin/kodi -fs"
-          ];
-          bind = [
-            "ALT, F4, killactive"
-            "SUPER, F12, exec, ${kodiLauncher}/bin/kodi -fs"
-          ];
+      systemd.services."ir-client" =
+        let
+          naersk = pkgs.callPackage inputs.naersk { };
+          ir-client = naersk.buildPackage {
+            src = ./ir-client;
+          };
+        in
+        {
+          enable = true;
+          description = "Use tv remote as an input.";
+          unitConfig = {
+            Type = "simple";
+          };
+          serviceConfig = {
+            ExecStart = "${ir-client}/bin/ir-client";
+          };
+          wantedBy = [ "multi-user.target" ];
         };
 
-        programs.firefox.profiles."tv" = {
-          id = 1;
-          extraConfig = ''
-            user_pref("browser.fullscreen.autohide", true);
+      meow.home.dataFile."kodi/addons" = {
+        enable = true;
+        source = "${kodiPackage}/addons";
+        recursive = true;
+      };
+
+      meow.sops.enableSecrets = [ "youtube_api_keys" ];
+      meow.sops.secrets."youtube_api_keys" = {
+        path = "${config.meow.home.directory}/.local/share/kodi/userdata/addon_data/plugin.video.youtube/api_keys.json";
+        mode = "0644";
+        owner = config.meow.home.user;
+      };
+
+      meow.home.modules =
+        let
+          kodiLauncher = pkgs.writeShellScriptBin "kodi" ''
+            ${kodiSettings}/bin/create_kodi_settings
+            export HOME=${config.meow.home.stubbornHomeDirectory} # hide log files
+            export KODI_DATA=${kodiHome}
+            exec "${kodiExecutable}" --audio-backend=pulseaudio "$@" # using pulseaudio fixes some weird pipewire issues
           '';
-          extensions = with pkgs.firefox-addons; [
-            enhancer-for-youtube
-            (pkgs.stdenv.mkDerivation rec {
-              name = "youtube_for_tv-0.0.3";
 
-              src = pkgs.fetchurl {
-                url = "https://addons.mozilla.org/firefox/downloads/file/3420768/youtube_for_tv-0.0.3.xpi";
-                hash = "sha256-Xfa7cB4D0Iyfex5y9/jRR93gUkziaIyjqMT0LIOhT6o=";
+          specialWorkspace = "special:tv";
+
+          openInKiosk =
+            bin: url:
+            pkgs.writeShellScriptBin "${bin}" ''
+              kill -s SIGUSR1 $(pidof waybar)
+              ${pkgs.hyprland}/bin/hyprctl dispatch togglespecialworkspace ${specialWorkspace}
+              ${pkgs.hyprland}/bin/hyprctl dispatch exec "[fullscreen] ${pkgs.firefox}/bin/firefox -P tv --new-window "${url}" --fullscreen"
+              kill -s SIGUSR1 $(pidof waybar)
+            '';
+
+          tvScripts = pkgs.stdenv.mkDerivation rec {
+            name = "tv_scripts";
+
+            unpackPhase = "true";
+
+            youtubeTv = openInKiosk "youtube_tv" "https://youtube.com/tv";
+            areenaTv = openInKiosk "areena_tv" "https://areena.yle.fi";
+            firefoxTv = openInKiosk "firefox_tv" "";
+
+            installPhase = ''
+              mkdir --parents "$out/bin"
+
+              cp ${youtubeTv}/bin/youtube_tv "$out/bin/youtube_tv"
+              cp ${areenaTv}/bin/areena_tv "$out/bin/areena_tv"
+              cp ${firefoxTv}/bin/firefox_tv "$out/bin/firefox_tv"
+            '';
+          };
+
+          hyprland = builtins.elem "hyprland" true;
+        in
+        [
+          (
+            {
+              config,
+              lib,
+              ...
+            }:
+            {
+              home.packages = [
+                kodiLauncher
+                tvScripts
+              ];
+
+              wayland.windowManager.hyprland.settings = lib.mkIf hyprland {
+                workspace = [
+                  "${specialWorkspace},rounding:false,border:false,shadow:false,gapsin:0,gapsout:0"
+                ];
+                windowrulev2 = [ "fullscreen,class:(Kodi)" ];
+                exec-once = [
+                  "${kodiLauncher}/bin/kodi -fs"
+                ];
+                bind = [
+                  "ALT, F4, killactive"
+                  "SUPER, F12, exec, ${kodiLauncher}/bin/kodi -fs"
+                ];
               };
 
-              addonId = "{d2bcedce-889b-4d53-8ce9-493d8f78612a}";
+              programs.firefox.profiles."tv" = {
+                id = 1;
+                extraConfig = ''
+                  user_pref("browser.fullscreen.autohide", true);
+                '';
+                extensions = with pkgs.firefox-addons; [
+                  enhancer-for-youtube
+                  (pkgs.stdenv.mkDerivation rec {
+                    name = "youtube_for_tv-0.0.3";
 
-              buildCommand = ''
-                dst="$out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                mkdir -p "$dst"
-                install -v -m644 "$src" "$dst/${addonId}.xpi"
-              '';
-            })
-          ];
-        };
-      })
-    ];
+                    src = pkgs.fetchurl {
+                      url = "https://addons.mozilla.org/firefox/downloads/file/3420768/youtube_for_tv-0.0.3.xpi";
+                      hash = "sha256-Xfa7cB4D0Iyfex5y9/jRR93gUkziaIyjqMT0LIOhT6o=";
+                    };
 
-    # systemd.services."ir-client" = let
-    #   naersk = pkgs.callPackage inputs.naersk {};
-    #   ir-client = naersk.buildPackage {
-    #     src = ./ir-client;
-    #   };
-    # in {
-    #   enable = true;
-    #   description = "Use tv remote as an input.";
-    #   unitConfig = {
-    #     Type = "simple";
-    #   };
-    #   serviceConfig = {
-    #     ExecStart = "${ir-client}/bin/ir-client";
-    #   };
-    #   wantedBy = ["multi-user.target"];
-    # };
-  });
+                    addonId = "{d2bcedce-889b-4d53-8ce9-493d8f78612a}";
+
+                    buildCommand = ''
+                      dst="$out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                      mkdir -p "$dst"
+                      install -v -m644 "$src" "$dst/${addonId}.xpi"
+                    '';
+                  })
+                ];
+              };
+            }
+          )
+        ];
+
+      # systemd.services."ir-client" = let
+      #   naersk = pkgs.callPackage inputs.naersk {};
+      #   ir-client = naersk.buildPackage {
+      #     src = ./ir-client;
+      #   };
+      # in {
+      #   enable = true;
+      #   description = "Use tv remote as an input.";
+      #   unitConfig = {
+      #     Type = "simple";
+      #   };
+      #   serviceConfig = {
+      #     ExecStart = "${ir-client}/bin/ir-client";
+      #   };
+      #   wantedBy = ["multi-user.target"];
+      # };
+    }
+  );
 }

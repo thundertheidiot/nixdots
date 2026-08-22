@@ -2,14 +2,15 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   meow.impermanence.directories = [
-    {path = "/var/lib/urlwatch";}
+    { path = "/var/lib/urlwatch"; }
   ];
 
   users.users.urlwatch.isSystemUser = true;
   users.users.urlwatch.group = "urlwatch";
-  users.groups.urlwatch = {};
+  users.groups.urlwatch = { };
 
   sops.secrets.urlwatch_urls.owner = "urlwatch";
   sops.secrets.urlwatch_config.owner = "urlwatch";
@@ -29,11 +30,13 @@
     };
     path = with pkgs; [
       (urlwatch.override {
-        python3Packages = python3Packages.overrideScope (final: prev: {
-          playwright = prev.playwright.override {
-            playwright-driver = playwright-driver.browsers-chromium;
-          };
-        });
+        python3Packages = python3Packages.overrideScope (
+          final: prev: {
+            playwright = prev.playwright.override {
+              playwright-driver = playwright-driver.browsers-chromium;
+            };
+          }
+        );
       })
     ];
     script = ''
@@ -43,8 +46,8 @@
 
   systemd.timers.urlwatch = {
     enable = true;
-    wantedBy = ["timers.target"];
-    partOf = ["urlwatch.service"];
+    wantedBy = [ "timers.target" ];
+    partOf = [ "urlwatch.service" ];
     timerConfig = {
       OnCalendar = "*:0/15";
       Persistent = true;

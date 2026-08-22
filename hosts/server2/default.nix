@@ -5,13 +5,15 @@
   mlib,
   inputs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib.types) str;
-in {
+in
+{
   options = {
     # here for easier changing in case of router change etc.
-    server.addr = mkOpt str "192.168.101.111" {};
+    server.addr = mkOpt str "192.168.101.111" { };
   };
 
   imports = [
@@ -50,7 +52,10 @@ in {
     ];
 
     networking.networkmanager.enable = true;
-    networking.firewall.allowedTCPPorts = [80 443];
+    networking.firewall.allowedTCPPorts = [
+      80
+      443
+    ];
 
     systemd.targets.sleep.enable = false;
     systemd.targets.suspend.enable = false;
@@ -77,10 +82,17 @@ in {
       ssh.rootKey = true;
     };
 
-    boot.initrd.availableKernelModules = ["xhci_pci" "ehci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
-    boot.initrd.kernelModules = ["i915"];
-    boot.kernelModules = ["kvm-intel"];
-    boot.extraModulePackages = [];
+    boot.initrd.availableKernelModules = [
+      "xhci_pci"
+      "ehci_pci"
+      "ahci"
+      "usbhid"
+      "usb_storage"
+      "sd_mod"
+    ];
+    boot.initrd.kernelModules = [ "i915" ];
+    boot.kernelModules = [ "kvm-intel" ];
+    boot.extraModulePackages = [ ];
     boot.kernel.sysctl = {
       "fs.inotify.max_user_watches" = "1048576";
     };

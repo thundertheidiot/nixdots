@@ -2,14 +2,15 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   meow.impermanence.directories = [
-    {path = "/var/lib/urlwatch";}
+    { path = "/var/lib/urlwatch"; }
   ];
 
   users.users.urlwatch.isSystemUser = true;
   users.users.urlwatch.group = "urlwatch";
-  users.groups.urlwatch = {};
+  users.groups.urlwatch = { };
 
   sops.secrets.urlwatch_urls.owner = "urlwatch";
   sops.secrets.urlwatch_config.owner = "urlwatch";
@@ -27,7 +28,7 @@
       WorkingDirectory = "/var/lib/urlwatch";
       StateDirectory = "urlwatch";
     };
-    path = with pkgs; [urlwatch];
+    path = with pkgs; [ urlwatch ];
     script = ''
       urlwatch --cache cache.db --urls ${config.sops.secrets.urlwatch_urls.path} --config ${config.sops.secrets.urlwatch_config.path}
     '';
@@ -35,8 +36,8 @@
 
   systemd.timers.urlwatch = {
     enable = true;
-    wantedBy = ["timers.target"];
-    partOf = ["urlwatch.service"];
+    wantedBy = [ "timers.target" ];
+    partOf = [ "urlwatch.service" ];
     timerConfig = {
       OnCalendar = "*:0/15";
       Persistent = true;

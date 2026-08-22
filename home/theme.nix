@@ -4,7 +4,8 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   inherit (lib) mkMerge mkIf mkForce;
   inherit (mlib) mkEnOptTrue;
 
@@ -13,7 +14,8 @@
 
   flavor = config.catppuccin.flavor;
   accent = config.catppuccin.accent;
-in {
+in
+{
   options.mHome.themeQt = mkEnOptTrue "qt";
   options.mHome.themeGtk = mkEnOptTrue "gtk";
 
@@ -43,7 +45,7 @@ in {
         enable = true;
         theme = {
           package = pkgs.catppuccin-gtk.override {
-            accents = [accent];
+            accents = [ accent ];
             size = "compact";
             variant = flavor;
           };
@@ -51,13 +53,18 @@ in {
         };
       };
 
-      xdg.configFile = let
-        s = source: mkForce {inherit source;};
-      in {
-        "gtk-4.0/assets" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
-        "gtk-4.0/gtk.css" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
-        "gtk-4.0/gtk-dark.css" = s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
-      };
+      xdg.configFile =
+        let
+          s = source: mkForce { inherit source; };
+        in
+        {
+          "gtk-4.0/assets" =
+            s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
+          "gtk-4.0/gtk.css" =
+            s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
+          "gtk-4.0/gtk-dark.css" =
+            s "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
+        };
     })
     (mkIf qt {
       qt = {
@@ -69,10 +76,12 @@ in {
       catppuccin.kvantum.enable = true;
 
       xdg.dataFile."Kvantum/catppuccin-${flavor}-${accent}" = {
-        source = "${(pkgs.catppuccin-kvantum.override {
-          inherit accent;
-          variant = flavor;
-        })}/share/Kvantum/catppuccin-${flavor}-${accent}";
+        source = "${
+          (pkgs.catppuccin-kvantum.override {
+            inherit accent;
+            variant = flavor;
+          })
+        }/share/Kvantum/catppuccin-${flavor}-${accent}";
         recursive = true;
       };
 

@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   certs = import ../../certs;
-in {
+in
+{
   config = {
     server.domains = [
       "reddit.local"
@@ -8,7 +10,7 @@ in {
     ];
 
     services.nginx.virtualHosts."reddit.local" = {
-      serverAliases = ["reddit.home"];
+      serverAliases = [ "reddit.home" ];
       forceSSL = true;
       sslCertificate = certs."local.crt";
       sslCertificateKey = config.sops.secrets.localKey.path;

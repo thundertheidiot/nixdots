@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf mkForce;
   cfg = config.meow.rice;
-in {
+in
+{
   imports = [
     ./waybar.nix
   ];

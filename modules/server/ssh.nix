@@ -3,16 +3,18 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 
   cfg = config.meow.server;
-in {
+in
+{
   options.meow.server.publicSSH = mkEnOpt "Public facing ssh server";
 
   config = mkIf cfg.publicSSH {
-    services.openssh.ports = [69];
+    services.openssh.ports = [ 69 ];
 
     services.endlessh-go = {
       enable = true;

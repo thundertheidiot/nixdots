@@ -4,14 +4,22 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
-  inherit (lib) genAttrs mkMerge mkIf listToAttrs mkDefault;
+  inherit (lib)
+    genAttrs
+    mkMerge
+    mkIf
+    listToAttrs
+    mkDefault
+    ;
 
   mkLangs = l: genAttrs l (n: mkEnOpt "Enable support for ${n}");
 
   cfg = config.mHome.lang;
-in {
+in
+{
   options.mHome.lang = mkLangs [
     "nix"
     "haskell"
@@ -29,14 +37,17 @@ in {
     fullLanguages = mkEnOpt "Enable all programming languages";
   };
 
-  config = let
-    enAll = list:
-      listToAttrs (map (i: {
-          name = i;
-          value = mkDefault true;
-        })
-        list);
-  in
+  config =
+    let
+      enAll =
+        list:
+        listToAttrs (
+          map (i: {
+            name = i;
+            value = mkDefault true;
+          }) list
+        );
+    in
     mkMerge [
       (mkIf config.mHome.setup.fullLanguages {
         mHome.lang = enAll [
@@ -53,11 +64,13 @@ in {
         ];
       })
       {
-        home.packages = with pkgs;
+        home.packages =
+          with pkgs;
           mkMerge [
             (mkIf cfg.nix [
               nixd # lsp
               nixfmt
+              nixfmt-tree
             ])
             (mkIf cfg.rust [
               # rust-bin.stable.latest.default
@@ -65,7 +78,7 @@ in {
               rustup
             ])
             (mkIf cfg.haskell [
-              (haskellPackages.ghcWithPackages (pkgs: []))
+              (haskellPackages.ghcWithPackages (pkgs: [ ]))
               haskell-language-server
             ])
             (mkIf cfg.lua [
@@ -79,7 +92,8 @@ in {
             ])
             (mkIf cfg.c_sharp [
               (
-                with dotnetCorePackages; (combinePackages [
+                with dotnetCorePackages;
+                (combinePackages [
                   sdk_10_0
                   sdk_8_0
                 ])

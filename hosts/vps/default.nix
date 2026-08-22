@@ -6,9 +6,11 @@
   server,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkForce;
-in {
+in
+{
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     # ./authentik.nix
@@ -81,7 +83,12 @@ in {
         #   domain = "git.kotiboksi.xyz";
         # };
 
-        domains = ["kotiboksi.xyz" "meowcloud.net" "gooptyland.xyz" "saatana.xyz"];
+        domains = [
+          "kotiboksi.xyz"
+          "meowcloud.net"
+          "gooptyland.xyz"
+          "saatana.xyz"
+        ];
         mainDomain = "kotiboksi.xyz";
         reverseProxy = {
           "img.${config.meow.server.mainDomain}" = "http://${server.homeServer}:2283";
@@ -89,14 +96,23 @@ in {
           "vw.meowcloud.net" = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
         };
 
-        jellyfinDomains = ["jellyfin.kotiboksi.xyz" "jellyfin.meowcloud.net"];
+        jellyfinDomains = [
+          "jellyfin.kotiboksi.xyz"
+          "jellyfin.meowcloud.net"
+        ];
 
         matrix.enable = true;
         matrix.domain = "meowcloud.net";
         matrix.whatsapp.enable = true;
 
-        certificates = ["kotiboksi.xyz" "meowcloud.net"];
-        xmppDomains = ["kotiboksi.xyz" "gooptyland.xyz"];
+        certificates = [
+          "kotiboksi.xyz"
+          "meowcloud.net"
+        ];
+        xmppDomains = [
+          "kotiboksi.xyz"
+          "gooptyland.xyz"
+        ];
         coturn = true;
         mumble = true;
         radio.enable = false;

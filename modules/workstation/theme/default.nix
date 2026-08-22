@@ -4,12 +4,14 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib) mkIf;
   inherit (lib.types) attrs;
-in {
-  options.meow.workstation.theme.palette = mkOpt attrs (import ./mocha.nix) {};
+in
+{
+  options.meow.workstation.theme.palette = mkOpt attrs (import ./mocha.nix) { };
 
   config = mkIf config.meow.workstation.enable {
     catppuccin = {
@@ -33,10 +35,13 @@ in {
         enable = true;
         useEmbeddedBitmaps = true;
         defaultFonts = {
-          serif = ["Inter Nerd Font"];
-          sansSerif = ["Inter Nerd Font"];
-          monospace = ["Maple Mono NF CN" "Symbols Nerd Font"];
-          emoji = ["Noto Color Emoji"];
+          serif = [ "Inter Nerd Font" ];
+          sansSerif = [ "Inter Nerd Font" ];
+          monospace = [
+            "Maple Mono NF CN"
+            "Symbols Nerd Font"
+          ];
+          emoji = [ "Noto Color Emoji" ];
         };
       };
     };

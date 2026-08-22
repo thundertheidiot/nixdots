@@ -4,7 +4,8 @@
   inputs,
   pkgs,
   ...
-}: {
+}:
+{
   config = {
     server.domains = [
       "homeassistant.home"
@@ -18,7 +19,7 @@
     ];
 
     sops.secrets.home_assistant_secrets = {
-      restartUnits = ["home-assistant.service"];
+      restartUnits = [ "home-assistant.service" ];
       key = "";
       path = "/var/lib/hass/secrets.yaml";
       owner = "hass";
@@ -34,11 +35,11 @@
       ];
 
       customComponents = [
-        (pkgs.callPackage ./ha-bambulab.nix {})
+        (pkgs.callPackage ./ha-bambulab.nix { })
       ];
 
       config = {
-        default_config = {};
+        default_config = { };
 
         homeassistant = {
           unit_system = "metric";

@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   meow.impermanence.directories = [
     {
       path = "/var/lib/postgresql";

@@ -4,12 +4,14 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   inherit (mlib) mkEnOptTrue;
 
   cfg = config.meow.workstation.gnomeKeyring.enable;
-in {
+in
+{
   options = {
     meow.workstation.gnomeKeyring.enable = mkEnOptTrue "Set up gnome keyring, disable this if you want kwallet for some reason?";
   };
@@ -25,7 +27,11 @@ in {
       {
         services.gnome-keyring = {
           enable = true;
-          components = ["pkcs11" "secrets" "ssh"];
+          components = [
+            "pkcs11"
+            "secrets"
+            "ssh"
+          ];
         };
 
         # services.gpg-agent = {

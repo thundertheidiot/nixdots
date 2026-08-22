@@ -5,13 +5,15 @@
   lib,
   inputs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf mkForce mkDefault;
   inherit (builtins) listToAttrs;
 
   cfg = config.meow.workstation;
-in {
+in
+{
   options = {
     meow.workstation.enable = mkEnOpt "Configuration for workstations";
   };
@@ -27,25 +29,35 @@ in {
   ];
 
   config = mkIf cfg.enable {
-    meow.workstation = listToAttrs (map (n: {
-        name = n;
-        value = {enable = mkDefault true;};
-      }) [
-        "audio"
-        "network"
-        "flatpak"
-      ]);
+    meow.workstation = listToAttrs (
+      map
+        (n: {
+          name = n;
+          value = {
+            enable = mkDefault true;
+          };
+        })
+        [
+          "audio"
+          "network"
+          "flatpak"
+        ]
+    );
 
     security.polkit.enable = true;
 
     users.users."${config.meow.user}" = {
-      extraGroups = ["wheel" "networkmanager" "docker"];
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "docker"
+      ];
       isNormalUser = true;
     };
 
     nix.settings = {
-      allowed-users = [config.meow.user];
-      trusted-users = [config.meow.user];
+      allowed-users = [ config.meow.user ];
+      trusted-users = [ config.meow.user ];
     };
 
     programs.command-not-found.enable = true;
@@ -79,8 +91,8 @@ in {
       enable = true;
       binfmt = true;
       package = pkgs.appimage-run.override {
-        extraPkgs = pkgs:
-          with pkgs; [
+        extraPkgs =
+          pkgs: with pkgs; [
             # stability matrix
             icu
             libxcrypt-legacy
@@ -105,15 +117,17 @@ in {
       "en_US.UTF-8/UTF-8"
       "fi_FI.UTF-8/UTF-8"
     ];
-    i18n.extraLocaleSettings =
-      {
-        LC_ALL = "en_US.UTF-8";
-        LC_CTYPE = "en_US.UTF-8";
-      }
-      // (listToAttrs (map (name: {
+    i18n.extraLocaleSettings = {
+      LC_ALL = "en_US.UTF-8";
+      LC_CTYPE = "en_US.UTF-8";
+    }
+    // (listToAttrs (
+      map
+        (name: {
           inherit name;
           value = "fi_FI.UTF-8";
-        }) [
+        })
+        [
           "LC_ADDRESS"
           "LC_IDENTIFICATION"
           "LC_MEASUREMENT"
@@ -125,6 +139,7 @@ in {
           "LC_TELEPHONE"
           "LC_TIME"
           "LC_COLLATE"
-        ]));
+        ]
+    ));
   };
 }

@@ -3,22 +3,29 @@
   lib,
   mlib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
-  inherit (lib.types) listOf str attrsOf anything;
+  inherit (lib.types)
+    listOf
+    str
+    attrsOf
+    anything
+    ;
   inherit (lib) mkMerge;
   inherit (lib.attrsets) filterAttrs;
   inherit (lib.lists) elem;
-in {
+in
+{
   options = {
     meow.sops = {
-      enableSecrets = mkOpt (listOf str) [] {
+      enableSecrets = mkOpt (listOf str) [ ] {
         description = ''
           Sops secrets to enable. Since all of our secrets are configured simultaniously in one place, we need a way to enable only some of them.
           Otherwise every machine gets the activationScript, and fails on every activation without a key.
         '';
       };
-      secrets = mkOpt (attrsOf anything) {} {};
+      secrets = mkOpt (attrsOf anything) { } { };
     };
   };
 
@@ -35,11 +42,9 @@ in {
       };
     }
     {
-      sops.secrets =
-        filterAttrs (
-          name: _: elem name config.meow.sops.enableSecrets
-        )
-        config.meow.sops.secrets;
+      sops.secrets = filterAttrs (
+        name: _: elem name config.meow.sops.enableSecrets
+      ) config.meow.sops.secrets;
     }
   ];
 }

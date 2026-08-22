@@ -4,8 +4,14 @@
   pkgs,
   mlib,
   ...
-}: let
-  inherit (lib) mkIf getExe getExe' concatStrings;
+}:
+let
+  inherit (lib)
+    mkIf
+    getExe
+    getExe'
+    concatStrings
+    ;
   inherit (builtins) elem;
   inherit (mlib) mkOpt;
   inherit (lib.types) listOf str;
@@ -16,29 +22,33 @@
   conf = config.meow.workstation.extraNiriConfig;
   binds = config.meow.workstation.extraNiriBinds;
   xkb = config.meow.workstation.niriKeyboardXkb;
-in {
+in
+{
   options = {
-    meow.workstation.extraNiriConfig = mkOpt (listOf str) [] {};
-    meow.workstation.niriKeyboardXkb = mkOpt str "" {};
-    meow.workstation.extraNiriBinds = mkOpt (listOf str) [] {};
+    meow.workstation.extraNiriConfig = mkOpt (listOf str) [ ] { };
+    meow.workstation.niriKeyboardXkb = mkOpt str "" { };
+    meow.workstation.extraNiriBinds = mkOpt (listOf str) [ ] { };
   };
 
   config = mkIf (work && elem "niri" env) {
-    environment.systemPackages = [pkgs.xwayland-satellite pkgs.awww];
+    environment.systemPackages = [
+      pkgs.xwayland-satellite
+      pkgs.awww
+    ];
     programs.niri.enable = true;
     meow.workstation.gnomeKeyring.enable = true;
 
     xdg.portal.config = {
-      common."org.freedesktop.impl.portal.OpenURI" = ["gtk"];
+      common."org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
     };
 
     services.gvfs.enable = true;
 
     systemd.user.services.polkit-gnome-authentication-agent-1 = {
       description = "polkit-gnome-authentication-agent-1";
-      wantedBy = ["graphical-session.target"];
-      wants = ["graphical-session.target"];
-      after = ["graphical-session.target"];
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
         ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
@@ -62,212 +72,216 @@ in {
           pkgs.blueman
         ];
 
-        xdg.configFile."niri/config.kdl".text = let
-          colors = config.meow.workstation.theme.palette.withHashtag;
+        xdg.configFile."niri/config.kdl".text =
+          let
+            colors = config.meow.workstation.theme.palette.withHashtag;
 
-          border = colors.base02;
-          borderFocus = colors.base03;
-          warn = colors.base0A;
+            border = colors.base02;
+            borderFocus = colors.base03;
+            warn = colors.base0A;
 
-          swayosd = getExe' pkgs.swayosd "swayosd-server";
-          swayosdc = getExe' pkgs.swayosd "swayosd-client";
-          waybar = getExe pkgs.waybar;
-          awww = getExe' pkgs.awww "awww-daemon";
-          xwayland-satellite = getExe pkgs.xwayland-satellite;
+            swayosd = getExe' pkgs.swayosd "swayosd-server";
+            swayosdc = getExe' pkgs.swayosd "swayosd-client";
+            waybar = getExe pkgs.waybar;
+            awww = getExe' pkgs.awww "awww-daemon";
+            xwayland-satellite = getExe pkgs.xwayland-satellite;
 
-          panic = getExe (pkgs.writeShellApplication {
-            name = "panic";
-            runtimeInputs = [
-              pkgs.niri
-              pkgs.swaynotificationcenter
-              pkgs.jq
-              pkgs.playerctl
-            ];
-            text = ''
-              swaync-client -dn
-              playerctl --all-players pause
+            panic = getExe (
+              pkgs.writeShellApplication {
+                name = "panic";
+                runtimeInputs = [
+                  pkgs.niri
+                  pkgs.swaynotificationcenter
+                  pkgs.jq
+                  pkgs.playerctl
+                ];
+                text = ''
+                  swaync-client -dn
+                  playerctl --all-players pause
 
-              for mon in $(niri msg -j outputs | jq -r '.[].name'); do
-                niri msg action focus-monitor "$mon"
-                niri msg action focus-workspace 99
-                sleep 0.02
-              done
-            '';
-          });
-        in ''
-          input {
-            keyboard {
-              xkb {
-                layout "us,fi"
-                options "grp:win_space_toggle"
-                ${xkb}
+                  for mon in $(niri msg -j outputs | jq -r '.[].name'); do
+                    niri msg action focus-monitor "$mon"
+                    niri msg action focus-workspace 99
+                    sleep 0.02
+                  done
+                '';
+              }
+            );
+          in
+          ''
+            input {
+              keyboard {
+                xkb {
+                  layout "us,fi"
+                  options "grp:win_space_toggle"
+                  ${xkb}
+                }
+
+                repeat-delay 300
+                repeat-rate 50
+                track-layout "global"
               }
 
-              repeat-delay 300
-              repeat-rate 50
-              track-layout "global"
+              touchpad {
+                tap
+                dwt
+                natural-scroll
+              }
+
+              mouse {
+                accel-profile "flat"
+              }
+
+              focus-follows-mouse
+              warp-mouse-to-focus
             }
 
-            touchpad {
-              tap
-              dwt
-              natural-scroll
+            screenshot-path "~/Pictures/screenshots/%Y-%m-%d_%H-%M-%S.png"
+            prefer-no-csd
+
+            cursor {
+              xcursor-theme "default"
+              xcursor-size 24
             }
 
-            mouse {
-              accel-profile "flat"
+            environment {
+              NIXOS_OZONE_WL "1"
+              QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
             }
 
-            focus-follows-mouse
-            warp-mouse-to-focus
-          }
-
-          screenshot-path "~/Pictures/screenshots/%Y-%m-%d_%H-%M-%S.png"
-          prefer-no-csd
-
-          cursor {
-            xcursor-theme "default"
-            xcursor-size 24
-          }
-
-          environment {
-            NIXOS_OZONE_WL "1"
-            QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
-          }
-
-          overview {
-            backdrop-color "${colors.base02}"
-          }
-
-          xwayland-satellite {
-            path "${xwayland-satellite}"
-          }
-
-          hotkey-overlay {
-            skip-at-startup
-            hide-not-bound
-          }
-
-          gestures {
-            hot-corners {
-              top-left
-            }
-          }
-
-          layout {
-            gaps 16
-
-            background-color "${colors.base00}"
-
-            struts {
-              left -10
-              right -10
-              top 0
-              bottom 0
+            overview {
+              backdrop-color "${colors.base02}"
             }
 
-            border {
-              width 3
-              active-color "${borderFocus}"
-              inactive-color "${border}"
-              urgent-color "${warn}"
+            xwayland-satellite {
+              path "${xwayland-satellite}"
             }
-          }
 
-          animations {
-            workspace-switch { off; }
-          }
+            hotkey-overlay {
+              skip-at-startup
+              hide-not-bound
+            }
 
-          spawn-at-startup "${waybar}"
-          spawn-at-startup "${swayosd}"
-          spawn-at-startup "${awww}"
+            gestures {
+              hot-corners {
+                top-left
+              }
+            }
 
-          recent-windows { off; }
+            layout {
+              gaps 16
 
-          binds {
-            Mod+E { spawn-sh "emacsclient -c -a '''"; }
-            Mod+Return { spawn-sh "emacsclient -c -a ''' -e '(meow/eshell)'"; }
-            Mod+Semicolon { spawn "alacritty"; }
-            Mod+W { spawn "firefox"; }
-            Print { screenshot; }
+              background-color "${colors.base00}"
 
-            Mod+M { spawn-sh "emacsclient -c -a ''' -e '(simple-mpc-view-current-playlist)'"; }
+              struts {
+                left -10
+                right -10
+                top 0
+                bottom 0
+              }
 
-            End { spawn-sh "mumble rpc togglemute"; }
+              border {
+                width 3
+                active-color "${borderFocus}"
+                inactive-color "${border}"
+                urgent-color "${warn}"
+              }
+            }
 
-            Mod+D { spawn-sh "vicinae open"; }
+            animations {
+              workspace-switch { off; }
+            }
 
-            XF86AudioPlay { spawn-sh "mpc toggle"; }
-            XF86AudioNext { spawn-sh "mpc next"; }
-            XF86AudioPrev { spawn-sh "mpc prev"; }
-            Mod+P { spawn-sh "mpc toggle"; }
-            Mod+BracketRight { spawn-sh "mpc next"; }
-            Mod+BracketLeft { spawn-sh "mpc prev"; }
+            spawn-at-startup "${waybar}"
+            spawn-at-startup "${swayosd}"
+            spawn-at-startup "${awww}"
 
-            XF86AudioMute { spawn-sh "${swayosdc} --output-volume mute-toggle"; }
-            XF86AudioRaiseVolume { spawn-sh "${swayosdc} --output-volume 3"; }
-            XF86AudioLowerVolume { spawn-sh "${swayosdc} --output-volume -3"; }
-            XF86MonBrightnessUp { spawn-sh "${swayosdc} --brightness=+5"; }
-            XF86MonBrightnessDown { spawn-sh "${swayosdc} --brightness=-5"; }
+            recent-windows { off; }
 
-            Mod+Q { close-window; }
-            Mod+Shift+Q { quit; }
+            binds {
+              Mod+E { spawn-sh "emacsclient -c -a '''"; }
+              Mod+Return { spawn-sh "emacsclient -c -a ''' -e '(meow/eshell)'"; }
+              Mod+Semicolon { spawn "alacritty"; }
+              Mod+W { spawn "firefox"; }
+              Print { screenshot; }
 
-            Mod+S { spawn "${panic}"; }
+              Mod+M { spawn-sh "emacsclient -c -a ''' -e '(simple-mpc-view-current-playlist)'"; }
 
-            Mod+T { toggle-column-tabbed-display; }
+              End { spawn-sh "mumble rpc togglemute"; }
 
-            Mod+F { maximize-column; }
-            Mod+Shift+F { fullscreen-window; }
+              Mod+D { spawn-sh "vicinae open"; }
 
-            Mod+H { focus-column-left; }
-            Mod+J { focus-window-down; }
-            Mod+K { focus-window-up; }
-            Mod+L { focus-column-right; }
-            Mod+Ctrl+H { focus-column-first; }
-            Mod+Ctrl+L { focus-column-last; }
-            Mod+Shift+Ctrl+H { move-column-to-first; }
-            Mod+Shift+Ctrl+L { move-column-to-last; }
+              XF86AudioPlay { spawn-sh "mpc toggle"; }
+              XF86AudioNext { spawn-sh "mpc next"; }
+              XF86AudioPrev { spawn-sh "mpc prev"; }
+              Mod+P { spawn-sh "mpc toggle"; }
+              Mod+BracketRight { spawn-sh "mpc next"; }
+              Mod+BracketLeft { spawn-sh "mpc prev"; }
 
-            Mod+Alt+J { focus-workspace-down; }
-            Mod+Alt+K { focus-workspace-up; }
-            Mod+Alt+Ctrl+J { focus-workspace 99; }
-            Mod+Alt+Ctrl+K { focus-workspace 1; }
+              XF86AudioMute { spawn-sh "${swayosdc} --output-volume mute-toggle"; }
+              XF86AudioRaiseVolume { spawn-sh "${swayosdc} --output-volume 3"; }
+              XF86AudioLowerVolume { spawn-sh "${swayosdc} --output-volume -3"; }
+              XF86MonBrightnessUp { spawn-sh "${swayosdc} --brightness=+5"; }
+              XF86MonBrightnessDown { spawn-sh "${swayosdc} --brightness=-5"; }
 
-            Mod+Alt+Shift+J { move-window-to-workspace-down; }
-            Mod+Alt+Shift+K { move-window-to-workspace-up; }
-            Mod+Alt+Ctrl+Shift+J { move-window-to-workspace 99; }
-            Mod+Alt+Ctrl+Shift+K { move-window-to-workspace 1; }
+              Mod+Q { close-window; }
+              Mod+Shift+Q { quit; }
 
-            Mod+Comma { focus-monitor-left; }
-            Mod+Period { focus-monitor-right; }
-            Mod+Shift+Comma { move-window-to-monitor-left; }
-            Mod+Shift+Period { move-window-to-monitor-right; }
+              Mod+S { spawn "${panic}"; }
 
-            Mod+1 { focus-workspace 1; }
-            Mod+2 { focus-workspace 2; }
-            Mod+3 { focus-workspace 3; }
-            Mod+4 { focus-workspace 4; }
-            Mod+5 { focus-workspace 5; }
-            Mod+6 { focus-workspace 6; }
-            Mod+7 { focus-workspace 7; }
-            Mod+8 { focus-workspace 8; }
-            Mod+9 { focus-workspace 9; }
+              Mod+T { toggle-column-tabbed-display; }
 
-            Mod+Shift+1 { move-window-to-workspace 1; }
-            Mod+Shift+2 { move-window-to-workspace 2; }
-            Mod+Shift+3 { move-window-to-workspace 3; }
-            Mod+Shift+4 { move-window-to-workspace 4; }
-            Mod+Shift+5 { move-window-to-workspace 5; }
-            Mod+Shift+6 { move-window-to-workspace 6; }
-            Mod+Shift+7 { move-window-to-workspace 7; }
-            Mod+Shift+8 { move-window-to-workspace 8; }
-            Mod+Shift+9 { move-window-to-workspace 9; }
-            ${concatStrings binds}
-          }
+              Mod+F { maximize-column; }
+              Mod+Shift+F { fullscreen-window; }
 
-          ${concatStrings conf}
-        '';
+              Mod+H { focus-column-left; }
+              Mod+J { focus-window-down; }
+              Mod+K { focus-window-up; }
+              Mod+L { focus-column-right; }
+              Mod+Ctrl+H { focus-column-first; }
+              Mod+Ctrl+L { focus-column-last; }
+              Mod+Shift+Ctrl+H { move-column-to-first; }
+              Mod+Shift+Ctrl+L { move-column-to-last; }
+
+              Mod+Alt+J { focus-workspace-down; }
+              Mod+Alt+K { focus-workspace-up; }
+              Mod+Alt+Ctrl+J { focus-workspace 99; }
+              Mod+Alt+Ctrl+K { focus-workspace 1; }
+
+              Mod+Alt+Shift+J { move-window-to-workspace-down; }
+              Mod+Alt+Shift+K { move-window-to-workspace-up; }
+              Mod+Alt+Ctrl+Shift+J { move-window-to-workspace 99; }
+              Mod+Alt+Ctrl+Shift+K { move-window-to-workspace 1; }
+
+              Mod+Comma { focus-monitor-left; }
+              Mod+Period { focus-monitor-right; }
+              Mod+Shift+Comma { move-window-to-monitor-left; }
+              Mod+Shift+Period { move-window-to-monitor-right; }
+
+              Mod+1 { focus-workspace 1; }
+              Mod+2 { focus-workspace 2; }
+              Mod+3 { focus-workspace 3; }
+              Mod+4 { focus-workspace 4; }
+              Mod+5 { focus-workspace 5; }
+              Mod+6 { focus-workspace 6; }
+              Mod+7 { focus-workspace 7; }
+              Mod+8 { focus-workspace 8; }
+              Mod+9 { focus-workspace 9; }
+
+              Mod+Shift+1 { move-window-to-workspace 1; }
+              Mod+Shift+2 { move-window-to-workspace 2; }
+              Mod+Shift+3 { move-window-to-workspace 3; }
+              Mod+Shift+4 { move-window-to-workspace 4; }
+              Mod+Shift+5 { move-window-to-workspace 5; }
+              Mod+Shift+6 { move-window-to-workspace 6; }
+              Mod+Shift+7 { move-window-to-workspace 7; }
+              Mod+Shift+8 { move-window-to-workspace 8; }
+              Mod+Shift+9 { move-window-to-workspace 9; }
+              ${concatStrings binds}
+            }
+
+            ${concatStrings conf}
+          '';
       }
     ];
   };

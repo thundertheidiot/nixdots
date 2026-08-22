@@ -5,7 +5,8 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   system.stateVersion = "26.05";
 
   time.timeZone = "Europe/Helsinki";
@@ -27,7 +28,7 @@
     ssh.rootKey = true;
 
     workstation.enable = true;
-    workstation.environment = ["niri"];
+    workstation.environment = [ "niri" ];
     workstation.displayManager = "gdm";
     home.enable = true;
     user = "ella";
@@ -48,7 +49,7 @@
 
     keyboard = {
       enable = true;
-      devices = ["/dev/input/by-path/platform-i8042-serio-0-event-kbd"];
+      devices = [ "/dev/input/by-path/platform-i8042-serio-0-event-kbd" ];
     };
   };
 
@@ -70,12 +71,18 @@
     device = "/dev/disk/by-partlabel/luks";
   };
 
-  boot.kernelParams = ["iomem=relaxed"];
+  boot.kernelParams = [ "iomem=relaxed" ];
 
-  boot.initrd.availableKernelModules = ["ehci_pci" "ahci" "usb_storage" "sd_mod" "sdhci_pci"];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+  boot.initrd.availableKernelModules = [
+    "ehci_pci"
+    "ahci"
+    "usb_storage"
+    "sd_mod"
+    "sdhci_pci"
+  ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
 
   disko.devices = {
     nodev."/" = {
@@ -120,15 +127,18 @@
                     mountpoint = "/boot";
                   };
                   "@home" = {
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                     mountpoint = "/home";
                   };
                   "@nix" = {
-                    mountOptions = ["compress=zstd" "noatime"];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                     mountpoint = "/nix";
                   };
                   "@persist" = {
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                     mountpoint = "/nix/persist";
                   };
                   "@tmp" = {
@@ -149,7 +159,7 @@
     "/tmp".neededForBoot = true;
   };
 
-  swapDevices = [];
+  swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
 

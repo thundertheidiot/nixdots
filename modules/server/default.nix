@@ -3,14 +3,16 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib) head mkForce;
   inherit (lib.types) listOf str;
-in {
+in
+{
   options.meow.server = {
-    domains = mkOpt (listOf str) [] {};
-    mainDomain = mkOpt str (head config.meow.server.domains) {};
+    domains = mkOpt (listOf str) [ ] { };
+    mainDomain = mkOpt str (head config.meow.server.domains) { };
   };
 
   imports = [
@@ -29,6 +31,6 @@ in {
   ];
 
   config = {
-    nix.registry = mkForce {};
+    nix.registry = mkForce { };
   };
 }

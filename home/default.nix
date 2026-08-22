@@ -1,5 +1,5 @@
 # You are now in home-manager land
-{...}: {
+{ ... }: {
   imports = [
     ./languages
     ./programs

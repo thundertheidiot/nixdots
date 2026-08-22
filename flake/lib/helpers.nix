@@ -1,5 +1,5 @@
-{...}: {
+{ ... }: {
   homeModule = module: {
-    meow.home.modules = [module];
+    meow.home.modules = [ module ];
   };
 }

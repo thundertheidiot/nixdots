@@ -4,12 +4,14 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf mkForce;
 
   cfg = config.meow.displaylink;
-in {
+in
+{
   options.meow.displaylink = mkEnOpt "DisplayLink support";
 
   config = mkIf cfg {
@@ -17,14 +19,17 @@ in {
       pkgs.displaylink
     ];
 
-    services.xserver.videoDrivers = ["displaylink" "modesetting"];
+    services.xserver.videoDrivers = [
+      "displaylink"
+      "modesetting"
+    ];
 
     boot = {
       extraModulePackages = [
         config.boot.kernelPackages.evdi
       ];
 
-      initrd.kernelModules = ["evdi"];
+      initrd.kernelModules = [ "evdi" ];
     };
   };
 }

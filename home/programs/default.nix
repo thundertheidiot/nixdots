@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   imports = [
     ./swaync.nix
     ./vicinae.nix

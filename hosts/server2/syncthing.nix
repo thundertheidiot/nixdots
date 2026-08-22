@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   certs = import ../../certs;
-in {
+in
+{
   config = {
     meow.impermanence.directories = [
       {

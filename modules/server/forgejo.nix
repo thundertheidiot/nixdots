@@ -4,16 +4,18 @@
   mlib,
   config,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt mkEnOpt;
   inherit (lib) mkIf;
   inherit (lib.types) nullOr str;
 
   cfg = config.meow.server.forgejo;
-in {
+in
+{
   options.meow.server.forgejo = {
     enable = mkEnOpt "Enable forgejo";
-    domain = mkOpt (nullOr str) null {};
+    domain = mkOpt (nullOr str) null { };
   };
 
   config = mkIf cfg.enable {
@@ -24,7 +26,7 @@ in {
         user = "forgejo";
         group = "forgejo";
       }
-      {path = "/var/lib/postgresql";}
+      { path = "/var/lib/postgresql"; }
     ];
 
     meow.server.reverseProxy = {

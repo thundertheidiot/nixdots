@@ -1,5 +1,5 @@
 {
-  module = {config, ...}: {
+  module = { config, ... }: {
     sops.secrets.rootCA = {
       sopsFile = ./rootCA.key;
       format = "binary";
@@ -11,7 +11,7 @@
       owner = config.services.nginx.user;
     };
 
-    security.pki.certificateFiles = [./rootCA.pem];
+    security.pki.certificateFiles = [ ./rootCA.pem ];
   };
 
   domains = [

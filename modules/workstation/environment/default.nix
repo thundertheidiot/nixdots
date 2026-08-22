@@ -4,7 +4,8 @@
   mlib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib.types) enum listOf;
   inherit (lib) mkIf mkMerge getExe;
@@ -12,15 +13,32 @@
   cfg = config.meow.workstation.enable;
   envir = config.meow.workstation.environment;
   dm = config.meow.workstation.displayManager;
-in {
+in
+{
   options = {
-    meow.workstation.environment = mkOpt (listOf (enum ["niri" "plasma"])) [] {
-      description = "The list of environments to configure and install.";
-    };
+    meow.workstation.environment =
+      mkOpt
+        (listOf (enum [
+          "niri"
+          "plasma"
+        ]))
+        [ ]
+        {
+          description = "The list of environments to configure and install.";
+        };
 
-    meow.workstation.displayManager = mkOpt (enum ["sddm" "plm" "gdm" "tuigreet"]) "sddm" {
-      description = "Display manager (login screen) to install.";
-    };
+    meow.workstation.displayManager =
+      mkOpt
+        (enum [
+          "sddm"
+          "plm"
+          "gdm"
+          "tuigreet"
+        ])
+        "sddm"
+        {
+          description = "Display manager (login screen) to install.";
+        };
   };
   imports = [
     ./niri
@@ -96,7 +114,7 @@ in {
       # services.cpupower-gui.enable = true;
 
       meow.home.modules = [
-        ({config, ...}: {
+        ({ config, ... }: {
           xresources = {
             path = "${config.xdg.configHome}/xresources";
           };

@@ -3,18 +3,23 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt mkOpt;
   inherit (lib) mkIf attrNames mapAttrs;
   inherit (lib.types) attrsOf str;
 
   cfg = config.meow.server;
-in {
+in
+{
   options.meow.server.webserver = mkEnOpt "Nginx";
-  options.meow.server.reverseProxy = mkOpt (attrsOf str) {} {};
+  options.meow.server.reverseProxy = mkOpt (attrsOf str) { } { };
 
   config = mkIf cfg.webserver {
-    networking.firewall.allowedTCPPorts = [80 443];
+    networking.firewall.allowedTCPPorts = [
+      80
+      443
+    ];
 
     meow.server.certificates = attrNames cfg.reverseProxy;
 
@@ -22,14 +27,12 @@ in {
       enable = true;
       logError = "stderr debug";
 
-      virtualHosts =
-        mapAttrs (_: proxyPass: {
-          locations."/" = {
-            inherit proxyPass;
-            recommendedProxySettings = true;
-          };
-        })
-        cfg.reverseProxy;
+      virtualHosts = mapAttrs (_: proxyPass: {
+        locations."/" = {
+          inherit proxyPass;
+          recommendedProxySettings = true;
+        };
+      }) cfg.reverseProxy;
     };
   };
 }

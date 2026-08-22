@@ -4,13 +4,15 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf mkForce;
   inherit (mlib) homeModule;
   inherit (pkgs) replaceVars;
 
   cfg = config.meow.rice;
-in {
+in
+{
   config = mkIf (cfg == "glass") (homeModule {
     programs.firefox.profiles."nix-managed" = {
       settings = {

@@ -1,4 +1,4 @@
-{config, ...}: {
+{ config, ... }: {
   config = {
     services.jellyfin = {
       enable = true;
@@ -22,7 +22,7 @@
 
     services.nginx.virtualHosts."jellyfin.local" = {
       root = "/fake";
-      serverAliases = ["jellyfin.home"];
+      serverAliases = [ "jellyfin.home" ];
 
       # recommendedTlsSettings = false;
       locations = {

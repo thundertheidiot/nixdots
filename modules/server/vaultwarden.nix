@@ -4,17 +4,20 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 
   cfg = config.meow.server;
-in {
+in
+{
   options.meow.server.vaultwarden = mkEnOpt "Vaultwarden";
 
   config = mkIf cfg.vaultwarden {
     meow.server.reverseProxy = {
-      "vw.${cfg.mainDomain}" = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+      "vw.${cfg.mainDomain}" =
+        "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
     };
 
     meow.impermanence.directories = [

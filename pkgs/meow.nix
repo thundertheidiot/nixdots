@@ -8,13 +8,14 @@ stdenv.mkDerivation {
   name = "meow";
   version = "0.1";
 
-  src = lib.sourceFilesBySuffices ../meow [".hs"];
+  src = lib.sourceFilesBySuffices ../meow [ ".hs" ];
 
   buildInputs = [
-    (haskellPackages.ghcWithPackages (p:
-      with p; [
+    (haskellPackages.ghcWithPackages (
+      p: with p; [
         aeson
-      ]))
+      ]
+    ))
   ];
 
   propagatedNativeBuildInputs = [

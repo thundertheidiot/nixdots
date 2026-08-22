@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   flavor = config.catppuccin.flavor;
-in {
+in
+{
   programs.vicinae = {
     systemd = {
       enable = true;

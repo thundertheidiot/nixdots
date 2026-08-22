@@ -4,18 +4,29 @@
   pkgs,
   mlib,
   ...
-}: let
+}:
+let
   cfg = config.meow.gpu;
 
   inherit (lib) mkMerge mkIf;
 
   inherit (lib.types) enum;
   inherit (mlib) mkOpt;
-in {
+in
+{
   options = {
-    meow.gpu = mkOpt (enum ["amd" "nvidia" "intel" "none"]) "none" {
-      description = "Gpu type, this is used for installing drivers.";
-    };
+    meow.gpu =
+      mkOpt
+        (enum [
+          "amd"
+          "nvidia"
+          "intel"
+          "none"
+        ])
+        "none"
+        {
+          description = "Gpu type, this is used for installing drivers.";
+        };
   };
 
   config = mkMerge [
@@ -24,9 +35,9 @@ in {
       hardware.graphics.enable32Bit = config.meow.gaming.enable;
     })
     (mkIf (cfg == "intel") {
-      boot.initrd.kernelModules = ["i915"];
+      boot.initrd.kernelModules = [ "i915" ];
 
-      environment.systemPackages = [pkgs.nvtopPackages.intel];
+      environment.systemPackages = [ pkgs.nvtopPackages.intel ];
 
       hardware.graphics.extraPackages = with pkgs; [
         intel-media-driver
@@ -56,8 +67,8 @@ in {
       ];
 
       services.xserver.enable = true;
-      services.xserver.videoDrivers = ["modesetting"];
-      boot.initrd.kernelModules = ["amdgpu"];
+      services.xserver.videoDrivers = [ "modesetting" ];
+      boot.initrd.kernelModules = [ "amdgpu" ];
     })
   ];
 }

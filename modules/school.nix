@@ -5,12 +5,14 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
 
   cfg = config.meow.school;
-in {
+in
+{
   options.meow.school.enable = mkEnOpt "Enable school stuff";
 
   config = mkIf cfg.enable {
@@ -42,8 +44,8 @@ in {
             name = "tmc-cli";
             dontUnpack = true;
 
-            nativeBuildInputs = [makeWrapper];
-            propagatedBuildInputs = [tmc-cli];
+            nativeBuildInputs = [ makeWrapper ];
+            propagatedBuildInputs = [ tmc-cli ];
 
             # defaults to $HOME/tmc-config lmao
             installPhase = ''

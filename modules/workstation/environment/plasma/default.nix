@@ -4,12 +4,14 @@
   pkgs,
   mlib,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf mkForce elem;
 
   work = config.meow.workstation.enable;
   env = config.meow.workstation.environment;
-in {
+in
+{
   config = mkIf (work && elem "plasma" env) {
     services.desktopManager.plasma6 = {
       enable = true;

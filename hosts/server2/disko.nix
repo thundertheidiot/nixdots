@@ -1,9 +1,9 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   boot.loader = {
     grub = {
       enable = true;
       efiSupport = true;
-      devices = ["/dev/disk/by-id/ata-SAMSUNG_MZHPV256HDGL-00000_S1X2NYAH700146"];
+      devices = [ "/dev/disk/by-id/ata-SAMSUNG_MZHPV256HDGL-00000_S1X2NYAH700146" ];
     };
 
     efi.canTouchEfiVariables = true;
@@ -31,7 +31,7 @@
             type = "btrfs";
             subvolumes = {
               "/storage" = {
-                mountOptions = ["compress=zstd"];
+                mountOptions = [ "compress=zstd" ];
                 mountpoint = "/mnt/ssd2";
               };
             };
@@ -66,11 +66,14 @@
               type = "btrfs";
               subvolumes = {
                 "/home" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/home";
                 };
                 "/nix" = {
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                   mountpoint = "/nix";
                 };
                 "/tmp" = {
@@ -80,7 +83,7 @@
                   mountpoint = "/tmp";
                 };
                 "/storage" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/mnt/ssd1";
                 };
               };
@@ -101,7 +104,7 @@
             type = "btrfs";
             subvolumes = {
               "/storage" = {
-                mountOptions = ["compress=zstd"];
+                mountOptions = [ "compress=zstd" ];
                 mountpoint = "/mnt/4tb";
               };
             };
@@ -111,7 +114,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [mergerfs];
+  environment.systemPackages = with pkgs; [ mergerfs ];
 
   fileSystems = {
     "/nix".neededForBoot = true;

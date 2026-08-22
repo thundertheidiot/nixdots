@@ -5,12 +5,19 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (mlib) mkEnOpt mkEnOptTrue;
-  inherit (lib) mkIf mkMerge mapAttrs recursiveUpdate;
+  inherit (lib)
+    mkIf
+    mkMerge
+    mapAttrs
+    recursiveUpdate
+    ;
 
   cfg = config.mHome.browser;
-in {
+in
+{
   options = {
     mHome.browser = {
       firefox = {
@@ -20,75 +27,75 @@ in {
     };
   };
 
-  config = let
-    defaultExtensions = import ./extensions.nix;
-    engines = import ./search.nix;
+  config =
+    let
+      defaultExtensions = import ./extensions.nix;
+      engines = import ./search.nix;
 
-    commonPolicies = {
-      DisableAppUpdate = true;
-      DisableTelemetry = true;
-      DisableFirefoxStudies = true;
-      DontCheckDefaultBrowser = true;
+      commonPolicies = {
+        DisableAppUpdate = true;
+        DisableTelemetry = true;
+        DisableFirefoxStudies = true;
+        DontCheckDefaultBrowser = true;
 
-      FirefoxSuggest = {
-        WebSuggestions = false;
-        SponsoredSuggestions = false;
-        ImproveSuggest = false;
+        FirefoxSuggest = {
+          WebSuggestions = false;
+          SponsoredSuggestions = false;
+          ImproveSuggest = false;
+        };
       };
-    };
 
-    policies = {
-      ExtensionSettings =
-        mapAttrs (_: v: {
+      policies = {
+        ExtensionSettings = mapAttrs (_: v: {
           installation_mode = "force_installed";
           install_url = v;
           private_browsing = true;
-        })
-        defaultExtensions;
-    };
+        }) defaultExtensions;
+      };
 
-    search = {
-      force = true;
-      default = "ddg";
-      privateDefault = "ddg";
-      inherit engines;
-    };
-  in (mkMerge [
-    (mkIf cfg.firefox.enable {
-      programs.firefox = {
-        enable = true;
-        package = pkgs.firefox;
+      search = {
+        force = true;
+        default = "ddg";
+        privateDefault = "ddg";
+        inherit engines;
+      };
+    in
+    (mkMerge [
+      (mkIf cfg.firefox.enable {
+        programs.firefox = {
+          enable = true;
+          package = pkgs.firefox;
 
-        policies = recursiveUpdate commonPolicies {
-          # firefox color for style
-          ExtensionSettings."FirefoxColor@mozilla.com" = {
-            installation_mode = "force_installed";
-            install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-color/addon-4757633-latest.xpi";
-            private_browsing = true;
-          };
-        };
-
-        profiles."nix-managed" = {
-          id = 0;
-
-          settings = {
-            "privacy.trackingprotection.enabled" = true;
-            "privacy.trackingprotection.socialtracking.enabled" = true;
-            "browser.contentblocking.category" = "strict";
+          policies = recursiveUpdate commonPolicies {
+            # firefox color for style
+            ExtensionSettings."FirefoxColor@mozilla.com" = {
+              installation_mode = "force_installed";
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-color/addon-4757633-latest.xpi";
+              private_browsing = true;
+            };
           };
 
-          extensions.force = true;
-        };
-      };
-    })
-    (mkIf cfg.firefox.defaults {
-      programs.firefox = {
-        inherit policies;
+          profiles."nix-managed" = {
+            id = 0;
 
-        profiles."nix-managed" = {
-          inherit search;
+            settings = {
+              "privacy.trackingprotection.enabled" = true;
+              "privacy.trackingprotection.socialtracking.enabled" = true;
+              "browser.contentblocking.category" = "strict";
+            };
+
+            extensions.force = true;
+          };
         };
-      };
-    })
-  ]);
+      })
+      (mkIf cfg.firefox.defaults {
+        programs.firefox = {
+          inherit policies;
+
+          profiles."nix-managed" = {
+            inherit search;
+          };
+        };
+      })
+    ]);
 }

@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{ inputs, ... }: {
   imports = [
     inputs.flake-parts.flakeModules.modules
     inputs.actions.flakeModules.default
@@ -10,45 +10,47 @@
     ./lib
   ];
 
-  flake.modules = {};
+  flake.modules = { };
 
   systems = [
     "x86_64-linux"
   ];
 
-  perSystem = {
-    config,
-    pkgs,
-    ...
-  }: {
-    devShells.default = pkgs.mkShell {
-      # shellHook = ''
-      #   ${config.pre-commit.installationScript}
-      # '';
+  perSystem =
+    {
+      config,
+      pkgs,
+      ...
+    }:
+    {
+      devShells.default = pkgs.mkShell {
+        # shellHook = ''
+        #   ${config.pre-commit.installationScript}
+        # '';
 
-      packages = with pkgs; [
-        just
-        cachix
-      ];
-    };
+        packages = with pkgs; [
+          just
+          cachix
+        ];
+      };
 
-    devShells.genkeys = pkgs.mkShell {
-      packages = with pkgs; [
-        (sbcl.withPackages
-          (ps: with ps; [shasht]))
-      ];
-    };
+      devShells.genkeys = pkgs.mkShell {
+        packages = with pkgs; [
+          (sbcl.withPackages (ps: with ps; [ shasht ]))
+        ];
+      };
 
-    devShells.meow = pkgs.mkShell {
-      packages = [
-        (pkgs.callPackage ../pkgs/meow.nix {})
-        pkgs.nix-output-monitor
-        (pkgs.haskellPackages.ghcWithPackages (p:
-          with p; [
-            aeson
-            haskell-language-server
-          ]))
-      ];
+      devShells.meow = pkgs.mkShell {
+        packages = [
+          (pkgs.callPackage ../pkgs/meow.nix { })
+          pkgs.nix-output-monitor
+          (pkgs.haskellPackages.ghcWithPackages (
+            p: with p; [
+              aeson
+              haskell-language-server
+            ]
+          ))
+        ];
+      };
     };
-  };
 }

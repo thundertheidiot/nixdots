@@ -7,8 +7,8 @@ buildFHSEnv rec {
   version = "0.1.63a";
 
   # yes, all of this is required for webgl to work
-  targetPkgs = pkgs:
-    with pkgs; [
+  targetPkgs =
+    pkgs: with pkgs; [
       glibc.bin # binary package
       gtk3
       alsa-lib
@@ -37,10 +37,12 @@ buildFHSEnv rec {
       glib
     ];
 
-  runScript = let
-    glide = fetchzip {
-      url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-x86_64.tar.xz";
-      hash = "sha256-xB5xhmJ3gAlyxxhukQLUwPvgBjWSZktzRMJTblsU0lE=";
-    };
-  in "${glide}/glide";
+  runScript =
+    let
+      glide = fetchzip {
+        url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-x86_64.tar.xz";
+        hash = "sha256-xB5xhmJ3gAlyxxhukQLUwPvgBjWSZktzRMJTblsU0lE=";
+      };
+    in
+    "${glide}/glide";
 }

@@ -3,21 +3,24 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (pkgs) replaceVars;
   inherit (lib) mkIf mkForce;
 
   cfg = config.meow.rice;
-in {
+in
+{
   config = mkIf (cfg == "minimal") {
     meow.workstation.waybarDiskFormat = "{path} {free}";
 
     meow.home.modules = [
       {
         catppuccin.waybar.enable = false;
-        programs.waybar.style = let
-          colors = config.meow.workstation.theme.palette.withHashtag;
-        in
+        programs.waybar.style =
+          let
+            colors = config.meow.workstation.theme.palette.withHashtag;
+          in
           replaceVars ./waybar.css {
             accent = colors.base0D;
             bg = colors.base00;
@@ -31,8 +34,8 @@ in {
           height = 24;
           spacing = 0;
 
-          modules-left = mkForce ["niri/window"];
-          modules-center = mkForce [];
+          modules-left = mkForce [ "niri/window" ];
+          modules-center = mkForce [ ];
           modules-right = mkForce [
             "network"
             "pulseaudio"

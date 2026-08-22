@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   config = {
     meow.impermanence.directories = [
       {
@@ -15,7 +16,7 @@
 
     services.postgresql = {
       enable = true;
-      ensureDatabases = [config.services.freshrss.database.name];
+      ensureDatabases = [ config.services.freshrss.database.name ];
 
       authentication = lib.mkOverride 10 ''
         #type database  DBuser  auth-method

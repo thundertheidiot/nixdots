@@ -3,12 +3,14 @@
   mlib,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   inherit (mlib) mkEnOptTrue;
 
   cfg = config.meow.program.alacrittyConfig;
-in {
+in
+{
   options = {
     meow.program.alacrittyConfig = mkEnOptTrue "Configure alacritty";
   };

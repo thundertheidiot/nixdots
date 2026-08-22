@@ -11,7 +11,7 @@
         ];
       }
     ];
-    definedAliases = ["@g"];
+    definedAliases = [ "@g" ];
   };
   "ddg" = {
     urls = [
@@ -25,7 +25,7 @@
         ];
       }
     ];
-    definedAliases = ["@ddg"];
+    definedAliases = [ "@ddg" ];
   };
   "Nix Packages" = {
     urls = [
@@ -39,7 +39,7 @@
         ];
       }
     ];
-    definedAliases = ["@np"];
+    definedAliases = [ "@np" ];
   };
   "Nix Options" = {
     urls = [
@@ -54,7 +54,7 @@
       }
     ];
 
-    definedAliases = ["@no"];
+    definedAliases = [ "@no" ];
   };
   "Noogle" = {
     urls = [
@@ -69,7 +69,7 @@
       }
     ];
 
-    definedAliases = ["@noogle"];
+    definedAliases = [ "@noogle" ];
   };
   "Home Manager Options" = {
     urls = [
@@ -84,6 +84,6 @@
       }
     ];
 
-    definedAliases = ["@hm"];
+    definedAliases = [ "@hm" ];
   };
 }

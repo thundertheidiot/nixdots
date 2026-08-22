@@ -4,12 +4,14 @@
   mlib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.meow.virtualization;
 
   inherit (mlib) mkEnOpt;
   inherit (lib) mkIf;
-in {
+in
+{
   options = {
     meow.virtualization = {
       enable = mkEnOpt "Install and configure virt-manager.";
@@ -20,7 +22,7 @@ in {
     virtualisation.libvirtd.enable = true;
     programs.virt-manager.enable = true;
 
-    users.users."${config.meow.user}".extraGroups = ["libvirtd"];
+    users.users."${config.meow.user}".extraGroups = [ "libvirtd" ];
 
     meow.impermanence.directories = [
       {
@@ -37,7 +39,7 @@ in {
         Type = "simple";
       };
       # don't fail the service on failure, this fails on system upgrades
-      path = [pkgs.libvirt];
+      path = [ pkgs.libvirt ];
       script = ''
         set -o pipefail
 
@@ -46,7 +48,7 @@ in {
         fi
       '';
       serviceConfig.RemainAfterExit = true;
-      wantedBy = ["multi-user.target"];
+      wantedBy = [ "multi-user.target" ];
     };
   };
 }

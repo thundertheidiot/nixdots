@@ -3,14 +3,24 @@
   mlib,
   config,
   ...
-}: let
+}:
+let
   inherit (mlib) mkOpt;
   inherit (lib.types) enum;
-in {
+in
+{
   options = {
-    meow.rice = mkOpt (enum ["glass" "minimal" "none"]) "glass" {
-      description = "Theme to install";
-    };
+    meow.rice =
+      mkOpt
+        (enum [
+          "glass"
+          "minimal"
+          "none"
+        ])
+        "glass"
+        {
+          description = "Theme to install";
+        };
   };
 
   imports = [

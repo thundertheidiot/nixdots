@@ -2,7 +2,8 @@
   config,
   inputs,
   ...
-}: {
+}:
+{
   config = {
     services.jellyfin = {
       enable = true;
@@ -25,7 +26,7 @@
     ];
 
     services.nginx.virtualHosts."jellyfin.local" = {
-      serverAliases = ["jellyfin.home"];
+      serverAliases = [ "jellyfin.home" ];
 
       addSSL = true;
       sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";

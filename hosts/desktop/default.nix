@@ -4,7 +4,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     ./vr.nix
     ./rathole.nix
@@ -17,9 +18,16 @@
 
   system.stateVersion = "24.05";
 
-  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ahci"
+    "nvme"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+  ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
 
   # temporary
   programs.nh.clean.enable = lib.mkForce false;
@@ -111,41 +119,51 @@
 
     user = "thunder";
 
-    workstation.environment = ["niri"];
+    workstation.environment = [ "niri" ];
     workstation.displayManager = "tuigreet";
 
     workstation.extraWaybarModules = {
-      "custom/qbittorrent" = let
-        script = pkgs.stdenv.mkDerivation {
-          name = "qbittorrent-waybar";
+      "custom/qbittorrent" =
+        let
+          script = pkgs.stdenv.mkDerivation {
+            name = "qbittorrent-waybar";
 
-          propagatedBuildInputs = [
-            (pkgs.python3.withPackages (pkgs: with pkgs; [humanize requests]))
-          ];
+            propagatedBuildInputs = [
+              (pkgs.python3.withPackages (
+                pkgs: with pkgs; [
+                  humanize
+                  requests
+                ]
+              ))
+            ];
 
-          dontUnpack = true;
+            dontUnpack = true;
 
-          installPhase = ''
-            install -Dm755 ${./qbit.py} $out/bin/qbit
-          '';
+            installPhase = ''
+              install -Dm755 ${./qbit.py} $out/bin/qbit
+            '';
+          };
+        in
+        {
+          exec = "${script}/bin/qbit";
+          on-click = "${script}/bin/qbit toggle_limit";
+          on-click-right = "xdg-open https://torrent.home";
+          return-type = "json";
+          restart-interval = "1";
+          format = "{icon} {text}";
+          format-icons = {
+            normal = "<span foreground='green'>󰓅</span> ";
+            alternative = "<span foreground='red'>󰾆</span> ";
+          };
         };
-      in {
-        exec = "${script}/bin/qbit";
-        on-click = "${script}/bin/qbit toggle_limit";
-        on-click-right = "xdg-open https://torrent.home";
-        return-type = "json";
-        restart-interval = "1";
-        format = "{icon} {text}";
-        format-icons = {
-          normal = "<span foreground='green'>󰓅</span> ";
-          alternative = "<span foreground='red'>󰾆</span> ";
-        };
-      };
     };
 
     gaming.enable = true;
     gaming.emulation = true;
-    gaming.games = ["duckgame" "minecraft"];
+    gaming.games = [
+      "duckgame"
+      "minecraft"
+    ];
 
     emacs.enable = true;
     emacs.ewm.enable = true;
@@ -287,7 +305,7 @@
 
     # electrum-ltc
 
-    (callPackage ./displaytoggle.nix {})
+    (callPackage ./displaytoggle.nix { })
   ];
 
   hardware.ckb-next.enable = true;
@@ -345,15 +363,18 @@
               type = "btrfs";
               subvolumes = {
                 "/storage" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/mnt/1tb_nvme";
                 };
                 "/persist" = {
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/persist";
                 };
                 "/nix" = {
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                   mountpoint = "/nix";
                 };
                 "/tmp" = {
@@ -386,7 +407,7 @@
   fileSystems."/home" = {
     device = "/dev/disk/by-uuid/8e5420d3-a33b-4de5-a06f-267202f1b3ee";
     fsType = "btrfs";
-    options = ["subvol=/subvolumes/home"];
+    options = [ "subvol=/subvolumes/home" ];
   };
 
   # fileSystems."/mnt/4tb" = {

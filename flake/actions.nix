@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   flake.actions-nix = {
     pre-commit.enable = true;
 
@@ -12,106 +13,115 @@
       };
     };
 
-    workflows = let
-      inherit (lib.lists) flatten singleton;
-      inherit (builtins) attrNames;
-      # buildAllHosts = map (n: {
-      #   name = "Build ${n}";
-      #   run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-      # }) (attrNames config.flake.nixosConfigurations);
+    workflows =
+      let
+        inherit (lib.lists) flatten singleton;
+        inherit (builtins) attrNames;
+        # buildAllHosts = map (n: {
+        #   name = "Build ${n}";
+        #   run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
+        # }) (attrNames config.flake.nixosConfigurations);
 
-      buildAllHosts = map (n: {
-        name = "Build ${n}";
-        run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-      }) ["server2" "vps" "framework"];
+        buildAllHosts =
+          map
+            (n: {
+              name = "Build ${n}";
+              run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
+            })
+            [
+              "server2"
+              "vps"
+              "framework"
+            ];
 
-      mkBasicNix = list: {
-        steps =
-          [
+        mkBasicNix = list: {
+          steps = [
             blocks.checkout
             blocks.cleanup
             blocks.nixInstaller
             blocks.cachix
           ]
           ++ (flatten list);
-      };
-
-      blocks = {
-        checkout = {
-          uses = "actions/checkout@v5";
         };
 
-        cleanup = {
-          uses = "wimpysworld/nothing-but-nix@v6";
-          "with" = {
-            hatchet-protocol = "rampage";
-            nix-permission-edict = true;
+        blocks = {
+          checkout = {
+            uses = "actions/checkout@v5";
+          };
+
+          cleanup = {
+            uses = "wimpysworld/nothing-but-nix@v6";
+            "with" = {
+              hatchet-protocol = "rampage";
+              nix-permission-edict = true;
+            };
+          };
+
+          nixInstaller = {
+            name = "Nix Installer";
+            uses = "cachix/install-nix-action@v31";
+            "with" = {
+              github_access_token = "\${{ secrets.GITHUB_TOKEN }}";
+              install_options = "--no-daemon";
+            };
+          };
+
+          cachix = {
+            name = "Cachix";
+            uses = "cachix/cachix-action@v17";
+            "with" = {
+              name = "meowos";
+              authToken = "\${{ secrets.CACHIX_AUTH_TOKEN }}";
+            };
+          };
+
+          vpsDeploy = {
+            name = "Deploy update to vps";
+
+            # other half of the setup in modules/server/deploy.nix
+            run = ''
+              echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+              chmod 600 ~/deploykey
+
+              ssh -t -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey deploy@kotiboksi.xyz -p 69
+            '';
           };
         };
+      in
+      {
+        ".github/workflows/build-hosts.yaml" = {
+          on.workflow_dispatch = { };
 
-        nixInstaller = {
-          name = "Nix Installer";
-          uses = "cachix/install-nix-action@v31";
-          "with" = {
-            github_access_token = "\${{ secrets.GITHUB_TOKEN }}";
-            install_options = "--no-daemon";
-          };
+          jobs.build = mkBasicNix (
+            map (n: {
+              name = "Build ${n}";
+              run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
+            }) (attrNames config.flake.nixosConfigurations)
+          );
         };
 
-        cachix = {
-          name = "Cachix";
-          uses = "cachix/cachix-action@v17";
-          "with" = {
-            name = "meowos";
-            authToken = "\${{ secrets.CACHIX_AUTH_TOKEN }}";
-          };
-        };
+        ".github/workflows/build-package.yaml" = {
+          name = "Update and build packages";
 
-        vpsDeploy = {
-          name = "Deploy update to vps";
+          on.workflow_dispatch.inputs = {
+            package = {
+              description = "Package(s) to build";
+              required = true;
+            };
 
-          # other half of the setup in modules/server/deploy.nix
-          run = ''
-            echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
-            chmod 600 ~/deploykey
+            flake-input = {
+              description = "Flake input(s) to update";
+              required = true;
+            };
 
-            ssh -t -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey deploy@kotiboksi.xyz -p 69
-          '';
-        };
-      };
-    in {
-      ".github/workflows/build-hosts.yaml" = {
-        on.workflow_dispatch = {};
-
-        jobs.build = mkBasicNix (map (n: {
-          name = "Build ${n}";
-          run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-        }) (attrNames config.flake.nixosConfigurations));
-      };
-
-      ".github/workflows/build-package.yaml" = {
-        name = "Update and build packages";
-
-        on.workflow_dispatch.inputs = {
-          package = {
-            description = "Package(s) to build";
-            required = true;
+            vps-deploy = {
+              description = "Should redeploy vps";
+              required = false;
+              default = "false";
+            };
           };
 
-          flake-input = {
-            description = "Flake input(s) to update";
-            required = true;
-          };
-
-          vps-deploy = {
-            description = "Should redeploy vps";
-            required = false;
-            default = "false";
-          };
-        };
-
-        jobs.build =
-          {
+          jobs.build = {
             permissions.contents = "write";
           }
           // mkBasicNix [
@@ -142,83 +152,89 @@
             }
           ];
 
-        jobs.update-vps.needs = ["build"];
-        jobs.update-vps.steps = singleton (blocks.vpsDeploy
-          // {
-            "if" = "\${{ inputs.vps-deploy == 'true' }}";
-          });
-      };
-
-      ".github/workflows/deploy-vps.yaml" = {
-        on.workflow_dispatch = {};
-        jobs.update-vps.steps = [blocks.vpsDeploy];
-      };
-
-      # ".github/workflows/mirror.yaml" = {
-      #   name = "Mirror repository for other forges";
-
-      #   on.push = {};
-      #   jobs.push.steps = [
-      #     blocks.checkout
-      #     {
-      #       name = "Push";
-      #       run = ''
-      #         echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
-      #         chmod 600 ~/deploykey
-
-      #         GIT_SSH_COMMAND="ssh -i ~/deploykey -o StrictHostKeyChecking=no" git push git@tangled.org:thundertheidiot.bsky.social/nixdots main
-      #       '';
-      #     }
-      #   ];
-      # };
-
-      ".github/workflows/update-flake.yaml" = {
-        name = "Update flake.lock";
-
-        on = {
-          schedule = [
-            {
-              cron = "0 03 */4 * *";
+          jobs.update-vps.needs = [ "build" ];
+          jobs.update-vps.steps = singleton (
+            blocks.vpsDeploy
+            // {
+              "if" = "\${{ inputs.vps-deploy == 'true' }}";
             }
-          ];
-          workflow_dispatch = {};
+          );
         };
 
-        jobs.update-lockfile.steps = [
-          blocks.checkout
-          blocks.nixInstaller
-          {
-            name = "Update flake.lock";
-            run = "nix flake update --accept-flake-config";
-          }
-          {
-            name = "Upload flake.lock";
-            uses = "actions/upload-artifact@v4";
-            "with" = {
-              name = "flake-lock";
-              path = "flake.lock";
-              retention-days = 1;
-            };
-          }
-        ];
+        ".github/workflows/deploy-vps.yaml" = {
+          on.workflow_dispatch = { };
+          jobs.update-vps.steps = [ blocks.vpsDeploy ];
+        };
 
-        jobs.build-matrix =
-          {
-            needs = ["update-lockfile"];
-            strategy.matrix.target = let
-              inherit (lib) concatStringsSep;
-              hostPackage = h: p: "nixosConfigurations.${h}.pkgs.${p}";
-              join = concatStringsSep " ";
+        # ".github/workflows/mirror.yaml" = {
+        #   name = "Mirror repository for other forges";
 
-              vpsPackage = hostPackage "vps";
-              vpsPkgs = map vpsPackage;
-              # frameworkPackage = hostPackage "framework";
-              # fwPkgs = map frameworkPackage;
-            in [
-              (join (vpsPkgs ["meowdzbot" "sodexobot"]))
-              (vpsPackage "leptos-kotiboksi")
-              # (join (fwPkgs ["krita" "blender"]))
+        #   on.push = {};
+        #   jobs.push.steps = [
+        #     blocks.checkout
+        #     {
+        #       name = "Push";
+        #       run = ''
+        #         echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+        #         chmod 600 ~/deploykey
+
+        #         GIT_SSH_COMMAND="ssh -i ~/deploykey -o StrictHostKeyChecking=no" git push git@tangled.org:thundertheidiot.bsky.social/nixdots main
+        #       '';
+        #     }
+        #   ];
+        # };
+
+        ".github/workflows/update-flake.yaml" = {
+          name = "Update flake.lock";
+
+          on = {
+            schedule = [
+              {
+                cron = "0 03 */4 * *";
+              }
             ];
+            workflow_dispatch = { };
+          };
+
+          jobs.update-lockfile.steps = [
+            blocks.checkout
+            blocks.nixInstaller
+            {
+              name = "Update flake.lock";
+              run = "nix flake update --accept-flake-config";
+            }
+            {
+              name = "Upload flake.lock";
+              uses = "actions/upload-artifact@v4";
+              "with" = {
+                name = "flake-lock";
+                path = "flake.lock";
+                retention-days = 1;
+              };
+            }
+          ];
+
+          jobs.build-matrix = {
+            needs = [ "update-lockfile" ];
+            strategy.matrix.target =
+              let
+                inherit (lib) concatStringsSep;
+                hostPackage = h: p: "nixosConfigurations.${h}.pkgs.${p}";
+                join = concatStringsSep " ";
+
+                vpsPackage = hostPackage "vps";
+                vpsPkgs = map vpsPackage;
+                # frameworkPackage = hostPackage "framework";
+                # fwPkgs = map frameworkPackage;
+              in
+              [
+                (join (vpsPkgs [
+                  "meowdzbot"
+                  "sodexobot"
+                ]))
+                (vpsPackage "leptos-kotiboksi")
+                # (join (fwPkgs ["krita" "blender"]))
+              ];
           }
           // mkBasicNix [
             {
@@ -236,9 +252,8 @@
             }
           ];
 
-        jobs.update =
-          {
-            needs = ["build-matrix"];
+          jobs.update = {
+            needs = [ "build-matrix" ];
             permissions.contents = "write";
           }
           // mkBasicNix [
@@ -270,7 +285,7 @@
               };
             }
           ];
+        };
       };
-    };
   };
 }
