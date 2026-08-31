@@ -113,6 +113,7 @@
     user = "thunder";
 
     gaming.enable = true;
+    gaming.games = [ "minecraft" ];
 
     emacs.enable = true;
     emacs.ewm.enable = true;
