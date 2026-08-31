@@ -10,6 +10,7 @@ in
   config = {
     nixpkgs.overlays = [
       inputs.nix-cachyos-kernel.overlays.pinned
+      inputs.nixwine.overlays.default
 
       (final: prev: rec {
         # TODO organize, break up

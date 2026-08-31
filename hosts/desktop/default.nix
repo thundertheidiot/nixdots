@@ -9,6 +9,7 @@
   imports = [
     ./vr.nix
     ./rathole.nix
+    ./games.nix
     # ./firedragon.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.common-gpu-amd

@@ -37,7 +37,7 @@ in
       AUDIO_DOWNLOAD_DIR = "/audio_downloads";
 
       OUTPUT_TEMPLATE = "%(uploader)s/%(title)s.%(ext)s";
-      OUTPUT_TEMPLATE_CHAPTER = "%(uploader)/%(title)s - %(section_number)s %(section_title)s.%(ext)s";
+      OUTPUT_TEMPLATE_CHAPTER = "%(uploader)s/%(title)s - %(section_number)s %(section_title)s.%(ext)s";
 
       CORS_ALLOWED_ORIGINS = "*";
 

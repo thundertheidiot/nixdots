@@ -40,6 +40,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixwine.url = "git+https://codeberg.org/thundertheidiot/nix-wine";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
