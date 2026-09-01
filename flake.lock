@@ -264,6 +264,7 @@
         "ewm": "ewm",
         "flake-parts": "flake-parts_4",
         "ghostel": "ghostel",
+        "gptel-zai": "gptel-zai",
         "home-manager": "home-manager",
         "nixpkgs": [
           "nixpkgs"
@@ -271,11 +272,11 @@
         "org-defblock": "org-defblock"
       },
       "locked": {
-        "lastModified": 1788240826,
-        "narHash": "sha256-ovFrZiuX1fMkx/5qvSDdWLlZprTPbIhJrelOIi4E3HI=",
+        "lastModified": 1788253987,
+        "narHash": "sha256-DJ5aanHweBFMaaEutpV7/xX0iPWvjuzD3wBlJoZVUUs=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "973103c0382d3521a2ffdfad5afecf66c855f76a",
+        "rev": "9a10bca7abaa18cb573cb311a629c9eed692f70c",
         "type": "github"
       },
       "original": {
@@ -797,6 +798,22 @@
       "original": {
         "owner": "hercules-ci",
         "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
+    "gptel-zai": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787360294,
+        "narHash": "sha256-mZkDwuMRW4id2G7J/CKz6H0VhIdHPpPwsrAWHj2kos4=",
+        "owner": "z80dev",
+        "repo": "gptel-zai",
+        "rev": "ba7fad4274013c33b065e28c4516ac221dfc5b69",
+        "type": "github"
+      },
+      "original": {
+        "owner": "z80dev",
+        "repo": "gptel-zai",
         "type": "github"
       }
     },
