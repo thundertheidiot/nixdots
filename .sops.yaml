@@ -27,6 +27,10 @@ creation_rules:
           - *desk
           - *vps
           - *framework
+  - path_regex: hosts/desktop/secrets/[^/]+$
+    key_groups:
+      - age:
+          - *desk
   - path_regex: sops/wireguard/[^/]+$
     key_groups:
       - age:

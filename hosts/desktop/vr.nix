@@ -26,105 +26,6 @@ let
 in
 {
   config = lib.mkMerge [
-    # mesa rdna2 fix
-    # {
-    #   nixpkgs.overlays = [
-    #     (final: prev: {
-    #       mesa = prev.mesa.overrideAttrs (prev: {
-    #         patches = [
-    #           (final.fetchpatch2 {
-    #             url = "https://aur.archlinux.org/cgit/aur.git/plain/0001-Revert-wsi-display-pass-the-plane-s-modifiers-to-the.patch?h=mesa-rdna2vr";
-    #             sha256 = "sha256-Vy/symhMl5Mupmct7zv/sgrOcYoQfT4QkDrcLcF6z0Q=";
-    #           })
-    #         ];
-    #       });
-    #     })
-    #   ];
-    # }
-    #
-    # xrizer override
-    # {
-    #   nixpkgs.overlays = [
-    #     (final: prev: {
-    #       xrizer = prev.xrizer.overrideAttrs (prev: {
-    #         version = "git";
-    #         src = inputs.xrizer;
-    #         cargoDeps = final.rustPlatform.importCargoLock {
-    #           lockFile = "${inputs.xrizer}/Cargo.lock";
-    #         };
-    #       });
-    #     })
-    #   ];
-    # }
-    # SteamVR
-    {
-      # NOTE: "Security" concern
-      # This patch allows any application to use the privileges granted by CAP_SYS_NICE
-      # Could potentially lead to system lockups
-      boot.kernelPatches = [
-        # {
-        #   name = "amdgpu-ignore-ctx-privileges";
-        #   patch = pkgs.fetchpatch {
-        #     name = "cap_sys_nice_begone.patch";
-        #     url = "https://github.com/Frogging-Family/community-patches/raw/master/linux61-tkg/cap_sys_nice_begone.mypatch";
-        #     hash = "sha256-Y3a0+x2xvHsfLax/uwycdJf3xLxvVfkfDVqjkxNaYEo=";
-        #   };
-        # }
-      ];
-
-      # systemd.services."steamvr-setcap" = {
-      #   enable = false;
-      #   description = "Run setcap to fix steamvr.";
-      #   unitConfig.Type = "simple";
-      #   serviceConfig = {
-      #     ExecStart = "${pkgs.libcap}/bin/setcap CAP_SYS_NICE+ep ${config.homeDirectory}/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher || true";
-      #   };
-      #   wantedBy = ["multi-user.target"];
-      # };
-    }
-    # funy
-    {
-      # Old vrc launch option
-      # env U_PACING_APP_USE_MIN_FRAME_PERIOD=1 PRESSURE_VESSEL_FILESYSTEMS_RW=$XDG_RUNTIME_DIR/monado_comp_ipc vrchatlauncher %command% --enable-avpro-in-proton
-      environment.systemPackages = with pkgs; [
-        (writeShellApplication {
-          name = "vrchatlauncher";
-
-          runtimeInputs = [
-            inotify-tools
-          ];
-
-          text = ''
-            steamapps=/home/thunder/.local/share/Steam/steamapps
-            watch_folder="$steamapps"/compatdata/438100/pfx/drive_c/users/steamuser/AppData/LocalLow/VRChat/VRChat
-
-            do_taskset() {
-            	log=$(inotifywait --include '.*\.txt' --event create "$watch_folder" --format '%f')
-
-            	echo "Log: $watch_folder/$log"
-
-            	while ! pid=$(pgrep VRChat); do
-            		sleep 0.1
-            	done
-
-            	echo "Setting VRChat to dual-core..."
-            	taskset -pac 0,1 "$pid"
-
-            	tail -f "$watch_folder/$log" 2>/dev/null | sed -n '/EOS Login Succeeded/{p;q}'
-            	sleep 1
-
-            	echo "Setting VRChat to all cores..."
-            	taskset -pac "0-$(($(nproc) - 1))" "$pid"
-
-            	echo "Our work here is done."
-            }
-
-            LD_PRELOAD=\'\' do_taskset </dev/null &
-            exec "$@"
-          '';
-        })
-      ];
-    }
     # Monado
     {
       services.monado = {
@@ -143,7 +44,7 @@ in
         WMR_HANDTRACKING = "0";
       };
     }
-    # wlx-overlay-s
+    # utils
     (homeModule {
       home.packages = with pkgs; [
         wayvr

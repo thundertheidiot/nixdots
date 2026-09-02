@@ -19,11 +19,12 @@ in
     ./freshrss.nix
     ./gatus.nix
     ./jellyfin.nix
+    ./rathole.nix
     ./secrets
     ./sodexobot.nix
+    ./urlwatch.nix
     ./website.nix
     ./wireguard.nix
-    ./urlwatch.nix
   ];
 
   config = {

@@ -1998,11 +1998,11 @@
     "xrizer": {
       "flake": false,
       "locked": {
-        "lastModified": 1780651049,
-        "narHash": "sha256-d1A8rUJxzBkkrWezVTTz3DQPh/V/k0WIZ3dJMS+0qc0=",
+        "lastModified": 1788332300,
+        "narHash": "sha256-8CVoVThQTnh6aXhnTeUNqG8WhgpFe4UDqYktCNU67HY=",
         "owner": "thundertheidiot",
         "repo": "xrizer",
-        "rev": "961e6cb6512aa775483583b4d5a6af52142512f3",
+        "rev": "baa0e0ee8bd45b1167b2e49857c9c55d99ce8612",
         "type": "github"
       },
       "original": {

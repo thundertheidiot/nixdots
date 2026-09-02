@@ -49,9 +49,10 @@ in
                     src = inputs.xrizer;
                     cargoDeps = final.rustPlatform.importCargoLock {
                       lockFile = "${inputs.xrizer}/Cargo.lock";
-                      outputHashes = {
-                        "openxr-0.19.0" = "sha256-mljVBbQTq/k7zd/WcE1Sd3gibaJiZ+t7td964clWHd8=";
-                      };
+                      # cargoHash = "";
+                      # outputHashes = {
+                      #   "openxr-0.19.0" = "sha256-mljVBbQTq/k7zd/WcE1Sd3gibaJiZ+t7td964clWHd8=";
+                      # };
                     };
                   });
                 })

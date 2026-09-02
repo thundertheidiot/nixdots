@@ -8,8 +8,8 @@
 {
   imports = [
     ./vr.nix
-    ./rathole.nix
     ./games.nix
+    ./secrets
     # ./firedragon.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
@@ -76,27 +76,6 @@
       mHome.lang.latex = true;
       meowEmacs.enable = true;
 
-      # services.mpd.enable = lib.mkForce false;
-      # services.mopidy = {
-      #   enable = true;
-      #   extensionPackages = with pkgs; [mopidy-mpd mopidy-local mopidy-subidy];
-
-      #   extraConfigFiles = ["/home/thunder/.config/mopidy/navidrome.conf"];
-
-      #   settings = {
-      #     file.media_dirs = ["~/Music/mpd|Music"];
-
-      #     verbosity.logging = 2;
-
-      #     mpd.enabled = true;
-      #     subidy.enabled = true;
-      #     subidy.url = "https://navidrome.home";
-      #     subidy.api_version = 1.14;
-
-      #     audio.output = "pipewiresink";
-      #   };
-      # };
-
       gtk.gtk3.bookmarks = [
         # "file:///mnt/4tb"
         "file:///mnt/1tb_nvme"
@@ -110,6 +89,20 @@
       };
     }
   ];
+
+  services.rathole = {
+    enable = true;
+    role = "client";
+    credentialsFile = config.sops.secrets."rathole_secrets".path;
+    settings = {
+      client = {
+        remote_addr = "meowcloud.net:2333";
+        transport.type = "noise";
+
+        services.minecraft.local_addr = "127.0.0.1:25565";
+      };
+    };
+  };
 
   meow = {
     fullSetup = true;
@@ -278,6 +271,7 @@
 
   environment.systemPackages = with pkgs; [
     distrobox
+    opencode
 
     mpkgs.helium
     mpkgs.sable-desktop
