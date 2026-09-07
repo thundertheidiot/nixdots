@@ -68,6 +68,8 @@ in
       # rustup
       sops
 
+      gcc
+
       ffmpeg
 
       atool
