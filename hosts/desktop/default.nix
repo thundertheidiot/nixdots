@@ -75,6 +75,7 @@
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
       meowEmacs.enable = true;
+      meowEmacs.package = "emacs-pwayl";
 
       gtk.gtk3.bookmarks = [
         # "file:///mnt/4tb"

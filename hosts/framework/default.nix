@@ -77,6 +77,8 @@
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
 
+      meowEmacs.package = "emacs-pwayl";
+
       home.packages = with pkgs; [
         distrobox
 
