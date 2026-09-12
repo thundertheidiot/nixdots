@@ -273,11 +273,11 @@
         "org-defblock": "org-defblock"
       },
       "locked": {
-        "lastModified": 1789198890,
-        "narHash": "sha256-O3YYGg5GY7OtSrakIGWHMkAXMN9vVo9rk+Im1T/Wj/k=",
+        "lastModified": 1789232876,
+        "narHash": "sha256-2QHouj/H8UlzZ20M5Y5iwGoO+14DHN3Kmgm0qeNFdjI=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "cb588654dfa44132caeda845b54483b71246e9a2",
+        "rev": "1968c4187e900aef5f82ed16f0514625af787a75",
         "type": "github"
       },
       "original": {
@@ -308,18 +308,18 @@
     "emacs-pwayl": {
       "flake": false,
       "locked": {
-        "lastModified": 1789060012,
-        "narHash": "sha256-WpbNF0k29BFTvumBlb58TZse+OaHOQ+ODsiLrw4AGmQ=",
-        "ref": "wayland-31",
-        "rev": "f7f37411b1c4ad713e227e7f039847159a07732d",
-        "revCount": 182660,
+        "lastModified": 1789230359,
+        "narHash": "sha256-EEZCP9Z0LANv6X7TKuq4gzUYbniraN260ClCmE//TNg=",
+        "ref": "emacsclient-fix",
+        "rev": "801b51007dc417e3997df5801a15a087f510457c",
+        "revCount": 182661,
         "type": "git",
-        "url": "https://codeberg.org/ezemtsov/emacs.git"
+        "url": "https://codeberg.org/thundertheidiot/emacs-pwayl.git"
       },
       "original": {
-        "ref": "wayland-31",
+        "ref": "emacsclient-fix",
         "type": "git",
-        "url": "https://codeberg.org/ezemtsov/emacs.git"
+        "url": "https://codeberg.org/thundertheidiot/emacs-pwayl.git"
       }
     },
     "emsg-blame": {
