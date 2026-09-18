@@ -117,6 +117,7 @@ in
 
           runtimeInputs = [
             pkgs.inotify-tools
+            pkgs.jq
           ];
 
           text =
@@ -159,15 +160,16 @@ in
               [ -z "$1" ] && { echo "provide argument"; exit 1; }
 
               case $1 in
-                game)
-                  shift 1
+              game)
+                shift 1
 
-                  exec env PRESSURE_VESSEL_FILESYSTEMS_RW="$XDG_RUNTIME_DIR/monado_comp_ipc" \
-                           PRESSURE_VESSEL_FILESYSTEMS="/nix/store" \
-                           PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1 \
-                           XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
-                           "$@"
-                  ;;
+                exec env PROTON_VR_RUNTIME="$(jq -r '.runtime[0]' "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath" 2>/dev/null)" \
+                         PRESSURE_VESSEL_FILESYSTEMS_RW="$XDG_RUNTIME_DIR/monado_comp_ipc" \
+                         PRESSURE_VESSEL_FILESYSTEMS="/nix/store" \
+                         PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1 \
+                         XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
+                         "$@"
+                ;;
                 steam)
                   sudo "${getExe enable_vr_mode}" || true
                   ln -f "$XDG_CONFIG_HOME/openxr/1/steamvr_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.json"
@@ -186,6 +188,10 @@ in
                       ;;
                     open32)
                       ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite32_openvrpaths.vrpath" \
+                            "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                      ;;
+                    vapor)
+                      ln -f "$XDG_CONFIG_HOME/openvr/monado_vapor.vrpath" \
                             "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
                       ;;
                     *)
@@ -304,6 +310,25 @@ in
             }/lib/xrizer"
           ];
           version = 1;
+        };
+
+        xdg.configFile."openvr/monado_vapor.vrpath".text = builtins.toJSON {
+          config = [
+            "${config.xdg.dataHome}/Steam/config"
+          ];
+          external_drivers = null;
+          jsonid = "vrpathreg";
+          log = [
+            "${config.xdg.dataHome}/Steam/logs"
+          ];
+          runtime = [
+            "${pkgs.vapor}/lib/VapoR"
+          ];
+          version = 1;
+        };
+
+        xdg.configFile."VapoR/config.json".text = builtins.toJSON {
+          device_profile = "steamvr_vive";
         };
 
         xdg.configFile."openvr/steamvr_openvrpaths.vrpath".text = builtins.toJSON {

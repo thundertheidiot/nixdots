@@ -24,6 +24,8 @@
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable-small/nixexprs.tar.xz";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    nixpkgs-multiverse.url = "github:fzakaria/nixpkgs-multiverse";
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -51,11 +53,6 @@
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    xrizer = {
-      url = "github:thundertheidiot/xrizer/alien-isolation-fix";
-      flake = false;
     };
 
     emacs.url = "github:thundertheidiot/emacs";

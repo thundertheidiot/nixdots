@@ -37,25 +37,16 @@ in
           inputs.authentik-nix.nixosModules.default
           inputs.catppuccin.nixosModules.default
           inputs.emacs.nixosModules.default
+          inputs.nixpkgs-multiverse.nixosModules.default
           ({ ... }: {
             imports = import "${root}/modules";
+
+            multiverse.config.allowUnfree = true;
+
             nixpkgs = {
               overlays = [
                 inputs.rust-overlay.overlays.default
                 inputs.nixpkgs-xr.overlays.default
-                (final: prev: {
-                  xrizer = prev.xrizer.overrideAttrs (prev: {
-                    version = "git";
-                    src = inputs.xrizer;
-                    cargoDeps = final.rustPlatform.importCargoLock {
-                      lockFile = "${inputs.xrizer}/Cargo.lock";
-                      # cargoHash = "";
-                      # outputHashes = {
-                      #   "openxr-0.19.0" = "sha256-mljVBbQTq/k7zd/WcE1Sd3gibaJiZ+t7td964clWHd8=";
-                      # };
-                    };
-                  });
-                })
               ];
             };
             home-manager = {

@@ -16,12 +16,14 @@ in
   options.meow.school.enable = mkEnOpt "Enable school stuff";
 
   config = mkIf cfg.enable {
+    multiverse.pins.ciscoPacketTracer9 = "9.0.0";
+
     programs.firejail = {
       enable = true;
       wrappedBinaries = {
         packettracer =
           let
-            pkg = pkgs.cisco-packet-tracer_9;
+            pkg = config.multiverse.pinned.ciscoPacketTracer9;
           in
           {
             executable = lib.getExe pkg;
