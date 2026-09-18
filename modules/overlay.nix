@@ -12,6 +12,10 @@ in
       inputs.nix-cachyos-kernel.overlays.pinned
       inputs.nixwine.overlays.default
 
+      (inputs.nixpkgs-multiverse.lib.pinOverlay {
+        pins.opencode = "1.18.29";
+      })
+
       (final: prev: rec {
         # TODO organize, break up
         nur = import inputs.nur {

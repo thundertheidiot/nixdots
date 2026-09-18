@@ -7,7 +7,7 @@
 }:
 {
   imports = [
-    ./vr.nix
+    ./vr
     ./games.nix
     ./secrets
     # ./firedragon.nix

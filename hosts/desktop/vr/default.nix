@@ -11,6 +11,7 @@
 let
   inherit (mlib) homeModule;
   inherit (lib) getExe;
+  inherit (builtins) toJSON;
 
   monadoI686 =
     (pkgs.pkgsi686Linux.monado.overrideAttrs (old: {
@@ -92,6 +93,8 @@ in
           IpdChange = "Center";
         };
       };
+
+      xdg.configFile."wayvr/theme/gui/watch.xml".source = ./watch.xml;
     })
     {
       services.ananicy = {
@@ -155,6 +158,40 @@ in
                   echo 0 > "/sys/class/drm/$card/device/pp_power_profile_mode"
                 '';
               };
+
+              mkRuntime =
+                runtime:
+                pkgs.writeText "openvrpaths.vrpath" (
+                  builtins.toJSON {
+                    config = [ "/home/thunder/.local/share/Steam/config" ];
+                    external_drivers = null;
+                    jsonid = "vrpathreg";
+                    log = [ "/home/thunder/.local/share/Steam/logs" ];
+                    version = 1;
+
+                    runtime = [ runtime ];
+                  }
+                );
+
+              opencomposite = mkRuntime (
+                (pkgs.opencomposite.overrideAttrs (old: {
+                  postInstall = (old.postInstall or "") + ''
+                    cp ${pkgs.pkgsi686Linux.opencomposite}/lib/opencomposite/bin/vrclient.so $out/lib/opencomposite/bin
+                  '';
+                }))
+                + "/lib/opencomposite"
+              );
+
+              xrizer = mkRuntime (
+                (pkgs.xrizer.overrideAttrs (old: {
+                  postInstall = (old.postInstall or "") + ''
+                    cp ${pkgs.pkgsi686Linux.xrizer}/lib/xrizer/bin/vrclient.so $out/lib/xrizer/bin
+                  '';
+                }))
+                + "/lib/xrizer"
+              );
+
+              vapor = mkRuntime (pkgs.vapor + "/lib/VapoR");
             in
             ''
               [ -z "$1" ] && { echo "provide argument"; exit 1; }
@@ -181,24 +218,8 @@ in
                   sudo "${getExe enable_vr_mode}" || true
                   ln -f "$XDG_CONFIG_HOME/openxr/1/monado_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.json"
                   ln -f "$XDG_CONFIG_HOME/openxr/1/monado32_active_runtime.json" "$XDG_CONFIG_HOME/openxr/1/active_runtime.i686.json"
-                  case "''${2:-}" in
-                    "")
-                      ln -f "$XDG_CONFIG_HOME/openvr/monado_xrizer_openvrpaths.vrpath" \
-                            "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
-                      ;;
-                    open32)
-                      ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite32_openvrpaths.vrpath" \
-                            "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
-                      ;;
-                    vapor)
-                      ln -f "$XDG_CONFIG_HOME/openvr/monado_vapor.vrpath" \
-                            "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
-                      ;;
-                    *)
-                      ln -f "$XDG_CONFIG_HOME/openvr/monado_opencomposite_openvrpaths.vrpath" \
-                            "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
-                      ;;
-                  esac
+
+                  [ ! -f "$XDG_CONFIG_HOME" ] && vrhelper openvr "''${2:-}"
 
                   { sleep 10; wayvr; } &
 
@@ -212,6 +233,45 @@ in
                       U_PACING_APP_USE_MIN_FRAME_PERIOD=1 \
                       WMR_HANDTRACKING=0 \
                       monado-service
+                  ;;
+                openvr)
+                  cur="$XDG_CONFIG_HOME/openvr/current"
+
+                  update() {
+                    echo "$1" > "$cur"
+                    wayvrctl panel-modify watch openvr_runtime set-text "OpenVR: $1" || true
+                  }
+
+                  case "''${2:-}" in
+                    opencomposite)
+                      cp -f "${opencomposite}" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                      update opencomposite
+                      ;;
+                    "" | xrizer)
+                      cp -f "${xrizer}" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                      update xrizer
+                      ;;
+                    vapor)
+                      cp -f "${vapor}" "$XDG_CONFIG_HOME/openvr/openvrpaths.vrpath"
+                      update vapor
+                      ;;
+                    rotate)
+                      case "$(cat "$cur")" in
+                        opencomposite)
+                          vrhelper openvr xrizer
+                          ;;
+                        xrizer)
+                          vrhelper openvr vapor
+                          ;;
+                        vapor)
+                          vrhelper openvr opencomposite
+                          ;;
+                      esac
+                      ;;
+                    *)
+                      echo "Invalid OpenVR runtime"
+                      ;;
+                  esac
                   ;;
                 disable)
                   sudo ${disable_vr_mode}
@@ -227,6 +287,10 @@ in
     # OpenXR and OpenVR files
     (homeModule (
       { config, ... }: {
+        xdg.configFile."VapoR/config.json".text = builtins.toJSON {
+          device_profile = "steamvr_vive";
+        };
+
         xdg.configFile."openxr/1/monado_active_runtime.json".text = builtins.toJSON {
           file_format_version = "1.0.0";
           runtime = {
@@ -250,100 +314,6 @@ in
             name = "SteamVR";
             library_path = "${config.xdg.dataHome}/Steam/steamapps/common/SteamVR/bin/linux64/vrclient.so";
           };
-        };
-
-        xdg.configFile."openvr/monado_opencomposite_openvrpaths.vrpath".text = builtins.toJSON {
-          config = [
-            "${config.xdg.dataHome}/Steam/config"
-          ];
-          external_drivers = null;
-          jsonid = "vrpathreg";
-          log = [
-            "${config.xdg.dataHome}/Steam/logs"
-          ];
-          runtime = [
-            "${
-              pkgs.opencomposite.overrideAttrs (old: {
-                postInstall = ''
-                  cp ${pkgs.pkgsi686Linux.opencomposite}/lib/opencomposite/bin/vrclient.so $out/lib/opencomposite/bin
-                '';
-              })
-            }/lib/opencomposite"
-          ];
-          version = 1;
-        };
-
-        xdg.configFile."openvr/monado_opencomposite32_openvrpaths.vrpath".text = builtins.toJSON {
-          config = [
-            "${config.xdg.dataHome}/Steam/config"
-          ];
-          external_drivers = null;
-          jsonid = "vrpathreg";
-          log = [
-            "${config.xdg.dataHome}/Steam/logs"
-          ];
-          runtime = [
-            "${pkgs.pkgsi686Linux.opencomposite}/lib/opencomposite"
-          ];
-          version = 1;
-        };
-
-        xdg.configFile."openvr/monado_xrizer_openvrpaths.vrpath".text = builtins.toJSON {
-          config = [
-            "${config.xdg.dataHome}/Steam/config"
-          ];
-          external_drivers = null;
-          jsonid = "vrpathreg";
-          log = [
-            "${config.xdg.dataHome}/Steam/logs"
-          ];
-          runtime = [
-            "${
-              pkgs.xrizer.overrideAttrs (old: {
-                postInstall = lib.strings.concatStrings [
-                  old.postInstall
-                  ''
-                    cp ${pkgs.pkgsi686Linux.xrizer}/lib/xrizer/bin/vrclient.so $out/lib/xrizer/bin
-                  ''
-                ];
-              })
-            }/lib/xrizer"
-          ];
-          version = 1;
-        };
-
-        xdg.configFile."openvr/monado_vapor.vrpath".text = builtins.toJSON {
-          config = [
-            "${config.xdg.dataHome}/Steam/config"
-          ];
-          external_drivers = null;
-          jsonid = "vrpathreg";
-          log = [
-            "${config.xdg.dataHome}/Steam/logs"
-          ];
-          runtime = [
-            "${pkgs.vapor}/lib/VapoR"
-          ];
-          version = 1;
-        };
-
-        xdg.configFile."VapoR/config.json".text = builtins.toJSON {
-          device_profile = "steamvr_vive";
-        };
-
-        xdg.configFile."openvr/steamvr_openvrpaths.vrpath".text = builtins.toJSON {
-          config = [
-            "${config.xdg.dataHome}/Steam/config"
-          ];
-          external_drivers = null;
-          jsonid = "vrpathreg";
-          log = [
-            "${config.xdg.dataHome}/Steam/logs"
-          ];
-          runtime = [
-            "${config.xdg.dataHome}/Steam/steamapps/common/SteamVR"
-          ];
-          version = 1;
         };
       }
     ))

@@ -37,12 +37,18 @@ in
     services.mpdris2 = {
       enable = true;
       mpd = {
-        host = "127.0.0.1";
-        port = 6600;
         musicDirectory = config.services.mpd.musicDirectory;
       };
       # multimediaKeys = true;
       notifications = false;
+
+      settings = {
+        Connection = {
+          
+        host = "127.0.0.1";
+        port = 6600;
+        };
+      };
     };
 
     programs.ncmpcpp = {

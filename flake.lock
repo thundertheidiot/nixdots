@@ -1524,11 +1524,11 @@
         "nixpkgs-multiverse": "nixpkgs-multiverse_2"
       },
       "locked": {
-        "lastModified": 1789647740,
-        "narHash": "sha256-GzAkgLDgpcqOXgOaV6YlH0RMe9wI0z9j0/PHnqGOX5A=",
+        "lastModified": 1789729249,
+        "narHash": "sha256-s/YuzzE7ajDbJE3QD8L1S3wIl4UqAnZRgt0fZQcMmCs=",
         "ref": "refs/heads/main",
-        "rev": "d89e21a07b620e6d8e9b1bf017a56aeb9e68b70e",
-        "revCount": 39,
+        "rev": "681a11807b33181a3ba9052ace679f6e2bd09420",
+        "revCount": 42,
         "type": "git",
         "url": "https://codeberg.org/thundertheidiot/nix-wine"
       },
