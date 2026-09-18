@@ -36,18 +36,13 @@ in
 
     services.mpdris2 = {
       enable = true;
-      mpd = {
-        musicDirectory = config.services.mpd.musicDirectory;
-      };
-      # multimediaKeys = true;
-      notifications = false;
-
       settings = {
+        Library.music_dir = config.services.mpd.musicDirectory;
         Connection = {
-          
-        host = "127.0.0.1";
-        port = 6600;
+          host = "127.0.0.1";
+          port = 6600;
         };
+        Bling.notify = false;
       };
     };
 
