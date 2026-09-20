@@ -22,7 +22,7 @@ in
     ./rathole.nix
     ./secrets
     ./sodexobot.nix
-    ./urlwatch.nix
+    # ./urlwatch.nix
     ./website.nix
     ./wireguard.nix
   ];
@@ -121,11 +121,11 @@ in
       };
     };
 
-    services.journald.extraConfig = ''
-      SystemMaxUse=500M
-      SystemKeepFree=200M
-      MaxFileSec=7day
-    '';
+    services.journald.settings.Journal = {
+      SystemMaxUse = "500M";
+      SystemKeepFree = "200M";
+      MaxFileSec = "7day";
+    };
 
     # mailserver.stateVersion = 3;
 

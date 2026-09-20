@@ -14,6 +14,7 @@ in
 
       (inputs.nixpkgs-multiverse.lib.pinOverlay {
         pins.opencode = "1.18.29";
+        pins.xwayland-satellite = "0.8.1"; # niri steam bug
       })
 
       (final: prev: rec {

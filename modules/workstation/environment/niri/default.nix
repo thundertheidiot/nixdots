@@ -113,7 +113,7 @@ in
               keyboard {
                 xkb {
                   layout "us,fi"
-                  options "grp:win_space_toggle"
+                  options "grp:win_space_toggle,lv3:ralt_switch"
                   ${xkb}
                 }
 
