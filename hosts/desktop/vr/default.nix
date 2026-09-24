@@ -204,7 +204,6 @@ in
                          PRESSURE_VESSEL_FILESYSTEMS_RW="$XDG_RUNTIME_DIR/monado_comp_ipc" \
                          PRESSURE_VESSEL_FILESYSTEMS="/nix/store" \
                          PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1 \
-                         XRT_COMPOSITOR_SCALE_PERCENTAGE=120 \
                          "$@"
                 ;;
                 steam)
