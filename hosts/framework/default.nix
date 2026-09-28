@@ -10,6 +10,7 @@
 {
   imports = [
     ./disko.nix
+    ./wireguard.nix
     inputs.nixos-hardware.nixosModules.framework-13-7040-amd
     ./kmod.nix # nixos-hardware workaround
     inputs.autoaspm.nixosModules.default

@@ -10,6 +10,7 @@
     ./vr
     ./games.nix
     ./secrets
+    ./wireguard.nix
     # ./firedragon.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.common-gpu-amd

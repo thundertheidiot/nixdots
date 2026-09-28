@@ -31,9 +31,28 @@ in
           publicKey = keys.home2.pubkey;
           presharedKeyFile = config.sops.secrets.wg_preshared.path;
         }
+        # Framework
+        {
+          allowedIPs = [ "10.100.0.4/32" ];
+          publicKey = keys.framework.pubkey;
+          presharedKeyFile = config.sops.secrets.wg_preshared.path;
+        }
+        # Desktop
+        {
+          allowedIPs = [ "10.100.0.5/32" ];
+          publicKey = keys.desktop.pubkey;
+          presharedKeyFile = config.sops.secrets.wg_preshared.path;
+        }
+        # Phone
+        {
+          allowedIPs = [ "10.100.0.6/32" ];
+          publicKey = keys.phone.pubkey;
+          presharedKeyFile = config.sops.secrets.wg_preshared.path;
+        }
       ];
     };
 
+    networking.firewall.trustedInterfaces = [ "wg0" ];
     networking.firewall.allowedUDPPorts = [ 51820 ];
 
     boot.kernel.sysctl = {

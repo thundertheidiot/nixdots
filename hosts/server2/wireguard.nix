@@ -16,7 +16,7 @@ in
 
       peers = [
         {
-          allowedIPs = [ "10.100.0.1/32" ];
+          allowedIPs = [ "10.100.0.0/24" ];
           publicKey = keys.vps.pubkey;
           presharedKeyFile = config.sops.secrets.wg_preshared.path;
           persistentKeepalive = 25;
@@ -25,5 +25,7 @@ in
         }
       ];
     };
+
+    networking.firewall.trustedInterfaces = [ "wg0" ];
   };
 }
