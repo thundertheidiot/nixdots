@@ -38,6 +38,7 @@ in
           inputs.catppuccin.nixosModules.default
           inputs.emacs.nixosModules.default
           inputs.nixpkgs-multiverse.nixosModules.default
+          inputs.noctalia.nixosModules.default
           ({ ... }: {
             imports = import "${root}/modules";
 
@@ -55,6 +56,7 @@ in
                 inputs.emacs.homeModules.default
                 inputs.vicinae.homeManagerModules.default
                 inputs.catppuccin.homeModules.default
+                inputs.noctalia.homeModules.default
               ];
             };
           })

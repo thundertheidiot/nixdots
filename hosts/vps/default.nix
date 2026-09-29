@@ -115,7 +115,7 @@ in
           "gooptyland.xyz"
         ];
         coturn = true;
-        mumble = true;
+        # mumble = true;
         radio.enable = false;
         vaultwarden = true;
       };

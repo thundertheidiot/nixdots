@@ -72,6 +72,9 @@
 
     sops-nix.url = "github:Mic92/sops-nix";
 
+    noctalia.url = "github:noctalia-dev/noctalia";
+    noctalia.inputs.nixpkgs.follows = "nixpkgs";
+
     # server
     authentik-nix.url = "github:nix-community/authentik-nix";
     nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/main";
