@@ -31,7 +31,7 @@ in
           "element"
           "signal"
           "gajim"
-          "mumble"
+          # "mumble"
           "discord"
 
           "libreoffice"

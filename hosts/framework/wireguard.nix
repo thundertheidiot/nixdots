@@ -10,6 +10,8 @@ in
   imports = [ keys.framework.module ];
 
   config = {
+    networking.firewall.trustedInterfaces = [ "wg0" ];
+
     networking.wg-quick.interfaces.wg0 = {
       address = [ "10.100.0.4/24" ];
       privateKeyFile = config.sops.secrets.wg_private.path;
