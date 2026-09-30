@@ -37,12 +37,10 @@ buildFHSEnv rec {
       glib
     ];
 
-  runScript =
-    let
-      glide = fetchzip {
-        url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-x86_64.tar.xz";
-        hash = "sha256-xB5xhmJ3gAlyxxhukQLUwPvgBjWSZktzRMJTblsU0lE=";
-      };
-    in
-    "${glide}/glide";
+  passthru.src = fetchzip {
+    url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-x86_64.tar.xz";
+    hash = "sha256-xB5xhmJ3gAlyxxhukQLUwPvgBjWSZktzRMJTblsU0lE=";
+  };
+
+  runScript = "${passthru.src}/glide";
 }

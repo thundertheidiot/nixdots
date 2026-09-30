@@ -5,11 +5,12 @@
   gnused,
   buildFHSEnv,
 }:
-stdenv.mkDerivation {
-  name = "duck_game_rebuilt";
+stdenv.mkDerivation (finalAttrs: {
+  pname = "duck_game_rebuilt";
+  version = "1.4.6.1";
 
   src = fetchzip {
-    url = "https://github.com/TheFlyingFoool/DuckGameRebuilt/releases/download/v1.4.6.1/DuckGameRebuilt.zip";
+    url = "https://github.com/TheFlyingFoool/DuckGameRebuilt/releases/download/v${finalAttrs.version}/DuckGameRebuilt.zip";
     hash = "sha256-D8/1Bq2Sk4Ai00D/j6UT9i1KT/8cyIlDN09/WMSMGOo=";
     stripRoot = false;
   };
@@ -48,4 +49,4 @@ stdenv.mkDerivation {
     maintainers = [ ];
     platforms = with platforms; linux;
   };
-}
+})

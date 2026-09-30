@@ -46,11 +46,11 @@
 
         blocks = {
           checkout = {
-            uses = "actions/checkout@v5";
+            uses = "actions/checkout@v7";
           };
 
           cleanup = {
-            uses = "wimpysworld/nothing-but-nix@v6";
+            uses = "wimpysworld/nothing-but-nix@v10";
             "with" = {
               hatchet-protocol = "rampage";
               nix-permission-edict = true;
@@ -89,15 +89,81 @@
         };
       in
       {
+        ".github/workflows/update-packages.yaml" = {
+          name = "Update custom packages";
+
+          on = {
+            schedule = [ { cron = "23 4 * * *"; } ];
+            workflow_dispatch = { };
+          };
+
+          concurrency = {
+            group = "update-custom-packages";
+            cancel-in-progress = false;
+          };
+
+          jobs.update = {
+            permissions = {
+              contents = "write";
+              pull-requests = "write";
+            };
+            steps = [
+              (blocks.checkout // { "with".persist-credentials = false; })
+              blocks.cleanup
+              blocks.nixInstaller
+              {
+                name = "Update and build packages";
+                env = {
+                  GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}";
+                  PR_BODY = "\${{ runner.temp }}/package-updates.md";
+                };
+                run = ''
+                  nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
+                  printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
+
+                  for package in helium glide sable-desktop dgr; do
+                    old_version=$(nix eval --raw ".#packages.x86_64-linux.$package.version")
+                    args=()
+                    # Glide uses prerelease-style tags for its regular releases.
+                    if [[ "$package" == glide ]]; then
+                      args+=(--version=unstable)
+                    fi
+                    nix-update --flake "$package" "''${args[@]}"
+
+                    if ! git diff --quiet -- "pkgs/$package.nix"; then
+                      nix build --accept-flake-config --no-link --print-build-logs ".#$package"
+                      new_version=$(nix eval --raw ".#packages.x86_64-linux.$package.version")
+                      printf -- "- %s: %s -> %s\n" "$package" "$old_version" "$new_version" >> "$PR_BODY"
+                    fi
+                  done
+                  SCRIPT
+                '';
+              }
+              {
+                name = "Open combined update PR";
+                uses = "peter-evans/create-pull-request@v7";
+                "with" = {
+                  branch = "updates/custom-packages";
+                  delete-branch = true;
+                  commit-message = "chore(deps): update custom packages";
+                  title = "chore(deps): update custom packages";
+                  body-path = "\${{ runner.temp }}/package-updates.md";
+                  add-paths = ''
+                    pkgs/helium.nix
+                    pkgs/glide.nix
+                    pkgs/sable-desktop.nix
+                    pkgs/dgr.nix
+                  '';
+                };
+              }
+            ];
+          };
+        };
+
         ".github/workflows/build-hosts.yaml" = {
           on.workflow_dispatch = { };
 
-          jobs.build = mkBasicNix (
-            map (n: {
-              name = "Build ${n}";
-              run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-            }) (attrNames config.flake.nixosConfigurations)
-          );
+          jobs.build = mkBasicNix buildAllHosts;
         };
 
         ".github/workflows/build-package.yaml" = {
@@ -165,24 +231,6 @@
           on.workflow_dispatch = { };
           jobs.update-vps.steps = [ blocks.vpsDeploy ];
         };
-
-        # ".github/workflows/mirror.yaml" = {
-        #   name = "Mirror repository for other forges";
-
-        #   on.push = {};
-        #   jobs.push.steps = [
-        #     blocks.checkout
-        #     {
-        #       name = "Push";
-        #       run = ''
-        #         echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
-        #         chmod 600 ~/deploykey
-
-        #         GIT_SSH_COMMAND="ssh -i ~/deploykey -o StrictHostKeyChecking=no" git push git@tangled.org:thundertheidiot.bsky.social/nixdots main
-        #       '';
-        #     }
-        #   ];
-        # };
 
         ".github/workflows/update-flake.yaml" = {
           name = "Update flake.lock";
@@ -266,8 +314,7 @@
               name = "Prefetch displaylink";
               # TODO update with displaylink
               run = ''
-                # nix-prefetch-url --name CiscopacketTracer822_amd64_signed.deb https://www.netacad.com/authoring-resources/courses/ff9e491c-49be-4734-803e-a79e6e83dab1/c3636211-1ce6-4f92-8a22-ccddf902dd72/en-US/assets/PacketTracer822_amd64_signed_en-US_35234a27-3127-49bc-91ce-2926af76f07a.deb
-                nix-prefetch-url --name displaylink-620.zip https://www.synaptics.com/sites/default/files/exe_files/2025-09/DisplayLink%20USB%20Graphics%20Software%20for%20Ubuntu6.2-EXE.zip
+                just prefetch
               '';
             }
             buildAllHosts

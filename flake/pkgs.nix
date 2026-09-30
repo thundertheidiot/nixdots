@@ -5,6 +5,10 @@
   ...
 }:
 {
+  perSystem = { pkgs, ... }: {
+    packages = import ../pkgs { inherit pkgs; };
+  };
+
   # imports = [
   #   inputs.pkgs-by-name.flakeModule
   # ];

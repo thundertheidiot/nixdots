@@ -14,6 +14,7 @@ buildFHSEnv (
   {
     pname = "helium";
     inherit version;
+    passthru.src = helium;
 
     targetPkgs =
       pkgs: with pkgs; [

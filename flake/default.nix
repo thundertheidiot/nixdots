@@ -31,6 +31,7 @@
         packages = with pkgs; [
           just
           cachix
+          nix-update
         ];
       };
 
