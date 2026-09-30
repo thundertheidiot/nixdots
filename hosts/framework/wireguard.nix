@@ -7,7 +7,10 @@ let
   keys = import "${inputs.self.outPath}/sops/wireguard";
 in
 {
-  imports = [ keys.framework.module ];
+  imports = [
+    keys.framework.module
+    ../wireguard-dns.nix
+  ];
 
   config = {
     networking.firewall.trustedInterfaces = [ "wg0" ];

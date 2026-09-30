@@ -10,6 +10,7 @@ vps_pubkey=$(jq -r .vps sops/wireguard/public-keys.json)
 cat <<CONF | qrencode -t ansiutf8
 [Interface]
 Address = 10.100.0.6/24
+DNS = 10.100.0.1
 PrivateKey = $private_key
 
 [Peer]

@@ -16,6 +16,7 @@ in
     # ./authentik.nix
     # ./meowdzbot.nix
     ./disko.nix
+    ./dns.nix
     ./freshrss.nix
     ./gatus.nix
     ./jellyfin.nix
