@@ -1,11 +1,14 @@
+concurrency:
+  cancel-in-progress: false
+  group: update-flake-lock
 jobs:
   build-matrix:
     needs:
     - update-lockfile
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-    - uses: wimpysworld/nothing-but-nix@v6
+    - uses: actions/checkout@v7
+    - uses: wimpysworld/nothing-but-nix@v10
       with:
         hatchet-protocol: rampage
         nix-permission-edict: true
@@ -40,8 +43,8 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-    - uses: wimpysworld/nothing-but-nix@v6
+    - uses: actions/checkout@v7
+    - uses: wimpysworld/nothing-but-nix@v10
       with:
         hatchet-protocol: rampage
         nix-permission-edict: true
@@ -60,7 +63,7 @@ jobs:
       with:
         name: flake-lock
     - name: Prefetch displaylink
-      run: just prefetch
+      run: nix develop --accept-flake-config -c just prefetch
     - name: Build server2
       run: nix build --accept-flake-config .#nixosConfigurations.server2.config.system.build.toplevel
     - name: Build vps
@@ -80,7 +83,7 @@ jobs:
   update-lockfile:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Nix Installer
       uses: cachix/install-nix-action@v31
       with:

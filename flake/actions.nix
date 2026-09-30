@@ -17,6 +17,10 @@
       let
         inherit (lib.lists) flatten singleton;
         inherit (builtins) attrNames;
+        lockUpdateConcurrency = {
+          group = "update-flake-lock";
+          cancel-in-progress = false;
+        };
         # buildAllHosts = map (n: {
         #   name = "Build ${n}";
         #   run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
@@ -75,15 +79,21 @@
             };
           };
 
-          vpsDeploy = {
+          vpsDeploy = revision: {
             name = "Deploy update to vps";
+            env = {
+              DEPLOY_REVISION = revision;
+              DEPLOY_SSH_KEY = "\${{ secrets.VPS_DEPLOY_SSH_KEY }}";
+            };
 
             # other half of the setup in modules/server/deploy.nix
             run = ''
-              echo "''${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+              [[ "$DEPLOY_REVISION" =~ ^[0-9a-f]{40}$ ]]
+              umask 077
+              printf '%s\n' "$DEPLOY_SSH_KEY" > ~/deploykey
               chmod 600 ~/deploykey
 
-              ssh -t -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey deploy@kotiboksi.xyz -p 69
+              ssh -T -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey -p 69 deploy@kotiboksi.xyz "$DEPLOY_REVISION"
             '';
           };
         };
@@ -168,6 +178,7 @@
 
         ".github/workflows/build-package.yaml" = {
           name = "Update and build packages";
+          concurrency = lockUpdateConcurrency;
 
           on.workflow_dispatch.inputs = {
             package = {
@@ -189,17 +200,26 @@
 
           jobs.build = {
             permissions.contents = "write";
+            outputs.revision = "\${{ steps.revision.outputs.revision }}";
           }
           // mkBasicNix [
             {
               name = "Update \${{ github.event.inputs.flake-input }}";
-              run = "nix flake update --accept-flake-config \${{ github.event.inputs.flake-input }}";
+              env.FLAKE_INPUTS = "\${{ inputs.flake-input }}";
+              run = ''
+                read -r -a inputs <<< "$FLAKE_INPUTS"
+                (( ''${#inputs[@]} > 0 ))
+                nix flake update --accept-flake-config -- "''${inputs[@]}"
+              '';
             }
             {
               name = "Build \${{ github.event.inputs.package }}";
+              env.PACKAGES = "\${{ inputs.package }}";
               run = ''
-                for i in ''${{ github.event.inputs.package }}; do
-                  nix build .#$i --print-build-logs --accept-flake-config
+                read -r -a packages <<< "$PACKAGES"
+                (( ''${#packages[@]} > 0 ))
+                for package in "''${packages[@]}"; do
+                  nix build ".#$package" --print-build-logs --accept-flake-config
                 done
               '';
             }
@@ -216,11 +236,18 @@
                 skip_fetch = true;
               };
             }
+            {
+              name = "Record committed revision";
+              id = "revision";
+              run = ''
+                printf 'revision=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+              '';
+            }
           ];
 
           jobs.update-vps.needs = [ "build" ];
           jobs.update-vps.steps = singleton (
-            blocks.vpsDeploy
+            (blocks.vpsDeploy "\${{ needs.build.outputs.revision }}")
             // {
               "if" = "\${{ inputs.vps-deploy == 'true' }}";
             }
@@ -229,11 +256,12 @@
 
         ".github/workflows/deploy-vps.yaml" = {
           on.workflow_dispatch = { };
-          jobs.update-vps.steps = [ blocks.vpsDeploy ];
+          jobs.update-vps.steps = [ (blocks.vpsDeploy "\${{ github.sha }}") ];
         };
 
         ".github/workflows/update-flake.yaml" = {
           name = "Update flake.lock";
+          concurrency = lockUpdateConcurrency;
 
           on = {
             schedule = [
@@ -312,9 +340,8 @@
             }
             {
               name = "Prefetch displaylink";
-              # TODO update with displaylink
               run = ''
-                just prefetch
+                nix develop --accept-flake-config -c just prefetch
               '';
             }
             buildAllHosts

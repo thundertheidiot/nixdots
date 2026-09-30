@@ -2,8 +2,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-    - uses: wimpysworld/nothing-but-nix@v6
+    - uses: actions/checkout@v7
+    - uses: wimpysworld/nothing-but-nix@v10
       with:
         hatchet-protocol: rampage
         nix-permission-edict: true

@@ -40,7 +40,12 @@ in
           pkgs.writeShellApplication {
             name = "deploy";
             text = ''
-              exec /run/wrappers/bin/sudo ${nixos-rebuild} switch --accept-flake-config --no-reexec --flake github:thundertheidiot/nixdots#${config.networking.hostName}
+              # sshd invokes the login shell with -c and the requested revision.
+              if [[ $# != 2 || "$1" != -c || ! "$2" =~ ^[0-9a-f]{40}$ ]]; then
+                echo "Expected a full Git commit revision as the SSH command" >&2
+                exit 1
+              fi
+              exec /run/wrappers/bin/sudo ${nixos-rebuild} switch --accept-flake-config --no-reexec --flake "github:thundertheidiot/nixdots/$2#${config.networking.hostName}"
             '';
           }
           + "/bin/deploy";

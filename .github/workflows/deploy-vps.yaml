@@ -2,11 +2,16 @@ jobs:
   update-vps:
     runs-on: ubuntu-latest
     steps:
-    - name: Deploy update to vps
+    - env:
+        DEPLOY_REVISION: ${{ github.sha }}
+        DEPLOY_SSH_KEY: ${{ secrets.VPS_DEPLOY_SSH_KEY }}
+      name: Deploy update to vps
       run: |-
-        echo "${{ secrets.VPS_DEPLOY_SSH_KEY }}" > ~/deploykey
+        [[ "$DEPLOY_REVISION" =~ ^[0-9a-f]{40}$ ]]
+        umask 077
+        printf '%s\n' "$DEPLOY_SSH_KEY" > ~/deploykey
         chmod 600 ~/deploykey
 
-        ssh -t -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey deploy@kotiboksi.xyz -p 69
+        ssh -T -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey -p 69 deploy@kotiboksi.xyz "$DEPLOY_REVISION"
 'on':
   workflow_dispatch: {}
