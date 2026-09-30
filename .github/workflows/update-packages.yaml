@@ -1,0 +1,64 @@
+concurrency:
+  cancel-in-progress: false
+  group: update-custom-packages
+jobs:
+  update:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+    - uses: wimpysworld/nothing-but-nix@v10
+      with:
+        hatchet-protocol: rampage
+        nix-permission-edict: true
+    - name: Nix Installer
+      uses: cachix/install-nix-action@v31
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
+        install_options: --no-daemon
+    - env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_BODY: ${{ runner.temp }}/package-updates.md
+      name: Update and build packages
+      run: |-
+        nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
+        printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
+
+        for package in helium glide sable-desktop dgr; do
+          old_version=$(nix eval --raw ".#packages.x86_64-linux.$package.version")
+          args=()
+          # Glide uses prerelease-style tags for its regular releases.
+          if [[ "$package" == glide ]]; then
+            args+=(--version=unstable)
+          fi
+          nix-update --flake "$package" "${args[@]}"
+
+          if ! git diff --quiet -- "pkgs/$package.nix"; then
+            nix build --accept-flake-config --no-link --print-build-logs ".#$package"
+            new_version=$(nix eval --raw ".#packages.x86_64-linux.$package.version")
+            printf -- "- %s: %s -> %s\n" "$package" "$old_version" "$new_version" >> "$PR_BODY"
+          fi
+        done
+        SCRIPT
+    - name: Open combined update PR
+      uses: peter-evans/create-pull-request@v7
+      with:
+        add-paths: |-
+          pkgs/helium.nix
+          pkgs/glide.nix
+          pkgs/sable-desktop.nix
+          pkgs/dgr.nix
+        body-path: ${{ runner.temp }}/package-updates.md
+        branch: updates/custom-packages
+        commit-message: 'chore(deps): update custom packages'
+        delete-branch: true
+        title: 'chore(deps): update custom packages'
+name: Update custom packages
+'on':
+  schedule:
+  - cron: 23 4 * * *
+  workflow_dispatch: {}
