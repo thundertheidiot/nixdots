@@ -9,6 +9,7 @@ let
   inherit (lib) mkIf;
   inherit (mlib) mkEnOptTrue;
 
+  work = config.meow.workstation.enable;
   cfg = config.meow.workstation.gnomeKeyring.enable;
 in
 {
@@ -16,7 +17,7 @@ in
     meow.workstation.gnomeKeyring.enable = mkEnOptTrue "Set up gnome keyring, disable this if you want kwallet for some reason?";
   };
 
-  config = mkIf cfg {
+  config = mkIf (work && cfg) {
     services.gnome.gnome-keyring.enable = true;
     programs.ssh.enableAskPassword = true;
 

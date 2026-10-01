@@ -24,8 +24,6 @@ in
           pkgs = prev;
         };
         firefox-addons = nur.repos.rycee.firefox-addons;
-        ataraxiasjel = nur.repos.ataraxiasjel;
-        hyprsplit = inputs.hyprsplit.packages.${final.stdenv.hostPlatform.system}.default;
 
         unstable = import inputs.nixpkgs-unstable {
           inherit (final) config;
@@ -88,7 +86,7 @@ in
               paths = [ pkg ];
               buildInputs = [ final.makeWrapper ];
 
-              postBuild = "wrapProgram $out/bin/${executable} --run 'export HOME=\"\${STUBBORN_HOME:-$HOME}\"'";
+              postBuild = "wrapProgram $out/bin/${executable} --run 'export HOME=\"\${STUBBORN_HOME_DIRECTORY:-$HOME}\"'";
             };
         in
         {

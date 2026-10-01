@@ -8,6 +8,7 @@
 let
   inherit (mlib) mkEnOptTrue mkOpt;
   inherit (lib.types) str;
+  inherit (lib) mkIf;
 in
 {
   options = {
@@ -15,7 +16,7 @@ in
     mHome.stubbornHomeDirectory = mkOpt str "${config.home.homeDirectory}/.local/state/home" { };
   };
 
-  config = {
+  config = mkIf config.mHome.cleanup {
     xdg.configFile = {
       "wget/wgetrc".text = "hsts-file = \"$XDG_CACHE_HOME\"/wget-hsts";
       "npm/npmrc".text = ''
@@ -83,7 +84,7 @@ in
         PYTHON_HISTORY = "${x.stateHome}/python_history";
         CARGO_HOME = "${x.dataHome}/cargo"; # .cargo
         GOPATH = "${x.dataHome}/go";
-        STUBBORN_HOME = "${config.mHome.stubbornHomeDirectory}";
+        STUBBORN_HOME_DIRECTORY = "${config.mHome.stubbornHomeDirectory}";
       };
 
     programs.gpg.homedir = "${config.xdg.dataHome}/gnupg";

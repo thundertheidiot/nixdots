@@ -82,12 +82,8 @@ in
 
       libnotify
 
-      # inputs.deploy-rs.packages."${pkgs.system}".default
-
       wireguard-tools
     ];
-
-    # services.cpupower-gui.enable = true;
 
     programs.appimage = {
       enable = true;

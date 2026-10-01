@@ -216,7 +216,7 @@ in
           ''
             output "${name}" {
               mode ${ifElseEmpty mon.niriCustom "custom=true"} "${toString width}x${toString height}${refresh}"
-              ${ifNotNull mon.primary "focus-at-startup"}
+              ${ifElseEmpty mon.primary "focus-at-startup"}
               scale ${toString scale}
               position x=${toString x} y=${toString y}
               ${ifElseEmpty (!mon.disableVrr) "variable-refresh-rate"}

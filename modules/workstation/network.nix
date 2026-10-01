@@ -8,6 +8,8 @@
 let
   inherit (mlib) mkEnOptTrue;
   inherit (lib) mkIf;
+
+  work = config.meow.workstation.enable;
   cfg = config.meow.workstation.network.enable;
 in
 {
@@ -15,7 +17,7 @@ in
     meow.workstation.network.enable = mkEnOptTrue "Enable workstation specific network configuration.";
   };
 
-  config = mkIf cfg {
+  config = mkIf (work && cfg) {
     environment.systemPackages = with pkgs; [
       wireguard-tools
     ];

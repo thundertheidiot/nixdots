@@ -19,8 +19,6 @@ in
         example = lib.options.literalExpression ''[ "/dev/input/by-id/usb-YMDK_YD60MQ-if01-event-kbd" ]'';
         description = "Devices to apply kanata to";
       };
-
-      layout = mkOpt str "" { };
     };
   };
 

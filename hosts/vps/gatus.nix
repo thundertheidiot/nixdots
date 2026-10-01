@@ -1,9 +1,18 @@
 {
-  server,
   config,
+  lib,
+  mlib,
   ...
 }:
+let
+  inherit (mlib) mkOpt;
+  inherit (lib.types) listOf attrs;
+in
 {
+  options = {
+    meow.server.gatus = mkOpt (listOf attrs) [ ] { };
+  };
+
   config = {
     meow.server.reverseProxy = {
       "meowcloud.net" = "http://127.0.0.1:${toString config.services.gatus.settings.web.port}";
@@ -32,24 +41,6 @@
 
         endpoints = [
           {
-            name = "homeserver";
-            group = "home";
-            url = "icmp://${server.homeServer2}";
-            interval = "30s";
-            conditions = [
-              "[CONNECTED] == true"
-            ];
-          }
-          {
-            name = "Jellyfin";
-            group = "home";
-            url = "http://${server.homeServer2}:8096";
-            interval = "30s";
-            conditions = [
-              "[STATUS] == 200"
-            ];
-          }
-          {
             name = "VaultWarden";
             group = "VPS";
             url = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}/alive";
@@ -76,16 +67,8 @@
               "[STATUS] == 200"
             ];
           }
-          {
-            name = "MeowDZBot";
-            group = "VPS";
-            url = "http://127.0.0.1:8080/health";
-            interval = "30s";
-            conditions = [
-              "[STATUS] == 200"
-            ];
-          }
-        ];
+        ]
+        ++ config.meow.server.gatus;
       };
     };
   };

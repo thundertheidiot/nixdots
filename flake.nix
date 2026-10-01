@@ -35,8 +35,6 @@
     # https://github.com/nialov/actions.nix/compare/master...alyraffauf:actions.nix:master
     actions.url = "github:alyraffauf/actions.nix";
 
-    pkgs-by-name.url = "github:drupol/pkgs-by-name-for-flake-parts";
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -47,8 +45,6 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
-
-    deploy-rs.url = "github:serokell/deploy-rs";
 
     home-manager = {
       url = "github:nix-community/home-manager";

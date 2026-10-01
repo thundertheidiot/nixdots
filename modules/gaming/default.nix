@@ -33,16 +33,12 @@ in
     (lib.mkIf (cfg.enable) {
       environment.systemPackages =
         let
-          # inherit (pkgs.ataraxiasjel) proton-ge wine-ge;
           inherit (builtins) elem;
         in
         with pkgs;
         [
           heroic
           mangohud
-
-          # wine-ge
-          # proton-ge
 
           (lib.mkIf (elem "minecraft" cfg.games) prismlauncher)
           (lib.mkIf (elem "duckgame" cfg.games) (mpkgs.dgr))

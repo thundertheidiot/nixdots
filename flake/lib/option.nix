@@ -8,7 +8,7 @@
     lib.mkOption {
       inherit type default;
       example = lib.mkIf (example != "") example;
-      description = lib.mkIf (description != "") example;
+      description = lib.mkIf (description != "") description;
     };
 
   mkEnOpt = desc: lib.mkEnableOption desc;

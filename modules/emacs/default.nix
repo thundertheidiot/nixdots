@@ -15,22 +15,6 @@ in
     meow.emacs = {
       enable = mkEnOpt "Install and configure emacs.";
       ewm.enable = mkEnOpt "Configure ewm.";
-
-      # TODO: move all this shit to modules/langs or something
-      lang = {
-        latex = mkEnOpt "Latex support";
-        haskell = mkEnOpt "Haskell";
-        rust = mkEnOpt "Rust";
-        ocaml = mkEnOpt "Ocaml";
-        lua = mkEnOpt "Lua";
-        fennel = mkEnOpt "Fennel";
-        janet = mkEnOpt "Janet";
-        lisp = mkEnOpt "Lisp";
-        c_cxx = mkEnOpt "C/C++";
-        bash = mkEnOpt "Bash";
-        python = mkEnOpt "Python";
-        javascript = mkEnOpt "Javascript";
-      };
     };
   };
 

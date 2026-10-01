@@ -20,6 +20,18 @@ in
   config = {
     meow.server.certificates = config.meow.server.jellyfinDomains;
 
+    meow.server.gatus = [
+      {
+        name = "Jellyfin";
+        group = "home";
+        url = "http://${server.homeServer2}:8096";
+        interval = "30s";
+        conditions = [
+          "[STATUS] == 200"
+        ];
+      }
+    ];
+
     services.nginx.virtualHosts = listToAttrs (
       map (name: {
         inherit name;

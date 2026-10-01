@@ -26,13 +26,6 @@ in
     meow.home = {
       enable = mkEnOptTrue "Enable home-manager.";
 
-      stateVersion = mkOpt str "25.05" { };
-
-      extraSpecialArgs = mkOpt attrs { inherit mlib; } {
-        example = literalExpression "{ inherit inputs; }";
-      };
-
-      sharedModules = mkOpt (listOf raw) [ ] { };
       modules = mkOpt (listOf raw) [ ] { };
 
       user = mkOpt str config.meow.user { };

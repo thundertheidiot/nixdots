@@ -2,6 +2,7 @@
   config,
   inputs,
   pkgs,
+  server,
   ...
 }:
 let
@@ -12,6 +13,18 @@ in
   imports = [ keys.vps.module ];
 
   config = {
+    meow.server.gatus = [
+      {
+        name = "homeserver";
+        group = "home";
+        url = "icmp://${server.homeServer2}";
+        interval = "30s";
+        conditions = [
+          "[CONNECTED] == true"
+        ];
+      }
+    ];
+
     networking.wg-quick.interfaces.wg0 = {
       address = [ "10.100.0.1/24" ];
       privateKeyFile = config.sops.secrets.wg_private.path;

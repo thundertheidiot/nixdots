@@ -20,10 +20,7 @@ in
       description = "Base setup for every machine, including servers.";
     };
 
-    meow.permittedInsecurePackages = mkOpt (listOf str) "permitted insecure packages" { };
-
-    meow.timeZone = mkOpt str "Europe/Helsinki" { };
-    meow.hostName = mkOpt str "meow" { };
+    meow.permittedInsecurePackages = mkOpt (listOf str) [ ] { };
   };
 
   config = mkIf en {

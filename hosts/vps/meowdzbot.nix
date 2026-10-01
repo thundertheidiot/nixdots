@@ -13,6 +13,18 @@
     "dz.meowcloud.net" = "http://127.0.0.1:8080";
   };
 
+  meow.server.gatus = [
+    {
+      name = "MeowDZBot";
+      group = "VPS";
+      url = "http://127.0.0.1:8080/health";
+      interval = "30s";
+      conditions = [
+        "[STATUS] == 200"
+      ];
+    }
+  ];
+
   systemd.services."meowdzbot" = {
     enable = true;
     description = "meowdzbot";
