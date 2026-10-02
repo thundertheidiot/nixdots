@@ -56,7 +56,6 @@ in
                 inputs.emacs.homeModules.default
                 inputs.vicinae.homeManagerModules.default
                 inputs.catppuccin.homeModules.default
-                inputs.noctalia.homeModules.default
               ];
             };
           })

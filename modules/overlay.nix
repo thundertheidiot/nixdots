@@ -38,7 +38,7 @@ in
           kdenlive
           blender
           krita
-          firefox
+          # firefox
           ananicy-cpp
           ;
 
