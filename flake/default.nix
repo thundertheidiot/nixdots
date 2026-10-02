@@ -32,29 +32,21 @@
           just
           cachix
           nix-update
+          nh
+          nixos-rebuild
         ];
       };
 
       devShells.genkeys = pkgs.mkShell {
         packages = with pkgs; [
-          (sbcl.withPackages (ps: with ps; [ shasht ]))
+          config.packages.wireguard-keys
           sops
+          wireguard-tools
+          age
           qrencode
           jq
         ];
       };
 
-      devShells.meow = pkgs.mkShell {
-        packages = [
-          (pkgs.callPackage ../pkgs/meow.nix { })
-          pkgs.nix-output-monitor
-          (pkgs.haskellPackages.ghcWithPackages (
-            p: with p; [
-              aeson
-              haskell-language-server
-            ]
-          ))
-        ];
-      };
     };
 }

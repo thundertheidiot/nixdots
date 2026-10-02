@@ -17,26 +17,41 @@ cache:
   done
 
 switch host="":
-  just _nh switch "{{host}}"
+  just _rebuild switch "{{host}}"
 
 build host="":
-  just _nh build "{{host}}"
+  just _rebuild build "{{host}}"
 
 boot host="":
-  just _nh boot "{{host}}"
+  just _rebuild boot "{{host}}"
 
 yeet host target="":
   #!/usr/bin/env bash
-  if [[ "{{target}}" = "" ]]; then
-    nh os switch -H {{host}} --target-host {{host}} . -- --accept-flake-config --show-trace
+  target="{{target}}"
+  if [[ "$target" = "" ]]; then
+    target="{{host}}"
+  fi
+  if [[ -n "${INSIDE_EMACS:-}" && "$INSIDE_EMACS" != vterm ]]; then
+    nixos-rebuild switch --flake ".#{{host}}" --target-host "$target" --sudo --accept-flake-config --show-trace --no-reexec
   else
-    nh os switch -H {{host}} --target-host {{target}} . -- --accept-flake-config --show-trace
+    nh os switch -H "{{host}}" --target-host "$target" . -- --accept-flake-config --show-trace
   fi
 
-_nh command host:
+_rebuild command host:
   #!/usr/bin/env bash
-  if [[ "{{host}}" = "" ]]; then
-    nh os {{command}} . -- --accept-flake-config --show-trace
+  host="{{host}}"
+  if [[ -n "${INSIDE_EMACS:-}" && "$INSIDE_EMACS" != vterm ]]; then
+    flake="."
+    if [[ -n "$host" ]]; then
+      flake=".#$host"
+    fi
+    nixos-rebuild "{{command}}" --flake "$flake" --accept-flake-config --show-trace --sudo --no-reexec
+  elif [[ -z "$host" ]]; then
+    nh os "{{command}}" . -- --accept-flake-config --show-trace
   else
-    nh os {{command}} . -H {{host}} -- --accept-flake-config --show-trace
+    nh os "{{command}}" . -H "$host" -- --accept-flake-config --show-trace
   fi
+
+[positional-arguments]
+wg *args:
+  nix run .#wireguard-keys -- "$@"

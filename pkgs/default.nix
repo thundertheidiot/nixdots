@@ -9,4 +9,5 @@ with pkgs;
   glide = callPackage ./glide.nix { };
   kodi = callPackage ./kodi { };
   bandcamp-dl = callPackage ./bandcamp-dl.nix { };
+  wireguard-keys = callPackage ./wireguard-keys.nix { };
 }
