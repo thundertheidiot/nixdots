@@ -18,6 +18,8 @@ in
   };
 
   config = mkIf (work && cfg) {
+    networking.networkmanager.enable = true;
+
     environment.systemPackages = with pkgs; [
       wireguard-tools
     ];

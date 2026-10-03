@@ -1,10 +1,5 @@
 {
   module = { config, ... }: {
-    sops.secrets.rootCA = {
-      sopsFile = ./rootCA.key;
-      format = "binary";
-    };
-
     sops.secrets.localKey = {
       sopsFile = ./local.key;
       format = "binary";

@@ -44,6 +44,8 @@ let
     # ''
     jqMergeFileWithValue {
       jq = "xq";
+      args = "--xml-output";
+      defaultContent = "<settings/>";
       inherit file value;
     }
   ) kodiSettings;

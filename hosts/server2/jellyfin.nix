@@ -17,6 +17,7 @@
         persistPath = "${config.meow.impermanence.persist}/jellyfin";
         user = "jellyfin";
         group = "jellyfin";
+        permissions = "0750";
       }
     ];
 

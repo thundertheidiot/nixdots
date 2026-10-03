@@ -16,7 +16,7 @@ in
 
   config = mkIf cfg {
     meow.impermanence.directories = [
-      "/var/lib/bluetooth"
+      { path = "/var/lib/bluetooth"; permissions = "0700"; }
     ];
 
     hardware.bluetooth = {
@@ -40,7 +40,7 @@ in
       jack.enable = true;
 
       wireplumber.extraConfig = {
-        "monitor.bluez.properties" = {
+        "10-disable-bluetooth-hw-volume"."monitor.bluez.properties" = {
           "bluez5.enable-hw-volume" = false;
         };
       };

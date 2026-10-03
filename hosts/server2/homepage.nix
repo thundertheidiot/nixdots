@@ -36,7 +36,11 @@ in
       };
     };
 
-    sops.secrets."homepage_env".mode = "0644";
+    sops.secrets."homepage_env" = {
+      mode = "0400";
+      owner = "root";
+      group = "root";
+    };
 
     services.homepage-dashboard = {
       enable = true;

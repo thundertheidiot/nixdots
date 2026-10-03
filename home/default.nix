@@ -1,13 +1,14 @@
 # You are now in home-manager land
 { ... }: {
   imports = [
-    ./languages
-    ./programs
-    ./browser
-    ./media.nix
-    ./cleanup.nix
-    ./shell.nix
     ./base.nix
+    ./browser
+    ./cleanup.nix
+    ./languages
+    ./media.nix
+    ./opencode
+    ./programs
+    ./shell.nix
     ./theme.nix
   ];
 }

@@ -360,34 +360,6 @@
       "docker-compose-server2-root.target"
     ];
   };
-  virtualisation.oci-containers.containers."soularr" = {
-    image = "mrusse08/soularr:latest";
-    environment = {
-      "SCRIPT_INTERVAL" = "1; exit";
-      "TZ" = "Europe/Helsinki";
-    };
-    volumes = [
-      "/mnt/storage/media/downloads/soulseek:/mnt/storage/media/downloads/soulseek:rw"
-      "/mnt/storage/torrent_stack/config/soularr:/data:rw"
-    ];
-    labels = {
-      "compose2nix.settings.autoStart" = "false";
-    };
-    dependsOn = [
-      "gluetun"
-    ];
-    user = "1000:1000";
-    log-driver = "journald";
-    autoStart = false;
-    extraOptions = [
-      "--network=container:gluetun"
-    ];
-  };
-  systemd.services."docker-soularr" = {
-    serviceConfig = {
-      Restart = lib.mkOverride 90 "no";
-    };
-  };
 
   # Networks
   systemd.services."docker-network-server2_default" = {

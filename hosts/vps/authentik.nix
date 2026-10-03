@@ -7,9 +7,14 @@
   meow.impermanence.directories = [
     {
       path = "/var/lib/postgresql";
+      user = "postgres";
+      group = "postgres";
+      permissions = "0700";
     }
     {
-      path = "/var/lib/authentik";
+      path = "/var/lib/private/authentik";
+      persistPath = "${config.meow.impermanence.persist}/rootfs//var/lib/authentik";
+      permissions = "0755";
     }
   ];
 

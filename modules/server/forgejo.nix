@@ -25,8 +25,9 @@ in
         persistPath = "${config.meow.impermanence.persist}/forgejo";
         user = "forgejo";
         group = "forgejo";
+        permissions = "0750";
       }
-      { path = "/var/lib/postgresql"; }
+      { path = "/var/lib/postgresql"; permissions = "0700"; user = "postgres"; group = "postgres"; }
     ];
 
     meow.server.reverseProxy = {

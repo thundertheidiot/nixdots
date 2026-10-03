@@ -8,9 +8,15 @@
     meow.impermanence.directories = [
       {
         path = "/var/lib/freshrss";
+        user = config.services.freshrss.user;
+        group = config.users.users.${config.services.freshrss.user}.group;
+        permissions = "0750";
       }
       {
         path = "/var/lib/postgresql";
+        user = "postgres";
+        group = "postgres";
+        permissions = "0700";
       }
     ];
 
@@ -20,7 +26,8 @@
 
       authentication = lib.mkOverride 10 ''
         #type database  DBuser  auth-method
-        local sameuser all trust
+        local all postgres peer
+        local sameuser all peer
         host sameuser all 127.0.0.1/32 scram-sha-256
         host sameuser all ::1/128 scram-sha-256
         host all freshrss 127.0.0.1/32 scram-sha-256

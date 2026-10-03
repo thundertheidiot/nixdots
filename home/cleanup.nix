@@ -39,7 +39,6 @@ in
         GRIPHOME = "${x.configHome}/grip"; # python-grip ~/.grip
         OMNISHARPHOME = "${x.configHome}/omnisharp"; # omnisharp-roslyn ~/.omnisharp
         NUGET_PACKAGES = "${x.cacheHome}/nugetpackages"; # nuget ~/.nuget/packages
-        ANDROID_HOME = "${x.configHome}/android";
         ANDROID_SDK_ROOT = "${x.dataHome}/android";
         ANDROID_SDK_HOME = "${x.configHome}/android";
         ADB_VENDOR_KEYS = "${x.stateHome}/adb"; # adb ~/.android
@@ -80,7 +79,7 @@ in
         KDEHOME = "${x.configHome}/kde";
         PYTHONPYCACHEPREFIX = "${x.cacheHome}/python";
         PYTHONUSERBASE = "${x.dataHome}/python";
-        PYTHONSTARTUP = "${x.configHome}/pythonrc";
+        PYTHONSTARTUP = "${x.configHome}/python/pythonrc";
         PYTHON_HISTORY = "${x.stateHome}/python_history";
         CARGO_HOME = "${x.dataHome}/cargo"; # .cargo
         GOPATH = "${x.dataHome}/go";

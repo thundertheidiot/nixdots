@@ -97,7 +97,7 @@ in
                 ];
                 text = ''
                   swaync-client -dn
-                  playerctl --all-players pause
+                  playerctl --all-players pause || true
 
                   for mon in $(niri msg -j outputs | jq -r '.[].name'); do
                     niri msg action focus-monitor "$mon"

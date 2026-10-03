@@ -57,12 +57,14 @@
     catppuccin.url = "github:catppuccin/nix";
 
     nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
+    nixpkgs-xr.inputs.nixpkgs.follows = "nixpkgs";
 
     rust-overlay.url = "github:oxalica/rust-overlay";
 
     naersk.url = "github:nix-community/naersk";
 
     vicinae.url = "github:vicinaehq/vicinae";
+    vicinae.inputs.nixpkgs.follows = "nixpkgs";
 
     nur.url = "github:nix-community/NUR";
 

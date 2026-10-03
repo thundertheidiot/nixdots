@@ -20,6 +20,7 @@ in
     meow.impermanence.directories = [
       {
         path = "/var/lib/mautrix-whatsapp";
+        permissions = "0700";
         user = "mautrix-whatsapp";
         group = "mautrix-whatsapp";
       }

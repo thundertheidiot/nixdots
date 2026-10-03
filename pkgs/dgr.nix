@@ -38,8 +38,8 @@ stdenv.mkDerivation (finalAttrs: {
       # script
       echo "#!/bin/sh
       cd $out/DuckGameRebuilt
-      [ ! -z $STUBBORN_HOME_DIRECTORY ] && export HOME=$STUBBORN_HOME_DIRECTORY
-      ${fhs}/bin/dgr_fhs ./DuckGame.sh \$@" > $out/bin/duck_game_rebuilt
+      [ -n \"\$STUBBORN_HOME_DIRECTORY\" ] && export HOME=\"\$STUBBORN_HOME_DIRECTORY\"
+      ${fhs}/bin/dgr_fhs ./DuckGame.sh \"\$@\"" > $out/bin/duck_game_rebuilt
       chmod +x $out/bin/duck_game_rebuilt
     '';
 

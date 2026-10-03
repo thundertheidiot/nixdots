@@ -92,7 +92,7 @@ in
       meow.impermanence.directories = [
         {
           path = "/var/lib/plasmalogin";
-          permissions = "777";
+          permissions = "0750";
           user = "plasmalogin";
           group = "plasmalogin";
         }
@@ -106,7 +106,9 @@ in
       meow.impermanence.directories = [
         {
           path = "/var/lib/gdm";
-          permissions = "755";
+          permissions = "0700";
+          user = "gdm";
+          group = "gdm";
         }
       ];
     })

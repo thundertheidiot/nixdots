@@ -6,11 +6,24 @@
 }:
 let
   cfg = config.meow.impermanence;
+  persistedShadow = "${cfg.persist}/rootfs/etc/shadow";
 
-  inherit (lib) mkIf mkMerge isString;
+  inherit (lib)
+    mkIf
+    mkMerge
+    isString
+    escapeShellArg
+    optional
+    any
+    ;
   inherit (lib.options) mkOption;
   inherit (lib.lists) flatten;
-  inherit (lib.strings) concatStringsSep replaceStrings;
+  inherit (lib.strings)
+    concatStringsSep
+    replaceStrings
+    optionalString
+    hasPrefix
+    ;
   inherit (lib.attrsets) filterAttrs mapAttrsToList listToAttrs;
   inherit (lib.types)
     listOf
@@ -44,7 +57,7 @@ in
               {
                 path,
                 persistPath ? "${cfg.persist}/rootfs/${path}",
-                permissions ? "1777",
+                permissions ? "0755",
                 user ? "root",
                 group ? "root",
                 wantedBy ? [ ],
@@ -77,7 +90,7 @@ in
               {
                 path,
                 persistPath ? "${cfg.persist}/rootfs/${path}",
-                permissions ? "1777",
+                permissions ? "0644",
                 user ? "root",
                 group ? "root",
                 wantedBy ? [ ],
@@ -110,14 +123,26 @@ in
           path = "/var/log";
           permissions = "711";
         }
-        "/root/.cache/nix"
+        {
+          path = "/root/.cache/nix";
+          permissions = "0700";
+        }
         "/var/lib/systemd"
-        "/var/lib/fprint"
-        "/etc/NetworkManager/system-connections"
+        {
+          path = "/var/lib/fprint";
+          permissions = "0700";
+        }
+        {
+          path = "/etc/NetworkManager/system-connections";
+          permissions = "0700";
+        }
         "/var/cache/man"
         "/var/lib/fwupd"
         "/var/cache/fwupd"
-        "/var/db/sudo"
+        {
+          path = "/var/db/sudo";
+          permissions = "0700";
+        }
         {
           path = "/var/lib/docker";
           persistPath = "${cfg.persist}/docker";
@@ -145,19 +170,52 @@ in
           type = "none";
           options = "bind,X-fstrim.notrim,x-gvfs-hidden";
 
-          before = [ "default.target" ] ++ before;
-          wantedBy = [ "default.target" ] ++ wantedBy;
+          requires = [ "persistence-directories.service" ];
+          after = [ "persistence-directories.service" ];
+          unitConfig.RequiresMountsFor = [ persistPath ];
+          before = [ "local-fs.target" ] ++ before;
+          wantedBy = [ "local-fs.target" ] ++ wantedBy;
         }
       ) cfg.directories;
 
-      systemd.tmpfiles.rules = flatten (
-        map (
-          dir: with dir; [
-            "d ${persistPath} ${permissions} ${user} ${group} - -"
-            "d ${path} ${permissions} ${user} ${group} - -"
-          ]
-        ) cfg.directories
-      );
+      # Names may not exist yet. Create mount sources without changing existing
+      # ownership; tmpfiles applies named ownership after accounts and mounts.
+      systemd.services.persistence-directories = {
+        unitConfig = {
+          DefaultDependencies = false;
+          RequiresMountsFor = map (dir: dir.persistPath) cfg.directories;
+        };
+        after = [ "systemd-remount-fs.service" ];
+        before = [ "local-fs.target" ];
+        serviceConfig.Type = "oneshot";
+        serviceConfig.RemainAfterExit = true;
+        script = concatStringsSep "\n" (
+          map (dir: ''
+            ${optionalString (hasPrefix "/var/lib/private/" dir.path) "install -d -m 0700 /var/lib/private"}
+            mkdir -p -- ${escapeShellArg dir.persistPath} ${escapeShellArg dir.path}
+            chmod ${escapeShellArg dir.permissions} -- ${escapeShellArg dir.persistPath}
+          '') cfg.directories
+        );
+      };
+
+      systemd.tmpfiles.rules =
+        optional (any (
+          dir: hasPrefix "/var/lib/private/" dir.path
+        ) cfg.directories) "d /var/lib/private 0700 root root - -"
+        ++ flatten (
+          map (
+            dir:
+            with dir;
+            let
+              # systemd owns private StateDirectory storage, including dynamic UIDs.
+              owner = if hasPrefix "/var/lib/private/" path then "- -" else "${user} ${group}";
+            in
+            [
+              "d ${persistPath} ${permissions} ${owner} - -"
+              "d ${path} ${permissions} ${owner} - -"
+            ]
+          ) cfg.directories
+        );
     })
 
     # Create and mount files
@@ -166,7 +224,11 @@ in
         map (
           file: with file; ''
             if [ -e "${persistPath}" ] || [ -L "${persistPath}" ]; then
-              cp -P "${persistPath}" "${path}"
+              cp -P -- ${escapeShellArg persistPath} ${escapeShellArg path}
+              chown -h ${escapeShellArg "${user}:${group}"} -- ${escapeShellArg path}
+              if [ ! -L ${escapeShellArg path} ]; then
+                chmod ${escapeShellArg permissions} -- ${escapeShellArg path}
+              fi
             fi
           ''
         ) cfg.files
@@ -182,16 +244,19 @@ in
           {
             inherit name;
             value = {
-              wantedBy = [ "default.target" ];
+              wantedBy = [ "default.target" ] ++ wantedBy;
+              inherit before;
               path = [ pkgs.util-linux ];
-              unitConfig.defaultDependencies = true;
+              unitConfig.DefaultDependencies = true;
+              unitConfig.RequiresMountsFor = [ persistPath ];
               serviceConfig = {
                 Type = "oneshot";
                 RemainAfterExit = true;
                 # Service is stopped before shutdown
                 ExecStop = pkgs.writeShellScript name ''
-                  mkdir --parents "$(dirname ${persistPath})"
-                  cp -P "${path}" "${persistPath}"
+                  umask 077
+                  mkdir --parents -- ${escapeShellArg (builtins.dirOf persistPath)}
+                  cp -P --preserve=mode,ownership -- ${escapeShellArg path} ${escapeShellArg persistPath}
                 '';
               };
             };
@@ -209,44 +274,39 @@ in
       ) (filterAttrs (_name: attrs: attrs.createHome) config.users.users);
     })
 
-    # machine id
-    # (mkIf cfg.enable {
-    #   environment.etc = listToAttrs (map (loc: {
-    #     name = loc;
-    #     value = {source = "${cfg.persist}/rootfs/etc/${loc}";};
-    #   }) ["machine-id"]);
-    # })
-
     # /etc/shadow (passwords)
     # cannot be handled through files, must run before user setup
     (mkIf cfg.enable {
-      systemd.services."etc_shadow_persistence" =
-        let
-          pShadow = "${cfg.persist}/rootfs/etc/shadow";
-        in
-        {
-          enable = true;
-          description = "Persist /etc/shadow on shutdown.";
-          wantedBy = [ "sysinit.target" ];
-          before = [ "systemd-sysusers.service" ];
-          unitConfig.RequiresMountsFor = [ "${cfg.persist}" ];
-          unitConfig.defaultDependencies = true;
-          path = [ pkgs.util-linux ];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            ExecStart = pkgs.writeShellScript "restore_etc_shadow" ''
-              mkdir -p /etc
-              [ -f "${pShadow}" ] && cp ${pShadow} /etc/shadow
-              [ -f /etc/shadow ] && chmod 600 /etc/shadow
-            '';
-            # Service is stopped before shutdown
-            ExecStop = pkgs.writeShellScript "persist_etc_shadow" ''
-              mkdir --parents "${cfg.persist}/rootfs/etc"
-              cp /etc/shadow ${pShadow}
-            '';
-          };
+      system.activationScripts = {
+        restore-persistent-shadow = {
+          deps = [ "specialfs" ];
+          text = ''
+            # Restore on boot, but do not overwrite live passwords during a switch.
+            if [ ! -e /etc/shadow ] && [ -f ${escapeShellArg persistedShadow} ]; then
+              install -m 0600 -o 0 -g 0 ${escapeShellArg persistedShadow} /etc/shadow
+            fi
+          '';
         };
+        users.deps = [ "restore-persistent-shadow" ];
+      };
+      systemd.services.etc_shadow_persistence = {
+        description = "Persist /etc/shadow on shutdown.";
+        wantedBy = [ "multi-user.target" ];
+        unitConfig.RequiresMountsFor = [ cfg.persist ];
+        script = "true";
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStop = pkgs.writeShellScript "persist_etc_shadow" ''
+            if [ -f /etc/shadow ]; then
+              umask 077
+              mkdir --parents -- ${escapeShellArg (builtins.dirOf persistedShadow)}
+              install -m 0600 -o 0 -g 0 /etc/shadow ${escapeShellArg "${persistedShadow}.new"}
+              mv -f -- ${escapeShellArg "${persistedShadow}.new"} ${escapeShellArg persistedShadow}
+            fi
+          '';
+        };
+      };
     })
 
     # Program configuration

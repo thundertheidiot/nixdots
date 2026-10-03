@@ -54,7 +54,7 @@ in
     );
 
     meow.impermanence.directories = [
-      { path = "/var/lib/acme"; }
+      { path = "/var/lib/acme"; permissions = "0755"; user = "acme"; group = "acme"; }
     ];
   };
 }

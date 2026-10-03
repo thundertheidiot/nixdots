@@ -27,27 +27,35 @@ rec {
       outfile ? file,
     }:
     ''
-      ${jq} ${args} '${operation}' < "${file}" > "${outfile}.tmp"
-      mv "${outfile}.tmp" "${outfile}"
+      (
+        tmp=$(mktemp "${outfile}.tmp.XXXXXX") || exit
+        trap 'rm -f "$tmp"' EXIT
+        if ${jq} ${args} '${operation}' < "${file}" > "$tmp"; then
+          mv "$tmp" "${outfile}"
+        else
+          exit $?
+        fi
+      )
     '';
 
   jqMergeFileWithValue =
     {
       jq ? "jq",
+      args ? "",
       value,
       file,
       outfile ? file,
       defaultContent ? "{}",
     }:
     ''
-      if [ ! -f "$(dirname "${file}")" ]; then
+      if [ ! -e "${file}" ]; then
         mkdir -p "$(dirname "${file}")"
-        echo -e "${defaultContent}" > "${file}"
+        printf '%s\n' '${defaultContent}' > "${file}"
       fi
 
       ${applyWithJq {
         inherit jq file outfile;
-        args = "--argjson value '${toJSON value}'";
+        args = "${args} --argjson value '${toJSON value}'";
         operation = "${defineJqDeepmerge} deepmerge({}; [., $value])";
       }}
     '';

@@ -52,7 +52,7 @@
                   mountpoint = "/tmp";
                 };
                 "/var/tmp" = {
-                  mountpoint = "/tmp";
+                  mountpoint = "/var/tmp";
                 };
                 "/storage" = {
                   mountOptions = [ "compress=zstd" ];

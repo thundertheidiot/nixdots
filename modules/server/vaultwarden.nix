@@ -23,11 +23,13 @@ in
     meow.impermanence.directories = [
       {
         path = "/var/lib/vaultwarden";
+        permissions = "0700";
         user = config.systemd.services.vaultwarden.serviceConfig.User;
         group = config.systemd.services.vaultwarden.serviceConfig.Group;
       }
       {
         path = "/var/backup/vaultwarden";
+        permissions = "0770";
         user = config.systemd.services.vaultwarden.serviceConfig.User;
         group = config.systemd.services.vaultwarden.serviceConfig.Group;
       }

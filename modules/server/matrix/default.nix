@@ -32,10 +32,15 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       meow.impermanence.directories = [
-        "/var/lib/private/continuwuity"
+        {
+          path = "/var/lib/private/continuwuity";
+          inherit (config.services.matrix-continuwuity) user group;
+          permissions = "0700";
+        }
         {
           path = config.services.matrix-continuwuity.settings.global.database_backup_path;
           inherit (config.services.matrix-continuwuity) user group;
+          permissions = "0700";
         }
       ];
 

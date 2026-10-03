@@ -19,7 +19,7 @@ in
     };
 
     meow.impermanence.directories = [
-      "/var/lib/private/gatus"
+      { path = "/var/lib/private/gatus"; permissions = "0700"; }
     ];
 
     services.gatus = {

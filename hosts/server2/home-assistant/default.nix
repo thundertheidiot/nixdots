@@ -15,6 +15,8 @@
       {
         path = "/var/lib/hass";
         user = "hass";
+        group = "hass";
+        permissions = "0700";
       }
     ];
 

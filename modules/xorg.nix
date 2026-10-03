@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkMerge;
+  inherit (lib) mkDefault mkIf mkMerge;
   inherit (mlib) mkEnOptTrue mkOpt;
   inherit (lib.types) str;
   cfg = config.meow.x11;
@@ -20,7 +20,14 @@ in
     meow.x11.opinionatedMouseConfig = mkEnOptTrue "opinionated pointer device configuration for x11";
   };
 
-  config = mkMerge [
+  config = mkIf cfg.enable (mkMerge [
+    {
+      # Let explicit XKB settings, including the keyboard module, take precedence.
+      services.xserver.xkb = {
+        layout = mkDefault cfg.xkb.layout;
+        options = mkDefault cfg.xkb.options;
+      };
+    }
     (mkIf cfg.opinionatedMouseConfig {
       services.xserver.config = lib.mkAfter ''
         Section "InputClass"
@@ -46,5 +53,5 @@ in
         EndSection
       '';
     })
-  ];
+  ]);
 }

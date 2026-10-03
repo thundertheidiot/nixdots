@@ -14,7 +14,9 @@ in
 
   sops.secrets."torrent_stack_env" = {
     path = "/run/torrent_stack.env";
-    mode = "0644";
+    mode = "0400";
+    owner = "root";
+    group = "root";
   };
 
   server.domains = [

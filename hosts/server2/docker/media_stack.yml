@@ -124,23 +124,6 @@ services:
       - /mnt/storage/media:/media
     restart: unless-stopped
 
-  soularr:
-    image: mrusse08/soularr:latest
-    network_mode: "service:gluetun"
-    container_name: soularr
-    depends_on:
-      - gluetun
-    labels:
-      - "compose2nix.settings.autoStart=false"
-    user: "1000:1000"
-    environment:
-      - TZ=Europe/Helsinki
-      - SCRIPT_INTERVAL=1; exit
-    volumes:
-      - /mnt/storage/torrent_stack/config/soularr:/data
-      - /mnt/storage/media/downloads/soulseek:/downloads
-      - /mnt/storage/media/downloads/soulseek:/mnt/storage/media/downloads/soulseek
-
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     network_mode: "service:gluetun"

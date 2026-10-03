@@ -25,18 +25,6 @@
         sopsFile = ./home-assistant.yaml;
         format = "yaml";
       };
-
-      urlwatch_urls = {
-        sopsFile = ./urlwatch_urls.yaml;
-        format = "yaml";
-        key = "";
-      };
-
-      urlwatch_config = {
-        sopsFile = ./urlwatch_config.yaml;
-        format = "yaml";
-        key = "";
-      };
     };
   };
 }

@@ -8,7 +8,8 @@ in
       {
         path = config.services.syncthing.dataDir;
         user = config.services.syncthing.user;
-        permissions = "774";
+        group = config.services.syncthing.group;
+        permissions = "0700";
       }
     ];
 
@@ -24,7 +25,14 @@ in
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8384";
-          recommendedProxySettings = true;
+          recommendedProxySettings = false;
+          extraConfig = ''
+            # Keep admin access local until declarative authentication is provisioned.
+            allow 127.0.0.1;
+            allow ::1;
+            deny all;
+            proxy_set_header Host $proxy_host;
+          '';
         };
       };
     };
@@ -32,13 +40,15 @@ in
     services.syncthing = {
       enable = true;
       openDefaultPorts = true;
+      # The CLI bind takes precedence over a potentially unsafe persisted GUI address.
+      guiAddress = "127.0.0.1:8384";
 
       overrideDevices = false;
       overrideFolders = false;
 
       settings.gui = {
-        insecureAdminAccess = true;
-        insecureSkipHostCheck = true;
+        insecureAdminAccess = false;
+        insecureSkipHostCheck = false;
       };
     };
   };

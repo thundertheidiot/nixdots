@@ -15,7 +15,11 @@ in
 
   config = mkIf cfg.mumble {
     meow.impermanence.directories = [
-      { path = config.services.murmur.stateDir; }
+      {
+        path = config.services.murmur.stateDir;
+        inherit (config.services.murmur) user group;
+        permissions = "0700";
+      }
       # {path = "/var/lib/botamusique";}
     ];
 

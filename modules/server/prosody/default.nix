@@ -15,6 +15,7 @@ let
     head
     length
     listToAttrs
+    recursiveUpdate
     ;
 
   cfg = config.meow.server;
@@ -49,7 +50,12 @@ in
       ) cfg.xmppDomains;
 
       meow.impermanence.directories = [
-        { path = config.services.prosody.dataDir; }
+        {
+          path = config.services.prosody.dataDir;
+          user = config.services.prosody.user;
+          group = config.services.prosody.group;
+          permissions = "0750";
+        }
       ];
 
       users.users."${config.services.prosody.user}".extraGroups = [
@@ -61,60 +67,64 @@ in
         config.services.prosody.settings.c2s_direct_tls_ports
         ++ config.services.prosody.settings.s2s_direct_tls_ports;
 
-      services.nginx.virtualHosts = {
-        "${mainDomain}" = {
-          locations."/http-bind" = {
-            proxyPass = "http://127.0.0.1:5280/http-bind";
-            recommendedProxySettings = false;
-            extraConfig = ''
-              proxy_http_version 1.1;
-              proxy_set_header Connection "Upgrade";
-              proxy_set_header Upgrade $http_upgrade;
+      services.nginx.virtualHosts =
+        recursiveUpdate
+          {
+            "${mainDomain}" = {
+              locations."/http-bind" = {
+                proxyPass = "http://127.0.0.1:5280/http-bind";
+                recommendedProxySettings = false;
+                extraConfig = ''
+                  proxy_http_version 1.1;
+                  proxy_set_header Connection "Upgrade";
+                  proxy_set_header Upgrade $http_upgrade;
 
-              proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-            '';
-          };
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                '';
+              };
 
-          locations."/xmpp-websocket" = {
-            proxyPass = "http://127.0.0.1:5280/xmpp-websocket";
-            recommendedProxySettings = false;
-            extraConfig = ''
-              proxy_http_version 1.1;
-              proxy_set_header Connection "Upgrade";
-              proxy_set_header Upgrade $http_upgrade;
+              locations."/xmpp-websocket" = {
+                proxyPass = "http://127.0.0.1:5280/xmpp-websocket";
+                recommendedProxySettings = false;
+                extraConfig = ''
+                  proxy_http_version 1.1;
+                  proxy_set_header Connection "Upgrade";
+                  proxy_set_header Upgrade $http_upgrade;
 
-              proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-              proxy_read_timeout 900s;
-            '';
-          };
-        };
-      }
-      // listToAttrs (
-        map (name: {
-          inherit name;
-          value = {
-            locations."/.well-known/host-meta" = {
-              proxyPass = "https://${name}:5281/.well-known/host-meta";
-              extraConfig = ''
-                default_type 'application/xrd+xml';
-                add_header Access-Control-Allow-Origin '*' always;
-              '';
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_read_timeout 900s;
+                '';
+              };
             };
+          }
+          (
+            listToAttrs (
+              map (name: {
+                inherit name;
+                value = {
+                  locations."/.well-known/host-meta" = {
+                    proxyPass = "https://${name}:5281/.well-known/host-meta";
+                    extraConfig = ''
+                      default_type 'application/xrd+xml';
+                      add_header Access-Control-Allow-Origin '*' always;
+                    '';
+                  };
 
-            locations."/.well-known/host-meta.json" = {
-              proxyPass = "https://${name}:5281/.well-known/host-meta.json";
-              extraConfig = ''
-                default_type 'application/jrd+json';
-                add_header Access-Control-Allow-Origin '*' always;
-              '';
-            };
-          };
-        }) cfg.xmppDomains
-      );
+                  locations."/.well-known/host-meta.json" = {
+                    proxyPass = "https://${name}:5281/.well-known/host-meta.json";
+                    extraConfig = ''
+                      default_type 'application/jrd+json';
+                      add_header Access-Control-Allow-Origin '*' always;
+                    '';
+                  };
+                };
+              }) cfg.xmppDomains
+            )
+          );
 
       services.prosody = {
         enable = true;

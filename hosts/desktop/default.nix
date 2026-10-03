@@ -78,6 +78,8 @@
       meowEmacs.enable = true;
       meowEmacs.package = "emacs-pwayl";
 
+      mHome.opencode.enable = true;
+
       gtk.gtk3.bookmarks = [
         # "file:///mnt/4tb"
         "file:///mnt/1tb_nvme"
