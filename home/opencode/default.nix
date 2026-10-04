@@ -25,6 +25,7 @@ in
           external_directory = {
             "*" = "ask";
             "/nix/store/**" = "allow";
+            "/tmp/opencode/**" = "allow";
             "~/Documents/org" = "deny";
             "~/Documents/org/**" = "deny";
           };
