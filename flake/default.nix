@@ -4,7 +4,6 @@
     inputs.actions.flakeModules.default
 
     ./actions.nix
-    ./containers.nix
     ./mksystem.nix
     ./nixos-configurations.nix
     ./pkgs.nix
