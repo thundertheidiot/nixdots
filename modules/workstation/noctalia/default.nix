@@ -113,6 +113,11 @@ in
       programs.noctalia = {
         enable = true;
         settings = {
+          theme = {
+            source = "builtin";
+            builtin = "Catppuccin";
+          };
+
           plugins.enabled = mapAttrsToList (_: widget: widget.id) config.meow.noctalia.widgets;
 
           bar.default = {
