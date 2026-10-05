@@ -8,10 +8,6 @@ let
   cfg = config.meow.rice;
 in
 {
-  imports = [
-    ./waybar.nix
-  ];
-
   config = mkIf (cfg == "glass") {
     meow.home.modules = [
       {

@@ -54,7 +54,6 @@ in
               extraSpecialArgs = { inherit inputs mlib; };
               sharedModules = [
                 inputs.emacs.homeModules.default
-                inputs.vicinae.homeManagerModules.default
                 inputs.catppuccin.homeModules.default
               ];
             };

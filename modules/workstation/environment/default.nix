@@ -43,7 +43,6 @@ in
   imports = [
     ./niri
     ./plasma
-    ./waybar.nix
   ];
 
   config = mkIf cfg (mkMerge [

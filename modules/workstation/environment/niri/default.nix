@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   mlib,
   ...
 }:
@@ -9,7 +10,6 @@ let
   inherit (lib)
     mkIf
     getExe
-    getExe'
     concatStrings
     ;
   inherit (builtins) elem;
@@ -31,9 +31,10 @@ in
   };
 
   config = mkIf (work && elem "niri" env) {
+    meow.noctalia.enable = true;
+
     environment.systemPackages = [
       pkgs.xwayland-satellite
-      pkgs.awww
     ];
     programs.niri.enable = true;
     meow.workstation.gnomeKeyring.enable = true;
@@ -60,9 +61,6 @@ in
 
     meow.home.modules = [
       {
-        programs.waybar.enable = true;
-        services.swaync.enable = true;
-        services.vicinae.enable = true;
         programs.alacritty.enable = true;
 
         home.packages = [
@@ -80,10 +78,7 @@ in
             borderFocus = colors.base03;
             warn = colors.base0A;
 
-            swayosd = getExe' pkgs.swayosd "swayosd-server";
-            swayosdc = getExe' pkgs.swayosd "swayosd-client";
-            waybar = getExe pkgs.waybar;
-            awww = getExe' pkgs.awww "awww-daemon";
+            noctalia = getExe inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
             xwayland-satellite = getExe pkgs.xwayland-satellite;
 
             panic = getExe (
@@ -91,12 +86,12 @@ in
                 name = "panic";
                 runtimeInputs = [
                   pkgs.niri
-                  pkgs.swaynotificationcenter
                   pkgs.jq
                   pkgs.playerctl
+                  inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
                 ];
                 text = ''
-                  swaync-client -dn
+                  noctalia msg notification-dnd-set on
                   playerctl --all-players pause || true
 
                   for mon in $(niri msg -j outputs | jq -r '.[].name'); do
@@ -192,9 +187,11 @@ in
               workspace-switch { off; }
             }
 
-            spawn-at-startup "${waybar}"
-            spawn-at-startup "${swayosd}"
-            spawn-at-startup "${awww}"
+            spawn-at-startup "${noctalia}"
+
+            debug {
+              honor-xdg-activation-with-invalid-serial
+            }
 
             recent-windows { off; }
 
@@ -209,7 +206,7 @@ in
 
               End { spawn-sh "mumble rpc togglemute"; }
 
-              Mod+D { spawn-sh "vicinae open"; }
+              Mod+D { spawn-sh "${noctalia} msg panel-toggle launcher"; }
 
               XF86AudioPlay { spawn-sh "mpc toggle"; }
               XF86AudioNext { spawn-sh "mpc next"; }
@@ -218,11 +215,11 @@ in
               Mod+BracketRight { spawn-sh "mpc next"; }
               Mod+BracketLeft { spawn-sh "mpc prev"; }
 
-              XF86AudioMute { spawn-sh "${swayosdc} --output-volume mute-toggle"; }
-              XF86AudioRaiseVolume { spawn-sh "${swayosdc} --output-volume 3"; }
-              XF86AudioLowerVolume { spawn-sh "${swayosdc} --output-volume -3"; }
-              XF86MonBrightnessUp { spawn-sh "${swayosdc} --brightness=+5"; }
-              XF86MonBrightnessDown { spawn-sh "${swayosdc} --brightness=-5"; }
+              XF86AudioMute { spawn-sh "${noctalia} msg volume-mute"; }
+              XF86AudioRaiseVolume { spawn-sh "${noctalia} msg volume-up 3"; }
+              XF86AudioLowerVolume { spawn-sh "${noctalia} msg volume-down 3"; }
+              XF86MonBrightnessUp { spawn-sh "${noctalia} msg brightness-up 5"; }
+              XF86MonBrightnessDown { spawn-sh "${noctalia} msg brightness-down 5"; }
 
               Mod+Q { close-window; }
               Mod+Shift+Q { quit; }

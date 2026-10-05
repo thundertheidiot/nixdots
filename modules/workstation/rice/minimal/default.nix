@@ -8,10 +8,6 @@ let
   cfg = config.meow.rice;
 in
 {
-  imports = [
-    ./waybar.nix
-  ];
-
   config = mkIf (cfg == "minimal") {
     meow.home.modules = [
       {

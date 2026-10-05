@@ -118,42 +118,31 @@
     user = "thunder";
 
     workstation.environment = [ "niri" ];
-    workstation.displayManager = "tuigreet";
+    workstation.displayManager = "gdm";
 
-    workstation.extraWaybarModules = {
-      "custom/qbittorrent" =
-        let
-          script = pkgs.stdenv.mkDerivation {
-            name = "qbittorrent-waybar";
-
-            propagatedBuildInputs = [
-              (pkgs.python3.withPackages (
-                pkgs: with pkgs; [
-                  humanize
-                  requests
-                ]
-              ))
-            ];
-
-            dontUnpack = true;
-
-            installPhase = ''
-              install -Dm755 ${./qbit.py} $out/bin/qbit
+    noctalia = {
+      enable = true;
+      widgets.qbittorrent = {
+        id = "thunder/qbittorrent";
+        description = "Show qBittorrent transfer speeds and toggle limit";
+        widget = [ ./qbittorrent/transfer.luau ];
+        postRun =
+          let
+            qbitPython = pkgs.python3.withPackages (
+              pythonPackages: with pythonPackages; [
+                humanize
+                requests
+              ]
+            );
+            qbitCommand = pkgs.writeShellScript "qbit" ''
+              exec ${qbitPython}/bin/python ${./qbittorrent/qbit.py} "$@"
             '';
-          };
-        in
-        {
-          exec = "${script}/bin/qbit";
-          on-click = "${script}/bin/qbit toggle_limit";
-          on-click-right = "xdg-open https://torrent.home";
-          return-type = "json";
-          restart-interval = "1";
-          format = "{icon} {text}";
-          format-icons = {
-            normal = "<span foreground='green'>󰓅</span> ";
-            alternative = "<span foreground='red'>󰾆</span> ";
-          };
-        };
+          in
+          ''
+            substituteInPlace "$out/transfer.luau" \
+            --replace-fail @QBIT_COMMAND@ ${qbitCommand}
+          '';
+      };
     };
 
     gaming.enable = true;
