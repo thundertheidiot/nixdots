@@ -22,6 +22,7 @@ in
     ./disko.nix
     ./dns.nix
     ./docker
+    ./forgejo.nix
     ./home-assistant
     ./homepage.nix
     ./jellyfin.nix
