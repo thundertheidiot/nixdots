@@ -255,7 +255,7 @@ in
                 # Service is stopped before shutdown
                 ExecStop = pkgs.writeShellScript name ''
                   umask 077
-                  mkdir --parents -- ${escapeShellArg (builtins.dirOf persistPath)}
+                  mkdir --parents -- ${escapeShellArg (dirOf persistPath)}
                   cp -P --preserve=mode,ownership -- ${escapeShellArg path} ${escapeShellArg persistPath}
                 '';
               };
@@ -266,6 +266,32 @@ in
     })
 
     ### fixes/hacks
+
+    # Account allocation state must be available before user/group setup.
+    (mkIf cfg.enable (
+      let
+        persistedState = "${cfg.persist}/rootfs/var/lib/nixos";
+      in
+      {
+        system.activationScripts = {
+          persist-nixos-state = {
+            deps = [ "specialfs" ];
+            text = ''
+              if ! ${pkgs.util-linux}/bin/mountpoint -q /var/lib/nixos; then
+                mkdir -p -- ${escapeShellArg persistedState}
+                # copy state when switching an existing installation
+                if [ -d /var/lib/nixos ]; then
+                  cp -a /var/lib/nixos/. ${escapeShellArg persistedState}/
+                fi
+                mkdir -p /var/lib/nixos
+                ${pkgs.util-linux}/bin/mount --bind ${escapeShellArg persistedState} /var/lib/nixos
+              fi
+            '';
+          };
+          users.deps = [ "persist-nixos-state" ];
+        };
+      }
+    ))
 
     # home directories
     (mkIf cfg.enable {
@@ -300,7 +326,7 @@ in
           ExecStop = pkgs.writeShellScript "persist_etc_shadow" ''
             if [ -f /etc/shadow ]; then
               umask 077
-              mkdir --parents -- ${escapeShellArg (builtins.dirOf persistedShadow)}
+              mkdir --parents -- ${escapeShellArg (dirOf persistedShadow)}
               install -m 0600 -o 0 -g 0 /etc/shadow ${escapeShellArg "${persistedShadow}.new"}
               mv -f -- ${escapeShellArg "${persistedShadow}.new"} ${escapeShellArg persistedShadow}
             fi
