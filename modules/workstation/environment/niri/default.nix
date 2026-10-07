@@ -74,9 +74,9 @@ in
           let
             colors = config.meow.workstation.theme.palette.withHashtag;
 
-            border = colors.base02;
-            borderFocus = colors.base03;
-            warn = colors.base0A;
+            border = colors.base01;
+            borderFocus = colors.base0E;
+            warn = colors.base08;
 
             noctalia = getExe inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
             xwayland-satellite = getExe pkgs.xwayland-satellite;
@@ -135,7 +135,7 @@ in
             prefer-no-csd
 
             cursor {
-              xcursor-theme "default"
+              xcursor-theme "Adwaita"
               xcursor-size 24
             }
 
@@ -171,12 +171,32 @@ in
               struts {
                 left -10
                 right -10
-                top 0
-                bottom 0
+              }
+
+              focus-ring {
+                off
               }
 
               border {
+                width 2
+                active-color "${borderFocus}"
+                inactive-color "${border}"
+                urgent-color "${warn}"
+              }
+
+              shadow {
+                on
+                softness 30
+                spread 3
+                offset x=0 y=4
+                color "${colors.base11}99"
+              }
+
+              tab-indicator {
+                on
+                hide-when-single-tab
                 width 3
+                corner-radius 6
                 active-color "${borderFocus}"
                 inactive-color "${border}"
                 urgent-color "${warn}"
@@ -184,7 +204,15 @@ in
             }
 
             animations {
-              workspace-switch { off; }
+              workspace-switch {
+                duration-ms 100
+                curve "ease-out-cubic"
+              }
+            }
+
+            window-rule {
+              geometry-corner-radius 12
+              clip-to-geometry true
             }
 
             spawn-at-startup "${noctalia}"
