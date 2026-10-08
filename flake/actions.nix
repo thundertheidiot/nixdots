@@ -131,7 +131,7 @@
                   nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
                   printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
 
-                  for package in helium glide sable-desktop dgr; do
+                  for package in helium glide photocraft sable-desktop dgr; do
                     old_version=$(nix eval --raw ".#packages.x86_64-linux.$package.version")
                     args=()
                     # Glide uses prerelease-style tags for its regular releases.
@@ -161,6 +161,7 @@
                   add-paths = ''
                     pkgs/helium.nix
                     pkgs/glide.nix
+                    pkgs/photocraft.nix
                     pkgs/sable-desktop.nix
                     pkgs/dgr.nix
                   '';

@@ -268,6 +268,7 @@
 
     mpkgs.helium
     mpkgs.sable-desktop
+    mpkgs.photocraft
 
     wineWow64Packages.staging
     gdb

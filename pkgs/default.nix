@@ -7,6 +7,7 @@ with pkgs;
   sable-desktop = callPackage ./sable-desktop.nix { };
   helium = callPackage ./helium.nix { };
   glide = callPackage ./glide.nix { };
+  photocraft = callPackage ./photocraft.nix { };
   kodi = callPackage ./kodi { };
   bandcamp-dl = callPackage ./bandcamp-dl.nix { };
   wireguard-keys = callPackage ./wireguard-keys.nix { };
