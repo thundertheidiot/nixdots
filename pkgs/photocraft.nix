@@ -20,6 +20,7 @@ buildFHSEnv (
       glibc.bin
       glib
       gtk3
+      dbus
       libxkbcommon
       libGL
       wayland
