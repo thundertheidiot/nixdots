@@ -16,19 +16,21 @@ buildFHSEnv (
     inherit version;
     passthru.src = photocraft;
 
-    targetPkgs = pkgs: with pkgs; [
-      glibc.bin
-      glib
-      gtk3
-      dbus
-      libxkbcommon
-      libGL
-      wayland
-      libx11
-      libxcursor
-      libxrandr
-      libxi
-    ];
+    targetPkgs =
+      pkgs: with pkgs; [
+        glibc.bin
+        glib
+        gtk3
+        dbus
+        libxkbcommon
+        libGL
+        wayland
+        libx11
+        libxcursor
+        libxrandr
+        libxi
+        libxcb
+      ];
 
     extraInstallCommands = ''
       cp -r ${photocraft}/share $out/
