@@ -4,10 +4,10 @@
 }:
 appimageTools.wrapType2 (finalAttrs: {
   pname = "sable";
-  version = "1.22.11";
+  version = "2.0.0";
 
   src = fetchurl {
-    url = "https://github.com/SableClient/Sable/releases/download/v${finalAttrs.version}/Sable-${finalAttrs.version}-linux-x86_64.AppImage";
-    hash = "sha256-fHdYj/JZ2uLHZeey3E3nOrZLyzv4rembxP0VTS9zot0=";
+    url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${finalAttrs.version}/sable-${finalAttrs.version}-linux-x86_64.AppImage";
+    hash = "sha256-0t0C2Rkv7DPiNL5s9clpAmeiPoKFKkDwfaSGJBPY68U=";
   };
 })
