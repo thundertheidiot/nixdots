@@ -35,7 +35,17 @@ jobs:
           if [[ "$package" == glide ]]; then
             args+=(--version=unstable)
           fi
-          nix-update --flake "$package" "${args[@]}"
+          for attempt in 1 2 3; do
+            if nix-update --flake --use-github-releases "$package" "${args[@]}"; then
+              break
+            fi
+            if [[ "$attempt" == 3 ]]; then
+              printf '::error::Failed to update %s after three attempts\n' "$package"
+              exit 1
+            fi
+            printf '::warning::Update for %s failed; retrying in 10 seconds\n' "$package"
+            sleep 10
+          done
 
           if ! git diff --quiet -- "pkgs/$package.nix"; then
             nix build --accept-flake-config --no-link --print-build-logs ".#$package"
