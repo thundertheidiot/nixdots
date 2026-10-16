@@ -47,11 +47,6 @@ in
         addmetadata = true;
         postprocessors = [
           {
-            key = "FFmpegExtractAudio";
-            preferredcodec = "mp3";
-            preferredquality = "0"; # VBR best quality
-          }
-          {
             key = "FFmpegSplitChapters";
             force_keyframes = false;
           }

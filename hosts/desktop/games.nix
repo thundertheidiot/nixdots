@@ -28,6 +28,14 @@ in
       wrapper = "vrhelper game";
       command = ''"$HOME/Games/fnafhw/FNAFVRHelpWanted/freddys.exe"'';
     })
+    (winelib.protonApp {
+      name = "the-joy-of-creation";
+      proton = winepkgs.protonGE."11-5-x86_64";
+      extraSetup = ''
+        cd "$HOME/Games/the-joy-of-creation-story-mode/The Joy of Creation Story Mode"
+      '';
+      command = ''"$HOME/Games/the-joy-of-creation-story-mode/The Joy of Creation Story Mode/TJoC_SM.exe"'';
+    })
     (winelib.protonApp rec {
       name = "sh2vr";
 
