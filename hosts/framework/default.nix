@@ -88,6 +88,7 @@
 
         mpkgs.glide
         mpkgs.helium
+        mpkgs.photocraft
 
         python313Packages.python
 
