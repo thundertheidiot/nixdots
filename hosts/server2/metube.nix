@@ -41,15 +41,10 @@ in
 
       CORS_ALLOWED_ORIGINS = "*";
 
+      # applied globally to every download
       YTDL_OPTIONS = builtins.toJSON {
-        writethumbnail = false;
-        embedthumbnail = true;
         addmetadata = true;
         postprocessors = [
-          {
-            key = "FFmpegSplitChapters";
-            force_keyframes = false;
-          }
           {
             key = "EmbedThumbnail";
           }
@@ -58,6 +53,18 @@ in
             add_metadata = true;
           }
         ];
+      };
+
+      # picked per-download in the UI (Advanced Options), so only audio gets split
+      YTDL_OPTIONS_PRESETS = builtins.toJSON {
+        "Split chapters" = {
+          postprocessors = [
+            {
+              key = "FFmpegSplitChapters";
+              force_keyframes = false;
+            }
+          ];
+        };
       };
 
       UID = "1000";
