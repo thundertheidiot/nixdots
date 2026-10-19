@@ -2,6 +2,7 @@
   config,
   mlib,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -18,6 +19,16 @@ in
   config = mkIf cfg {
     programs.opencode = {
       enable = true;
+
+      enableMcpIntegration = true;
+      context = ./global.md;
+
+      extraPackages = [ pkgs.python3Packages.trafilatura ];
+
+      tools = {
+        searxng = ./searxng.ts;
+        webfetch = ./webfetch.ts;
+      };
 
       settings = {
         permission = {
