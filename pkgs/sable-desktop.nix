@@ -8,6 +8,6 @@ appimageTools.wrapType2 (finalAttrs: {
 
   src = fetchurl {
     url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${finalAttrs.version}/sable-${finalAttrs.version}-linux-x86_64.AppImage";
-    hash = "sha256-lA1cNLU2UftCy2K9h+j9kZXy4Q2E82Fe2MfTp8XAUjo=";
+    hash = "sha256-nxD3y+e70+Ato6dKKWef9ywiq6/aCSBOujoODiAB9G8=";
   };
 })
