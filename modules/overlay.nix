@@ -5,7 +5,6 @@
 {
   config = {
     nixpkgs.overlays = [
-      inputs.nix-cachyos-kernel.overlays.pinned
       inputs.nixwine.overlays.default
 
       (inputs.nixpkgs-multiverse.lib.pinOverlay {

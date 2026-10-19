@@ -13,7 +13,6 @@
     ./wireguard.nix
     inputs.nixos-hardware.nixosModules.framework-13-7040-amd
     ./kmod.nix # nixos-hardware workaround
-    inputs.autoaspm.nixosModules.default
   ];
 
   system.stateVersion = "25.05";
@@ -34,7 +33,6 @@
 
   services.power-profiles-daemon.enable = lib.mkForce false;
   boot.kernelParams = [ "amd_pstate=active" ];
-  services.autoaspm.enable = true;
 
   services.tlp = {
     enable = true;
@@ -67,8 +65,6 @@
   services.fprintd = {
     enable = true;
   };
-
-  # boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-lto-zen4;
 
   virtualisation.docker.enable = true;
 
