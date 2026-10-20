@@ -80,7 +80,6 @@
 
       home.packages = with pkgs; [
         distrobox
-        opencode
 
         mpkgs.glide
         mpkgs.helium

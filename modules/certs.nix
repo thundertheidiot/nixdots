@@ -7,7 +7,7 @@
 }:
 let
   inherit (mlib) mkEnOptTrue;
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkMerge;
 
   cfg = config.meow.certificates;
 in
@@ -16,7 +16,18 @@ in
     meow.certificates = mkEnOptTrue "Enable self signed certificates for local server.";
   };
 
-  config = mkIf config.meow.certificates {
-    security.pki.certificateFiles = [ ../certs/rootCA.pem ];
-  };
+  config = mkMerge [
+    {
+      # compromised root ca
+      security.pki.caCertificateBlacklist = [
+        "Comodo AAA Services root"
+        "emSign ECC Root CA - G3"
+        "emSign Root CA - C1"
+        "emSign ECC Root CA - C3"
+      ];
+    }
+    (mkIf config.meow.certificates {
+      security.pki.certificateFiles = [ ../certs/rootCA.pem ];
+    })
+  ];
 }
