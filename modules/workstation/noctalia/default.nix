@@ -108,6 +108,12 @@ in
         enable = true;
         recommendedServices.enable = true;
       };
+
+      programs.gpu-screen-recorder.enable = true;
+
+      environment.systemPackages = with pkgs; [
+        slurp
+      ];
     }
     (homeModule {
       programs.noctalia = {
@@ -118,13 +124,20 @@ in
             builtin = "Catppuccin";
           };
 
-          plugins.enabled = mapAttrsToList (_: widget: widget.id) config.meow.noctalia.widgets;
+          plugins.enabled = mapAttrsToList (_: widget: widget.id) config.meow.noctalia.widgets ++ [
+            "noctalia/screen_recorder"
+          ];
+
+          plugin.settings."noctalia/screen_recorder" = {
+            video_source = "region";
+          };
 
           bar.default = {
             start = [ "workspaces" ];
             center = [ "clock" ];
             end = map (widget: widget.instance) widgetInstances ++ [
               "network"
+              "noctalia/screen_recorder:recorder"
               "notifications"
               "clipboard"
               "bluetooth"
