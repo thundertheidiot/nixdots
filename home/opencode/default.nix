@@ -2,6 +2,7 @@
   config,
   mlib,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -16,8 +17,20 @@ in
   };
 
   config = mkIf cfg {
+    # install the tools as copies instead of symlinks
+    # bun resolves the imports locally, there's no @opencode-ai in the nix store
+    home.activation.opencodeTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run mkdir -p $HOME/.config/opencode/tools
+      run install -m644 ${./tools}/*.ts $HOME/.config/opencode/tools/
+    '';
+
     programs.opencode = {
       enable = true;
+
+      enableMcpIntegration = true;
+      context = ./global.md;
+
+      extraPackages = [ pkgs.python3Packages.trafilatura ];
 
       settings = {
         permission = {

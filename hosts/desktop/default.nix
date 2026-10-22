@@ -283,8 +283,6 @@
 
     krita
 
-    gpu-screen-recorder-gtk
-
     qmk
     android-tools
 

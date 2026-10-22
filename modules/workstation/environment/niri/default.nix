@@ -235,6 +235,7 @@ in
               End { spawn-sh "mumble rpc togglemute"; }
 
               Mod+D { spawn-sh "${noctalia} msg panel-toggle launcher"; }
+              Mod+Shift+R { spawn-sh "${noctalia} msg plugin noctalia/screen_recorder:service all toggle"; }
 
               XF86AudioPlay { spawn-sh "mpc toggle"; }
               XF86AudioNext { spawn-sh "mpc next"; }
