@@ -107,6 +107,8 @@
     workstation.displayManager = "gdm";
     rice = "minimal";
 
+    displaylink = true;
+
     impermanence.enable = true;
     impermanence.directories = [
       "/var/lib/fwupd"

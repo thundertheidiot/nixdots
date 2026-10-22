@@ -3,7 +3,7 @@ iso:
 
 prefetch:
   nix-prefetch-url --name CiscoPacketTracer_900_Ubuntu_64bit.deb https://archive.org/download/cisco-packet-tracer-900-64bit/CiscoPacketTracer_900_Ubuntu_64bit.deb
-  nix-prefetch-url --name displaylink-620.zip https://www.synaptics.com/sites/default/files/exe_files/2025-09/DisplayLink%20USB%20Graphics%20Software%20for%20Ubuntu6.2-EXE.zip
+  nix-prefetch-url --name displaylink-630.zip https://www.synaptics.com/sites/default/files/exe_files/2026-06/DisplayLink%20USB%20Graphics%20Software%20for%20Ubuntu6.3-EXE.zip
 
 _build host:
 	@nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel --print-out-paths --accept-flake-config --show-trace
