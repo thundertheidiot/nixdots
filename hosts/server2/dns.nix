@@ -16,7 +16,7 @@ in
   };
 
   config = {
-    networking.firewall.interfaces.eno0 = {
+    networking.firewall.interfaces.enp3s0 = {
       allowedUDPPorts = [ 53 ];
       allowedTCPPorts = [ 53 ];
     };

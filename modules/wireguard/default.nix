@@ -126,6 +126,8 @@ in
       systemd.services.wg-dns-select = {
         description = "Select LAN or VPN private DNS";
         before = [ "dnsmasq.service" ];
+        # NetworkManager emits enough events at boot to hit the default start limit.
+        unitConfig.StartLimitIntervalSec = 0;
         serviceConfig = {
           Type = "oneshot";
           RuntimeDirectory = "wg-dns";
@@ -139,11 +141,24 @@ in
           for zone in home server local desktop; do
             printf 'server=/%s/%s\n' "$zone" "$resolver"
           done > /run/wg-dns/servers.new
+          if cmp -s /run/wg-dns/servers.new /run/wg-dns/servers; then
+            rm /run/wg-dns/servers.new
+            exit 0
+          fi
           mv /run/wg-dns/servers.new /run/wg-dns/servers
+          echo "Private DNS resolver: $resolver"
           if ${pkgs.systemd}/bin/systemctl is-active --quiet dnsmasq.service; then
             ${pkgs.systemd}/bin/systemctl kill --kill-whom=main --signal=HUP dnsmasq.service
           fi
         '';
+      };
+      # Recover from missed dispatcher events, including during boot and resume.
+      systemd.timers.wg-dns-select = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnBootSec = "15s";
+          OnUnitInactiveSec = "30s";
+        };
       };
       networking.networkmanager.dispatcherScripts = [
         {
@@ -173,8 +188,14 @@ in
         '';
       };
       systemd.services.dnsmasq = {
-        requires = [ "wg-dns-route.service" "wg-dns-select.service" ];
-        after = [ "wg-dns-route.service" "wg-dns-select.service" ];
+        requires = [
+          "wg-dns-route.service"
+          "wg-dns-select.service"
+        ];
+        after = [
+          "wg-dns-route.service"
+          "wg-dns-select.service"
+        ];
       };
       systemd.services.wg-quick-wg0 = {
         requires = [ "wg-dns-route.service" ];
