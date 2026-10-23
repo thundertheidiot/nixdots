@@ -27,6 +27,7 @@ let
   node = vpn.peers.${peerName};
   hub = vpn.peers.${vpn.hub}.address;
   resolver = vpn.peers.${vpn.dns}.address;
+  lanResolver = inputs.self.nixosConfigurations.server2.config.server.addr;
   trusted = concatMapStringsSep ", " (peer: peer.address) (
     attrValues (filterAttrs (name: peer: name != vpn.hub && peer.address != node.address) vpn.peers)
   );
@@ -38,7 +39,7 @@ in
     tcpPorts = mkOpt (listOf port) [ ] {
       description = "TCP ports on this host that the VPN hub may connect to.";
     };
-    dns.enable = mkEnOpt "Local split DNS over WireGuard";
+    dns.enable = mkEnOpt "Private DNS over the home LAN or WireGuard when away";
   };
 
   config = mkMerge [
@@ -115,16 +116,46 @@ in
           bind-interfaces = true;
           no-resolv = true;
           conf-file = [ ];
-          server = [
-            "/home/${resolver}"
-            "/server/${resolver}"
-            "/local/${resolver}"
-            "/desktop/${resolver}"
-            "1.1.1.1"
-          ];
+          servers-file = "/run/wg-dns/servers";
+          server = [ "1.1.1.1" ];
           cache-size = 1000;
         };
       };
+
+      # servers-file is reread on SIGHUP, unlike the main dnsmasq configuration.
+      systemd.services.wg-dns-select = {
+        description = "Select LAN or VPN private DNS";
+        before = [ "dnsmasq.service" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RuntimeDirectory = "wg-dns";
+          RuntimeDirectoryPreserve = "yes";
+        };
+        script = ''
+          resolver=${resolver}
+          if [ -n "$(${pkgs.iproute2}/bin/ip -4 route show match ${lanResolver}/32 scope link)" ]; then
+            resolver=${lanResolver}
+          fi
+          for zone in home server local desktop; do
+            printf 'server=/%s/%s\n' "$zone" "$resolver"
+          done > /run/wg-dns/servers.new
+          mv /run/wg-dns/servers.new /run/wg-dns/servers
+          if ${pkgs.systemd}/bin/systemctl is-active --quiet dnsmasq.service; then
+            ${pkgs.systemd}/bin/systemctl kill --kill-whom=main --signal=HUP dnsmasq.service
+          fi
+        '';
+      };
+      networking.networkmanager.dispatcherScripts = [
+        {
+          source = pkgs.writeShellScript "select-private-dns" ''
+            case "$2" in
+              up|down|dhcp4-change|connectivity-change|reapply)
+                ${pkgs.systemd}/bin/systemctl --no-block start wg-dns-select.service
+                ;;
+            esac
+          '';
+        }
+      ];
 
       systemd.services.wg-dns-route = {
         description = "Fail-closed route for private VPN DNS";
@@ -142,8 +173,8 @@ in
         '';
       };
       systemd.services.dnsmasq = {
-        requires = [ "wg-dns-route.service" ];
-        after = [ "wg-dns-route.service" ];
+        requires = [ "wg-dns-route.service" "wg-dns-select.service" ];
+        after = [ "wg-dns-route.service" "wg-dns-select.service" ];
       };
       systemd.services.wg-quick-wg0 = {
         requires = [ "wg-dns-route.service" ];
