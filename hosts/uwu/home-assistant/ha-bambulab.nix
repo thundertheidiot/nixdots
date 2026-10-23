@@ -15,7 +15,7 @@ buildHomeAssistantComponent rec {
     sha256 = "sha256-DJsIB5wFEGF6myTfHblJzIvS+zhGNLbB5j7zSrodP6s=";
   };
 
-  propagatedBuildInputs = with home-assistant.python.pkgs; [
+  propagatedBuildInputs = with home-assistant.python3Packages; [
     beautifulsoup4
     paho-mqtt
   ];

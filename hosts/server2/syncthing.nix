@@ -27,9 +27,10 @@ in
           proxyPass = "http://127.0.0.1:8384";
           recommendedProxySettings = false;
           extraConfig = ''
-            # Keep admin access local until declarative authentication is provisioned.
+            # Keep the admin GUI available only on the home network until authentication is provisioned.
             allow 127.0.0.1;
             allow ::1;
+            allow 192.168.101.0/24;
             deny all;
             proxy_set_header Host $proxy_host;
           '';

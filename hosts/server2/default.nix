@@ -50,6 +50,7 @@ in
     ];
 
     networking.networkmanager.enable = true;
+    networking.firewall.trustedInterfaces = [ "eno0" ];
     networking.firewall.allowedTCPPorts = [
       80
       443

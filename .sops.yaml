@@ -31,12 +31,40 @@ creation_rules:
     key_groups:
       - age:
           - *desk
-  - path_regex: sops/wireguard/[^/]+$
+  - path_regex: sops/wireguard/private/vps$
+    key_groups:
+      - age:
+          - *desk
+          - *vps
+          - *framework
+  - path_regex: sops/wireguard/private/home2?$
+    key_groups:
+      - age:
+          - *desk
+          - *server
+          - *framework
+  - path_regex: sops/wireguard/psk/home2?$
     key_groups:
       - age:
           - *desk
           - *vps
           - *server
+          - *framework
+  - path_regex: sops/wireguard/private/(framework|desktop|phone)$
+    key_groups:
+      - age:
+          - *desk
+          - *framework
+  - path_regex: sops/wireguard/psk/(framework|desktop|phone)$
+    key_groups:
+      - age:
+          - *desk
+          - *framework
+          - *vps
+  - path_regex: certs/rootCA\.key$
+    key_groups:
+      - age:
+          - *desk
           - *framework
   - path_regex: certs/[^/]+$
     key_groups:

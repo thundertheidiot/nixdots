@@ -1,31 +1,22 @@
 {
-  config,
-  inputs,
-  ...
-}:
-let
-  keys = import "${inputs.self.outPath}/sops/wireguard";
-in
-{
-  imports = [ keys.home.module ];
+  meow.wireguard = {
+    enable = true;
+    peer = "home";
+    tcpPorts = [ 2284 ];
+  };
 
-  config = {
-    networking.wg-quick.interfaces.wg0 = {
-      address = [ "10.100.0.2/24" ];
-      privateKeyFile = config.sops.secrets.wg_private.path;
-
-      peers = [
-        {
-          allowedIPs = [ "10.100.0.0/24" ];
-          publicKey = keys.vps.pubkey;
-          presharedKeyFile = config.sops.secrets.wg_preshared.path;
-          persistentKeepalive = 25;
-
-          endpoint = "95.216.151.56:51820";
-        }
-      ];
+  # Docker owns 2283; a dedicated native listener keeps outer FORWARD default-deny.
+  services.nginx.virtualHosts.immich-transport = {
+    listen = [
+      {
+        addr = "0.0.0.0";
+        port = 2284;
+      }
+    ];
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:2283";
+      proxyWebsockets = true;
+      extraConfig = "client_max_body_size 50000M;";
     };
-
-    networking.firewall.trustedInterfaces = [ "wg0" ];
   };
 }

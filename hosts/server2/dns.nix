@@ -2,11 +2,11 @@
   config,
   lib,
   mlib,
-  pkgs,
   ...
 }:
 let
   inherit (mlib) mkOpt;
+  inherit (lib) unique;
   inherit (lib.types) listOf str;
 in
 {
@@ -16,25 +16,32 @@ in
   };
 
   config = {
-    networking.firewall.allowedUDPPorts = [ 53 ];
-    networking.firewall.allowedTCPPorts = [ 53 ];
+    networking.firewall.interfaces.eno0 = {
+      allowedUDPPorts = [ 53 ];
+      allowedTCPPorts = [ 53 ];
+    };
 
     services.dnsmasq = {
       enable = true;
       resolveLocalQueries = true;
       settings = {
-        listen-address = "::1,127.0.0.1,${config.server.addr}";
-        interface = "eno0";
-        resolv-file =
-          let
-            conf = pkgs.writeText "resolv.conf" ''
-              nameserver 1.1.1.1
-            '';
-          in
-          "${conf}";
+        listen-address = [
+          "::1"
+          "127.0.0.1"
+          config.server.addr
+        ];
+        bind-dynamic = true;
+        no-resolv = true;
+        conf-file = [ ];
         cache-size = 1000;
-        address = (map (d: "/${d}/${config.server.addr}") config.server.domains) ++ [
-          "/pc.desktop/192.168.101.100"
+        host-record = map (domain: "${domain},${config.server.addr}") (unique config.server.domains) ++ [
+          "pc.desktop,192.168.101.100"
+        ];
+        local = [
+          "/home/"
+          "/server/"
+          "/local/"
+          "/desktop/"
         ];
         server = [
           "1.1.1.1"

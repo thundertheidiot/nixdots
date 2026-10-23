@@ -1,95 +1,73 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
-  server,
   ...
 }:
 let
-  root = inputs.self.outPath;
-  keys = import "${root}/sops/wireguard";
+  inherit (lib)
+    mapAttrsToList
+    filterAttrs
+    concatMapStringsSep
+    attrValues
+    ;
+  vpn = import "${inputs.self.outPath}/sops/wireguard";
+  hub = vpn.peers.${vpn.hub};
+  clients = filterAttrs (name: _: name != vpn.hub) vpn.peers;
 in
 {
-  imports = [ keys.vps.module ];
+  imports = [ hub.module ];
 
-  config = {
-    meow.server.gatus = [
-      {
-        name = "homeserver";
-        group = "home";
-        url = "icmp://${server.homeServer2}";
-        interval = "30s";
-        conditions = [
-          "[CONNECTED] == true"
-        ];
-      }
-    ];
+  networking.wg-quick.interfaces.wg0 = {
+    address = [ "${hub.address}/24" ];
+    privateKeyFile = config.sops.secrets.wg_private.path;
+    listenPort = vpn.port;
+    peers = mapAttrsToList (name: peer: {
+      publicKey = peer.publicKey;
+      allowedIPs = [ "${peer.address}/32" ];
+      presharedKeyFile = config.sops.secrets."wg_psk_${name}".path;
+    }) clients;
+  };
 
-    networking.wg-quick.interfaces.wg0 = {
-      address = [ "10.100.0.1/24" ];
-      privateKeyFile = config.sops.secrets.wg_private.path;
+  networking.firewall = {
+    backend = "iptables";
+    package = pkgs.iptables;
+    allowedUDPPorts = [ vpn.port ];
+  };
 
-      listenPort = 51820;
-
-      peers = [
-        # Homeserver - port forward
-        {
-          allowedIPs = [ "10.100.0.2/32" ];
-          publicKey = keys.home.pubkey;
-          presharedKeyFile = config.sops.secrets.wg_preshared.path;
-        }
-        # Homeserver 2 - port forward
-        {
-          allowedIPs = [ "10.100.0.3/32" ];
-          publicKey = keys.home2.pubkey;
-          presharedKeyFile = config.sops.secrets.wg_preshared.path;
-        }
-        # Framework
-        {
-          allowedIPs = [ "10.100.0.4/32" ];
-          publicKey = keys.framework.pubkey;
-          presharedKeyFile = config.sops.secrets.wg_preshared.path;
-        }
-        # Desktop
-        {
-          allowedIPs = [ "10.100.0.5/32" ];
-          publicKey = keys.desktop.pubkey;
-          presharedKeyFile = config.sops.secrets.wg_preshared.path;
-        }
-        # Phone
-        {
-          allowedIPs = [ "10.100.0.6/32" ];
-          publicKey = keys.phone.pubkey;
-          presharedKeyFile = config.sops.secrets.wg_preshared.path;
-        }
-      ];
+  networking.nftables = {
+    enable = true;
+    flushRuleset = false;
+    tables.wg-hub-boundary = {
+      family = "inet";
+      content =
+        let
+          addresses = concatMapStringsSep ", " (peer: peer.address) (attrValues clients);
+        in
+        ''
+          chain forward {
+            type filter hook forward priority -10; policy drop;
+            iifname "wg0" oifname "wg0" ip saddr { ${addresses} } ip daddr { ${addresses} } counter accept
+          }
+          chain output {
+            type filter hook output priority -10; policy accept;
+            ip saddr { ${addresses} } counter drop
+            oifname "wg0" ct state established,related return
+            oifname "wg0" ip saddr ${hub.address} ip daddr ${vpn.peers.home2.address} tcp dport { 4533, 8096 } return
+            oifname "wg0" counter drop
+          }
+        '';
+      # 4533 - navidrome
+      # 8096 - jellyfin
     };
+  };
 
-    networking.firewall.trustedInterfaces = [ "wg0" ];
-    networking.firewall.allowedUDPPorts = [ 51820 ];
-
-    boot.kernel.sysctl = {
-      "net.ipv4.ip_forward" = 1;
-      "net.ipv6.conf.all.forwarding" = 1;
-    };
-
-    # proxy ssh from home
-    services.nginx.package = pkgs.nginxMainline;
-    services.nginx.streamConfig = ''
-      upstream home_ssh {
-        server 10.100.0.2:22;
-      }
-
-      upstream home2_ssh {
-        server 10.100.0.3:22;
-      }
-
-      server {
-        listen 2222;
-        proxy_pass home2_ssh;
-      }
-    '';
-
-    networking.firewall.allowedTCPPorts = [ 2222 ];
+  # The host is trusted as a router; local services cannot initiate arbitrary peer access.
+  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+  systemd.services.wg-quick-wg0 = {
+    requires = [ "nftables.service" ];
+    after = [ "nftables.service" ];
+    partOf = [ "nftables.service" ];
   };
 }

@@ -19,6 +19,12 @@ in
   config = mkIf (cfg.enable && cfg.whatsapp.enable) {
     meow.impermanence.directories = [
       {
+        path = "/var/lib/postgresql";
+        permissions = "0700";
+        user = "postgres";
+        group = "postgres";
+      }
+      {
         path = "/var/lib/mautrix-whatsapp";
         permissions = "0700";
         user = "mautrix-whatsapp";

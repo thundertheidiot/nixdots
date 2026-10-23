@@ -21,6 +21,7 @@
   ./tv
   ./user.nix
   ./vm.nix
+  ./wireguard
   ./workstation
   ./xorg.nix
 ]
