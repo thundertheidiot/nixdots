@@ -4,11 +4,11 @@
 }:
 buildFHSEnv (
   let
-    version = "0.10.0";
+    version = "0.14.0";
 
     photocraft = fetchzip {
       url = "https://github.com/storytold/photocraft/releases/download/v${version}/photocraft-${version}-linux-x86_64.tar.gz";
-      hash = "sha256-5SRROWz/dFWK00oMB4XlFjBNMTpLmLNfYiUa5pWifCI=";
+      hash = "sha256-bsMZJ2Dy9VxjC610ide5idQQ561Z/Kq+nn9uPN1+bpg=";
     };
   in
   {

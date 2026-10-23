@@ -4,7 +4,7 @@
 }:
 buildFHSEnv rec {
   pname = "glide-browser";
-  version = "0.1.64a";
+  version = "0.1.65a";
 
   # yes, all of this is required for webgl to work
   targetPkgs =
@@ -39,7 +39,7 @@ buildFHSEnv rec {
 
   passthru.src = fetchzip {
     url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-x86_64.tar.xz";
-    hash = "sha256-5ZkXl43yhkuOdtK2Ue1BynbEeBaGM+NNVrD72yE9T10=";
+    hash = "sha256-iQWvXKCn/lKAOEUg17/U8ZjNOLRkNRPSl3+bLEiYoNM=";
   };
 
   runScript = "${passthru.src}/glide";
