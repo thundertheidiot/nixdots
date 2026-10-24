@@ -253,11 +253,11 @@
         "org-defblock": "org-defblock"
       },
       "locked": {
-        "lastModified": 1792647981,
-        "narHash": "sha256-kQdpxtdWL3jhbKFQ7e5vNVZPGfoRd0mbl+AVNyq1+sY=",
+        "lastModified": 1792829481,
+        "narHash": "sha256-4N6sYaCKLTvkQcsOQ4rzrZfsyLRDAHqu9PyTiV7PgnQ=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "116347f76bbc06dfe168ed8f970a98e056adf8ef",
+        "rev": "7ec91d0a8889774c33c8affb7fd158e81f7d33cf",
         "type": "github"
       },
       "original": {
@@ -272,11 +272,11 @@
         "nixpkgs-stable": "nixpkgs-stable"
       },
       "locked": {
-        "lastModified": 1791349001,
-        "narHash": "sha256-YXvFnowmw+9Qe14lKBWbkChRMzeDCm8SWZJqSXwCwbQ=",
+        "lastModified": 1792815328,
+        "narHash": "sha256-lFHX2KQI/vLi171kE/5XHh6H1ZuaM33YUCWTdhYLK68=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "44f7fdaf7405c012ae96d801b707d15b90d1df12",
+        "rev": "8070424d91ce0660bebe760ac066148150980a75",
         "type": "github"
       },
       "original": {
@@ -288,11 +288,11 @@
     "emacs-pwayl": {
       "flake": false,
       "locked": {
-        "lastModified": 1790244886,
-        "narHash": "sha256-GuvBXTrHWkBBiEsSVD3zbsDbsH9J4aAP9d8sCoNTuWM=",
+        "lastModified": 1792574201,
+        "narHash": "sha256-nKtACp0qCXb+zAPxvuX3xrtyi6ecVGZqlOy/Zoi3MkE=",
         "ref": "wayland-31",
-        "rev": "8c10aa934dc5754318fbf384b5e7538e17f3d0ba",
-        "revCount": 182663,
+        "rev": "1ab88f6726eb85c31ad35701c4a4a8584e646f8c",
+        "revCount": 182818,
         "type": "git",
         "url": "https://codeberg.org/ezemtsov/emacs.git"
       },
@@ -323,11 +323,11 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1791278021,
-        "narHash": "sha256-rOzR3tkphq8JmteuyUUAd+ar/o4KybjK7zeiR2NH3iI=",
+        "lastModified": 1792791728,
+        "narHash": "sha256-uR/8G4iNzYib5mPW3fw0p3Qfn5s50lCJ2GwriuJ6HUQ=",
         "ref": "refs/heads/master",
-        "rev": "3de61c40d6f2af06ea4443cad0ee033ba9800005",
-        "revCount": 1037,
+        "rev": "cc06b6405d5a53d3cbc4e7ad516459f5e6b6ac4b",
+        "revCount": 1172,
         "type": "git",
         "url": "https://codeberg.org/ezemtsov/ewm.git"
       },
@@ -619,11 +619,11 @@
     "ghostel": {
       "flake": false,
       "locked": {
-        "lastModified": 1790770474,
-        "narHash": "sha256-FNMEGNeVRXTB9Q/uEXChIDDZifMQVriId8Crm517leQ=",
+        "lastModified": 1792683430,
+        "narHash": "sha256-LuzWDnzyEJ1G3k3cdYamimfjsHWCIK4phBD8FZYnd2A=",
         "owner": "dakra",
         "repo": "ghostel",
-        "rev": "8cc917321a8ba5d704c72e3dd6d9d186ece7a692",
+        "rev": "706be5d877f7372adf725eb24b087ac5006b5428",
         "type": "github"
       },
       "original": {
@@ -773,11 +773,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791306979,
-        "narHash": "sha256-KuLePuhwJM9NLt/gTLHzXaOoSZKGoB3m7NfXjiQ98HY=",
+        "lastModified": 1792818371,
+        "narHash": "sha256-yhEZAzZRNvzYpoAlyFY3wM75V9BmkIXJIueof8S5gOg=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "fae6e9e42c3b762ab47635cddcfaf6f52374a61b",
+        "rev": "2cd3234928f60bbff695a7ee56115ef7799c47cd",
         "type": "github"
       },
       "original": {
@@ -985,11 +985,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1791254437,
-        "narHash": "sha256-qMSsgG+9tIdx282dMqGuJAUK3t6F36clM6efd0rXfes=",
+        "lastModified": 1792615934,
+        "narHash": "sha256-MlvRfa1O5Cqc2/a+gG+l9TSuowEoCKCmrJ1d9oAVm0I=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b25309931cfda5f0b8805f462a29897eeae50168",
+        "rev": "da6dc0e7b26060f2f71ce3ef7088fb56ee44fa36",
         "type": "github"
       },
       "original": {
@@ -1257,11 +1257,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1791260994,
-        "narHash": "sha256-Miqqk/ammqnTUxaoCyvtwoPeLbI1ksFyLxi/CazZpWY=",
+        "lastModified": 1792502884,
+        "narHash": "sha256-IoNisKcGbUjdd45qCqywGMCYmZ5EnkxezvLII0FWwNA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "151fa4e8ddfdd8dd25d945ad94ed54a13de9f6e4",
+        "rev": "02c087f3fe673c9e317f206a627cb6b910336dbe",
         "type": "github"
       },
       "original": {
