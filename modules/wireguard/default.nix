@@ -104,7 +104,11 @@ in
 
     (mkIf dnsEnabled {
       services.resolved.enable = false;
-      networking.networkmanager.dns = "none";
+      networking.networkmanager = {
+        dns = "default";
+        # Publish upstream DNS without replacing the local dnsmasq resolver.
+        settings.main.rc-manager = "unmanaged";
+      };
       services.dnsmasq = {
         enable = true;
         resolveLocalQueries = true;
@@ -114,10 +118,12 @@ in
             "::1"
           ];
           bind-interfaces = true;
-          no-resolv = true;
+          resolv-file = "/run/NetworkManager/resolv.conf";
+          # Respect NetworkManager's DNS priorities, with VPN DNS first by default.
+          strict-order = true;
+          clear-on-reload = true;
           conf-file = [ ];
           servers-file = "/run/wg-dns/servers";
-          server = [ "1.1.1.1" ];
           cache-size = 1000;
         };
       };
@@ -164,7 +170,7 @@ in
         {
           source = pkgs.writeShellScript "select-private-dns" ''
             case "$2" in
-              up|down|dhcp4-change|connectivity-change|reapply)
+              up|down|vpn-up|vpn-down|dhcp4-change|connectivity-change|reapply)
                 ${pkgs.systemd}/bin/systemctl --no-block start wg-dns-select.service
                 ;;
             esac
