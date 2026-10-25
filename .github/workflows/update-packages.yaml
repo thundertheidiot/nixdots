@@ -2,21 +2,52 @@ concurrency:
   cancel-in-progress: false
   group: update-custom-packages
 jobs:
-  update:
+  create-pr:
+    needs:
+    - update
     permissions:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         persist-credentials: false
-    - uses: wimpysworld/nothing-but-nix@v10
+    - name: Download package updates
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+      with:
+        name: package-updates
+        path: ${{ runner.temp }}/package-updates
+    - name: Apply package updates
+      run: cp "$RUNNER_TEMP"/package-updates/*.nix pkgs/
+    - name: Open combined update PR
+      uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676
+      with:
+        add-paths: |-
+          pkgs/helium.nix
+          pkgs/glide.nix
+          pkgs/photocraft.nix
+          pkgs/sable-desktop.nix
+          pkgs/dgr.nix
+        body-path: ${{ runner.temp }}/package-updates/package-updates.md
+        branch: updates/custom-packages
+        commit-message: 'chore(deps): update custom packages'
+        delete-branch: true
+        title: 'chore(deps): update custom packages'
+  update:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+    - uses: wimpysworld/nothing-but-nix@687c797a730352432950c707ab493fcc951818d7
       with:
         hatchet-protocol: rampage
         nix-permission-edict: true
     - name: Nix Installer
-      uses: cachix/install-nix-action@v31
+      uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
         install_options: --no-daemon
@@ -54,22 +85,21 @@ jobs:
           fi
         done
         SCRIPT
-    - name: Open combined update PR
-      uses: peter-evans/create-pull-request@v7
+    - name: Stage package updates
+      run: |-
+        mkdir -p "$RUNNER_TEMP/package-updates"
+        cp pkgs/{helium,glide,photocraft,sable-desktop,dgr}.nix "$RUNNER_TEMP/package-updates/"
+        cp "$PR_BODY" "$RUNNER_TEMP/package-updates/package-updates.md"
+    - name: Upload package updates
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
       with:
-        add-paths: |-
-          pkgs/helium.nix
-          pkgs/glide.nix
-          pkgs/photocraft.nix
-          pkgs/sable-desktop.nix
-          pkgs/dgr.nix
-        body-path: ${{ runner.temp }}/package-updates.md
-        branch: updates/custom-packages
-        commit-message: 'chore(deps): update custom packages'
-        delete-branch: true
-        title: 'chore(deps): update custom packages'
+        name: package-updates
+        path: ${{ runner.temp }}/package-updates
+        retention-days: 1
 name: Update custom packages
 'on':
   schedule:
   - cron: 23 4 * * *
   workflow_dispatch: {}
+permissions:
+  contents: read

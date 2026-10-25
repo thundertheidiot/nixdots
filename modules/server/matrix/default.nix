@@ -158,7 +158,16 @@ in
         inherit (config.services.livekit) keyFile;
       };
 
-      systemd.services.lk-jwt-service.environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = cfg.domain;
+      systemd.services.livekit = {
+        after = [ "generate-livekit-key.service" ];
+        requires = [ "generate-livekit-key.service" ];
+      };
+
+      systemd.services.lk-jwt-service = {
+        after = [ "generate-livekit-key.service" ];
+        requires = [ "generate-livekit-key.service" ];
+        environment.LIVEKIT_FULL_ACCESS_HOMESERVERS = cfg.domain;
+      };
 
       systemd.services.generate-livekit-key = {
         before = [
@@ -172,12 +181,17 @@ in
           gawk
         ];
         script = ''
-          echo "Key missing, generating key"
-          echo "lk-jwt-service: $(livekit-server generate-keys | tail -1 | awk '{print $3}')" > "${config.services.livekit.keyFile}"
-
+          if [ ! -s "${config.services.livekit.keyFile}" ]; then
+            echo "Key missing, generating key"
+            echo "lk-jwt-service: $(livekit-server generate-keys | tail -1 | awk '{print $3}')" > "${config.services.livekit.keyFile}"
+          else
+            chmod 0600 "${config.services.livekit.keyFile}"
+          fi
         '';
-        serviceConfig.Type = "oneshot";
-        unitConfig.ConditionPathExists = "!${config.services.livekit.keyFile}";
+        serviceConfig = {
+          Type = "oneshot";
+          UMask = "0077";
+        };
       };
 
       services.matrix-continuwuity.settings.global.matrix_rtc.foci = [
@@ -230,8 +244,8 @@ in
         # inject coturn secret at startup
         preStart = ''
           ${getExe pkgs.jq} \
-            --arg sec "$(cat "$CREDENTIALS_DIRECTORY/turn-secret")" \
-            '.rtc.turn_servers[0].secret = $sec' \
+            --rawfile sec "$CREDENTIALS_DIRECTORY/turn-secret" \
+            '.rtc.turn_servers[0].secret = ($sec | rtrimstr("\n"))' \
             ${(pkgs.formats.json { }).generate "livekit.json" config.services.livekit.settings} \
             > "$RUNTIME_DIRECTORY/livekit.json"
         '';

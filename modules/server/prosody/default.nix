@@ -232,7 +232,7 @@ in
 
             c2s_direct_tls_ports = [ 5223 ];
             s2s_direct_tls_ports = [ 5270 ];
-            s2s_secure_auth = false;
+            s2s_secure_auth = true;
 
             # if this is not set it tries to search a nonexistent directory and prosodyctl crashes
             certificates = "/var/lib/acme";

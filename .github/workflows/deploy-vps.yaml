@@ -15,3 +15,4 @@ jobs:
         ssh -T -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey -p 69 deploy@kotiboksi.xyz "$DEPLOY_REVISION"
 'on':
   workflow_dispatch: {}
+permissions: {}
