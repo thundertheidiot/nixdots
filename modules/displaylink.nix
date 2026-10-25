@@ -26,11 +26,12 @@ in
 
     boot = {
       extraModulePackages = [
-        (config.boot.kernelPackages.evdi.overrideAttrs (old: {
-          postInstall = (old.postInstall or "") + ''
-            install -D /dev/null $out/lib/modules/${config.boot.kernelPackages.kernel.modDirVersion}/kernel/drivers/gpu/drm/evdi/evdi.ko.cer
-          '';
-        }))
+        config.boot.kernelPackages.evdi
+        # (config.boot.kernelPackages.evdi.overrideAttrs (old: {
+        #   postInstall = (old.postInstall or "") + ''
+        #     install -D /dev/null $out/lib/modules/${config.boot.kernelPackages.kernel.modDirVersion}/kernel/drivers/gpu/drm/evdi/evdi.ko.cer
+        #   '';
+        # }))
       ];
 
       initrd.kernelModules = [ "evdi" ];

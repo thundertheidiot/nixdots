@@ -41,7 +41,6 @@ in
       neovim
     ];
 
-    boot.initrd.systemd.enable = true;
     systemd.settings.Manager = {
       DefaultTimeoutStopSec = "3s";
     };

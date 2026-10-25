@@ -70,7 +70,6 @@ in
       loader.timeout = 5;
 
       consoleLogLevel = 0;
-      initrd.verbose = false;
 
       kernelParams = [
         "quiet"

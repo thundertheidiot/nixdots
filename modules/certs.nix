@@ -17,13 +17,6 @@ in
   };
 
   config = mkMerge [
-    {
-      # compromised root ca
-      security.pki.caCertificateBlacklist = [
-        "Comodo AAA Services root"
-        "emSign ECC Root CA - G3"
-      ];
-    }
     (mkIf config.meow.certificates {
       security.pki.certificateFiles = [ ../certs/rootCA.pem ];
     })
