@@ -8,7 +8,8 @@
 }:
 let
   inherit (lib) mkIf mkMerge replaceStrings;
-  inherit (mlib) mkEnOpt jqMergeFileWithValue;
+  inherit (mlib) mkEnOpt mkOpt jqMergeFileWithValue;
+  inherit (lib.types) attrsOf anything;
 
   cfg = config.mHome.ai.enable && config.mHome.ai.albedo.enable;
 
@@ -19,7 +20,14 @@ let
   albedoHome = "${config.xdg.dataHome}/albedo";
 in
 {
-  options.mHome.ai.albedo.enable = mkEnOpt "Set up albedo";
+  options.mHome.ai.albedo = {
+    enable = mkEnOpt "Set up albedo";
+
+    # extra mcp servers other modules want merged into extensions.json
+    mcpServers = mkOpt (attrsOf anything) { } {
+      description = "extra mcp servers to merge into extensions.json";
+    };
+  };
 
   config = mkIf cfg (mkMerge [
     {
@@ -33,9 +41,6 @@ in
       };
     }
 
-    # the daemon as a user unit, the cli discovers it via $ALBEDO_HOME/daemon.json
-    # both come from the same flake input, so their builds always match and the
-    # cli never offers to replace the systemd daemon with its own
     {
       systemd.user.services.albedo = {
         Unit = {
@@ -55,8 +60,6 @@ in
       };
     }
 
-    # the web interface, always running: the browser client is baked into the
-    # cli (ALBEDO_WEB_DIST) and it finds the daemon like the terminal client
     {
       systemd.user.services.albedo-web = {
         Unit = {
@@ -78,7 +81,8 @@ in
     }
 
     {
-      home.file.".albedo/global.md".source = ../global.md;
+      # global agents file
+      home.file.".agents/global.md".source = ../global.md;
 
       # try to block ~/Documents/org, this is probably broken
       xdg.dataFile."albedo/hooks.json".text =
@@ -116,11 +120,14 @@ in
                 mcp = true;
               };
               # searxng search + trafilatura fetch, see ./mcp
-              mcp.servers.web = {
-                type = "stdio";
-                command = "${albedoWebMcp}/bin/albedo-web-mcp";
-                callTimeoutMs = 60000;
-              };
+              mcp.servers = {
+                web = {
+                  type = "stdio";
+                  command = "${albedoWebMcp}/bin/albedo-web-mcp";
+                  callTimeoutMs = 60000;
+                };
+              }
+              // config.mHome.ai.albedo.mcpServers;
             };
           }}
         ''}

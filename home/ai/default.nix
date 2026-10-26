@@ -14,6 +14,7 @@ in
 {
   imports = [
     ./opencode.nix
+    ./firefox-mcp.nix
     ./albedo
   ];
 
