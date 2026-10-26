@@ -97,7 +97,19 @@ in
       };
     };
 
-    boot.tmp.cleanOnBoot = mkDefault true;
+    # boot.tmp.cleanOnBoot uses a `D! /tmp` tmpfiles rule, but NixOS patches
+    # systemd-tmpfiles-setup to run with --boot and restarts it on every
+    # activation, wiping /tmp on each nixos-rebuild switch.
+    systemd.services.clean-tmp = {
+      description = "Clean /tmp at boot";
+      wantedBy = [ "multi-user.target" ];
+      before = [ "systemd-tmpfiles-setup.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.findutils}/bin/find /tmp -mindepth 1 -delete";
+      };
+    };
+
     hardware.enableRedistributableFirmware = mkDefault true;
   };
 }
