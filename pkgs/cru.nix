@@ -32,6 +32,8 @@ stdenv.mkDerivation {
       chmod +x $out/bin/cru
     '';
 
+  passthru.autoUpdate.skip = "CRU is currently unused; automatic updates are disabled.";
+
   meta = with lib; {
     description = "Custom Resolution Utility (CRU) is an EDID editor that focuses on custom resolutions.";
     homepage = "https://www.monitortests.com/forum/Thread-Custom-Resolution-Utility-CRU";

@@ -16,7 +16,9 @@
     workflows =
       let
         inherit (lib.lists) flatten;
+        inherit (lib) concatStringsSep;
         inherit (builtins) attrNames;
+        frequentInputs = [ "albedo" ];
         lockUpdateConcurrency = {
           group = "update-flake-lock";
           cancel-in-progress = false;
@@ -115,10 +117,7 @@
             workflow_dispatch = { };
           };
 
-          concurrency = {
-            group = "update-custom-packages";
-            cancel-in-progress = false;
-          };
+          concurrency = lockUpdateConcurrency;
 
           jobs.update = {
             permissions = {
@@ -129,6 +128,16 @@
               blocks.cleanup
               blocks.nixInstaller
               {
+                name = "Update frequent flake inputs";
+                env.FLAKE_INPUTS = concatStringsSep " " frequentInputs;
+                run = ''
+                  if [[ -n "$FLAKE_INPUTS" ]]; then
+                    read -r -a inputs <<< "$FLAKE_INPUTS"
+                    nix flake update --accept-flake-config -- "''${inputs[@]}"
+                  fi
+                '';
+              }
+              {
                 name = "Update and build packages";
                 env = {
                   GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}";
@@ -137,16 +146,32 @@
                 run = ''
                   nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
                   printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
+                  if ! git diff --quiet -- flake.lock; then
+                    printf -- "- Frequent flake inputs updated (lockfile only; not built).\n" >> "$PR_BODY"
+                  fi
 
-                  for package in helium glide photocraft sable-desktop dgr; do
-                    old_version=$(nix eval --raw ".#packages.x86_64-linux.$package.version")
-                    args=()
-                    # Glide uses prerelease-style tags for its regular releases.
-                    if [[ "$package" == glide ]]; then
-                      args+=(--version=unstable)
+                  policies=$(nix eval --json --accept-flake-config .#packageUpdates)
+                  packages=$(jq -r 'keys[]' <<< "$policies")
+                  for package in $packages; do
+                    policy=$(jq -c --arg package "$package" '.[$package]' <<< "$policies")
+                    reason=$(jq -r '.skip // empty' <<< "$policy")
+                    if [[ -n "$reason" ]]; then
+                      printf 'Skipping %s: %s\n' "$package" "$reason"
+                      continue
                     fi
+                    old_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
+                    mapfile -t args < <(jq -r '.args[]' <<< "$policy")
+                    git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-before.patch"
+                    update_package() {
+                      if [[ $(jq -r '.script' <<< "$policy") == true ]]; then
+                        updater=$(nix build --no-link --print-out-paths ".#packages.x86_64-linux.$package.autoUpdate.script") || return
+                        UPDATE_NIX_ATTR_PATH="$package" "$updater"/bin/*
+                      else
+                        nix-update --flake --use-github-releases "$package" "''${args[@]}"
+                      fi
+                    }
                     for attempt in 1 2 3; do
-                      if nix-update --flake --use-github-releases "$package" "''${args[@]}"; then
+                      if update_package; then
                         break
                       fi
                       if [[ "$attempt" == 3 ]]; then
@@ -157,10 +182,15 @@
                       sleep 10
                     done
 
-                    if ! git diff --quiet -- "pkgs/$package.nix"; then
+                    git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-after.patch"
+                    if ! cmp -s "$RUNNER_TEMP/package-before.patch" "$RUNNER_TEMP/package-after.patch"; then
                       nix build --accept-flake-config --no-link --print-build-logs ".#$package"
-                      new_version=$(nix eval --raw ".#packages.x86_64-linux.$package.version")
-                      printf -- "- %s: %s -> %s\n" "$package" "$old_version" "$new_version" >> "$PR_BODY"
+                      new_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
+                      if [[ "$old_version" == "$new_version" ]]; then
+                        printf -- "- %s: updated sources/dependencies (built successfully)\n" "$package" >> "$PR_BODY"
+                      else
+                        printf -- "- %s: %s -> %s\n" "$package" "$old_version" "$new_version" >> "$PR_BODY"
+                      fi
                     fi
                   done
                   SCRIPT
@@ -170,8 +200,8 @@
                 name = "Stage package updates";
                 run = ''
                   mkdir -p "$RUNNER_TEMP/package-updates"
-                  cp pkgs/{helium,glide,photocraft,sable-desktop,dgr}.nix "$RUNNER_TEMP/package-updates/"
-                  cp "$PR_BODY" "$RUNNER_TEMP/package-updates/package-updates.md"
+                  git diff --binary -- pkgs/ flake.lock > "$RUNNER_TEMP/package-updates/updates.patch"
+                  cp "$RUNNER_TEMP/package-updates.md" "$RUNNER_TEMP/package-updates/package-updates.md"
                 '';
               }
               {
@@ -204,7 +234,12 @@
               }
               {
                 name = "Apply package updates";
-                run = "cp \"$RUNNER_TEMP\"/package-updates/*.nix pkgs/";
+                run = ''
+                  patch="$RUNNER_TEMP/package-updates/updates.patch"
+                  if [[ -s "$patch" ]]; then
+                    git apply "$patch"
+                  fi
+                '';
               }
               (blocks.pr {
                 name = "Open combined update PR";
@@ -214,11 +249,8 @@
                 title = "chore(deps): update custom packages";
                 body-path = "\${{ runner.temp }}/package-updates/package-updates.md";
                 add-paths = ''
-                  pkgs/helium.nix
-                  pkgs/glide.nix
-                  pkgs/photocraft.nix
-                  pkgs/sable-desktop.nix
-                  pkgs/dgr.nix
+                  pkgs/
+                  flake.lock
                 '';
               })
             ];

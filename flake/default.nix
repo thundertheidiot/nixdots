@@ -32,6 +32,7 @@
           just
           cachix
           nix-update
+          jq
           nh
           nixos-rebuild
         ];

@@ -15,5 +15,6 @@ kodi.overrideAttrs (prev: {
   passthru = (prev.passthru or { }) // {
     inherit addons;
     inherit (kodi-wayland) pythonPackages;
+    autoUpdate.skip = "Kodi is currently unused; addon updates are disabled.";
   };
 })

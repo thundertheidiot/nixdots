@@ -9,7 +9,6 @@ with pkgs;
   glide = callPackage ./glide.nix { };
   photocraft = callPackage ./photocraft.nix { };
   kodi = callPackage ./kodi { };
-  bandcamp-dl = callPackage ./bandcamp-dl.nix { };
   wireguard-keys = callPackage ./wireguard-keys.nix { };
   local-certs = callPackage ./local-certs.nix { };
   firefox-devtools-mcp = callPackage ./firefox-devtools-mcp.nix { };

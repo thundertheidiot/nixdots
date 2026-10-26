@@ -37,6 +37,8 @@ buildFHSEnv rec {
       glib
     ];
 
+  # Regular Glide releases use prerelease-style tags.
+  passthru.autoUpdate.args = [ "--version=unstable" ];
   passthru.src = fetchzip {
     url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-x86_64.tar.xz";
     hash = "sha256-iQWvXKCn/lKAOEUg17/U8ZjNOLRkNRPSl3+bLEiYoNM=";
