@@ -31,6 +31,8 @@
     # https://github.com/nialov/actions.nix/compare/master...alyraffauf:actions.nix:master
     actions.url = "github:alyraffauf/actions.nix";
 
+    albedo.url = "git+https://tangled.org/okami.mom/albedo";
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";

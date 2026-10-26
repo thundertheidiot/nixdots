@@ -76,7 +76,9 @@
       meowEmacs.enable = true;
       meowEmacs.package = "emacs-pwayl";
 
-      mHome.opencode.enable = true;
+      mHome.ai.enable = true;
+      mHome.ai.opencode.enable = true;
+      mHome.ai.albedo.enable = true;
 
       gtk.gtk3.bookmarks = [
         # "file:///mnt/4tb"

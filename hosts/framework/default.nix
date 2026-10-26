@@ -74,7 +74,9 @@
       mHome.browser.firefox.enable = true;
       mHome.setup.fullLanguages = true;
 
-      mHome.opencode.enable = true;
+      mHome.ai.enable = true;
+      mHome.ai.albedo.enable = true;
+      mHome.ai.opencode.enable = true;
 
       meowEmacs.package = "emacs-pwayl";
 

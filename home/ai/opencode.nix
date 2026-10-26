@@ -9,11 +9,11 @@ let
   inherit (lib) mkIf;
   inherit (mlib) mkEnOpt;
 
-  cfg = config.mHome.opencode.enable;
+  cfg = config.mHome.ai.enable && config.mHome.ai.opencode.enable;
 in
 {
   options = {
-    mHome.opencode.enable = mkEnOpt "Set up opencode";
+    mHome.ai.opencode.enable = mkEnOpt "Set up opencode";
   };
 
   config = mkIf cfg {
