@@ -52,6 +52,12 @@ buildFHSEnv (
       install -m 444 -D ${helium}/helium.desktop $out/share/applications
     '';
 
+    # helium reads browser policies from /etc/chromium/policies, but the FHS
+    # sandbox mounts a tmpfs over /etc, so bind it in read-only.
+    extraBwrapArgs = [
+      "--ro-bind-try /etc/chromium /etc/chromium"
+    ];
+
     runScript = "${helium}/helium";
   }
 )

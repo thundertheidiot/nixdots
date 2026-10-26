@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkMerge replaceStrings;
+  inherit (lib) mkIf mkMerge mapAttrs' nameValuePair replaceStrings;
   inherit (mlib) mkEnOpt mkOpt jqMergeFileWithValue;
   inherit (lib.types) attrsOf anything;
 
@@ -27,9 +27,20 @@ in
     mcpServers = mkOpt (attrsOf anything) { } {
       description = "extra mcp servers to merge into extensions.json";
     };
+
+    # extra skills other modules want placed in ~/.albedo/skills
+    skills = mkOpt (attrsOf anything) { } {
+      description = "skill files to place in ~/.albedo/skills, key is the relative path";
+    };
   };
 
   config = mkIf cfg (mkMerge [
+    {
+      home.file = mapAttrs'
+        (name: value: nameValuePair ".albedo/skills/${name}" value)
+        config.mHome.ai.albedo.skills;
+    }
+
     {
       home.packages = [
         albedo.albedo

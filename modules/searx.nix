@@ -38,13 +38,36 @@ in
         server.public_instance = false;
 
         engines = [
-                  { name = "bing"; disabled = false; }
-          { name = "qwant"; disabled = false; }
-          { name = "startpage"; disabled = false; inactive = false; }
-          { name = "mojeek"; disabled = false; inactive = false; }
-                  { name = "wikipedia"; disabled = false; }
-          { name = "duckduckgo"; disabled = true; network.impersonate = "firefox135"; }
-          { name = "brave"; disabled = true; }
+          {
+            name = "bing";
+            disabled = false;
+          }
+          {
+            name = "qwant";
+            disabled = false;
+          }
+          {
+            name = "startpage";
+            disabled = false;
+            inactive = false;
+          }
+          {
+            name = "mojeek";
+            disabled = false;
+            inactive = false;
+          }
+          {
+            name = "wikipedia";
+            disabled = false;
+          }
+          {
+            name = "duckduckgo";
+            disabled = false;
+          }
+          {
+            name = "brave";
+            disabled = true;
+          }
         ];
       };
     };

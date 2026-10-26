@@ -52,7 +52,21 @@ in
         aiFirefox
       ];
 
-      home.file.".agents/skills/firefox-mcp/SKILL.md".source = ./firefox-mcp.md;
+      # launcher entry for the agent browser
+      xdg.desktopEntries.ai-firefox = {
+        name = "Firefox Ai";
+        comment = "Firefox agent profile, automatable via firefox-devtools-mcp";
+        exec = "${aiFirefox}/bin/ai-firefox %u";
+        icon = "applications-science";
+        terminal = false;
+        type = "Application";
+        mimeType = [ "x-scheme-handler/http" "x-scheme-handler/https" ];
+      };
+    }
+
+    # register the skill with albedo, lands in ~/.albedo/skills
+    {
+      mHome.ai.albedo.skills."firefox-mcp/SKILL.md".source = ./firefox-mcp.md;
     }
 
     # register with albedo

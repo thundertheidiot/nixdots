@@ -40,6 +40,7 @@ in
 
   imports = [
     ./discord
+    ./helium.nix
     ./sets.nix
   ];
 
