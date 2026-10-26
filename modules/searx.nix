@@ -27,11 +27,25 @@ in
         server.bind_address = "127.0.0.1";
         server.secret_key = "unimportant_because_this_is_local_lol";
 
-        search.formats = [
-          "html"
-          "json"
-        ];
+        search = {
+          default_lang = "en";
+          formats = [
+            "html"
+            "json"
+          ];
+          preferences.lock = [ "language" ];
+        };
         server.public_instance = false;
+
+        engines = [
+                  { name = "bing"; disabled = false; }
+          { name = "qwant"; disabled = false; }
+          { name = "startpage"; disabled = false; inactive = false; }
+          { name = "mojeek"; disabled = false; inactive = false; }
+                  { name = "wikipedia"; disabled = false; }
+          { name = "duckduckgo"; disabled = false; network.impersonate = "firefox135"; }
+          { name = "brave"; disabled = true; }
+        ];
       };
     };
   };
