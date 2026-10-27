@@ -17,7 +17,7 @@ in
     # ./meowdzbot.nix
     ./disko.nix
     ./dns.nix
-    # ./freshrss.nix
+    ./freshrss.nix
     ./gatus.nix
     ./jellyfin.nix
     ./rathole.nix

@@ -1,9 +1,12 @@
 {
   config,
   lib,
+  inputs,
   ...
 }:
 {
+  imports = [ (import ../../certs).module ];
+
   config = {
     meow.impermanence.directories = [
       {
@@ -49,15 +52,23 @@
 
     sops.secrets.freshrss_db_password.owner = "freshrss";
 
-    services.nginx.virtualHosts."rss.meowcloud.net" = {
-      forceSSL = true;
-      enableACME = true;
+    services.nginx.virtualHosts."rss.vps.home" = {
+      onlySSL = true;
+      listen = [
+        {
+          addr = (import "${inputs.self.outPath}/sops/wireguard").peers.vps.address;
+          port = 443;
+          ssl = true;
+        }
+      ];
+      sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
+      sslCertificateKey = config.sops.secrets.localKey.path;
     };
 
     services.freshrss = {
       enable = true;
-      baseUrl = "https://rss.meowcloud.net";
-      virtualHost = "rss.meowcloud.net";
+      baseUrl = "https://rss.vps.home";
+      virtualHost = "rss.vps.home";
 
       passwordFile = config.sops.secrets.freshrss_db_password.path;
 

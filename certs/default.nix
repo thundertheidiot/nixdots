@@ -29,6 +29,8 @@
     "soulbeet.home"
     "metube.home"
     "syncthing.server"
+    "vps.home"
+    "*.vps.home"
   ];
 
   "local.crt" = ./local.crt;

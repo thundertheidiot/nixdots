@@ -8,6 +8,7 @@ let
   inherit (mlib) mkOpt;
   inherit (lib) unique;
   inherit (lib.types) listOf str;
+  vpn = import ../../sops/wireguard;
 in
 {
   options = {
@@ -34,8 +35,13 @@ in
         no-resolv = true;
         conf-file = [ ];
         cache-size = 1000;
+        cname = [ "*.vps.home,vps.home" ];
+        auth-zone = [ "vps.home" ];
+        auth-server = [ "server2.home" ];
         host-record = map (domain: "${domain},${config.server.addr}") (unique config.server.domains) ++ [
           "pc.desktop,192.168.101.100"
+          "vps.home,${vpn.peers.${vpn.hub}.address}"
+          "server2.home,${config.server.addr}"
         ];
         local = [
           "/home/"

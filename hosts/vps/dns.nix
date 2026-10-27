@@ -19,6 +19,7 @@ in
       no-hosts = true;
       conf-file = [ ];
       cache-size = 1000;
+      cname = [ "*.vps.home,vps.home" ];
       # Never send private names to the upstream resolver.
       local = [
         "/home/"
@@ -44,7 +45,11 @@ in
           in
           "${hostname}.home,${peer.address}"
         ) vpn.peers
-        ++ [ "pc.desktop,${vpn.peers.desktop.address}" ];
+        ++ [
+          "pc.desktop,${vpn.peers.desktop.address}"
+          "vps.home,${vpn.peers.${vpn.hub}.address}"
+          "rss.vps.home,${vpn.peers.${vpn.hub}.address}"
+        ];
     };
   };
 }

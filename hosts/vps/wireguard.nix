@@ -34,6 +34,7 @@ in
     backend = "iptables";
     package = pkgs.iptables;
     allowedUDPPorts = [ vpn.port ];
+    interfaces.wg0.allowedTCPPorts = [ 443 ];
   };
 
   networking.nftables = {

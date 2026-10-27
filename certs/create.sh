@@ -44,7 +44,7 @@ nix eval --json --no-write-lock-file \
   .#nixosConfigurations.server2.config.server.domains > "$work/host-domains.json"
 nix eval --json --file ./certs/default.nix domains > "$work/aliases.json"
 jq -s -e '
-  add + ["*.home"] | unique |
+  add + ["*.home", "vps.home", "*.vps.home"] | unique |
   if length > 0 and all(.[]; type == "string" and
     test("^(\\*\\.)?[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)*$"))
   then . else error("Invalid DNS name in certificate domains") end
