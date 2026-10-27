@@ -89,6 +89,14 @@ in
         };
       })
       (mkIf cfg.firefox.defaults {
+        xdg.mimeApps = {
+          enable = true;
+          defaultApplications = {
+            "x-scheme-handler/http" = [ "firefox.desktop" ];
+            "x-scheme-handler/https" = [ "firefox.desktop" ];
+          };
+        };
+
         programs.firefox = {
           inherit policies;
 

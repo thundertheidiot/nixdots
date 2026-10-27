@@ -11,5 +11,4 @@ with pkgs;
   kodi = callPackage ./kodi { };
   wireguard-keys = callPackage ./wireguard-keys.nix { };
   local-certs = callPackage ./local-certs.nix { };
-  firefox-devtools-mcp = callPackage ./firefox-devtools-mcp.nix { };
 }
