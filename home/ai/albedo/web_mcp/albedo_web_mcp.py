@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Albedo MCP stdio server: searxng search + trafilatura page extraction.
+"""Albedo MCP stdio server: searxng search + page fetching.
 
 Speaks newline-delimited JSON-RPC 2.0 (Model Context Protocol, stdio
 transport) and exposes two tools:
 
   search(query, ...)  local SearXNG instance, JSON API
-  fetch(url, ...)     trafilatura extraction to markdown or plain text
+  fetch(url, ...)     raw response text or trafilatura extraction
 
-The only non-stdlib import is trafilatura, so any python environment with
-it can run the script. Everything written to stdout is protocol; logs go
-to stderr (albedo discards server stderr).
+Trafilatura is required for extracted fetch mode; raw mode uses only the stdlib.
+Everything written to stdout is protocol; logs go to stderr (albedo discards
+server stderr).
 """
 
 import json
@@ -84,6 +84,9 @@ def fetch(args):
     url = str(args.get("url", "")).strip()
     if not url.lower().startswith(("http://", "https://")):
         raise ToolError("url must be http or https")
+    mode = args.get("mode") or "extract"
+    if mode not in ("extract", "raw"):
+        raise ToolError("mode must be 'extract' or 'raw'")
     fmt = args.get("format") or "markdown"
     if fmt not in ("markdown", "text"):
         raise ToolError("format must be 'markdown' or 'text'")
@@ -103,6 +106,13 @@ def fetch(args):
             final_url = response.geturl()
     except Exception as error:
         raise ToolError(f"download failed ({url}): {error}") from error
+
+    if mode == "raw":
+        text = body.decode("utf-8", errors="replace")
+        truncated = len(text) > max_chars
+        if truncated:
+            text = text[:max_chars].rstrip() + "\n\n[truncated]"
+        return f"Raw response from {final_url} ({len(text)} chars{', truncated' if truncated else ''}):\n\n{text}"
 
     try:
         text = trafilatura.extract(
@@ -144,8 +154,9 @@ FETCH_SCHEMA = {
     "type": "object",
     "properties": {
         "url": {"type": "string", "pattern": "^https?://", "description": "The HTTP or HTTPS URL to fetch"},
-        "format": {"type": "string", "enum": ["markdown", "text"], "description": "Extracted content format (default: markdown)"},
-        "max_chars": {"type": "integer", "minimum": 1, "maximum": 100000, "description": "Maximum extracted characters to return (default 20000, max 100000)"},
+        "mode": {"type": "string", "enum": ["extract", "raw"], "description": "'extract' removes boilerplate with trafilatura (default); 'raw' returns the response body as decoded text without extraction"},
+        "format": {"type": "string", "enum": ["markdown", "text"], "description": "Extracted content format (default: markdown; ignored in raw mode)"},
+        "max_chars": {"type": "integer", "minimum": 1, "maximum": 100000, "description": "Maximum returned characters (default 20000, max 100000)"},
         "timeout": {"type": "integer", "minimum": 1, "maximum": 120, "description": "Timeout in seconds (default 30, max 120)"},
     },
     "required": ["url"],
@@ -160,9 +171,9 @@ TOOLS = [
     },
     {
         "name": "fetch",
-        "description": "Fetch a web page and extract its main content with trafilatura, removing navigation and "
-        "other boilerplate. Returns Markdown with links by default, or plain text. Use to read URLs found by search. "
-        "Does not execute JavaScript or bypass paywalls; not intended for PDFs or binary downloads.",
+        "description": "Fetch a web page. By default extracts its main content with trafilatura, removing navigation and "
+        "other boilerplate; set mode='raw' to return the response body as decoded text without extraction. "
+        "Extracted output is Markdown with links by default, or plain text. Does not execute JavaScript or bypass paywalls.",
         "inputSchema": FETCH_SCHEMA,
     },
 ]
