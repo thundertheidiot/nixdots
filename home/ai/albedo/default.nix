@@ -7,7 +7,13 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkMerge mapAttrs' nameValuePair replaceStrings;
+  inherit (lib)
+    mkIf
+    mkMerge
+    mapAttrs'
+    nameValuePair
+    replaceStrings
+    ;
   inherit (mlib) mkEnOpt mkOpt jqMergeFileWithValue;
   inherit (lib.types) attrsOf anything;
 
@@ -36,9 +42,9 @@ in
 
   config = mkIf cfg (mkMerge [
     {
-      home.file = mapAttrs'
-        (name: value: nameValuePair ".albedo/skills/${name}" value)
-        config.mHome.ai.albedo.skills;
+      home.file = mapAttrs' (
+        name: value: nameValuePair ".agents/skills/${name}" value
+      ) config.mHome.ai.albedo.skills;
     }
 
     {
@@ -94,6 +100,9 @@ in
     {
       # global agents file
       home.file.".agents/global.md".source = ../global.md;
+      home.file.".agents/web.md".text = ''
+        Prefer the web mcp over your other search tools.
+      '';
 
       # try to block ~/Documents/org, this is probably broken
       xdg.dataFile."albedo/hooks.json".text =
