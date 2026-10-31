@@ -165,7 +165,7 @@ FETCH_SCHEMA = {
 TOOLS = [
     {
         "name": "search",
-        "description": "Search the web with the local SearXNG instance. "
+        "description": "Search the web with the local SearXNG instance. Important! This is running on the local machine, do not spam massive amounts of searches if you can avoid it, too much traffic will get me blocked by the search engines. "
         "Returns numbered results with title, URL, and snippet. Pair with fetch to read a result's page.",
         "inputSchema": SEARCH_SCHEMA,
     },
