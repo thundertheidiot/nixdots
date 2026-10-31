@@ -49,11 +49,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1793379532,
-        "narHash": "sha256-/99cXoxDodQ26EWKu70KpzGbNXbSfQdMp7XyhOtuR1k=",
+        "lastModified": 1793435438,
+        "narHash": "sha256-oWXlYki/4I8J95a+joWtAdVAE/HWatl4+WlaPPh0PAw=",
         "ref": "refs/heads/main",
-        "rev": "133f53e41ddd718f84f73345253457171cd04ded",
-        "revCount": 1353,
+        "rev": "860c76982de1e971730d35a83d21e4c296204249",
+        "revCount": 1371,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -1251,11 +1251,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1791456040,
-        "narHash": "sha256-H83yz/do+hjOO0uujHyH8RgtIQP2v7Mw+cLwcZK/xKc=",
+        "lastModified": 1793110635,
+        "narHash": "sha256-dhoW6VgFWlaodSY5jrBn+CF2FLmaUvDVgM7+C7T2+NM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e7439b6b14ad3cc35d05608ebca9bce01a25f5f8",
+        "rev": "31ecbaca1bdefa45dffc409f0250bd8039ea0010",
         "type": "github"
       },
       "original": {
@@ -1763,17 +1763,17 @@
     "tg": {
       "flake": false,
       "locked": {
-        "lastModified": 1791059989,
-        "narHash": "sha256-Jgq2N/2dIoIJ9kPOyIrjPvqFsBa4dDdBo5oL3nvTKug=",
+        "lastModified": 1793301292,
+        "narHash": "sha256-/CEkvZpDnfS4K/yjBX0w0P/l1Gr2a2WAkU50ttcNs5c=",
         "ref": "refs/heads/master",
-        "rev": "9529b60733486df3da4e3c1100f68948d4c3e1ed",
-        "revCount": 171,
+        "rev": "1d013b170ade55fcfda8ed73535b67b0c7eff441",
+        "revCount": 182,
         "type": "git",
-        "url": "https://tangled.org/okami.mom/tg"
+        "url": "https://tangled.org/aly.codes/tg"
       },
       "original": {
         "type": "git",
-        "url": "https://tangled.org/okami.mom/tg"
+        "url": "https://tangled.org/aly.codes/tg"
       }
     },
     "treefmt-nix": {
@@ -1784,11 +1784,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791490544,
-        "narHash": "sha256-qScE7Wz6Zg7eg8ItUpnkmKgst8weWschGe0E8jM4rj4=",
+        "lastModified": 1791885023,
+        "narHash": "sha256-C3alQ2MEt0zVrUSho5NUDo3jmhbff72++bfwoqT9Omo=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "4cfe8d7065cc8ca91c0a50361b6dd74920eeb1f5",
+        "rev": "0d6d739a833ba9a9c93034862e4a7b061a062a1c",
         "type": "github"
       },
       "original": {
