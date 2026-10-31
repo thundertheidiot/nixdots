@@ -92,6 +92,11 @@
         overrideDevices = false;
         overrideFolders = false;
       };
+
+      mHome.desktop.common.media.scrobbling = {
+        usernameFile = config.sops.secrets."listenbrainz_username".path;
+        tokenFile = config.sops.secrets."listenbrainz_token".path;
+      };
     }
   ];
 
@@ -260,6 +265,11 @@
       };
     };
   };
+
+  meow.sops.enableSecrets = [
+    "listenbrainz_username"
+    "listenbrainz_token"
+  ];
 
   hardware.keyboard.qmk.enable = true;
 

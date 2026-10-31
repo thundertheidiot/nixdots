@@ -40,6 +40,18 @@ in
         sopsFile = ./desk/rathole.toml;
         format = "binary";
       };
+
+      meow.sops.secrets."listenbrainz_token" = {
+        sopsFile = ./shared/listenbrainz;
+        format = "binary";
+        owner = config.meow.user;
+      };
+
+      meow.sops.secrets."listenbrainz_username" = {
+        sopsFile = ./shared/listenbrainz-username;
+        format = "binary";
+        owner = config.meow.user;
+      };
     }
     {
       sops.secrets = filterAttrs (

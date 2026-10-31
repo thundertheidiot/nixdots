@@ -96,6 +96,11 @@
       services.syncthing = {
         enable = true;
       };
+
+      mHome.desktop.common.media.scrobbling = {
+        usernameFile = config.sops.secrets."listenbrainz_username".path;
+        tokenFile = config.sops.secrets."listenbrainz_token".path;
+      };
     }
   ];
 
@@ -147,6 +152,11 @@
       scale = 1.8;
     };
   };
+
+  meow.sops.enableSecrets = [
+    "listenbrainz_username"
+    "listenbrainz_token"
+  ];
 
   boot.loader.grub.enable = true;
 

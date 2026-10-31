@@ -9,6 +9,11 @@ creation_rules:
       - age:
           - *desk
           - *framework
+  - path_regex: sops/shared/[^/]+$
+    key_groups:
+      - age:
+          - *desk
+          - *framework
   - path_regex: hosts/uwu/secrets/[^/]+$
     key_groups:
       - age:
