@@ -22,6 +22,7 @@ in
       tokenFile = mkOpt (nullOr str) null {
         description = "File containing the ListenBrainz user token. Setting this enables scrobbling.";
       };
+      # no username for you :)
       usernameFile = mkOpt (nullOr str) null {
         description = "File containing the ListenBrainz (MusicBrainz ID) username.";
       };
