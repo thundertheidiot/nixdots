@@ -73,6 +73,7 @@ in
       gpu = "none";
 
       server = {
+        comin.enable = true;
         publicSSH = true;
         webserver = true;
 
