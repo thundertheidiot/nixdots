@@ -19,6 +19,7 @@ in
     # ./mail.nix
     ./acme.nix
     ./coturn.nix
+    ./comin.nix
     ./deploy.nix
     ./forgejo.nix
     ./matrix

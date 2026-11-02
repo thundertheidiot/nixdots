@@ -33,7 +33,7 @@ in
           "${root}/sops"
           inputs.home-manager.nixosModules.home-manager
           inputs.sops-nix.nixosModules.default
-          inputs.comin.nixosModules.default
+          inputs.comin.nixosModules.comin
           inputs.disko.nixosModules.default
           inputs.authentik-nix.nixosModules.default
           inputs.catppuccin.nixosModules.default
