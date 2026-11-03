@@ -37,6 +37,7 @@ in
         inherit name;
         value = {
           locations = {
+            "= /metrics".return = "404";
             "/" = {
               proxyPass = addr;
               recommendedProxySettings = false;

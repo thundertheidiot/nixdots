@@ -9,6 +9,7 @@
       9100 # node exporter scraped by the VPS
       9113 # nginx exporter
       9114 # forgejo metrics only
+      9153 # dnsmasq exporter
       9187 # PostgreSQL exporter
     ];
   };

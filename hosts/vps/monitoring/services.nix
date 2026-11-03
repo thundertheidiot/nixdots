@@ -1,7 +1,25 @@
-{ lib, ... }:
+{ config, lib, ... }:
+let
+  inherit (lib) mkAfter;
+  inherit (builtins) toFile;
+in
 {
   config = {
+    services.prometheus.exporters.dnsmasq = {
+      enable = true;
+      listenAddress = "127.0.0.1";
+      dnsmasqListenAddress = "10.100.0.1:53";
+      leasesPath = toFile "dnsmasq-empty-leases" "";
+    };
+
+    services.coturn.extraConfig = mkAfter ''
+      prometheus
+      prometheus-address=127.0.0.1
+      prometheus-port=9641
+    '';
+
     services.nginx.statusPage = true;
+    services.nginx.virtualHosts."navidrome.meowcloud.net".locations."= /metrics".return = "404";
 
     services.prometheus.exporters.nginx = {
       enable = true;
@@ -37,13 +55,30 @@
       '';
     };
 
-    systemd.services.postgresql.postStart = lib.mkAfter ''
-      psql -v ON_ERROR_STOP=1 -d postgres -c 'GRANT pg_monitor TO postgres_exporter'
-    '';
+    systemd.services.postgres-exporter-grant = {
+      after = [ "postgresql-setup.service" ];
+      requires = [ "postgresql-setup.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        User = "postgres";
+      };
+      script = ''
+        ${lib.getExe' config.services.postgresql.package "psql"} -v ON_ERROR_STOP=1 -d postgres <<'SQL'
+        SELECT 'CREATE USER postgres_exporter' WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'postgres_exporter') \gexec
+        GRANT pg_monitor TO postgres_exporter;
+        SQL
+      '';
+    };
 
     systemd.services.prometheus-postgres-exporter = {
-      after = [ "postgresql.service" ];
-      requires = [ "postgresql.service" ];
+      after = [
+        "postgresql.service"
+        "postgres-exporter-grant.service"
+      ];
+      requires = [
+        "postgresql.service"
+        "postgres-exporter-grant.service"
+      ];
     };
 
     services.gatus.settings = {

@@ -11,7 +11,10 @@ let
   exporterRole = "prometheus-postgres-exporter";
   psql = lib.getExe' config.services.postgresql.package "psql";
   grantPgMonitor = pkgs.writeShellScript "grant-postgres-exporter-monitor" ''
-    exec ${psql} --dbname=postgres --command='GRANT pg_monitor TO "${exporterRole}"'
+    exec ${psql} -v ON_ERROR_STOP=1 --dbname=postgres <<'SQL'
+    SELECT 'CREATE USER "${exporterRole}"' WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '${exporterRole}') \gexec
+    GRANT pg_monitor TO "${exporterRole}";
+    SQL
   '';
 in
 {
@@ -55,8 +58,8 @@ in
 
   systemd.services.postgres-exporter-grant = {
     wantedBy = [ "multi-user.target" ];
-    after = [ "postgresql.service" ];
-    requires = [ "postgresql.service" ];
+    after = [ "postgresql-setup.service" ];
+    requires = [ "postgresql-setup.service" ];
     before = [ "prometheus-postgres-exporter.service" ];
     serviceConfig = {
       Type = "oneshot";
@@ -75,6 +78,17 @@ in
       "postgresql.service"
       "postgres-exporter-grant.service"
     ];
+  };
+
+  services.prometheus.exporters.dnsmasq = {
+    enable = true;
+    listenAddress = address;
+    dnsmasqListenAddress = "127.0.0.1:53";
+    leasesPath = builtins.toFile "dnsmasq-empty-leases" "";
+  };
+  systemd.services.prometheus-dnsmasq-exporter = {
+    wants = [ "wg-quick-wg0.service" ];
+    after = [ "wg-quick-wg0.service" ];
   };
 
   services.nginx.statusPage = true;

@@ -58,11 +58,93 @@
             ];
           }
           {
+            job_name = "dnsmasq";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:9153" ];
+                labels.host = "vps";
+              }
+              {
+                targets = [ "${server.homeServer2}:9153" ];
+                labels.host = "server2";
+              }
+            ];
+          }
+          {
+            job_name = "media";
+            static_configs =
+              map
+                (target: {
+                  targets = [ "${server.homeServer2}:${toString target.port}" ];
+                  labels = {
+                    host = "server2";
+                    service = target.name;
+                  };
+                })
+                [
+                  {
+                    name = "radarr";
+                    port = 9708;
+                  }
+                  {
+                    name = "sonarr";
+                    port = 9709;
+                  }
+                  {
+                    name = "prowlarr";
+                    port = 9710;
+                  }
+                  {
+                    name = "bazarr";
+                    port = 9711;
+                  }
+                  {
+                    name = "qbittorrent";
+                    port = 9712;
+                  }
+                  {
+                    name = "slskd";
+                    port = 9713;
+                  }
+                  {
+                    name = "flaresolverr";
+                    port = 9714;
+                  }
+                ];
+          }
+          {
+            job_name = "jellyfin";
+            static_configs = [
+              {
+                targets = [ "${server.homeServer2}:8096" ];
+                labels.host = "server2";
+              }
+            ];
+          }
+          {
+            job_name = "navidrome";
+            static_configs = [
+              {
+                targets = [ "${server.homeServer2}:4533" ];
+                labels.host = "server2";
+              }
+            ];
+          }
+          {
             job_name = "forgejo";
             static_configs = [
               {
                 targets = [ "${server.homeServer2}:9114" ];
                 labels.host = "server2";
+              }
+            ];
+          }
+          {
+            job_name = "coturn";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:9641" ];
+                labels.host = "vps";
               }
             ];
           }
