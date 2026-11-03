@@ -20,6 +20,7 @@ in
     ./freshrss.nix
     ./gatus.nix
     ./jellyfin.nix
+    ./monitoring
     ./rathole.nix
     ./secrets
     ./sodexobot.nix

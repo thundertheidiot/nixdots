@@ -27,6 +27,7 @@ in
     ./homepage.nix
     ./jellyfin.nix
     ./metube.nix
+    ./monitoring.nix
     ./navidrome.nix
     ./redlib.nix
     ./secrets

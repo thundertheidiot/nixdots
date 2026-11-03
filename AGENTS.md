@@ -1,19 +1,20 @@
 # Basics
 
 Don't overcomplicate! This is a personal repo, you don't need to handle every edgecase, handling what's present is good enough.
-Don't create integration tests.
+Don't create integration tests. Keep comments super minimal, never write full senteces with uppercase letters and periods.
 
 # Style guide
 
-Import library functions at the top in a let in block, as if it's an import statement. Like this:
+Import library and builtins functions at the top in a let in block, as if it's an import statement. Like this:
 
 ```nix
 {lib, config, ...}:
 let
-  inherit (lib) mkIf
+  inherit (lib) mkIf;
+  inherit (builtins) toJSON;
 in {
   config = mkIf true {
-    option = "value";
+    option = toJSON { key = "value"; };
   };
 }
 ```

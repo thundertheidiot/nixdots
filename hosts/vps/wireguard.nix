@@ -55,12 +55,14 @@ in
             type filter hook output priority -10; policy accept;
             ip saddr { ${addresses} } counter drop
             oifname "wg0" ct state established,related return
-            oifname "wg0" ip saddr ${hub.address} ip daddr ${vpn.peers.home2.address} tcp dport { 4533, 8096 } return
+            oifname "wg0" ip saddr ${hub.address} ip daddr ${vpn.peers.home2.address} tcp dport { 4533, 8096, 8428, 9100 } return
             oifname "wg0" counter drop
           }
         '';
       # 4533 - navidrome
       # 8096 - jellyfin
+      # 8428 - VictoriaMetrics
+      # 9100 - node exporter
     };
   };
 
