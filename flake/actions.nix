@@ -123,98 +123,95 @@
             permissions = {
               contents = "read";
             };
-            steps = [
-              blocks.checkout
-              blocks.cleanup
-              blocks.nixInstaller
-              {
-                name = "Update frequent flake inputs";
-                env.FLAKE_INPUTS = concatStringsSep " " frequentInputs;
-                run = ''
-                  if [[ -n "$FLAKE_INPUTS" ]]; then
-                    read -r -a inputs <<< "$FLAKE_INPUTS"
-                    nix flake update --accept-flake-config -- "''${inputs[@]}"
-                  fi
-                '';
-              }
-              {
-                name = "Update and build packages";
-                env = {
-                  GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}";
-                  PR_BODY = "\${{ runner.temp }}/package-updates.md";
-                };
-                run = ''
-                  nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
-                  printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
-                  if ! git diff --quiet -- flake.lock; then
-                    printf -- "- Frequent flake inputs updated (lockfile only; not built).\n" >> "$PR_BODY"
-                  fi
+          }
+          // mkBasicNix [
+            {
+              name = "Update frequent flake inputs";
+              env.FLAKE_INPUTS = concatStringsSep " " frequentInputs;
+              run = ''
+                if [[ -n "$FLAKE_INPUTS" ]]; then
+                  read -r -a inputs <<< "$FLAKE_INPUTS"
+                  nix flake update --accept-flake-config -- "''${inputs[@]}"
+                fi
+              '';
+            }
+            {
+              name = "Update and build packages";
+              env = {
+                GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}";
+                PR_BODY = "\${{ runner.temp }}/package-updates.md";
+              };
+              run = ''
+                nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
+                printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
+                if ! git diff --quiet -- flake.lock; then
+                  printf -- "- Frequent flake inputs updated (lockfile only; not built).\n" >> "$PR_BODY"
+                fi
 
-                  policies=$(nix eval --json --accept-flake-config .#packageUpdates)
-                  packages=$(jq -r 'keys[]' <<< "$policies")
-                  for package in $packages; do
-                    policy=$(jq -c --arg package "$package" '.[$package]' <<< "$policies")
-                    reason=$(jq -r '.skip // empty' <<< "$policy")
-                    if [[ -n "$reason" ]]; then
-                      printf 'Skipping %s: %s\n' "$package" "$reason"
-                      continue
+                policies=$(nix eval --json --accept-flake-config .#packageUpdates)
+                packages=$(jq -r 'keys[]' <<< "$policies")
+                for package in $packages; do
+                  policy=$(jq -c --arg package "$package" '.[$package]' <<< "$policies")
+                  reason=$(jq -r '.skip // empty' <<< "$policy")
+                  if [[ -n "$reason" ]]; then
+                    printf 'Skipping %s: %s\n' "$package" "$reason"
+                    continue
+                  fi
+                  old_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
+                  mapfile -t args < <(jq -r '.args[]' <<< "$policy")
+                  git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-before.patch"
+                  update_package() {
+                    if [[ $(jq -r '.script' <<< "$policy") == true ]]; then
+                      updater=$(nix build --no-link --print-out-paths ".#packages.x86_64-linux.$package.autoUpdate.script") || return
+                      UPDATE_NIX_ATTR_PATH="$package" "$updater"/bin/*
+                    else
+                      nix-update --flake --use-github-releases "$package" "''${args[@]}"
                     fi
-                    old_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
-                    mapfile -t args < <(jq -r '.args[]' <<< "$policy")
-                    git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-before.patch"
-                    update_package() {
-                      if [[ $(jq -r '.script' <<< "$policy") == true ]]; then
-                        updater=$(nix build --no-link --print-out-paths ".#packages.x86_64-linux.$package.autoUpdate.script") || return
-                        UPDATE_NIX_ATTR_PATH="$package" "$updater"/bin/*
-                      else
-                        nix-update --flake --use-github-releases "$package" "''${args[@]}"
-                      fi
-                    }
-                    for attempt in 1 2 3; do
-                      if update_package; then
-                        break
-                      fi
-                      if [[ "$attempt" == 3 ]]; then
-                        printf '::error::Failed to update %s after three attempts\n' "$package"
-                        exit 1
-                      fi
-                      printf '::warning::Update for %s failed; retrying in 10 seconds\n' "$package"
-                      sleep 10
-                    done
-
-                    git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-after.patch"
-                    if ! cmp -s "$RUNNER_TEMP/package-before.patch" "$RUNNER_TEMP/package-after.patch"; then
-                      nix build --accept-flake-config --no-link --print-build-logs ".#$package"
-                      new_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
-                      if [[ "$old_version" == "$new_version" ]]; then
-                        printf -- "- %s: updated sources/dependencies (built successfully)\n" "$package" >> "$PR_BODY"
-                      else
-                        printf -- "- %s: %s -> %s\n" "$package" "$old_version" "$new_version" >> "$PR_BODY"
-                      fi
+                  }
+                  for attempt in 1 2 3; do
+                    if update_package; then
+                      break
                     fi
+                    if [[ "$attempt" == 3 ]]; then
+                      printf '::error::Failed to update %s after three attempts\n' "$package"
+                      exit 1
+                    fi
+                    printf '::warning::Update for %s failed; retrying in 10 seconds\n' "$package"
+                    sleep 10
                   done
-                  SCRIPT
-                '';
-              }
-              {
-                name = "Stage package updates";
-                run = ''
-                  mkdir -p "$RUNNER_TEMP/package-updates"
-                  git diff --binary -- pkgs/ flake.lock > "$RUNNER_TEMP/package-updates/updates.patch"
-                  cp "$RUNNER_TEMP/package-updates.md" "$RUNNER_TEMP/package-updates/package-updates.md"
-                '';
-              }
-              {
-                name = "Upload package updates";
-                uses = "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"; # v4
-                "with" = {
-                  name = "package-updates";
-                  path = "\${{ runner.temp }}/package-updates";
-                  retention-days = 1;
-                };
-              }
-            ];
-          };
+
+                  git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-after.patch"
+                  if ! cmp -s "$RUNNER_TEMP/package-before.patch" "$RUNNER_TEMP/package-after.patch"; then
+                    nix build --accept-flake-config --no-link --print-build-logs ".#$package"
+                    new_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
+                    if [[ "$old_version" == "$new_version" ]]; then
+                      printf -- "- %s: updated sources/dependencies (built successfully)\n" "$package" >> "$PR_BODY"
+                    else
+                      printf -- "- %s: %s -> %s\n" "$package" "$old_version" "$new_version" >> "$PR_BODY"
+                    fi
+                  fi
+                done
+                SCRIPT
+              '';
+            }
+            {
+              name = "Stage package updates";
+              run = ''
+                mkdir -p "$RUNNER_TEMP/package-updates"
+                git diff --binary -- pkgs/ flake.lock > "$RUNNER_TEMP/package-updates/updates.patch"
+                cp "$RUNNER_TEMP/package-updates.md" "$RUNNER_TEMP/package-updates/package-updates.md"
+              '';
+            }
+            {
+              name = "Upload package updates";
+              uses = "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"; # v4
+              "with" = {
+                name = "package-updates";
+                path = "\${{ runner.temp }}/package-updates";
+                retention-days = 1;
+              };
+            }
+          ];
 
           jobs.create-pr = {
             needs = [ "update" ];
