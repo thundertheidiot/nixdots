@@ -16,6 +16,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    meow.impermanence.directories = [ "/var/lib/comin" ];
+
     services.comin = {
       enable = true;
       remotes = [
