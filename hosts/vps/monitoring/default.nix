@@ -7,6 +7,7 @@
     ./vmagent.nix
     ./grafana.nix
     ./dashboard.nix
+    ./service-dashboard.nix
   ];
 
   config = {

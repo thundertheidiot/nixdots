@@ -106,11 +106,7 @@
                     name = "slskd";
                     port = 9713;
                   }
-                  {
-                    name = "flaresolverr";
-                    port = 9714;
-                  }
-                ];
+                  ];
           }
           {
             job_name = "jellyfin";

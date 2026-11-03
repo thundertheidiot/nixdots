@@ -52,6 +52,8 @@ in
     enable = true;
     listenAddress = address;
     port = 9187;
+    user = exporterRole;
+    group = exporterRole;
     dataSourceName = "user=${exporterRole} dbname=postgres host=/run/postgresql sslmode=disable";
     openFirewall = false;
   };

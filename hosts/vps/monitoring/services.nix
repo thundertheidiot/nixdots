@@ -88,7 +88,11 @@ in
     services.nginx.virtualHosts."meowcloud.net".locations."= /metrics".extraConfig = "return 404;";
 
     services.prosody.settings = {
-      modules_enabled = [ "http_openmetrics" ];
+      modules_enabled = [
+        "http_openmetrics"
+        "statistics"
+      ];
+      statistics_interval = "60";
       openmetrics_allow_ips = [
         "127.0.0.1"
         "::1"

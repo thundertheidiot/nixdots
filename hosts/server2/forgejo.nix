@@ -48,6 +48,7 @@ in
     authentication = lib.mkOverride 10 ''
       #type database  DBuser  auth-method
       local all postgres peer
+      local all prometheus-postgres-exporter peer
       local sameuser all peer
     '';
   };

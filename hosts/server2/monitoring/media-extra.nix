@@ -8,7 +8,6 @@
 let
   inherit (lib)
     getExe
-    getExe'
     mapAttrs'
     mkMerge
     nameValuePair
@@ -32,7 +31,6 @@ in
         9711
         9712
         9713
-        9714
       ];
       services.prometheus.exporters = mapAttrs' (
         name: port:
@@ -192,10 +190,6 @@ in
               port = 9713;
               upstream = 5030;
             };
-            flaresolverr = {
-              port = 9714;
-              upstream = 8192;
-            };
           }
         // {
           "soulseek.home".locations."~* ^/metrics".return = "404";
@@ -205,34 +199,6 @@ in
         SLSKD_METRICS = "true";
         SLSKD_METRICS_NO_AUTH = "true";
       };
-      systemd.services.flaresolverr.environment = {
-        PROMETHEUS_ENABLED = "true";
-        PROMETHEUS_PORT = "8192";
-      };
-      systemd.services.media-metrics-firewall =
-        let
-          ip = getExe' pkgs.iproute2 "ip";
-          iptables = getExe pkgs.iptables;
-          rule = "INPUT -i veth-airvpn -s ${namespace.bridgeAddress} -p tcp --dport 8192 -j ACCEPT";
-        in
-        {
-          description = "Allow host access to FlareSolverr metrics";
-          wantedBy = [ "airvpn.service" ];
-          after = [ "airvpn.service" ];
-          requires = [ "airvpn.service" ];
-          partOf = [ "airvpn.service" ];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-          };
-          script = ''
-            ${ip} netns exec airvpn ${iptables} -C ${rule} 2>/dev/null ||
-            ${ip} netns exec airvpn ${iptables} -A ${rule}
-          '';
-          preStop = ''
-            ${ip} netns exec airvpn ${iptables} -D ${rule} 2>/dev/null || true
-          '';
-        };
     }
   ];
 }
