@@ -5,6 +5,8 @@
   autoPatchelfHook,
   fetchFromGitHub,
   fetchPnpmDeps,
+  nix-update,
+  writeShellApplication,
   pnpm_12,
   pnpmConfigHook,
   makeWrapper,
@@ -34,8 +36,15 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     tag = finalAttrs.version;
     hash = "sha256-vp5ZbihV3nbI0RJyfaW6qmoKd28NcCi9xqqaS/zRL4c=";
   };
-  # Frontend dependency hashes must be refreshed and tested along with the source.
-  passthru.autoUpdate.skip = "MeTube updates require refreshing the pnpm dependency hash and validating the frontend build.";
+  passthru.autoUpdate.script = writeShellApplication {
+    name = "update-metube";
+    runtimeInputs = [ nix-update ];
+    text = ''
+      nix-update --flake --use-github-releases --src-only "$UPDATE_NIX_ATTR_PATH"
+      # Re-evaluate the updated source and refresh dependencies even on retries.
+      nix-update --flake --version skip --no-src "$UPDATE_NIX_ATTR_PATH"
+    '';
+  };
   sourceRoot = "source/ui";
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs)

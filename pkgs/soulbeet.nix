@@ -9,6 +9,8 @@
   wasm-bindgen-cli_0_2_114,
   lld,
   binaryen,
+  nix-update,
+  writeShellApplication,
 }:
 rustPlatform.buildRustPackage {
   pname = "soulbeet";
@@ -53,7 +55,15 @@ rustPlatform.buildRustPackage {
     runHook postInstall
   '';
 
-  passthru.autoUpdate.skip = "Pinned to the deployed image revision for database compatibility.";
+  passthru.autoUpdate.script = writeShellApplication {
+    name = "update-soulbeet";
+    runtimeInputs = [ nix-update ];
+    text = ''
+      nix-update --flake --use-github-releases --src-only "$UPDATE_NIX_ATTR_PATH"
+      # re-evaluate the updated source and refresh dependencies even on retries.
+      nix-update --flake --version skip --no-src "$UPDATE_NIX_ATTR_PATH"
+    '';
+  };
   meta = {
     description = "Music downloader and library manager";
     homepage = "https://github.com/terry90/soulbeet";
