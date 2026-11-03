@@ -1,11 +1,15 @@
 { config, lib, ... }:
 let
   inherit (lib) genAttrs mapAttrs recursiveUpdate;
+  inherit (builtins)
+    attrNames
+    fromJSON
+    toJSON
+    readFile
+    ;
   slskd = import ./slskd.nix;
   secret = name: config.sops.placeholder.${name};
-  names = builtins.attrNames (
-    builtins.removeAttrs (builtins.fromJSON (builtins.readFile ../secrets/media-stack.json)) [ "sops" ]
-  );
+  names = attrNames (removeAttrs (fromJSON (readFile ../secrets/media-stack.json)) [ "sops" ]);
 in
 {
   config = {
@@ -20,7 +24,7 @@ in
       restartUnits = [ "slskd.service" ];
       path = "/run/media-stack/slskd.yml";
       mode = "0400";
-      content = builtins.toJSON (
+      content = toJSON (
         recursiveUpdate slskd {
           soulseek = {
             username = secret "slskd-soulseek-username";
