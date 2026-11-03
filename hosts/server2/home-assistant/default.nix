@@ -1,16 +1,9 @@
 {
-  config,
-  lib,
-  inputs,
   pkgs,
   ...
 }:
 {
   config = {
-    server.domains = [
-      "homeassistant.home"
-    ];
-
     meow.impermanence.directories = [
       {
         path = "/var/lib/hass";
@@ -57,17 +50,5 @@
       };
     };
 
-    services.nginx.virtualHosts."homeassistant.home" = {
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:${toString config.services.home-assistant.config.http.server_port}";
-          recommendedProxySettings = true;
-          extraConfig = ''
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "Upgrade";
-          '';
-        };
-      };
-    };
   };
 }

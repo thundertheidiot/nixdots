@@ -4,8 +4,7 @@
   ...
 }:
 let
-  # vpnAddress = config.vpnNamespaces."airvpn".namespaceAddress;
-  vpnAddress = "127.0.0.1";
+  vpnAddress = config.vpnNamespaces.airvpn.namespaceAddress;
 in
 {
   config = {
@@ -45,7 +44,10 @@ in
     services.homepage-dashboard = {
       enable = true;
 
-      environmentFiles = [ config.sops.secrets."homepage_env".path ];
+      environmentFiles = [
+        config.sops.secrets."homepage_env".path
+        config.sops.templates."media-stack-homepage".path
+      ];
       settings = {
         title = "Homepage";
       };
@@ -87,18 +89,6 @@ in
                 };
               };
             }
-            {
-              "Immich" = {
-                icon = "immich.svg";
-                href = "http://immich.home";
-                widget = {
-                  type = "immich";
-                  url = "http://127.0.0.1:2283";
-                  key = "{{HOMEPAGE_VAR_IMMICH_API}}";
-                  version = 2;
-                };
-              };
-            }
           ];
         }
         {
@@ -128,18 +118,6 @@ in
               };
             }
             {
-              "Lidarr" = {
-                icon = "lidarr.svg";
-                href = "http://lidarr.home";
-                widget = {
-                  type = "lidarr";
-                  url = "http://${vpnAddress}:8686";
-                  key = "{{HOMEPAGE_VAR_LIDARR_API}}";
-                  enableQueue = true;
-                };
-              };
-            }
-            {
               "Bazarr" = {
                 icon = "bazarr.svg";
                 href = "http://bazarr.home";
@@ -162,8 +140,8 @@ in
                 widget = {
                   type = "qbittorrent";
                   url = "http://${vpnAddress}:8080";
-                  username = "admin";
-                  password = "adminadmin";
+                  username = "{{HOMEPAGE_VAR_QBIT_USERNAME}}";
+                  password = "{{HOMEPAGE_VAR_QBIT_PASSWORD}}";
                 };
               };
             }
@@ -178,13 +156,8 @@ in
                 };
               };
             }
-            {
-              "Firefox" = {
-                description = "Firefox container permanently connected to a VPN";
-                icon = "firefox.svg";
-                href = "http://firefox.home";
-              };
-            }
+          ]
+          ++ [
             {
               "Soulseek" = {
                 icon = "slskd.svg";

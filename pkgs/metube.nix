@@ -1,0 +1,90 @@
+{
+  lib,
+  stdenvNoCC,
+  stdenv,
+  autoPatchelfHook,
+  fetchFromGitHub,
+  fetchPnpmDeps,
+  pnpm_12,
+  pnpmConfigHook,
+  makeWrapper,
+  python3,
+  ffmpeg,
+  deno,
+  aria2,
+}:
+let
+  python = python3.withPackages (
+    p: with p; [
+      aiohttp
+      python-socketio
+      yt-dlp
+      watchfiles
+      mutagen
+      curl-cffi
+    ]
+  );
+in
+stdenvNoCC.mkDerivation (finalAttrs: {
+  pname = "metube";
+  version = "2026.11.01";
+  src = fetchFromGitHub {
+    owner = "alexta69";
+    repo = "metube";
+    tag = finalAttrs.version;
+    hash = "sha256-vp5ZbihV3nbI0RJyfaW6qmoKd28NcCi9xqqaS/zRL4c=";
+  };
+  # Frontend dependency hashes must be refreshed and tested along with the source.
+  passthru.autoUpdate.skip = "MeTube updates require refreshing the pnpm dependency hash and validating the frontend build.";
+  sourceRoot = "source/ui";
+  pnpmDeps = fetchPnpmDeps {
+    inherit (finalAttrs)
+      pname
+      version
+      src
+      sourceRoot
+      ;
+    pnpm = pnpm_12;
+    fetcherVersion = 5;
+    hash = "sha256-K5y2u1739FeGgPzWTCJfrWxWj0+UDy+IveWUYqnO3ic=";
+  };
+  meta = {
+    description = "Self-hosted web GUI for yt-dlp";
+    homepage = "https://github.com/alexta69/metube";
+    license = lib.licenses.agpl3Only;
+    maintainers = [ ];
+    platforms = [ "x86_64-linux" ];
+    mainProgram = "metube";
+  };
+  nativeBuildInputs = [
+    pnpm_12
+    pnpm_12.nodejs-slim
+    pnpmConfigHook
+    makeWrapper
+    autoPatchelfHook
+  ];
+  buildInputs = [ stdenv.cc.cc.lib ];
+  buildPhase = ''
+    runHook preBuild
+    autoPatchelf node_modules
+    pnpm run build
+    runHook postBuild
+  '';
+  installPhase = ''
+    runHook preInstall
+    mkdir -p $out/share/metube/ui/dist $out/bin
+    cp -r ../app $out/share/metube/app
+    cp -r dist/metube $out/share/metube/ui/dist/
+    makeWrapper ${python}/bin/python $out/bin/metube \
+      --add-flags "$out/share/metube/app/main.py" \
+      --set BASE_DIR "$out/share/metube" \
+      --prefix PATH : ${
+        lib.makeBinPath [
+          ffmpeg
+          deno
+          aria2
+        ]
+      }
+    runHook postInstall
+  '';
+})

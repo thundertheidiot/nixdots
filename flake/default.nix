@@ -31,6 +31,7 @@
         packages = with pkgs; [
           just
           cachix
+          gh
           nix-update
           jq
           nh

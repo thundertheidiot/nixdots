@@ -1,4 +1,8 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 let
   certs = import ../../certs;
 in
@@ -23,15 +27,23 @@ in
     };
   };
 
-  virtualisation.oci-containers.containers.metube = {
-    image = "ghcr.io/alexta69/metube:latest";
-    ports = [ "8081:8081" ];
+  users.groups.metube = {
+    gid = 1000;
+  };
+  users.users.metube = {
+    uid = 1000;
+    group = "metube";
+    isSystemUser = true;
+  };
 
-    volumes = [
-      "/mnt/storage/media/youtube/videos:/downloads"
-      "/mnt/storage/media/my_music/youtube:/audio_downloads"
+  systemd.services.metube = {
+    description = "MeTube downloader";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "network-online.target"
     ];
-
+    wants = [ "network-online.target" ];
+    unitConfig.RequiresMountsFor = [ "/mnt/storage" ];
     environment = {
       DOWNLOAD_DIR = "/downloads";
       AUDIO_DOWNLOAD_DIR = "/audio_downloads";
@@ -69,6 +81,22 @@ in
 
       UID = "1000";
       GID = "1000";
+      STATE_DIR = "/downloads/.metube";
+      HOST = "127.0.0.1";
+      HOME = "/run/metube";
+    };
+    serviceConfig = {
+      BindPaths = [
+        "/mnt/storage/media/youtube/videos:/downloads"
+        "/mnt/storage/media/my_music/youtube:/audio_downloads"
+      ];
+      ExecStart = "${pkgs.callPackage ../../pkgs/metube.nix { }}/bin/metube";
+      User = "metube";
+      Group = "metube";
+      UMask = "0022";
+      RuntimeDirectory = "metube";
+      Restart = "on-failure";
+      NoNewPrivileges = true;
     };
   };
 }

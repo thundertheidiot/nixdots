@@ -21,7 +21,7 @@ in
     (import ../../certs).module
     ./disko.nix
     ./dns.nix
-    ./docker
+    ./media
     ./forgejo.nix
     ./home-assistant
     ./homepage.nix
@@ -64,6 +64,7 @@ in
     services.nginx = {
       enable = true;
       logError = "stderr debug";
+
     };
 
     meow = {

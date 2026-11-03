@@ -18,6 +18,8 @@ in {
 }
 ```
 
+Use lib.getExe or getExe' to get package binaries, instead of hardcoding `${pkgs.package}/bin/package` into scripts.
+
 Remember to use the helper functions in `flake/lib`. Especially the option ones (`flake/lib/option.nix`) should always be preferred.
 
 The top `let in` block shouldn't get too big, it should just be an import and shared section, don't be afraid to create more let in blocks further down, things used only once should be placed in a block right before they're used for simplicity.

@@ -1,6 +1,11 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 let
   certs = import ../../certs;
+  soulbeet = pkgs.callPackage ../../pkgs/soulbeet.nix { };
 in
 {
   server.domains = [
@@ -71,28 +76,40 @@ in
     };
   };
 
-  virtualisation.oci-containers.containers.soulbeet = {
-    image = "docker.io/docccccc/soulbeet:latest";
-    ports = [
-      "9765:9765"
+  systemd.services.soulbeet = {
+    description = "Soulbeet";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "network-online.target"
     ];
+    wants = [ "network-online.target" ];
+    unitConfig.RequiresMountsFor = [
+      "/nix/persist/media-stack/soulbeet"
+      "/mnt/storage"
+    ];
+    path = [ pkgs.beets ];
     environment = {
-      "DATABASE_URL" = "sqlite:/data/soulbeet.db";
-      "DOWNLOAD_PATH" = "/downloads";
-      "NAVIDROME_URL" = "http://host.docker.internal:${toString config.services.navidrome.settings.Port}";
-      "BEETS_ALBUM_MODE" = "true";
+      DATABASE_URL = "sqlite:/data/soulbeet.db";
+      DOWNLOAD_PATH = "/downloads";
+      NAVIDROME_URL = "http://127.0.0.1:${toString config.services.navidrome.settings.Port}";
+      BEETS_ALBUM_MODE = "true";
+      BEETS_CONFIG = "${soulbeet}/beets_config.yaml";
+      HOME = "/tmp";
+      IP = "127.0.0.1";
+      PORT = "9765";
     };
-    environmentFiles = [ config.sops.secrets.soulbeet_env.path ];
-    volumes = [
-      "/mnt/storage/media:/mnt/storage/media:rw"
-      "/mnt/storage/media/my_music:/music:rw"
-      "/nix/persist/soulbeet:/data"
-      "/mnt/storage/media/downloads/soulseek:/downloads"
-    ];
-
-    extraOptions = [
-      "--add-host=host.docker.internal:host-gateway"
-      "--network=server2_default"
-    ];
+    serviceConfig = {
+      User = "root";
+      Group = "root";
+      EnvironmentFile = config.sops.secrets.soulbeet_env.path;
+      WorkingDirectory = "${soulbeet}";
+      ExecStart = "${soulbeet}/server";
+      Restart = "on-failure";
+      BindPaths = [
+        "/nix/persist/media-stack/soulbeet:/data"
+        "/mnt/storage/media/my_music:/music"
+        "/mnt/storage/media/downloads/soulseek:/downloads"
+      ];
+    };
   };
 }

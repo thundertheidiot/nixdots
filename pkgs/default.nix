@@ -11,4 +11,6 @@ with pkgs;
   kodi = callPackage ./kodi { };
   wireguard-keys = callPackage ./wireguard-keys.nix { };
   local-certs = callPackage ./local-certs.nix { };
+  metube = callPackage ./metube.nix { };
+  soulbeet = callPackage ./soulbeet.nix { };
 }
