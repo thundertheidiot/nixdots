@@ -32,6 +32,59 @@
             ];
           }
           {
+            job_name = "nginx";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:9113" ];
+                labels.host = "vps";
+              }
+              {
+                targets = [ "${server.homeServer2}:9113" ];
+                labels.host = "server2";
+              }
+            ];
+          }
+          {
+            job_name = "postgres";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:9187" ];
+                labels.host = "vps";
+              }
+              {
+                targets = [ "${server.homeServer2}:9187" ];
+                labels.host = "server2";
+              }
+            ];
+          }
+          {
+            job_name = "forgejo";
+            static_configs = [
+              {
+                targets = [ "${server.homeServer2}:9114" ];
+                labels.host = "server2";
+              }
+            ];
+          }
+          {
+            job_name = "gatus";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:8081" ];
+                labels.host = "vps";
+              }
+            ];
+          }
+          {
+            job_name = "prosody";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:5280" ];
+                labels.host = "vps";
+              }
+            ];
+          }
+          {
             job_name = "vmagent";
             static_configs = [ { targets = [ "127.0.0.1:8429" ]; } ];
           }

@@ -28,6 +28,7 @@ in
     ./jellyfin.nix
     ./metube.nix
     ./monitoring.nix
+    ./monitoring-services.nix
     ./navidrome.nix
     ./redlib.nix
     ./secrets

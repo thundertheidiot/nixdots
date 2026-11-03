@@ -1,10 +1,23 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-  inherit (lib) mod;
+  inherit (lib) mod head filter;
   inherit (builtins) div toJSON;
 in
 {
   config = {
+
+    services.grafana.settings.dashboards.default_home_dashboard_path = "${
+      (head (
+        filter (
+          provider: provider.name == "hosts"
+        ) config.services.grafana.provision.dashboards.settings.providers
+      )).options.path
+    }/hosts.json";
 
     services.grafana.provision.dashboards.settings.providers = [
       {
@@ -28,7 +41,9 @@ in
                 targets = [
                   {
                     inherit expr;
-                    legendFormat = "{{host}} {{instance}} {{name}} {{url}}";
+                    # dedup btrfs subvol/bind mount spam, max usage wins per host+device
+                    legendFormat =
+                      if id == 4 || id == 8 then "{{host}} {{device}}" else "{{host}} {{instance}} {{name}} {{url}}";
                     refId = "A";
                   }
                 ];
@@ -67,7 +82,7 @@ in
                   "percent"
                 )
                 (panel 4 "Filesystem used"
-                  "100 * (1 - node_filesystem_avail_bytes{fstype!~\"tmpfs|ramfs|squashfs|overlay\"} / node_filesystem_size_bytes)"
+                  "topk by (host, device) (1, 100 * (1 - node_filesystem_avail_bytes{fstype!~\"tmpfs|ramfs|squashfs|overlay\"} / node_filesystem_size_bytes))"
                   "percent"
                 )
                 (panel 5 "Failed systemd units"
