@@ -1,10 +1,18 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
 let
+  inherit (lib) getExe;
   certs = import ../../certs;
+  beetsPython =
+    let
+      mv = config.multiverse.instance;
+      beetsPkgs = mv.at (mv.revOf "beets" "2.11.0");
+    in
+    beetsPkgs.python3.withPackages (p: [ p.beets ]);
   soulbeet = pkgs.callPackage ../../pkgs/soulbeet.nix { };
 in
 {
@@ -87,12 +95,13 @@ in
       "/nix/persist/media-stack/soulbeet"
       "/mnt/storage"
     ];
-    path = [ pkgs.beets ];
+    path = [ beetsPython ];
     environment = {
       DATABASE_URL = "sqlite:/data/soulbeet.db";
       DOWNLOAD_PATH = "/downloads";
       NAVIDROME_URL = "http://127.0.0.1:${toString config.services.navidrome.settings.Port}";
       BEETS_ALBUM_MODE = "true";
+      BEETS_PYTHON = getExe beetsPython;
       BEETS_CONFIG = "${soulbeet}/beets_config.yaml";
       HOME = "/tmp";
       IP = "127.0.0.1";
