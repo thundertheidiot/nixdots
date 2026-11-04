@@ -455,7 +455,7 @@ in
               )
             ]
           ))
-          (at 0 131 24 8 (
+          (at 0 131 24 16 (
             panel 303 "Filesystem used" "percent" [
               (query "A"
                 ''topk by (host, device) (1, 100 * (1 - node_filesystem_avail_bytes{fstype!~"tmpfs|ramfs|squashfs|overlay"} / node_filesystem_size_bytes))''
@@ -463,14 +463,14 @@ in
               )
             ]
           ))
-          (at 0 139 12 14 (
+          (at 0 139 12 16 (
             panel 304 "Network receive / second" "Bps" [
               (query "A" ''rate(node_network_receive_bytes_total{device!="lo"}[$__rate_interval])''
                 "{{host}} {{device}}"
               )
             ]
           ))
-          (at 12 139 12 14 (
+          (at 12 139 12 16 (
             panel 309 "Network send / second" "Bps" [
               (query "A" ''rate(node_network_transmit_bytes_total{device!="lo"}[$__rate_interval])''
                 "{{host}} {{device}}"
@@ -577,6 +577,12 @@ in
           (at 0 210 24 5 (
             stat 413 "Last Comin deployment" "short" [
               (query "A" "comin_deployment_info" "{{host}} · {{status}} · {{commit_id}}")
+            ]
+          ))
+          (at 0 215 24 5 (
+            stat 414 "Comin deployments in range" "short" [
+              (query "A" ''count by (host) (count_over_time(comin_deployment_info{status="done"}[$__range]))'' "{{host}} · succeeded")
+              (query "B" ''count by (host) (count_over_time(comin_deployment_info{status="failed"}[$__range]))'' "{{host}} · failed")
             ]
           ))
 
