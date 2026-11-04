@@ -3,6 +3,7 @@
     enable = true;
     peer = "home2";
     tcpPorts = [
+      4243 # comin exporter
       4533
       8096
       8428 # victoriametrics remote write and queries from the VPS

@@ -1,7 +1,7 @@
 # Basics
 
 Don't overcomplicate! This is a personal repo, you don't need to handle every edgecase, handling what's present is good enough.
-Don't create integration tests. Keep comments super minimal, never write full senteces with uppercase letters and periods.
+Don't create integration tests. Keep comments super minimal, never write full senteces with uppercase letters and periods. NEVER EVER TOUCH THE README.
 
 # Style guide
 

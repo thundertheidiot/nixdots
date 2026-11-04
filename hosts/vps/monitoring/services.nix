@@ -5,6 +5,8 @@ let
 in
 {
   config = {
+    services.comin.exporter.listen_address = "127.0.0.1";
+
     services.prometheus.exporters.dnsmasq = {
       enable = true;
       listenAddress = "127.0.0.1";

@@ -554,6 +554,32 @@ in
             ]
           ))
 
+          (section 208 "Comin deployments" 203)
+          (recursiveUpdate (at 0 205 6 5 (
+            stat 410 "Comin availability" "short" [
+              (query "A" ''up{job="comin"}'' "{{host}}")
+            ]
+          )) { fieldConfig.defaults.mappings = statusMappings; })
+          (at 6 205 9 5 (
+            problems 411 "Last Comin failures" [
+              (query "A" "comin_last_fetch_failed" "{{host}} {{remote_name}} · fetch")
+              (query "B" "comin_last_eval_failed" "{{host}} · evaluation")
+              (query "C" "comin_last_build_failed" "{{host}} · build")
+              (query "D" "comin_last_deployment_failed" "{{host}} · deployment")
+            ]
+          ))
+          (at 15 205 9 5 (
+            problems 412 "Comin attention" [
+              (query "A" "comin_is_suspended" "{{host}} · suspended")
+              (query "B" "comin_need_to_reboot" "{{host}} · reboot required")
+            ]
+          ))
+          (at 0 210 24 5 (
+            stat 413 "Last Comin deployment" "short" [
+              (query "A" "comin_deployment_info" "{{host}} · {{status}} · {{commit_id}}")
+            ]
+          ))
+
         ];
       });
     }

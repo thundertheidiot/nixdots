@@ -18,6 +18,8 @@ let
   '';
 in
 {
+  services.comin.exporter.listen_address = "";
+
   services.forgejo.settings.metrics.ENABLED = true;
   services.nginx.virtualHosts."git.home".locations."= /metrics" = {
     return = "404";

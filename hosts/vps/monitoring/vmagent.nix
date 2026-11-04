@@ -32,6 +32,19 @@
             ];
           }
           {
+            job_name = "comin";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:4243" ];
+                labels.host = "vps";
+              }
+              {
+                targets = [ "${server.homeServer2}:4243" ];
+                labels.host = "server2";
+              }
+            ];
+          }
+          {
             job_name = "nginx";
             static_configs = [
               {
