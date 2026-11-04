@@ -9,20 +9,23 @@
   wasm-bindgen-cli_0_2_114,
   lld,
   binaryen,
+  bash,
+  python3,
+  util-linux,
   nix-update,
   writeShellApplication,
 }:
-rustPlatform.buildRustPackage {
+rustPlatform.buildRustPackage (finalAttrs: {
   pname = "soulbeet";
   version = "0.8.0";
 
   src = fetchFromGitHub {
     owner = "terry90";
     repo = "soulbeet";
-    rev = "49f94d957bb2203a47c8c599caa324aec28e623a";
-    hash = "sha256-8JvRRo+QRQ1kjNeBVgXZgEsF0GKaDXQaMKx/oAfyDYA=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-cQuaP3YYCFP5Ewpo1kZ5i/TsdD6KMhbHztiZ/AG9Ue0=";
   };
-  cargoHash = "sha256-lvlWfknAKaP7niEtI6V+OJgBKhwuMOcL+L4VbbB2WC0=";
+  cargoHash = "sha256-iIvOGHMdl/5dMCDGGrKR5jooJQ9o8nBLf3uqbsrrvDY=";
 
   nativeBuildInputs = [
     pkg-config
@@ -33,6 +36,15 @@ rustPlatform.buildRustPackage {
     binaryen
   ];
   buildInputs = [ openssl ];
+  nativeCheckInputs = [
+    python3
+    util-linux
+  ];
+
+  postPatch = ''
+    substituteInPlace lib/soulbeet/src/beets/probe.rs \
+      --replace-fail /bin/bash ${lib.getExe bash}
+  '';
 
   buildPhase = ''
     runHook preBuild
@@ -60,8 +72,8 @@ rustPlatform.buildRustPackage {
     runtimeInputs = [ nix-update ];
     text = ''
       nix-update --flake --use-github-releases --src-only "$UPDATE_NIX_ATTR_PATH"
-      # re-evaluate the updated source and refresh dependencies even on retries.
-      nix-update --flake --version skip --no-src "$UPDATE_NIX_ATTR_PATH"
+      # refresh source and dependencies even on retries
+      nix-update --flake --version skip "$UPDATE_NIX_ATTR_PATH"
     '';
   };
   meta = {
@@ -71,4 +83,4 @@ rustPlatform.buildRustPackage {
     mainProgram = "soulbeet";
     platforms = lib.platforms.linux;
   };
-}
+})

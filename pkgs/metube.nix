@@ -41,8 +41,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     runtimeInputs = [ nix-update ];
     text = ''
       nix-update --flake --use-github-releases --src-only "$UPDATE_NIX_ATTR_PATH"
-      # Re-evaluate the updated source and refresh dependencies even on retries.
-      nix-update --flake --version skip --no-src "$UPDATE_NIX_ATTR_PATH"
+      # refresh source and dependencies even on retries
+      nix-update --flake --version skip "$UPDATE_NIX_ATTR_PATH"
     '';
   };
   sourceRoot = "source/ui";
