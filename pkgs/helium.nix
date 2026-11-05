@@ -4,11 +4,11 @@
 }:
 buildFHSEnv (
   let
-    version = "0.20.3.1";
+    version = "0.21.1.1";
 
     helium = fetchzip {
       url = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-x86_64_linux.tar.xz";
-      hash = "sha256-mwViXcpSA6YluIFTKPxhTz0Vbntmd5X4zxIFOZT8WsE=";
+      hash = "sha256-PyBHnSF3q1Z/5SApv7m+liRmFuuVORmRN6Ig4GQSkB8=";
     };
   in
   {
