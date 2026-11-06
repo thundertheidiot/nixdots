@@ -2,6 +2,8 @@
 
 Welcome to my nixos configuration
 
+This repository is now being "mirrored" to a couple places, the main host is still github so i can use their generous free actions for updates.
+
 ** Emacs
 
 Emacs is now in a separate repository.

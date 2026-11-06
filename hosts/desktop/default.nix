@@ -183,7 +183,7 @@
         }
 
         window-rule {
-          match at-startup=true app-id="vesktop"
+          match at-startup=true app-id="discord"
           match at-startup=true app-id="signal"
           match at-startup=true app-id=r#"^org\.gajim\.Gajim$"#
 
@@ -191,7 +191,7 @@
           open-maximized true
         }
 
-        spawn-at-startup "vesktop"
+        spawn-at-startup "discord"
         spawn-at-startup "signal-desktop"
         spawn-at-startup "gajim"
         spawn-at-startup "sable"

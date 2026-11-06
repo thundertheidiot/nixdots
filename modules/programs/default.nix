@@ -58,7 +58,7 @@ in
           (mkIf cfg.signal signal-desktop)
           (mkIf cfg.gajim gajim)
           (mkIf cfg.mumble mumble)
-          (mkIf cfg.discord vesktop)
+          (mkIf cfg.discord discord)
 
           (mkIf cfg.blender pkgs.blender)
           (mkIf cfg.kdenlive kdePackages.kdenlive)

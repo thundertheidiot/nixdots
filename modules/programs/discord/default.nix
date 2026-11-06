@@ -22,7 +22,7 @@ in
 {
   options = {
     meow.program.discordConfig = {
-      enable = mkOpt bool true {
+      enable = mkOpt bool false {
         description = "Discord";
       };
 
