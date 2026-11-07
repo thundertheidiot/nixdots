@@ -117,6 +117,8 @@
   meow = {
     fullSetup = true;
     workstation.enable = true;
+    workstation.theme.family = "madoromi";
+    workstation.theme.variant = "haru-yoru";
     rice = "glass";
 
     boot.efi = true;

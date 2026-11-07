@@ -43,6 +43,7 @@ in
       config.home-manager.users."${cfg.user}".mHome.stubbornHomeDirectory;
 
     home-manager = {
+      extraSpecialArgs.theme = config.meow.workstation.theme;
       useGlobalPkgs = true;
       useUserPackages = true;
       backupFileExtension = "hm_backup";

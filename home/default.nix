@@ -9,6 +9,6 @@
     ./media.nix
     ./programs
     ./shell.nix
-    ./theme.nix
+    ./theme
   ];
 }

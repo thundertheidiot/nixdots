@@ -7,18 +7,48 @@
 }:
 let
   inherit (mlib) mkOpt;
+  inherit (builtins) map substring;
   inherit (lib) mkIf;
-  inherit (lib.types) attrs;
+  inherit (lib.types) attrs enum str;
+
+  theme = config.meow.workstation.theme;
+  catEnabled = theme.family == "catppuccin";
 in
 {
-  options.meow.workstation.theme.palette = mkOpt attrs (import ./mocha.nix) { };
+  options.meow.workstation.theme = {
+    family = mkOpt (enum [
+      "catppuccin"
+      "madoromi"
+    ]) "madoromi" { description = "desktop palette family"; };
+    variant = mkOpt str (if theme.family == "madoromi" then "fuyu-yoru" else "mocha") {
+      example = "haru-hiru";
+      description = "palette variant within the selected family";
+    };
+    palette =
+      let
+        palettes = {
+          madoromi = import ./palettes/madoromi.nix { inherit (theme) variant; };
+          catppuccin = import ./palettes/catppuccin.nix {
+            source = config.catppuccin.sources.palette;
+            inherit (theme) variant;
+          };
+        };
+      in
+      mkOpt attrs (mlib.mkThemePalette palettes.${theme.family}) { }
+      // {
+        readOnly = true;
+      };
+  };
 
   config = mkIf config.meow.workstation.enable {
+    console.colors = mkIf (!catEnabled) (map (color: substring 1 6 color) theme.palette.ansi);
+
     catppuccin = {
-      enable = true;
-      autoEnable = true;
-      flavor = "mocha";
-      accent = "mauve";
+      enable = catEnabled;
+      autoEnable = catEnabled;
+      flavor = mkIf catEnabled theme.variant;
+      accent = mkIf catEnabled "mauve";
+      plymouth.enable = false;
     };
 
     # fonts
@@ -50,7 +80,6 @@ in
     environment.variables.XCURSOR_SIZE = 24;
 
     # plymouth
-    catppuccin.plymouth.enable = false;
     boot = {
       plymouth = {
         enable = true;
@@ -59,7 +88,9 @@ in
           (plymouth-blahaj-theme.overrideAttrs (prev: {
             postPatch = ''
               substituteInPlace "blahaj.plymouth" \
-                --replace "=0x000000" "=0x${config.meow.workstation.theme.palette.hex.base01}"
+                --replace-fail "=0x000000" "=0x${
+                  substring 1 6 (if catEnabled then theme.palette.roles.surface else theme.palette.roles.outer)
+                }"
             '';
           }))
         ];

@@ -72,11 +72,11 @@ in
 
         xdg.configFile."niri/config.kdl".text =
           let
-            colors = config.meow.workstation.theme.palette.withHashtag;
+            colors = config.meow.workstation.theme.palette.roles;
 
-            border = colors.base01;
-            borderFocus = colors.base0E;
-            warn = colors.base08;
+            border = colors.border;
+            borderFocus = colors.accent;
+            warn = colors.error;
 
             noctalia = getExe inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
             xwayland-satellite = getExe pkgs.xwayland-satellite;
@@ -145,7 +145,7 @@ in
             }
 
             overview {
-              backdrop-color "${colors.base02}"
+              backdrop-color "${colors.backdrop}"
             }
 
             xwayland-satellite {
@@ -166,7 +166,7 @@ in
             layout {
               gaps 16
 
-              background-color "${colors.base00}"
+              background-color "${colors.background}"
 
               struts {
                 left -10
@@ -189,7 +189,7 @@ in
                 softness 30
                 spread 3
                 offset x=0 y=4
-                color "${colors.base11}99"
+                color "${colors.outer}99"
               }
 
               tab-indicator {

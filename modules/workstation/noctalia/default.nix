@@ -17,6 +17,7 @@ let
     listToAttrs
     nameValuePair
     ;
+  inherit (builtins) toJSON;
   inherit (mlib) mkEnOpt mkOpt homeModule;
   inherit (lib.types)
     listOf
@@ -29,6 +30,7 @@ let
 
   work = config.meow.workstation.enable;
   cfg = config.meow.noctalia.enable;
+  theme = config.meow.workstation.theme;
 
   widgetFiles =
     widget:
@@ -120,9 +122,22 @@ in
         enable = true;
         settings = {
           theme = {
-            source = "builtin";
+            source = if theme.family == "madoromi" then "custom" else "builtin";
             builtin = "Catppuccin";
-          };
+            templates = {
+              enable_builtin_templates = false;
+              enable_community_templates = false;
+            };
+          }
+          // (
+            if theme.family == "madoromi" then
+              {
+                custom_palette = "Madoromi";
+                mode = if theme.palette.dark then "dark" else "light";
+              }
+            else
+              { }
+          );
 
           plugins.enabled = mapAttrsToList (_: widget: widget.id) config.meow.noctalia.widgets ++ [
             "noctalia/screen_recorder"
@@ -154,6 +169,10 @@ in
             map (widget: nameValuePair widget.instance { type = widget.type; }) widgetInstances
           );
         };
+      };
+
+      xdg.configFile."noctalia/palettes/Madoromi.json" = mkIf (theme.family == "madoromi") {
+        text = toJSON theme.palette.noctalia;
       };
 
       xdg.dataFile = lib.mapAttrs' (name: source: {
