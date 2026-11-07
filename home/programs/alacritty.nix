@@ -2,6 +2,7 @@
   config = {
     programs.alacritty = {
       settings = {
+        window.opacity = 1.0;
         cursor = {
           style = {
             shape = "Beam";

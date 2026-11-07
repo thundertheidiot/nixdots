@@ -13,7 +13,7 @@ in
       {
         programs.alacritty.settings = {
           window = {
-            opacity = mkForce 0.88;
+            opacity = mkForce 1.0;
             padding = {
               x = 12;
               y = 12;
