@@ -291,6 +291,7 @@
         "ghostel": "ghostel",
         "gptel-zai": "gptel-zai",
         "home-manager": "home-manager",
+        "madoromi-emacs": "madoromi-emacs",
         "multiverse": "multiverse",
         "nixpkgs": [
           "nixpkgs"
@@ -298,11 +299,11 @@
         "org-defblock": "org-defblock"
       },
       "locked": {
-        "lastModified": 1793886704,
-        "narHash": "sha256-thRVSKA7OLq+7MfIrvbGxikvhUruaPgzK0tWxs5qUMk=",
+        "lastModified": 1794131982,
+        "narHash": "sha256-XviHumyfI/Qk+HR6a2kS4gG7kAK3B84mwOU4AsjXzMU=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "d462d8c5dbd47e6fc3b5c467a51396dc2340588f",
+        "rev": "980e42f40a47391968fdcb0185857db6362910d6",
         "type": "github"
       },
       "original": {
@@ -903,6 +904,22 @@
       "original": {
         "owner": "thundertheidiot",
         "repo": "leptos-kotiboksi",
+        "type": "github"
+      }
+    },
+    "madoromi-emacs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794127147,
+        "narHash": "sha256-p/eMO2sHhyw/eE7+0wlXRM3wP4lxZ4WjEGzTbpLN2Ws=",
+        "owner": "thundertheidiot",
+        "repo": "madoromi-emacs",
+        "rev": "eb7f80dadda4d60b296a11fdbc894d38657c8b67",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thundertheidiot",
+        "repo": "madoromi-emacs",
         "type": "github"
       }
     },
