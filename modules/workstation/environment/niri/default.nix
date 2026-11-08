@@ -163,6 +163,12 @@ in
               }
             }
 
+            blur {
+              passes 2
+              offset 4
+              noise 0.03
+            }
+
             layout {
               gaps 16
 
