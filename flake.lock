@@ -43,17 +43,18 @@
     "albedo": {
       "inputs": {
         "flake-parts": "flake-parts_2",
+        "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_2",
         "tg": "tg",
         "treefmt-nix": "treefmt-nix",
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1793942708,
-        "narHash": "sha256-tuVWLAjXWK6k/CPG5q3RnjbBbxK0R3gP6voTcdi3xS0=",
+        "lastModified": 1794192522,
+        "narHash": "sha256-4BZPm5HeB3nEQfTFlDf4P1Yn2+97fI6i2kKCe6TU0YI=",
         "ref": "refs/heads/main",
-        "rev": "68548664bca56b026abd92a289d289ced12897b3",
-        "revCount": 1757,
+        "rev": "a7faad3b5e9b2bbb16608715a832c853f3c8fa6b",
+        "revCount": 1805,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -290,7 +291,7 @@
         "flake-parts": "flake-parts_5",
         "ghostel": "ghostel",
         "gptel-zai": "gptel-zai",
-        "home-manager": "home-manager",
+        "home-manager": "home-manager_2",
         "madoromi-emacs": "madoromi-emacs",
         "multiverse": "multiverse",
         "nixpkgs": [
@@ -848,6 +849,27 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
+          "albedo",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793979366,
+        "narHash": "sha256-7OoWDsYO9teiPxl0QdlS5lYE20Pue8/5mpscSL32FUA=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "2c0c1f01521469cf0271180c453c79782d53c2f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "home-manager_2": {
+      "inputs": {
+        "nixpkgs": [
           "emacs",
           "nixpkgs"
         ]
@@ -866,7 +888,7 @@
         "type": "github"
       }
     },
-    "home-manager_2": {
+    "home-manager_3": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -1698,7 +1720,7 @@
         "disko": "disko",
         "emacs": "emacs",
         "flake-parts": "flake-parts_6",
-        "home-manager": "home-manager_2",
+        "home-manager": "home-manager_3",
         "leptos-kotiboksi": "leptos-kotiboksi",
         "meowdzbot": "meowdzbot",
         "naersk": "naersk",
