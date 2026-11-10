@@ -43,6 +43,11 @@
         mpkgs = (import "${inputs.self.outPath}/pkgs") { pkgs = final; };
 
         # functionality fixes
+        tmc-cli = prev.tmc-cli.overrideAttrs (old: {
+          nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.pkg-config ];
+          buildInputs = (old.buildInputs or [ ]) ++ [ final.zstd ];
+        });
+
         gajim = prev.gajim.overrideAttrs (old: {
           nativeBuildInputs = old.nativeBuildInputs ++ [ final.makeWrapper ];
 

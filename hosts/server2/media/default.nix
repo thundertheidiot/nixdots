@@ -289,7 +289,7 @@ in
 
       server.domains = builtins.attrNames hosts;
       services.nginx.virtualHosts = mapAttrs (_: port: {
-        addSSL = true;
+        forceSSL = true;
         sslCertificate = certs."local.crt";
         sslCertificateKey = config.sops.secrets.localKey.path;
         locations."/" = {

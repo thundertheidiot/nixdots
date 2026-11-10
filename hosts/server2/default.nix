@@ -51,7 +51,7 @@ in
     ];
 
     networking.networkmanager.enable = true;
-    networking.firewall.trustedInterfaces = [ "enp3s0" ];
+    networking.firewall.trustedInterfaces = lib.mkForce [ "lo" ];
     networking.firewall.allowedTCPPorts = [
       80
       443

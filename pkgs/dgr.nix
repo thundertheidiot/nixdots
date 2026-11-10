@@ -4,7 +4,12 @@
   fetchzip,
   gnused,
   buildFHSEnv,
+  fna3d,
+  sdl3,
 }:
+let
+  inherit (lib) getLib;
+in
 stdenv.mkDerivation (finalAttrs: {
   pname = "duck_game_rebuilt";
   version = "1.4.8.4";
@@ -19,21 +24,23 @@ stdenv.mkDerivation (finalAttrs: {
 
   installPhase =
     let
+      renderer = fna3d.override { useSDL3 = true; };
       fhs = buildFHSEnv {
         name = "dgr_fhs";
         targetPkgs =
           pkgs: with pkgs; [
             glibc.bin
             mono
-            SDL2
-            gtk2
+            sdl3
           ];
       };
     in
     ''
       mkdir -p $out/bin
       cp -r $src $out/DuckGameRebuilt
-      chmod 755 $out/DuckGameRebuilt # the below sed operation doesn't work otherwise
+      chmod 755 $out/DuckGameRebuilt
+      ln -sf ${getLib renderer}/lib/libFNA3D.so.0 $out/DuckGameRebuilt/libFNA3D.so.0
+      ln -sf ${getLib sdl3}/lib/libSDL3.so.0 $out/DuckGameRebuilt/libSDL3.so.0
       sed 's/ | tee outputlog.txt//g' -i $out/DuckGameRebuilt/DuckGame.sh
       # script
       echo "#!/bin/sh

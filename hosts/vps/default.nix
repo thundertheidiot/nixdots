@@ -4,7 +4,6 @@
   mlib,
   modulesPath,
   server,
-  pkgs,
   ...
 }:
 let
@@ -43,23 +42,6 @@ in
     users.users.root.hashedPassword = "!";
     hardware.enableRedistributableFirmware = false;
 
-    # org sync git
-    users.users.orgsync = {
-      isNormalUser = true;
-      description = "Sync org roam git repository";
-
-      home = "/${config.meow.impermanence.persist}/orgsync";
-      createHome = true;
-
-      shell = "${pkgs.git}/bin/git-shell";
-
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBKwHM/9spQfyeNIl/p8N8XBuoKj8UrhuhhlbEwkrgjZ thunder@disroot.org"
-        "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBE6bPM6n9EHBHhkFe9KZ6QrHnCtdCFWSZQp6OLDNlIhUz4YB1ZYMIB1E0iEyW0XiICOeWYcy/MoYCAnJafF+Xhs=" # orgzly
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMKvFyn0+PoSl4PWZPyg2A+feiC3wgYElw+p2MPLTmy u0_a298@localhost" # termux
-      ];
-    };
-
     meow = {
       certificates = false;
       workstation.enable = false;
@@ -77,11 +59,6 @@ in
         comin.enable = true;
         publicSSH = true;
         webserver = true;
-
-        deploy = {
-          enable = true;
-          pubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH43IsqYdCbqrJ6M00a7idsUJSC7hS96Nj3FQOxa355r";
-        };
 
         # forgejo = {
         #   enable = true;

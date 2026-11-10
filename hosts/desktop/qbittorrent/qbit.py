@@ -5,7 +5,7 @@ import sys
 import humanize
 import requests
 
-domain = "http://torrent.home"
+domain = "https://torrent.home"
 user = "admin"
 passwd = "adminadmin"
 

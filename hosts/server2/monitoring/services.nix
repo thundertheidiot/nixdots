@@ -18,7 +18,11 @@ let
   '';
 in
 {
-  services.comin.exporter.listen_address = "";
+  services.comin.exporter.listen_address = address;
+  systemd.services.comin = {
+    wants = [ "wg-quick-wg0.service" ];
+    after = [ "wg-quick-wg0.service" ];
+  };
 
   services.forgejo.settings.metrics.ENABLED = true;
   services.nginx.virtualHosts."git.home".locations."= /metrics" = {

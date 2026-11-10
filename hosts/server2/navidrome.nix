@@ -49,7 +49,7 @@ in
 
   services.navidrome = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
     environmentFile = config.sops.secrets.navidrome_env.path;
     settings = {
       Address = "0.0.0.0";
@@ -84,6 +84,13 @@ in
     };
   };
 
+  users.groups.soulbeet = { };
+  users.users.soulbeet = {
+    isSystemUser = true;
+    group = "soulbeet";
+    extraGroups = [ "media" ];
+  };
+
   systemd.services.soulbeet = {
     description = "Soulbeet";
     wantedBy = [ "multi-user.target" ];
@@ -108,11 +115,37 @@ in
       PORT = "9765";
     };
     serviceConfig = {
-      User = "root";
-      Group = "root";
+      User = "soulbeet";
+      Group = "soulbeet";
+      UMask = "0022";
+      NoNewPrivileges = true;
+      CapabilityBoundingSet = "";
+      PrivateTmp = true;
+      PrivateDevices = true;
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectKernelLogs = true;
+      ProtectControlGroups = true;
+      RestrictSUIDSGID = true;
+      RestrictRealtime = true;
+      LockPersonality = true;
+      RestrictAddressFamilies = [
+        "AF_UNIX"
+        "AF_INET"
+        "AF_INET6"
+      ];
+      InaccessiblePaths = [
+        "/nix/persist"
+        "/var/lib"
+        "/run/secrets"
+        "-/run/secrets.d"
+        "-/run/media-stack"
+      ];
       EnvironmentFile = config.sops.secrets.soulbeet_env.path;
       WorkingDirectory = "${soulbeet}";
-      ExecStart = "${soulbeet}/server";
+      ExecStart = getExe soulbeet;
       Restart = "on-failure";
       BindPaths = [
         "/nix/persist/media-stack/soulbeet:/data"

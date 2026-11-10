@@ -88,23 +88,6 @@
             "with" = builtins.removeAttrs args [ "name" ];
           };
 
-          vpsDeploy = revision: {
-            name = "Deploy update to vps";
-            env = {
-              DEPLOY_REVISION = revision;
-              DEPLOY_SSH_KEY = "\${{ secrets.VPS_DEPLOY_SSH_KEY }}";
-            };
-
-            # other half of the setup in modules/server/deploy.nix
-            run = ''
-              [[ "$DEPLOY_REVISION" =~ ^[0-9a-f]{40}$ ]]
-              umask 077
-              printf '%s\n' "$DEPLOY_SSH_KEY" > ~/deploykey
-              chmod 600 ~/deploykey
-
-              ssh -T -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i ~/deploykey -p 69 deploy@kotiboksi.xyz "$DEPLOY_REVISION"
-            '';
-          };
         };
       in
       {
@@ -337,12 +320,6 @@
               })
             ];
           };
-        };
-
-        ".github/workflows/deploy-vps.yaml" = {
-          on.workflow_dispatch = { };
-          permissions = { };
-          jobs.update-vps.steps = [ (blocks.vpsDeploy "\${{ github.sha }}") ];
         };
 
         ".github/workflows/update-flake.yaml" = {

@@ -20,7 +20,6 @@ in
     ./acme.nix
     ./coturn.nix
     ./comin.nix
-    ./deploy.nix
     ./forgejo.nix
     ./matrix
     ./mumble.nix

@@ -7,9 +7,14 @@
   config = {
     services.jellyfin = {
       enable = true;
-      openFirewall = true;
+      openFirewall = false;
       cacheDir = "${config.services.jellyfin.dataDir}/cache";
     };
+
+    networking.firewall.allowedUDPPorts = [
+      1900
+      7359
+    ];
 
     meow.impermanence.directories = [
       {
@@ -29,7 +34,7 @@
     services.nginx.virtualHosts."jellyfin.local" = {
       serverAliases = [ "jellyfin.home" ];
 
-      addSSL = true;
+      forceSSL = true;
       sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
       sslCertificateKey = config.sops.secrets.localKey.path;
 

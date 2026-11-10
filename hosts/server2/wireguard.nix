@@ -1,4 +1,21 @@
 {
+  config,
+  lib,
+  inputs,
+  ...
+}:
+let
+  inherit (lib) concatMapStringsSep getExe';
+  vpn = import "${inputs.self.outPath}/sops/wireguard";
+in
+{
+  networking.firewall.extraCommands = ''
+    ${getExe' config.networking.firewall.package "iptables"} -A nixos-fw \
+      -i wg0 -s ${vpn.peers.${vpn.hub}.address} -d ${vpn.peers.home2.address} \
+      -p tcp -m multiport --dports ${concatMapStringsSep "," toString config.meow.wireguard.tcpPorts} \
+      -j nixos-fw-accept
+  '';
+
   meow.wireguard = {
     enable = true;
     peer = "home2";

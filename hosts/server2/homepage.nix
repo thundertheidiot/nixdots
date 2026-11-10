@@ -16,7 +16,7 @@ in
     services.nginx.virtualHosts = {
       "homepage.local" = {
         serverAliases = [ "homepage.home" ];
-        addSSL = true;
+        forceSSL = true;
         sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
         sslCertificateKey = config.sops.secrets.localKey.path;
         locations = {
@@ -40,6 +40,8 @@ in
       owner = "root";
       group = "root";
     };
+
+    systemd.services.homepage-dashboard.environment.HOSTNAME = "127.0.0.1";
 
     services.homepage-dashboard = {
       enable = true;
@@ -79,7 +81,7 @@ in
             {
               "Jellyfin" = {
                 icon = "jellyfin.svg";
-                href = "http://jellyfin.home";
+                href = "https://jellyfin.home";
                 widget = {
                   type = "jellyfin";
                   url = "http://127.0.0.1:8096";
@@ -96,7 +98,7 @@ in
             {
               "Radarr" = {
                 icon = "radarr.svg";
-                href = "http://radarr.home";
+                href = "https://radarr.home";
                 widget = {
                   type = "radarr";
                   url = "http://${vpnAddress}:7878";
@@ -108,7 +110,7 @@ in
             {
               "Sonarr" = {
                 icon = "sonarr.svg";
-                href = "http://sonarr.home";
+                href = "https://sonarr.home";
                 widget = {
                   type = "sonarr";
                   url = "http://${vpnAddress}:8989";
@@ -120,7 +122,7 @@ in
             {
               "Bazarr" = {
                 icon = "bazarr.svg";
-                href = "http://bazarr.home";
+                href = "https://bazarr.home";
                 widget = {
                   type = "bazarr";
                   url = "http://${vpnAddress}:6767";
@@ -136,7 +138,7 @@ in
             {
               "qBittorrent" = {
                 icon = "qbittorrent.svg";
-                href = "http://torrent.home";
+                href = "https://torrent.home";
                 widget = {
                   type = "qbittorrent";
                   url = "http://${vpnAddress}:8080";
@@ -148,7 +150,7 @@ in
             {
               "Prowlarr" = {
                 icon = "prowlarr.svg";
-                href = "http://prowlarr.home";
+                href = "https://prowlarr.home";
                 widget = {
                   type = "prowlarr";
                   url = "http://${vpnAddress}:9696";
@@ -161,7 +163,7 @@ in
             {
               "Soulseek" = {
                 icon = "slskd.svg";
-                href = "http://soulseek.home";
+                href = "https://soulseek.home";
               };
             }
           ];

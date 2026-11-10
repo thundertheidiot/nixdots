@@ -4,8 +4,10 @@
   fetchFromGitHub,
   pkg-config,
   openssl,
+  sqlite,
   tailwindcss_4,
   dioxus-cli,
+  zstd,
   wasm-bindgen-cli_0_2_114,
   lld,
   binaryen,
@@ -30,12 +32,17 @@ rustPlatform.buildRustPackage (finalAttrs: {
   nativeBuildInputs = [
     pkg-config
     tailwindcss_4
-    dioxus-cli
+    (dioxus-cli.overrideAttrs (old: {
+      buildInputs = old.buildInputs ++ [ zstd ];
+    }))
     wasm-bindgen-cli_0_2_114
     lld
     binaryen
   ];
-  buildInputs = [ openssl ];
+  buildInputs = [
+    openssl
+    sqlite
+  ];
   nativeCheckInputs = [
     python3
     util-linux

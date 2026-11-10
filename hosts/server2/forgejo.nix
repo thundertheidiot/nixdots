@@ -64,6 +64,7 @@ in
     };
     settings.server = {
       ROOT_URL = "https://git.home/";
+      HTTP_ADDR = "127.0.0.1";
       HTTP_PORT = 3001;
     };
   };
