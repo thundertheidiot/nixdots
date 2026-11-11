@@ -37,7 +37,6 @@ in
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      jack.enable = true;
 
       wireplumber.extraConfig = {
         "10-disable-bluetooth-hw-volume"."monitor.bluez.properties" = {
