@@ -21,6 +21,11 @@ in
   options.mHome.ai.enable = mkEnOpt "Set up ai things";
 
   config = mkIf cfg {
-    home.packages = [ pkgs.python314Packages.trafilatura ];
+    programs.mcp.enable = true;
+
+    home.packages = [
+      pkgs.python314Packages.trafilatura
+      pkgs.claude-code
+    ];
   };
 }

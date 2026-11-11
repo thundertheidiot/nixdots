@@ -14,9 +14,9 @@ deny() {
   exit 2
 }
 
-# the org path, followed by end, /, a closing quote, or a space
+# the org path, followed by end or anything that can't continue a name
 case $payload in
-  *"$org"|*"$org"/*|*"$org"'"'*|*"$org"' '*) deny ;;
+  *"$org"|*"$org"[!A-Za-z0-9._-]*) deny ;;
 esac
 
 # a bare relative Documents/org reference resolves under the session cwd
@@ -26,7 +26,7 @@ cwd=${cwd%%'"'*}
 case $cwd in
   "$home"|"$home"/*)
     case $payload in
-      *"Documents/org"|*"Documents/org"/*|*"Documents/org"'"'*|*"Documents/org"' '*) deny ;;
+      *"Documents/org"|*"Documents/org"[!A-Za-z0-9._-]*) deny ;;
     esac
     ;;
 esac

@@ -13,4 +13,5 @@ with pkgs;
   local-certs = callPackage ./local-certs.nix { };
   metube = callPackage ./metube.nix { };
   soulbeet = callPackage ./soulbeet.nix { };
+  ghidra-mcp = callPackage ./ghidra-mcp.nix { };
 }

@@ -56,6 +56,7 @@ in
               sharedModules = [
                 inputs.emacs.homeModules.default
                 inputs.catppuccin.homeModules.default
+                inputs.albedo.homeModules.default
               ];
             };
           })
