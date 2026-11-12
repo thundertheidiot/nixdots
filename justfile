@@ -31,6 +31,9 @@ yeet host target="":
   if [[ "$target" = "" ]]; then
     target="{{host}}"
   fi
+  if command -v nixdots-behind >/dev/null; then
+    nixdots-behind "$target" || [[ -n "${FORCE:-}" ]] || exit 1
+  fi
   if [[ -n "${INSIDE_EMACS:-}" && "$INSIDE_EMACS" != vterm ]]; then
     nixos-rebuild switch --flake ".#{{host}}" --target-host "$target" --sudo --accept-flake-config --show-trace --no-reexec
   else
@@ -40,6 +43,9 @@ yeet host target="":
 _rebuild command host:
   #!/usr/bin/env bash
   host="{{host}}"
+  if [[ "{{command}}" != build ]] && command -v nixdots-behind >/dev/null; then
+    nixdots-behind || [[ -n "${FORCE:-}" ]] || exit 1
+  fi
   if [[ -n "${INSIDE_EMACS:-}" && "$INSIDE_EMACS" != vterm ]]; then
     flake="."
     if [[ -n "$host" ]]; then

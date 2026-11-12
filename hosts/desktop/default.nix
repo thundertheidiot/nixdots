@@ -121,6 +121,8 @@
     workstation.theme.variant = "haru-yoru";
     rice = "glass";
 
+    comin.enable = true;
+
     boot.efi = true;
 
     user = "thunder";

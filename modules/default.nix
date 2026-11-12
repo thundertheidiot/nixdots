@@ -2,6 +2,7 @@
   ./base.nix
   ./boot.nix
   ./certs.nix
+  ./comin.nix
   ./displaylink.nix
   ./emacs
   ./gaming

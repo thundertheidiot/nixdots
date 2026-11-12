@@ -19,7 +19,6 @@ in
     # ./mail.nix
     ./acme.nix
     ./coturn.nix
-    ./comin.nix
     ./forgejo.nix
     ./matrix
     ./mumble.nix

@@ -72,7 +72,7 @@ in
       workstation.enable = false;
       home.enable = false;
 
-      server.comin.enable = true;
+      comin.enable = true;
 
       boot.enable = false;
 

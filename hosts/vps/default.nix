@@ -55,8 +55,9 @@ in
 
       gpu = "none";
 
+      comin.enable = true;
+
       server = {
-        comin.enable = true;
         publicSSH = true;
         webserver = true;
 

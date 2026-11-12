@@ -113,6 +113,8 @@
     workstation.displayManager = "gdm";
     rice = "minimal";
 
+    comin.enable = true;
+
     displaylink = true;
 
     impermanence.enable = true;
