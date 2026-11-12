@@ -300,11 +300,11 @@
         "org-defblock": "org-defblock"
       },
       "locked": {
-        "lastModified": 1794486710,
-        "narHash": "sha256-1Skeo80fk3J+IOjo17EjM5FgTsutBc/kGzlUc3ip9SE=",
+        "lastModified": 1794489739,
+        "narHash": "sha256-FuodHLoS1cxZFGDE8IZ/awP66aH3cW+3odcaSgq0c60=",
         "owner": "thundertheidiot",
         "repo": "emacs",
-        "rev": "0dd11cf6df8029ce43e065e6305d154f59791585",
+        "rev": "c8d899a5e56bd4797a9bff61b2aee7bfafbda33e",
         "type": "github"
       },
       "original": {
