@@ -29,12 +29,12 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "metube";
-  version = "2026.11.06";
+  version = "2026.11.10";
   src = fetchFromGitHub {
     owner = "alexta69";
     repo = "metube";
     tag = finalAttrs.version;
-    hash = "sha256-DawYorpLWUUajq7I22TSLyI2O5VqlvhLoeVQfy43anU=";
+    hash = "sha256-fIy/pSlU4lKS+KoXmBJTwMwRTCTy16CIN2cRpIknXYw=";
   };
   passthru.autoUpdate.script = writeShellApplication {
     name = "update-metube";
@@ -55,7 +55,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       ;
     pnpm = pnpm_12;
     fetcherVersion = 5;
-    hash = "sha256-K5y2u1739FeGgPzWTCJfrWxWj0+UDy+IveWUYqnO3ic=";
+    hash = "sha256-3ccw2QrWiYXFkQyCTOn8mFT6o5t/9msU2qOkf5z/2FM=";
   };
   meta = {
     description = "Self-hosted web GUI for yt-dlp";
