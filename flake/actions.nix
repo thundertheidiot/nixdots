@@ -4,6 +4,62 @@
   ...
 }:
 {
+  # markdown summary of flake.lock input changes and optional host closure diffs
+  perSystem =
+    { pkgs, ... }:
+    let
+      lockDiff = pkgs.writeText "lock-diff.jq" ''
+        def locked($l; $n): $l.nodes[$l.nodes.root.inputs[$n] // ""].locked // null;
+        def fmt: if . == null then "-" else "`\(.rev // .narHash | .[0:7])` \(.lastModified | strftime("%Y-%m-%d"))" end;
+        def repo: if .type == "github" then "\(.owner)/\(.repo)"
+          elif (.url // "" | test("nixos\\.org")) then "NixOS/nixpkgs"
+          else null end;
+
+        [ ($old[0].nodes.root.inputs + $new[0].nodes.root.inputs | keys[]) as $n
+          | locked($old[0]; $n) as $o
+          | locked($new[0]; $n) as $w
+          | select($o.narHash != $w.narHash)
+          | "| \($n) | \($o | fmt) | \($w | fmt) | \(
+              if $o != null and $w != null and ($w | repo) != null and $o.rev != null
+              then "[compare](https://github.com/\($w | repo)/compare/\($o.rev)...\($w.rev))"
+              else "" end) |"
+        ]
+        | if length == 0 then "No flake input changes."
+          else (["| Input | Old | New | |", "|---|---|---|---|"] + .) | join("\n") end
+      '';
+    in
+    {
+      packages.flake-diff = pkgs.writeShellApplication {
+        name = "flake-diff";
+        runtimeInputs = with pkgs; [
+          jq
+          nvd
+        ];
+        # usage: flake-diff OLD_LOCK NEW_LOCK [CLOSURES], closures has old/<name> and new/<name> links
+        text = ''
+          printf '### Flake inputs\n\n'
+          jq -rn --slurpfile old "$1" --slurpfile new "$2" -f ${lockDiff}
+
+          closures=''${3:-}
+          [[ -n "$closures" && -d "$closures/new" ]] || exit 0
+
+          printf '\n### Closure changes\n'
+          for new in "$closures"/new/*; do
+            name=$(basename "$new")
+            old="$closures/old/$name"
+            [[ -e "$old" ]] || continue
+
+            diff=$(nvd --color never diff "$old" "$new")
+            lines=$(wc -l <<< "$diff")
+            printf '\n<details><summary><b>%s</b>: %s</summary>\n\n```\n' "$name" "$(tail -n 1 <<< "$diff")"
+            head -n 300 <<< "$diff"
+            (( lines > 300 )) && printf '... %d more lines\n' "$(( lines - 300 ))"
+            printf '```\n\n</details>\n'
+          done
+        '';
+      };
+    };
+
   flake.actions-nix = {
     pre-commit.enable = true;
 
@@ -16,9 +72,15 @@
     workflows =
       let
         inherit (lib.lists) flatten;
-        inherit (lib) concatStringsSep;
-        inherit (builtins) attrNames;
-        frequentInputs = [ "albedo" ];
+        inherit (lib) concatStringsSep optionalAttrs;
+        inherit (builtins) attrNames attrValues;
+
+        # input -> packages built and cached after updating it
+        frequentInputs = {
+          albedo = [
+            "nixosConfigurations.framework.config.home-manager.users.thunder.programs.albedo.package"
+          ];
+        };
         lockUpdateConcurrency = {
           group = "update-flake-lock";
           cancel-in-progress = false;
@@ -28,17 +90,34 @@
         #   run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
         # }) (attrNames config.flake.nixosConfigurations);
 
-        buildAllHosts =
-          map
-            (n: {
-              name = "Build ${n}";
-              run = "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
-            })
-            [
-              "server2"
-              "vps"
-              "framework"
-            ];
+        hosts = [
+          "server2"
+          "vps"
+          "framework"
+        ];
+        buildHost =
+          n: "nix build --accept-flake-config .#nixosConfigurations.${n}.config.system.build.toplevel";
+
+        buildAllHosts = map (n: {
+          name = "Build ${n}";
+          run = buildHost n;
+        }) hosts;
+
+        # links closures for flake-diff
+        buildClosures =
+          state:
+          map (
+            n:
+            {
+              name = "Build ${n} (${state})";
+              run = ''${buildHost n} --out-link "$RUNNER_TEMP/closures/${state}/${n}"'';
+            }
+            # old builds only feed the diff
+            // optionalAttrs (state == "old") { continue-on-error = true; }
+          ) hosts;
+
+        flakeDiff = ''nix run --accept-flake-config .#flake-diff -- "$RUNNER_TEMP/old.lock" flake.lock'';
+        saveOldLock = ''git show HEAD:flake.lock > "$RUNNER_TEMP/old.lock"'';
 
         mkBasicNix = list: {
           steps = [
@@ -110,12 +189,29 @@
           // mkBasicNix [
             {
               name = "Update frequent flake inputs";
-              env.FLAKE_INPUTS = concatStringsSep " " frequentInputs;
+              env.FLAKE_INPUTS = concatStringsSep " " (attrNames frequentInputs);
               run = ''
                 if [[ -n "$FLAKE_INPUTS" ]]; then
                   read -r -a inputs <<< "$FLAKE_INPUTS"
                   nix flake update --accept-flake-config -- "''${inputs[@]}"
                 fi
+              '';
+            }
+            {
+              name = "Build frequent flake input packages";
+              env.PACKAGES = concatStringsSep " " (flatten (attrValues frequentInputs));
+              run = ''
+                if git diff --quiet -- flake.lock; then
+                  exit 0
+                fi
+                read -r -a packages <<< "$PACKAGES"
+                for package in "''${packages[@]}"; do
+                  if ! nix build --accept-flake-config --no-link --print-build-logs ".#$package"; then
+                    printf '::warning::Failed to build %s, dropping frequent flake input updates\n' "$package"
+                    git checkout -- flake.lock
+                    exit 0
+                  fi
+                done
               '';
             }
             {
@@ -128,7 +224,7 @@
                 nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
                 printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
                 if ! git diff --quiet -- flake.lock; then
-                  printf -- "- Frequent flake inputs updated (lockfile only; not built).\n" >> "$PR_BODY"
+                  printf -- "- Frequent flake inputs updated, their packages were built and cached.\n" >> "$PR_BODY"
                 fi
 
                 policies=$(nix eval --json --accept-flake-config .#packageUpdates)
@@ -174,6 +270,13 @@
                     fi
                   fi
                 done
+
+                if ! git diff --quiet -- flake.lock; then
+                  ${saveOldLock}
+                  printf '\n' >> "$PR_BODY"
+                  ${flakeDiff} >> "$PR_BODY"
+                fi
+                cat "$PR_BODY" >> "$GITHUB_STEP_SUMMARY"
                 SCRIPT
               '';
             }
@@ -286,11 +389,25 @@
               '';
             }
             {
+              name = "Summarize flake update";
+              env.PACKAGES = "\${{ inputs.package }}";
+              run = ''
+                mkdir -p "$RUNNER_TEMP/flake-update"
+                cp flake.lock "$RUNNER_TEMP/flake-update/flake.lock"
+                ${saveOldLock}
+                {
+                  printf 'Flake inputs updated by the manual workflow. Built: `%s`\n\n' "$PACKAGES"
+                  ${flakeDiff}
+                } > "$RUNNER_TEMP/flake-update/body.md"
+                cat "$RUNNER_TEMP/flake-update/body.md" >> "$GITHUB_STEP_SUMMARY"
+              '';
+            }
+            {
               name = "Upload updated flake.lock";
               uses = "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"; # v4
               "with" = {
                 name = "manual-flake-lock";
-                path = "flake.lock";
+                path = "\${{ runner.temp }}/flake-update";
                 retention-days = 1;
               };
             }
@@ -307,7 +424,14 @@
               {
                 name = "Download updated flake.lock";
                 uses = "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093"; # v4
-                "with".name = "manual-flake-lock";
+                "with" = {
+                  name = "manual-flake-lock";
+                  path = "\${{ runner.temp }}/flake-update";
+                };
+              }
+              {
+                name = "Apply updated flake.lock";
+                run = ''cp "$RUNNER_TEMP/flake-update/flake.lock" flake.lock'';
               }
               (blocks.pr {
                 name = "Open flake update PR";
@@ -316,7 +440,7 @@
                 commit-message = "chore(deps): update flake inputs";
                 delete-branch = true;
                 title = "chore(deps): update flake inputs";
-                body = "Flake inputs and the selected package builds were updated by the manual workflow.";
+                body-path = "\${{ runner.temp }}/flake-update/body.md";
               })
             ];
           };
@@ -400,7 +524,10 @@
             {
               name = "Download flake.lock";
               uses = "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093"; # v4
-              "with".name = "flake-lock";
+              "with" = {
+                name = "flake-lock";
+                path = "\${{ runner.temp }}/flake-update";
+              };
             }
             {
               name = "Prefetch displaylink";
@@ -408,13 +535,29 @@
                 nix develop --accept-flake-config -c just prefetch
               '';
             }
-            buildAllHosts
+            (buildClosures "old")
+            {
+              name = "Use updated flake.lock";
+              run = ''cp "$RUNNER_TEMP/flake-update/flake.lock" flake.lock'';
+            }
+            (buildClosures "new")
+            {
+              name = "Summarize flake update";
+              run = ''
+                ${saveOldLock}
+                {
+                  printf 'Automated flake input update. The configured package and host builds passed.\n\n'
+                  ${flakeDiff} "$RUNNER_TEMP/closures"
+                } > "$RUNNER_TEMP/flake-update/body.md"
+                cat "$RUNNER_TEMP/flake-update/body.md" >> "$GITHUB_STEP_SUMMARY"
+              '';
+            }
             {
               name = "Upload verified flake.lock";
               uses = "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"; # v4
               "with" = {
                 name = "verified-flake-lock";
-                path = "flake.lock";
+                path = "\${{ runner.temp }}/flake-update";
                 retention-days = 1;
               };
             }
@@ -431,7 +574,14 @@
               {
                 name = "Download verified flake.lock";
                 uses = "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093"; # v4
-                "with".name = "verified-flake-lock";
+                "with" = {
+                  name = "verified-flake-lock";
+                  path = "\${{ runner.temp }}/flake-update";
+                };
+              }
+              {
+                name = "Apply verified flake.lock";
+                run = ''cp "$RUNNER_TEMP/flake-update/flake.lock" flake.lock'';
               }
               (blocks.pr {
                 name = "Open flake update PR";
@@ -440,7 +590,7 @@
                 commit-message = "chore(deps): bump flake.lock";
                 delete-branch = true;
                 title = "chore(deps): bump flake.lock";
-                body = "Automated flake input update. The configured package and host builds passed.";
+                body-path = "\${{ runner.temp }}/flake-update/body.md";
               })
             ];
           };

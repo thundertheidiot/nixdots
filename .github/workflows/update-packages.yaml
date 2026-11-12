@@ -66,6 +66,21 @@ jobs:
           nix flake update --accept-flake-config -- "${inputs[@]}"
         fi
     - env:
+        PACKAGES: nixosConfigurations.framework.config.home-manager.users.thunder.programs.albedo.package
+      name: Build frequent flake input packages
+      run: |-
+        if git diff --quiet -- flake.lock; then
+          exit 0
+        fi
+        read -r -a packages <<< "$PACKAGES"
+        for package in "${packages[@]}"; do
+          if ! nix build --accept-flake-config --no-link --print-build-logs ".#$package"; then
+            printf '::warning::Failed to build %s, dropping frequent flake input updates\n' "$package"
+            git checkout -- flake.lock
+            exit 0
+          fi
+        done
+    - env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PR_BODY: ${{ runner.temp }}/package-updates.md
       name: Update and build packages
@@ -73,7 +88,7 @@ jobs:
         nix develop --accept-flake-config --command bash -euo pipefail <<'SCRIPT'
         printf "Automated custom package updates. Each changed package was built successfully.\n\n" > "$PR_BODY"
         if ! git diff --quiet -- flake.lock; then
-          printf -- "- Frequent flake inputs updated (lockfile only; not built).\n" >> "$PR_BODY"
+          printf -- "- Frequent flake inputs updated, their packages were built and cached.\n" >> "$PR_BODY"
         fi
 
         policies=$(nix eval --json --accept-flake-config .#packageUpdates)
@@ -119,6 +134,13 @@ jobs:
             fi
           fi
         done
+
+        if ! git diff --quiet -- flake.lock; then
+          git show HEAD:flake.lock > "$RUNNER_TEMP/old.lock"
+          printf '\n' >> "$PR_BODY"
+          nix run --accept-flake-config .#flake-diff -- "$RUNNER_TEMP/old.lock" flake.lock >> "$PR_BODY"
+        fi
+        cat "$PR_BODY" >> "$GITHUB_STEP_SUMMARY"
         SCRIPT
     - name: Stage package updates
       run: |-
