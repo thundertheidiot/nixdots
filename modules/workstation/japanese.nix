@@ -25,6 +25,8 @@ in
         waylandFrontend = true;
         addons = [ pkgs.fcitx5-mozc ];
         settings.globalOptions."Hotkey/TriggerKeys"."0" = "Alt+space";
+        # quickphrase is disabled, its default super+grave trigger clashes with backticks
+        settings.globalOptions."Behavior/DisabledAddons"."0" = "quickphrase";
         settings.inputMethod = {
           GroupOrder."0" = "Default";
           "Groups/0" = {
