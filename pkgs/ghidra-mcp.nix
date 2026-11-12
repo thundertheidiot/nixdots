@@ -8,12 +8,10 @@
   python3Packages,
   ghidra,
   openjdk25,
-  nix-update,
-  writeShellApplication,
 }:
 let
-  version = "2.0.0";
-  tag = lib.versions.majorMinor version;
+  # upstream tags are major.minor
+  version = "2.0";
 
   # upstream pins mcp sdk 1.x, nixpkgs only ships 2.x
   mcp_1 = python3Packages.buildPythonPackage {
@@ -48,8 +46,8 @@ let
   };
 
   release = fetchurl {
-    url = "https://github.com/LaurieWired/GhidraMCP/releases/download/${tag}/GhidraMCP-release-${
-      lib.replaceStrings [ "." ] [ "-" ] tag
+    url = "https://github.com/LaurieWired/GhidraMCP/releases/download/${version}/GhidraMCP-release-${
+      lib.replaceStrings [ "." ] [ "-" ] version
     }.zip";
     hash = "sha256-6/kE/WeC5CnpWmCiT+BySyDArLLe2zBBNaUoH2tfLnI=";
   };
@@ -66,7 +64,7 @@ let
       runHook preInstall
       unzip -q GhidraMCP-release-*/ghidra_*_PUBLIC_*_GhidraMCP.zip
       install -Dm644 GhidraMCP/lib/GhidraMCP.jar $out/share/ghidra-mcp/GhidraMCP.jar
-      install -Dm644 GhidraMCP-release-*/ghidra_mcp-${version}-py3-none-any.whl $out/ghidra_mcp-${version}-py3-none-any.whl
+      install -Dm644 -t $out GhidraMCP-release-*/ghidra_mcp-*-py3-none-any.whl
       runHook postInstall
     '';
   };
@@ -75,7 +73,12 @@ let
     pname = "ghidra-mcp";
     inherit version;
     format = "wheel";
-    src = "${assets}/ghidra_mcp-${version}-py3-none-any.whl";
+    # wheel version has a patch component the tag lacks
+    src = assets;
+    unpackPhase = ''
+      mkdir -p dist
+      cp $src/*.whl dist/
+    '';
 
     propagatedBuildInputs = [
       mcp_1
@@ -117,16 +120,9 @@ stdenvNoCC.mkDerivation {
   '';
 
   passthru = {
+    # lets nix-update find the release url
+    src = release;
     inherit assets mcp_1;
-    autoUpdate.script = writeShellApplication {
-      name = "update-ghidra-mcp";
-      runtimeInputs = [ nix-update ];
-      text = ''
-        nix-update --flake --use-github-releases --src-only "$UPDATE_NIX_ATTR_PATH"
-        # refresh source and dependencies even on retries
-        nix-update --flake --version skip "$UPDATE_NIX_ATTR_PATH"
-      '';
-    };
   };
 
   meta = {
