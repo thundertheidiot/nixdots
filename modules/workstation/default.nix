@@ -23,6 +23,7 @@ in
     ./network.nix
     ./flatpak.nix
     ./keyring.nix
+    ./japanese.nix
     ./noctalia
     ./theme
     ./environment # de's and wm's
