@@ -15,6 +15,7 @@ in
   imports = [
     ./opencode.nix
     ./playwright-mcp
+    ./ghidra-mcp
     ./albedo
   ];
 

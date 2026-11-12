@@ -36,6 +36,14 @@ in
       '';
       command = ''"$HOME/Games/the-joy-of-creation-story-mode/The Joy of Creation Story Mode/TJoC_SM.exe"'';
     })
+    (winelib.protonApp {
+      name = "playrooms";
+      proton = winepkgs.protonGE."11-5-x86_64";
+      extraSetup = ''
+        cd "$HOME/Games/playrooms/Playrooms"
+      '';
+      command = ''"$HOME/Games/playrooms/Playrooms/Playrooms.exe"'';
+    })
     (winelib.protonApp rec {
       name = "sh2vr";
 
