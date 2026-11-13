@@ -12,11 +12,11 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "duck_game_rebuilt";
-  version = "1.4.8.4";
+  version = "1.4.8.5";
 
   src = fetchzip {
     url = "https://github.com/TheFlyingFoool/DuckGameRebuilt/releases/download/v${finalAttrs.version}/DuckGameRebuilt.zip";
-    hash = "sha256-JgKKULRWjDw4z5xkYQjVocF0X4b/GZMm1oecmuwTlkA=";
+    hash = "sha256-QSiBx1uXS41GZuMJTUwj5oduchnlNSm9RPe2LMNfFWc=";
     stripRoot = false;
   };
 
