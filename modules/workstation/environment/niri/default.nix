@@ -102,6 +102,32 @@ in
                 '';
               }
             );
+
+            albedoWeb = getExe (
+              pkgs.writeShellApplication {
+                name = "albedo-web";
+                runtimeInputs = [
+                  pkgs.niri
+                  pkgs.jq
+                ];
+                text = ''
+                  focused() {
+                    niri msg -j focused-window | jq -e '(.app_id // "") | test("^firefox")' > /dev/null
+                  }
+
+                  if ! focused; then
+                    setsid firefox > /dev/null 2>&1 &
+
+                    for _ in $(seq 100); do
+                      sleep 0.1
+                      focused && break
+                    done
+                  fi
+
+                  exec albedo web
+                '';
+              }
+            );
           in
           ''
             input {
@@ -234,6 +260,7 @@ in
               Mod+Return { spawn-sh "emacsclient -c -a ''' -e '(meow/eshell)'"; }
               Mod+Semicolon { spawn "alacritty"; }
               Mod+W { spawn "firefox"; }
+              Mod+A { spawn "${albedoWeb}"; }
               Print { screenshot; }
 
               Mod+M { spawn-sh "emacsclient -c -a ''' -e '(simple-mpc-view-current-playlist)'"; }
