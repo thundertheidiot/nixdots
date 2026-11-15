@@ -14,6 +14,7 @@ in
 {
   imports = [
     ./opencode.nix
+    ./claude-code.nix
     ./playwright-mcp
     ./ghidra-mcp
     ./albedo
@@ -26,7 +27,6 @@ in
 
     home.packages = [
       pkgs.python314Packages.trafilatura
-      pkgs.claude-code
     ];
   };
 }
