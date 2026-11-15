@@ -36,6 +36,7 @@ in
 
           "libreoffice"
           "speedcrunch"
+          "anki"
 
           "blender"
           "obs"

@@ -32,6 +32,7 @@ in
 
         libreoffice = mkEnOpt "Libreoffice";
         speedcrunch = mkEnOpt "Speedcrunch";
+        anki = mkEnOpt "Anki";
 
         freetube = mkEnOpt "Youtube client";
         ansel = mkEnOpt "Ansel";
@@ -67,6 +68,7 @@ in
 
           (mkIf cfg.libreoffice libreoffice)
           (mkIf cfg.speedcrunch speedcrunch)
+          (mkIf cfg.anki anki)
 
           (mkIf cfg.freetube freetube)
           (mkIf cfg.ansel ansel)
