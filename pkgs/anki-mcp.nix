@@ -10,7 +10,7 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "anki-mcp";
-  version = "0.1.0-unstable-2026-01-01";
+  version = "0-unstable-2025-12-17";
 
   src = fetchFromGitHub {
     owner = "obviyus";
@@ -59,6 +59,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       --add-flags "run $out/share/anki-mcp/src/index.ts"
     runHook postInstall
   '';
+
+  # no releases upstream, track the default branch
+  passthru.autoUpdate.args = [ "--version=branch" ];
 
   meta = {
     description = "Read-only MCP server for Anki via AnkiConnect";
