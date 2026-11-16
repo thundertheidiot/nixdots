@@ -22,6 +22,16 @@
       pkgs,
       ...
     }:
+    let
+      # nix 2.35 flake metadata no longer copies the flake to the store, prefetch does
+      nix-update = pkgs.nix-update.overrideAttrs (old: {
+        postPatch = (old.postPatch or "") + ''
+          substituteInPlace nix_update/options.py \
+            --replace-fail '["nix", "flake", "metadata", "--json"]' '["nix", "flake", "prefetch", "--json", "."]' \
+            --replace-fail 'metadata.get("path")' 'metadata.get("storePath")'
+        '';
+      });
+    in
     {
       devShells.default = pkgs.mkShell {
         # shellHook = ''
