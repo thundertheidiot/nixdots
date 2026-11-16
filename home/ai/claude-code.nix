@@ -17,6 +17,15 @@ in
     programs.claude-code = {
       enable = true;
       enableMcpIntegration = true;
+      mutableSettings = true;
+
+      settings = {
+        enabledPlugins."typescript-lsp@claude-plugins-official" = true;
+        remoteControlAtStartup = true;
+        agentPushNotifEnabled = true;
+        promptSuggestionEnabled = false;
+        awaySummaryEnabled = false;
+      };
     };
   };
 }

@@ -19,6 +19,8 @@ in
     ./playwright-mcp
     ./ghidra-mcp
     ./anki-mcp
+    ./nixos-mcp
+    ./jisho-mcp
     ./albedo
   ];
 

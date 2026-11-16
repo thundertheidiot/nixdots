@@ -15,4 +15,5 @@ with pkgs;
   soulbeet = callPackage ./soulbeet.nix { };
   ghidra-mcp = callPackage ./ghidra-mcp.nix { };
   anki-mcp = callPackage ./anki-mcp.nix { };
+  jisho-mcp = callPackage ./jisho-mcp.nix { };
 }
