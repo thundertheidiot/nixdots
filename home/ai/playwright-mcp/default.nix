@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib) getExe mkIf mkMerge;
-  inherit (builtins) readFile;
   inherit (mlib) mkEnOptTrue;
 
   cfg = config.mHome.ai.playwright-mcp.enable;
@@ -53,7 +52,7 @@ in
       home.packages = [ heliumMcp ];
     }
     {
-      programs.albedo.skills.playwright-mcp = pkgs.writeTextDir "SKILL.md" (readFile ./playwright-mcp.md);
+      mHome.ai.skills.playwright-mcp = ./playwright-mcp.md;
     }
     {
       programs.mcp.servers.playwright = {

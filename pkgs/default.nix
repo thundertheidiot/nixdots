@@ -14,4 +14,5 @@ with pkgs;
   metube = callPackage ./metube.nix { };
   soulbeet = callPackage ./soulbeet.nix { };
   ghidra-mcp = callPackage ./ghidra-mcp.nix { };
+  anki-mcp = callPackage ./anki-mcp.nix { };
 }

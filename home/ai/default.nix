@@ -13,10 +13,12 @@ let
 in
 {
   imports = [
+    ./skills.nix
     ./opencode.nix
     ./claude-code.nix
     ./playwright-mcp
     ./ghidra-mcp
+    ./anki-mcp
     ./albedo
   ];
 

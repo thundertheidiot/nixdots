@@ -41,6 +41,7 @@ in
 
   imports = [
     ./discord
+    ./anki.nix
     ./helium.nix
     ./sets.nix
   ];
@@ -68,7 +69,6 @@ in
 
           (mkIf cfg.libreoffice libreoffice)
           (mkIf cfg.speedcrunch speedcrunch)
-          (mkIf cfg.anki (anki.withAddons [ ankiAddons.anki-connect ]))
 
           (mkIf cfg.freetube freetube)
           (mkIf cfg.ansel ansel)
