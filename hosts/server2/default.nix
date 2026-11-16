@@ -62,11 +62,7 @@ in
     systemd.targets.hibernate.enable = false;
     systemd.targets.hybrid-sleep.enable = false;
 
-    services.nginx = {
-      enable = true;
-      logError = "stderr debug";
-
-    };
+    services.nginx.enable = true;
 
     meow = {
       workstation.enable = false;

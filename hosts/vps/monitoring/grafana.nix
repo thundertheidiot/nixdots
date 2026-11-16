@@ -32,7 +32,7 @@ in
         "auth.basic".enabled = false;
         "auth.anonymous" = {
           enabled = true;
-          org_role = "Admin";
+          org_role = "Viewer";
         };
         analytics = {
           reporting_enabled = false;

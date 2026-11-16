@@ -25,7 +25,6 @@ in
 
     services.nginx = {
       enable = true;
-      logError = "stderr debug";
 
       virtualHosts = mapAttrs (_: proxyPass: {
         locations."/" = {

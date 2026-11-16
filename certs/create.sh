@@ -119,5 +119,4 @@ for file in local.key rootCA.pem local.crt; do
 done
 printf '%s\n' \
   'Updated certs/local.key, certs/rootCA.pem and certs/local.crt.' \
-  'New CA private key discarded; existing certs/rootCA.key left untouched.' \
   'Trust the new rootCA.pem on clients before deploying the new leaf.'

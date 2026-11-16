@@ -137,18 +137,16 @@
 
           cleanup = {
             uses = "wimpysworld/nothing-but-nix@687c797a730352432950c707ab493fcc951818d7"; # v10
-            "with" = {
-              hatchet-protocol = "rampage";
-              nix-permission-edict = true;
-            };
+            "with".hatchet-protocol = "rampage";
           };
 
+          # daemon install, single user can't sandbox on the runners
           nixInstaller = {
             name = "Nix Installer";
             uses = "cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b"; # v31
             "with" = {
               github_access_token = "\${{ secrets.GITHUB_TOKEN }}";
-              install_options = "--no-daemon";
+              extra_nix_config = "sandbox-fallback = false";
             };
           };
 
@@ -229,6 +227,7 @@
 
                 policies=$(nix eval --json --accept-flake-config .#packageUpdates)
                 packages=$(jq -r 'keys[]' <<< "$policies")
+                failed=()
                 for package in $packages; do
                   policy=$(jq -c --arg package "$package" '.[$package]' <<< "$policies")
                   reason=$(jq -r '.skip // empty' <<< "$policy")
@@ -236,7 +235,6 @@
                     printf 'Skipping %s: %s\n' "$package" "$reason"
                     continue
                   fi
-                  old_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
                   mapfile -t args < <(jq -r '.args[]' <<< "$policy")
                   git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-before.patch"
                   update_package() {
@@ -247,29 +245,49 @@
                       nix-update --flake --use-github-releases "$package" "''${args[@]}"
                     fi
                   }
-                  for attempt in 1 2 3; do
-                    if update_package; then
-                      break
-                    fi
-                    if [[ "$attempt" == 3 ]]; then
-                      printf '::error::Failed to update %s after three attempts\n' "$package"
-                      exit 1
-                    fi
-                    printf '::warning::Update for %s failed; retrying in 10 seconds\n' "$package"
-                    sleep 10
-                  done
+                  # runs with errexit off, every step returns explicitly
+                  try_package() {
+                    local old_version new_version attempt
+                    old_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"') || return
+                    for attempt in 1 2 3; do
+                      if update_package; then
+                        break
+                      fi
+                      if [[ "$attempt" == 3 ]]; then
+                        return 1
+                      fi
+                      printf '::warning::Update for %s failed; retrying in 10 seconds\n' "$package"
+                      sleep 10
+                    done
 
-                  git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-after.patch"
-                  if ! cmp -s "$RUNNER_TEMP/package-before.patch" "$RUNNER_TEMP/package-after.patch"; then
-                    nix build --accept-flake-config --no-link --print-build-logs ".#$package"
-                    new_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"')
+                    git diff --binary -- pkgs/ > "$RUNNER_TEMP/package-after.patch"
+                    if cmp -s "$RUNNER_TEMP/package-before.patch" "$RUNNER_TEMP/package-after.patch"; then
+                      return 0
+                    fi
+                    nix build --accept-flake-config --no-link --print-build-logs ".#$package" || return
+                    new_version=$(nix eval --raw ".#packages.x86_64-linux.$package" --apply 'p: p.version or "local"') || return
                     if [[ "$old_version" == "$new_version" ]]; then
                       printf -- "- %s: updated sources/dependencies (built successfully)\n" "$package" >> "$PR_BODY"
                     else
                       printf -- "- %s: %s -> %s\n" "$package" "$old_version" "$new_version" >> "$PR_BODY"
                     fi
+                  }
+                  if ! try_package; then
+                    printf '::error::Failed to update %s, dropping its changes\n' "$package"
+                    # back to the state before this package
+                    git checkout -- pkgs/
+                    if [[ -s "$RUNNER_TEMP/package-before.patch" ]]; then
+                      git apply "$RUNNER_TEMP/package-before.patch"
+                    fi
+                    failed+=("$package")
                   fi
                 done
+
+                if (( ''${#failed[@]} > 0 )); then
+                  printf '\nFailed to update, left unchanged:\n' >> "$PR_BODY"
+                  printf -- '- %s\n' "''${failed[@]}" >> "$PR_BODY"
+                  printf '%s\n' "''${failed[@]}" > "$RUNNER_TEMP/failed-packages"
+                fi
 
                 if ! git diff --quiet -- flake.lock; then
                   ${saveOldLock}
@@ -297,10 +315,21 @@
                 retention-days = 1;
               };
             }
+            {
+              # after the upload, the pr still gets the packages that worked
+              name = "Report failed packages";
+              run = ''
+                if [[ -s "$RUNNER_TEMP/failed-packages" ]]; then
+                  printf '::error::Failed to update: %s\n' "$(paste -sd ' ' "$RUNNER_TEMP/failed-packages")"
+                  exit 1
+                fi
+              '';
+            }
           ];
 
           jobs.create-pr = {
             needs = [ "update" ];
+            "if" = "\${{ !cancelled() }}";
             permissions = {
               contents = "write";
               pull-requests = "write";

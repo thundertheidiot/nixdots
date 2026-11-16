@@ -137,9 +137,16 @@ in
     }
     # livekit (matrixrtc and element call)
     {
+      # only the media ports, signalling goes through nginx
+      networking.firewall.allowedUDPPortRanges = with config.services.livekit.settings.rtc; [
+        {
+          from = port_range_start;
+          to = port_range_end;
+        }
+      ];
+
       services.livekit = {
         enable = true;
-        openFirewall = true;
         settings = {
           room.auto_create = false;
           rtc.enable_loopback_candidate = false;

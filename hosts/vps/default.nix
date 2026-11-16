@@ -74,7 +74,6 @@ in
         ];
         mainDomain = "kotiboksi.xyz";
         reverseProxy = {
-          "img.${config.meow.server.mainDomain}" = "http://${server.homeServer}:2284";
           "navidrome.meowcloud.net" = "http://${server.homeServer2}:4533";
           "vw.meowcloud.net" = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
         };

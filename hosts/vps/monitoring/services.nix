@@ -87,6 +87,7 @@ in
       metrics = true;
       web.address = "127.0.0.1";
     };
+    services.nginx.virtualHosts."meowcloud.net".locations."= /metrics".return = "404";
 
     services.prosody.settings = {
       modules_enabled = [

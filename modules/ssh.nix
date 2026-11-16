@@ -22,8 +22,10 @@ in
     services.openssh = {
       enable = true;
       settings = {
-        PermitRootLogin = "yes";
+        PermitRootLogin = "prohibit-password";
         PasswordAuthentication = false;
+        # pam would still take passwords through this
+        KbdInteractiveAuthentication = false;
       };
     };
 
