@@ -23,6 +23,7 @@ in
     ./rathole.nix
     ./secrets
     ./sodexobot.nix
+    ./static.nix
     # ./urlwatch.nix
     ./website.nix
     ./wireguard.nix
