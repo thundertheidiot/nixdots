@@ -11,10 +11,11 @@ let
     mkIf
     getExe
     concatStrings
+    optionalString
     ;
   inherit (builtins) elem;
   inherit (mlib) mkOpt;
-  inherit (lib.types) listOf str;
+  inherit (lib.types) listOf str nullOr;
 
   work = config.meow.workstation.enable;
   env = config.meow.workstation.environment;
@@ -22,12 +23,14 @@ let
   conf = config.meow.workstation.extraNiriConfig;
   binds = config.meow.workstation.extraNiriBinds;
   xkb = config.meow.workstation.niriKeyboardXkb;
+  tablet = config.meow.workstation.niriTabletOutput;
 in
 {
   options = {
     meow.workstation.extraNiriConfig = mkOpt (listOf str) [ ] { };
     meow.workstation.niriKeyboardXkb = mkOpt str "" { };
     meow.workstation.extraNiriBinds = mkOpt (listOf str) [ ] { };
+    meow.workstation.niriTabletOutput = mkOpt (nullOr str) null { };
   };
 
   config = mkIf (work && elem "niri" env) {
@@ -152,6 +155,12 @@ in
               mouse {
                 accel-profile "flat"
               }
+
+              ${optionalString (tablet != null) ''
+                tablet {
+                  map-to-output "${tablet}"
+                }
+              ''}
 
               focus-follows-mouse
               warp-mouse-to-focus

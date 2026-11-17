@@ -174,6 +174,8 @@
 
     keyboard.enable = false;
 
+    workstation.niriTabletOutput = "DP-3";
+
     workstation.extraNiriBinds = [
       ''
         Mod+C { spawn "displaytoggle"; }
