@@ -258,10 +258,6 @@ in
 
             spawn-at-startup "${noctalia}"
 
-            debug {
-              honor-xdg-activation-with-invalid-serial
-            }
-
             recent-windows { off; }
 
             binds {

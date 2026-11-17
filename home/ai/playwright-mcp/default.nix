@@ -60,5 +60,28 @@ in
         callTimeoutMs = 120000;
       };
     }
+    # inline server gives every spawned agent its own connection and tab group
+    {
+      programs.claude-code.agents.browser = ''
+        ---
+        name: browser
+        description: Web worker with its own private Playwright connection and tab group in the user's Helium. Use for browser tasks instead of the shared playwright tools, and always when several agents browse in parallel.
+        mcpServers:
+          browser:
+            type: stdio
+            command: ${getExe heliumMcp}
+        disallowedTools: mcp__plugin_hm_playwright
+        skills:
+          - playwright-mcp
+        ---
+
+        You drive Helium through your own `browser` MCP server. Its connection and tab group belong to you alone; other agents may be working in other groups of the same window at the same time.
+
+        - Your first `browser_navigate` reuses your connect tab; stay in it and navigate rather than opening tabs.
+        - Only touch tabs listed by your own `browser_tabs`; never close user tabs.
+        - Close tabs you opened when done, unless the task is to leave a page up for the user.
+        - Report findings concisely; include URLs you used.
+      '';
+    }
   ]);
 }

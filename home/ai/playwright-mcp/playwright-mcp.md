@@ -19,3 +19,13 @@ Use the `mcp.playwright` tools and observe available tool names before acting. Y
 - Large snapshot outputs are saved to `.cache/playwright-mcp/*.yml` with only the path returned inline; read the file if needed.
 - To scroll the user's view to a section, click its table-of-contents/anchor link rather than synthesizing scroll events.
 - Tabs opened by the agent (`browser_tabs new`) are yours to close; user tabs are not.
+- `browser_tabs new` with `about:blank` drops the extension connection; always pass a real URL.
+- Connecting, `browser_tabs new` and `browser_tabs select` raise the Helium window if the compositor lets it take focus; `browser_navigate`, `browser_evaluate` and the rest don't. Prefer staying in one tab and navigating.
+
+## Parallel agents
+
+One MCP server has a single "current tab" shared by every caller, so parallel agents on the shared `playwright` server hijack each other's tabs. Each server process gets its own extension connection and tab group though.
+
+- In Claude Code, spawn `browser` subagents (`subagent_type: "browser"`, any model) for web work, one per parallel task. Each starts its own playwright-mcp with a separate tab group.
+- Don't use the shared `playwright` tools yourself while `browser` agents are running.
+- In albedo, every child or peer agent is its own session with its own MCP connections, so each already gets a separate playwright-mcp and tab group; just spawn children for parallel web work.
