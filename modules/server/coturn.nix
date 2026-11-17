@@ -58,6 +58,9 @@ in
 
     users.users.turnserver.extraGroups = [ "acme" ];
 
+    # coturn reads the cert directly, pick up renewals
+    security.acme.certs.${config.services.coturn.realm}.reloadServices = [ "coturn.service" ];
+
     networking.firewall = {
       allowedUDPPortRanges = with config.services.coturn; [
         {

@@ -12,6 +12,7 @@ let
   inherit (lib)
     mkIf
     mkMerge
+    genAttrs
     head
     length
     listToAttrs
@@ -36,13 +37,19 @@ in
     {
       meow.server.certificates = cfg.xmppDomains;
 
-      security.acme.certs."${mainDomain}" = {
-        extraDomainNames = map msubd [
-          "chat"
-          "share"
-          "proxy"
-        ];
-      };
+      security.acme.certs = mkMerge [
+        # certs are discovered from the directory, reload on renewal
+        (genAttrs cfg.xmppDomains (_: {
+          reloadServices = [ "prosody.service" ];
+        }))
+        {
+          "${mainDomain}".extraDomainNames = map msubd [
+            "chat"
+            "share"
+            "proxy"
+          ];
+        }
+      ];
 
       # hack for cert discovery
       systemd.tmpfiles.rules = map (
@@ -247,7 +254,8 @@ in
             end
             local content = file:read("*a")
             file:close()
-            return content
+            -- coturn strips the trailing newline, match it
+            return (content:gsub("%s+$", ""))
           end
 
           turn_external_secret = read_file("${config.sops.secrets.coturn_secret.path}")

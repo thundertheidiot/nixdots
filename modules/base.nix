@@ -42,7 +42,7 @@ in
     ];
 
     systemd.settings.Manager = {
-      DefaultTimeoutStopSec = "3s";
+      DefaultTimeoutStopSec = "15s";
     };
 
     # i'm too brainrotted, i'll reach for a search engine first

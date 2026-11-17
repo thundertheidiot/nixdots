@@ -6,7 +6,7 @@
 }:
 let
   inherit (mlib) mkOpt;
-  inherit (lib) head mkForce;
+  inherit (lib) head mkForce mkIf;
   inherit (lib.types) listOf str;
 in
 {
@@ -30,6 +30,6 @@ in
   ];
 
   config = {
-    nix.registry = mkForce { };
+    nix.registry = mkIf (!config.meow.workstation.enable) (mkForce { });
   };
 }
