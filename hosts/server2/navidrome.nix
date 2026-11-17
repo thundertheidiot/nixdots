@@ -62,6 +62,9 @@ in
       LastFM.Enabled = true;
       Deezer.Enabled = true;
       ListenBrainz.Enabled = true;
+
+      # needed by navidrome-mpd-sync, applies to newly registered players
+      Subsonic.DefaultReportRealPath = true;
     };
   };
 

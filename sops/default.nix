@@ -47,6 +47,12 @@ in
         owner = config.meow.user;
       };
 
+      meow.sops.secrets."navidrome_password" = {
+        sopsFile = ./shared/navidrome-password;
+        format = "binary";
+        owner = config.meow.user;
+      };
+
       meow.sops.secrets."listenbrainz_username" = {
         sopsFile = ./shared/listenbrainz-username;
         format = "binary";

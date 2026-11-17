@@ -97,6 +97,9 @@
         usernameFile = config.sops.secrets."listenbrainz_username".path;
         tokenFile = config.sops.secrets."listenbrainz_token".path;
       };
+
+      mHome.desktop.common.media.navidromeSync.passwordFile =
+        config.sops.secrets."navidrome_password".path;
     }
   ];
 
@@ -275,6 +278,7 @@
   meow.sops.enableSecrets = [
     "listenbrainz_username"
     "listenbrainz_token"
+    "navidrome_password"
   ];
 
   hardware.keyboard.qmk.enable = true;
