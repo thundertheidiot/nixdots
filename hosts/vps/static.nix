@@ -36,7 +36,7 @@ in
       }
     ) protected
     // {
-      "~ ^/\\.".extraConfig = "deny all;";
+      "~ ^/([^/]+/)?\\.".extraConfig = "deny all;";
     };
   };
 }
