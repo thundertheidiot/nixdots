@@ -5,7 +5,7 @@
 }:
 python3Packages.buildPythonApplication {
   pname = "jisho-mcp";
-  version = "0-unstable-2026-05-05";
+  version = "0-unstable-2026-05-04";
   pyproject = true;
 
   src = fetchFromGitHub {
