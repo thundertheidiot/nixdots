@@ -36,6 +36,7 @@
 
   services.tlp = {
     enable = true;
+    pd.enable = true;
     settings = {
       CPU_MIN_PERF_ON_AC = 0;
       CPU_MAX_PERF_ON_AC = 100;
