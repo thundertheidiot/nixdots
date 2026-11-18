@@ -32,7 +32,7 @@
           kdenlive
           blender
           krita
-          # firefox
+          firefox
           ananicy-cpp
           flaresolverr
           ;
