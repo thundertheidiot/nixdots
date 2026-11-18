@@ -34,6 +34,7 @@
           krita
           # firefox
           ananicy-cpp
+          flaresolverr
           ;
 
         sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;

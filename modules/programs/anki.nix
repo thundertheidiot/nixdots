@@ -9,7 +9,14 @@ let
 
   cfg = config.meow.program.anki;
 
-  anki = pkgs.anki.withAddons [ pkgs.ankiAddons.anki-connect ];
+  anki = pkgs.anki.withAddons [
+    (pkgs.ankiAddons.anki-connect.withConfig {
+      config.webCorsOriginList = [
+        "http://localhost"
+        "http://localhost:5173"
+      ];
+    })
+  ];
   systemctl = getExe' pkgs.systemd "systemctl";
 
   # the gui takes over ankiconnect while open, the headless instance comes back when it closes
