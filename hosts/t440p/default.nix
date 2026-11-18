@@ -42,8 +42,6 @@
     }
   ];
 
-  services.cpupower-gui.enable = true;
-
   # virtualisation.virtualbox.host.enable = true;
   # users.extraGroups.vboxusers.members = ["thunder"];
   # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;

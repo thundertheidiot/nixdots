@@ -107,8 +107,6 @@
     }
   ];
 
-  services.cpupower-gui.enable = true;
-
   meow = {
     fullSetup = true;
     workstation.enable = true;
