@@ -907,6 +907,29 @@
         "type": "github"
       }
     },
+    "kissasome": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795109914,
+        "narHash": "sha256-PSJG76DkpYMiCItkiVKlRf+CXAV+joxJ7p8KNbDCgQY=",
+        "owner": "thundertheidiot",
+        "repo": "kissasome",
+        "rev": "5fedfe1bf5e9b8d057716048bd8fa20877707e1f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thundertheidiot",
+        "repo": "kissasome",
+        "type": "github"
+      }
+    },
     "leptos-kotiboksi": {
       "inputs": {
         "crane": "crane",
@@ -1789,6 +1812,7 @@
         "emacs": "emacs",
         "flake-parts": "flake-parts_6",
         "home-manager": "home-manager_3",
+        "kissasome": "kissasome",
         "leptos-kotiboksi": "leptos-kotiboksi",
         "meowdzbot": "meowdzbot",
         "naersk": "naersk",

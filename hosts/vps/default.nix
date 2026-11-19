@@ -19,6 +19,7 @@ in
     ./freshrss.nix
     ./gatus.nix
     ./jellyfin.nix
+    ./kissasome.nix
     ./monitoring
     ./rathole.nix
     ./secrets

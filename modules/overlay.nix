@@ -40,6 +40,9 @@
         sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;
         leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
         meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;
+        kissasome = inputs.kissasome.packages.${final.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+          buildInputs = (old.buildInputs or [ ]) ++ [ final.zstd ];
+        });
 
         mpkgs = (import "${inputs.self.outPath}/pkgs") { pkgs = final; };
 
