@@ -57,6 +57,11 @@
         format = "dotenv";
       };
 
+      kissasome_env = {
+        sopsFile = ./kissasome.env;
+        format = "dotenv";
+      };
+
       urlwatch_urls = {
         sopsFile = ./urlwatch_urls.yaml;
         format = "yaml";

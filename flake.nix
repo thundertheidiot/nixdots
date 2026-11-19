@@ -90,5 +90,10 @@
     meowdzbot = {
       url = "github:thundertheidiot/meowdzbot";
     };
+    kissasome = {
+      url = "github:thundertheidiot/kissasome";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
   };
 }
