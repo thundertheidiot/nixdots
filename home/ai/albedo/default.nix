@@ -3,10 +3,18 @@
   mlib,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 let
-  inherit (lib) getExe' makeBinPath mkAfter mkIf mkMerge replaceStrings;
+  inherit (lib)
+    getExe'
+    makeBinPath
+    mkAfter
+    mkIf
+    mkMerge
+    replaceStrings
+    ;
   inherit (mlib) mkEnOpt;
   inherit (builtins) readFile toJSON;
 
@@ -29,6 +37,8 @@ in
         settings.extensions.enabled.hooks = true;
       };
 
+      programs.albedo.skills.review-artifact = inputs.review-artifact.packages."${pkgs.system}".default;
+
       # searxng search + trafilatura fetch, see ./web_mcp
       programs.mcp.servers.web = {
         command = getExe' albedoWebMcp "albedo-web-mcp";
@@ -39,11 +49,13 @@ in
     {
       # upstream path is only the hm profile, add the system ones back
       systemd.user.services.albedo.Service.Environment = mkAfter [
-        "PATH=${makeBinPath [
-          config.home.profileDirectory
-          "/run/wrappers"
-          "/run/current-system/sw"
-        ]}"
+        "PATH=${
+          makeBinPath [
+            config.home.profileDirectory
+            "/run/wrappers"
+            "/run/current-system/sw"
+          ]
+        }"
       ];
     }
 
@@ -52,12 +64,15 @@ in
         Unit = {
           Description = "albedo web interface";
           After = [ "albedo.service" ];
+          Requires = [ "albedo.service" ];
+          StartLimitIntervalSec = 0;
         };
 
         Service = {
           Type = "simple";
           ExecStart = "${getExe' config.programs.albedo.package "albedo"} web --foreground --no-open --allow 10.0.0.0/8";
           Restart = "on-failure";
+          RestartSec = 2;
         };
 
         Install.WantedBy = [ "default.target" ];
@@ -65,9 +80,9 @@ in
     }
 
     {
-      # global agents file
-      home.file.".agents/global.md".source = ../global.md;
-      home.file.".agents/web.md".text = ''
+      # global agent files
+      home.file.".albedo/global.md".source = ../global.md;
+      home.file.".albedo/albedo.md".text = ''
         Prefer the web mcp over your other search tools.
       '';
 

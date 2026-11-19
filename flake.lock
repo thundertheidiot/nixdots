@@ -1689,6 +1689,26 @@
         "type": "github"
       }
     },
+    "review-artifact": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795082950,
+        "narHash": "sha256-uMAZF//KnD5prcSPZ+hzrRT8KWz961UUMxdvXxU/8zE=",
+        "owner": "thundertheidiot",
+        "repo": "review-artifact",
+        "rev": "404cf14c043382fbf3666e77c291dfb2fff709d3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thundertheidiot",
+        "repo": "review-artifact",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "actions": "actions",
@@ -1713,6 +1733,7 @@
         "nixwine": "nixwine",
         "noctalia": "noctalia",
         "nur": "nur",
+        "review-artifact": "review-artifact",
         "rust-overlay": "rust-overlay_3",
         "sodexobot": "sodexobot",
         "sops-nix": "sops-nix"

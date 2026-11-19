@@ -33,6 +33,9 @@
 
     albedo.url = "git+https://tangled.org/okami.mom/albedo";
 
+    review-artifact.url = "github:thundertheidiot/review-artifact";
+    review-artifact.inputs.nixpkgs.follows = "nixpkgs";
+
     comin = {
       url = "github:nlewo/comin";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -71,7 +71,7 @@
 
   home-manager.sharedModules = [
     {
-      home.stateVersion = "26.05";
+      home.stateVersion = "26.11";
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
       meowEmacs.enable = true;
