@@ -19,15 +19,15 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "soulbeet";
-  version = "0.8.0";
+  version = "0.9.0";
 
   src = fetchFromGitHub {
     owner = "terry90";
     repo = "soulbeet";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-cQuaP3YYCFP5Ewpo1kZ5i/TsdD6KMhbHztiZ/AG9Ue0=";
+    hash = "sha256-Vc/lHsNiMwD33sRN+Tqr5FcvARXDXAgMq0/S2VukppM=";
   };
-  cargoHash = "sha256-iIvOGHMdl/5dMCDGGrKR5jooJQ9o8nBLf3uqbsrrvDY=";
+  cargoHash = "sha256-W9AWJKn9kgaiyQlcDmVSE2d/ykmKepXzzqTgP9/iz+M=";
 
   nativeBuildInputs = [
     pkg-config
