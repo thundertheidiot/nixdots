@@ -148,6 +148,7 @@
               ]
             );
             qbitCommand = pkgs.writeShellScript "qbit" ''
+              export REQUESTS_CA_BUNDLE=${../../certs/rootCA.pem}
               exec ${qbitPython}/bin/python ${./qbittorrent/qbit.py} "$@"
             '';
           in

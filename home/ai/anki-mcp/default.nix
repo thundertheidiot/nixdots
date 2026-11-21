@@ -18,6 +18,6 @@ in
   config = mkIf cfg {
     programs.mcp.servers.anki.command = getExe pkgs.mpkgs.anki-mcp;
 
-    mHome.ai.skills.anki-sentences = ./sentences.md;
+    mHome.ai.skills.anki = ./anki.md;
   };
 }
