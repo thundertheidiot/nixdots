@@ -49,6 +49,7 @@ in
           "pc.desktop,${vpn.peers.desktop.address}"
           "vps.home,${vpn.peers.${vpn.hub}.address}"
           "rss.vps.home,${vpn.peers.${vpn.hub}.address}"
+          "books.vps.home,${vpn.peers.${vpn.hub}.address}"
         ];
     };
   };

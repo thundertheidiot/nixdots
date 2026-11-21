@@ -14,6 +14,7 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
     # ./authentik.nix
     # ./meowdzbot.nix
+    ./bookorbit.nix
     ./disko.nix
     ./dns.nix
     ./freshrss.nix

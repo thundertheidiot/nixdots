@@ -42,6 +42,23 @@ in
       extraSetup = ''
         cd "$HOME/Games/playrooms/Playrooms"
       '';
+      wrapper = winelib.wrappers.gamescope {
+        extraArgs = [
+          "-W"
+          "2560"
+          "-H"
+          "1440"
+          "-w"
+          "2560"
+          "-h"
+          "1440"
+          "-r"
+          "144"
+          "-f"
+          "--force-composition"
+          "--force-grab-cursor"
+        ];
+      };
       command = ''"$HOME/Games/playrooms/Playrooms/Playrooms.exe"'';
     })
     (winelib.protonApp rec {
