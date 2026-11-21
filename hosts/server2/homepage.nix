@@ -78,9 +78,28 @@ in
                   type = "jellyfin";
                   url = "http://127.0.0.1:8096";
                   key = "{{HOMEPAGE_VAR_JELLYFIN_API}}";
+                  version = 2;
                   enableBlocks = true;
                   enableNowPlaying = false;
                 };
+              };
+            }
+            {
+              "Navidrome" = {
+                icon = "navidrome.svg";
+                href = "https://navidrome.${nya}";
+              };
+            }
+            {
+              "FreshRSS" = {
+                icon = "freshrss.svg";
+                href = "https://rss.${nya}";
+              };
+            }
+            {
+              "BookOrbit" = {
+                icon = "mdi-book-open-page-variant";
+                href = "https://books.${nya}";
               };
             }
           ];
@@ -123,6 +142,18 @@ in
                 };
               };
             }
+            {
+              "MeTube" = {
+                icon = "metube.svg";
+                href = "https://metube.${nya}";
+              };
+            }
+            {
+              "Soulbeet" = {
+                icon = "mdi-music-box-multiple";
+                href = "https://soulbeet.${nya}";
+              };
+            }
           ];
         }
         {
@@ -156,6 +187,47 @@ in
               "Soulseek" = {
                 icon = "slskd.svg";
                 href = "https://soulseek.${nya}";
+              };
+            }
+          ];
+        }
+        {
+          "Services" = [
+            {
+              "Forgejo" = {
+                icon = "forgejo.svg";
+                href = "https://git.${nya}";
+              };
+            }
+            {
+              "Redlib" = {
+                icon = "redlib.svg";
+                href = "https://reddit.${nya}";
+              };
+            }
+            {
+              "Home Assistant" = {
+                icon = "home-assistant.svg";
+                href = "https://homeassistant.${nya}";
+              };
+            }
+            {
+              "Syncthing" = {
+                icon = "syncthing.svg";
+                href = "https://syncthing.${nya}";
+                description = "lan only";
+              };
+            }
+            {
+              "Grafana" = {
+                icon = "grafana.svg";
+                href = "https://dash.${nya}";
+              };
+            }
+            {
+              "Vaultwarden" = {
+                icon = "vaultwarden.svg";
+                href = "https://vw.meowcloud.net";
               };
             }
           ];

@@ -14,10 +14,15 @@ in
 {
   config = {
     sops.templates."media-stack-homepage" = {
+      restartUnits = [ "homepage-dashboard.service" ];
       mode = "0400";
       content = ''
         HOMEPAGE_VAR_QBIT_USERNAME=${secret "radarr-qbit-username"}
         HOMEPAGE_VAR_QBIT_PASSWORD=${secret "radarr-qbit-password"}
+        HOMEPAGE_VAR_RADARR_API=${secret "radarr-api-key"}
+        HOMEPAGE_VAR_SONARR_API=${secret "sonarr-api-key"}
+        HOMEPAGE_VAR_LIDARR_API=${secret "lidarr-api-key"}
+        HOMEPAGE_VAR_PROWLARR_API=${secret "prowlarr-api-key"}
       '';
     };
     sops.templates."media-stack-slskd" = {
