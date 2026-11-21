@@ -13,6 +13,7 @@ let
     mkOption
     mapAttrs
     mapAttrsToList
+    optionalAttrs
     removeSuffix
     listToAttrs
     nameValuePair
@@ -20,6 +21,7 @@ let
   inherit (builtins) toJSON;
   inherit (mlib) mkEnOpt mkOpt homeModule;
   inherit (lib.types)
+    attrs
     listOf
     attrsOf
     submodule
@@ -40,20 +42,40 @@ let
       id = removeSuffix ".luau" (baseNameOf (toString file));
     }) widget.widget;
 
+  panelFiles =
+    widget:
+    map (
+      panel:
+      let
+        path = baseNameOf (toString panel.file);
+      in
+      {
+        inherit (panel) file;
+        inherit path;
+        manifest = removeAttrs panel [ "file" ] // { entry = path; };
+      }
+    ) widget.panel;
+
   widgetPlugin =
     widget:
     let
-      files = widgetFiles widget;
+      widgets = widgetFiles widget;
+      panels = panelFiles widget;
+      files = widgets ++ panels;
       manifest =
         (removeAttrs widget [
           "postRun"
           "widget"
+          "panel"
         ])
         // {
           widget = map (file: {
             inherit (file) id;
             entry = file.path;
-          }) files;
+          }) widgets;
+        }
+        // optionalAttrs (widget.panel != [ ]) {
+          panel = map (panel: panel.manifest) panels;
         };
     in
     pkgs.runCommand "noctalia-widget-${widget.name}" { } ''
@@ -96,6 +118,7 @@ in
               postRun = mkOpt str "" { };
 
               widget = mkOpt (listOf path) [ ] { };
+              panel = mkOpt (listOf attrs) [ ] { };
             };
           }
         )
@@ -106,6 +129,9 @@ in
 
   config = mkIf (work && cfg) (mkMerge [
     {
+      meow.noctalia.widgets.claude-usage = import ./claude-usage { inherit lib pkgs; };
+      meow.noctalia.widgets.qbittorrent = import ./qbittorrent { inherit lib pkgs; };
+
       programs.noctalia = {
         enable = true;
         recommendedServices.enable = true;

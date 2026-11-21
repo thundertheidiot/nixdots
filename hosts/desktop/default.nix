@@ -133,31 +133,7 @@
     workstation.environment = [ "niri" ];
     workstation.displayManager = "gdm";
 
-    noctalia = {
-      enable = true;
-      widgets.qbittorrent = {
-        id = "thunder/qbittorrent";
-        description = "Show qBittorrent transfer speeds and toggle limit";
-        widget = [ ./qbittorrent/transfer.luau ];
-        postRun =
-          let
-            qbitPython = pkgs.python3.withPackages (
-              pythonPackages: with pythonPackages; [
-                humanize
-                requests
-              ]
-            );
-            qbitCommand = pkgs.writeShellScript "qbit" ''
-              export REQUESTS_CA_BUNDLE=${../../certs/rootCA.pem}
-              exec ${qbitPython}/bin/python ${./qbittorrent/qbit.py} "$@"
-            '';
-          in
-          ''
-            substituteInPlace "$out/transfer.luau" \
-            --replace-fail @QBIT_COMMAND@ ${qbitCommand}
-          '';
-      };
-    };
+    noctalia.enable = true;
 
     gaming.enable = true;
     gaming.emulation = true;
