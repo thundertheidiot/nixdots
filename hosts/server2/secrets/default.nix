@@ -11,6 +11,11 @@
         format = "dotenv";
       };
 
+      bookorbit_env = {
+        sopsFile = ./bookorbit.env;
+        format = "dotenv";
+      };
+
       soulbeet_env = {
         sopsFile = ./soulbeet.env;
         format = "dotenv";

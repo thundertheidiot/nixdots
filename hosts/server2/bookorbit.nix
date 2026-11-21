@@ -2,13 +2,11 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 let
   inherit (lib) getExe getExe';
   nya = config.meow.dns.domain;
-  vpn = import "${inputs.self.outPath}/sops/wireguard";
 
   port = 5066;
   dataDir = "${config.meow.impermanence.persist}/bookorbit";
@@ -18,14 +16,7 @@ let
 in
 {
   services.nginx.virtualHosts."books.${nya}" = {
-    onlySSL = true;
-    listen = [
-      {
-        addr = vpn.peers.${vpn.hub}.address;
-        port = 443;
-        ssl = true;
-      }
-    ];
+    forceSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString port}";
       recommendedProxySettings = true;

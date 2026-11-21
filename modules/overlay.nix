@@ -42,6 +42,13 @@
         meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;
         kissasome = inputs.kissasome.packages.${final.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
           buildInputs = (old.buildInputs or [ ]) ++ [ final.zstd ];
+          nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.removeReferencesTo ];
+          # toolchain paths leak into the binary, drop them from the closure
+          postFixup = (old.postFixup or "") + ''
+            for p in $(grep -aoE '/nix/store/[a-z0-9]{32}-rust[^/" ]*' $out/bin/.kissasome-wrapped | sort -u); do
+              remove-references-to -t $p $out/bin/.kissasome-wrapped
+            done
+          '';
         });
 
         mpkgs = (import "${inputs.self.outPath}/pkgs") { pkgs = final; };

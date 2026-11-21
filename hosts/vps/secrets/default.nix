@@ -17,11 +17,6 @@
       #   format = "binary";
       # };
 
-      bookorbit_env = {
-        sopsFile = ./bookorbit.env;
-        format = "dotenv";
-      };
-
       freshrss_db_password = {
         sopsFile = ./freshrss;
         format = "binary";

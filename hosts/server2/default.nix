@@ -18,6 +18,7 @@ in
   };
 
   imports = [
+    ./bookorbit.nix
     ./disko.nix
     ./dns.nix
     ./media

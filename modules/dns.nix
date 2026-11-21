@@ -35,7 +35,7 @@ let
     syncthing = "server2";
     torrent = "server2";
 
-    books = "vps";
+    books = "server2";
     dash = "vps";
     rss = "vps";
   };

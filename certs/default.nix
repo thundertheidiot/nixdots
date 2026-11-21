@@ -14,6 +14,7 @@
     "n8n.home"
     "git.home"
     "jellyfin.home"
+    "books.home"
     "firefox.home"
     "torrent.home"
     "radarr.home"
