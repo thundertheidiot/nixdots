@@ -1,8 +1,10 @@
 {
   config,
-  inputs,
   ...
 }:
+let
+  nya = config.meow.dns.domain;
+in
 {
   config = {
     services.jellyfin = {
@@ -26,17 +28,8 @@
       }
     ];
 
-    server.domains = [
-      "jellyfin.local"
-      "jellyfin.home"
-    ];
-
-    services.nginx.virtualHosts."jellyfin.local" = {
-      serverAliases = [ "jellyfin.home" ];
-
+    services.nginx.virtualHosts."jellyfin.${nya}" = {
       forceSSL = true;
-      sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
 
       # recommendedTlsSettings = false;
       locations = {

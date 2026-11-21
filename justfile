@@ -64,3 +64,7 @@ wg *args:
 
 certs:
   nix run .#local-certs
+
+[positional-arguments]
+dns *args:
+  nix run .#dns -- "$@"

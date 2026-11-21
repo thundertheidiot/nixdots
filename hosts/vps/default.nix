@@ -8,6 +8,7 @@
 }:
 let
   inherit (lib) mkForce;
+  vpn = import ../../sops/wireguard;
 in
 {
   imports = [
@@ -22,6 +23,7 @@ in
     ./jellyfin.nix
     ./kissasome.nix
     ./monitoring
+    ./nya.nix
     ./rathole.nix
     ./secrets
     ./sodexobot.nix
@@ -46,7 +48,6 @@ in
     hardware.enableRedistributableFirmware = false;
 
     meow = {
-      certificates = false;
       workstation.enable = false;
       home.enable = false;
 
@@ -59,6 +60,12 @@ in
       gpu = "none";
 
       comin.enable = true;
+
+      dns = {
+        enable = true;
+        server2 = vpn.peers.home2.address;
+        vps = vpn.peers.${vpn.hub}.address;
+      };
 
       server = {
         publicSSH = true;

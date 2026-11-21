@@ -1,8 +1,8 @@
 [
   ./base.nix
   ./boot.nix
-  ./certs.nix
   ./comin.nix
+  ./dns.nix
   ./displaylink.nix
   ./emacs
   ./gaming

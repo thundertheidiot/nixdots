@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib) getExe;
-  certs = import ../../certs;
+  nya = config.meow.dns.domain;
   beetsPython =
     let
       mv = config.multiverse.instance;
@@ -16,15 +16,8 @@ let
   soulbeet = pkgs.callPackage ../../pkgs/soulbeet.nix { };
 in
 {
-  server.domains = [
-    "navidrome.home"
-    "soulbeet.home"
-  ];
-
-  services.nginx.virtualHosts."navidrome.home" = {
+  services.nginx.virtualHosts."navidrome.${nya}" = {
     forceSSL = true;
-    sslCertificate = certs."local.crt";
-    sslCertificateKey = config.sops.secrets.localKey.path;
     locations = {
       "/" = {
         proxyPass = "http://127.0.0.1:${toString config.services.navidrome.settings.Port}";
@@ -68,10 +61,8 @@ in
     };
   };
 
-  services.nginx.virtualHosts."soulbeet.home" = {
+  services.nginx.virtualHosts."soulbeet.${nya}" = {
     forceSSL = true;
-    sslCertificate = certs."local.crt";
-    sslCertificateKey = config.sops.secrets.localKey.path;
     locations = {
       "/" = {
         proxyPass = "http://127.0.0.1:9765";

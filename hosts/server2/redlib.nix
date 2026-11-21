@@ -1,19 +1,11 @@
 { config, ... }:
 let
-  certs = import ../../certs;
+  nya = config.meow.dns.domain;
 in
 {
   config = {
-    server.domains = [
-      "reddit.local"
-      "reddit.home"
-    ];
-
-    services.nginx.virtualHosts."reddit.local" = {
-      serverAliases = [ "reddit.home" ];
+    services.nginx.virtualHosts."reddit.${nya}" = {
       forceSSL = true;
-      sslCertificate = certs."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:${toString config.services.redlib.port}";

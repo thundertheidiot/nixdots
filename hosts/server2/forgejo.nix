@@ -5,15 +5,11 @@
   ...
 }:
 let
-  certs = import ../../certs;
+  nya = config.meow.dns.domain;
 in
 {
-  server.domains = [ "git.home" ];
-
-  services.nginx.virtualHosts."git.home" = {
+  services.nginx.virtualHosts."git.${nya}" = {
     forceSSL = true;
-    sslCertificate = certs."local.crt";
-    sslCertificateKey = config.sops.secrets.localKey.path;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString config.services.forgejo.settings.server.HTTP_PORT}";
       recommendedProxySettings = true;
@@ -63,7 +59,7 @@ in
       user = "forgejo";
     };
     settings.server = {
-      ROOT_URL = "https://git.home/";
+      ROOT_URL = "https://git.${nya}/";
       HTTP_ADDR = "127.0.0.1";
       HTTP_PORT = 3001;
     };

@@ -9,6 +9,7 @@
 let
   inherit (mlib) mkOpt;
   inherit (lib.types) str;
+  vpn = import ../../sops/wireguard;
 in
 {
   options = {
@@ -17,8 +18,6 @@ in
   };
 
   imports = [
-    # local self signed certificates
-    (import ../../certs).module
     ./disko.nix
     ./dns.nix
     ./media
@@ -79,6 +78,12 @@ in
 
       ssh.key = false; # there is no user
       ssh.rootKey = true;
+
+      dns = {
+        enable = true;
+        server2 = config.server.addr;
+        vps = vpn.peers.${vpn.hub}.address;
+      };
     };
 
     boot.initrd.availableKernelModules = [

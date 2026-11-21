@@ -4,9 +4,10 @@
   inputs,
   ...
 }:
+let
+  nya = config.meow.dns.domain;
+in
 {
-  imports = [ (import ../../certs).module ];
-
   config = {
     meow.impermanence.directories = [
       {
@@ -52,7 +53,7 @@
 
     sops.secrets.freshrss_db_password.owner = "freshrss";
 
-    services.nginx.virtualHosts."rss.vps.home" = {
+    services.nginx.virtualHosts."rss.${nya}" = {
       onlySSL = true;
       listen = [
         {
@@ -61,14 +62,12 @@
           ssl = true;
         }
       ];
-      sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
     };
 
     services.freshrss = {
       enable = true;
-      baseUrl = "https://rss.vps.home";
-      virtualHost = "rss.vps.home";
+      baseUrl = "https://rss.${nya}";
+      virtualHost = "rss.${nya}";
 
       passwordFile = config.sops.secrets.freshrss_db_password.path;
 

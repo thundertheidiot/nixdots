@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  certs = import ../../certs;
+  nya = config.meow.dns.domain;
 in
 {
   config = {
@@ -13,15 +13,9 @@ in
       }
     ];
 
-    server.domains = [
-      "syncthing.server"
-    ];
-
-    services.nginx.virtualHosts."syncthing.server" = {
+    services.nginx.virtualHosts."syncthing.${nya}" = {
       root = "/fake";
       forceSSL = true;
-      sslCertificate = certs."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8384";

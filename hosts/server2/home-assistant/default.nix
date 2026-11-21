@@ -3,13 +3,13 @@
   config,
   ...
 }:
+let
+  nya = config.meow.dns.domain;
+in
 {
   config = {
-    server.domains = [ "homeassistant.home" ];
-    services.nginx.virtualHosts."homeassistant.home" = {
+    services.nginx.virtualHosts."homeassistant.${nya}" = {
       forceSSL = true;
-      sslCertificate = (import ../../../certs)."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
       extraConfig = ''
         allow 192.168.101.0/24;
         allow 10.100.0.0/24;

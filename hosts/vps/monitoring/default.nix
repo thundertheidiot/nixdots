@@ -1,7 +1,6 @@
 { config, ... }:
 {
   imports = [
-    (import ../../../certs).module
     ./services.nix
     ./prometheus.nix
     ./vmagent.nix

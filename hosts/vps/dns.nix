@@ -1,6 +1,6 @@
 { inputs, lib, ... }:
 let
-  inherit (lib) mapAttrsToList unique;
+  inherit (lib) mapAttrsToList;
   vpn = import "${inputs.self.outPath}/sops/wireguard";
 in
 {
@@ -19,7 +19,6 @@ in
       no-hosts = true;
       conf-file = [ ];
       cache-size = 1000;
-      cname = [ "*.vps.home,vps.home" ];
       # Never send private names to the upstream resolver.
       local = [
         "/home/"
@@ -29,11 +28,7 @@ in
       ];
       server = [ "1.1.1.1" ];
       host-record =
-        let
-          domains = inputs.self.nixosConfigurations.server2.config.server.domains;
-        in
-        map (domain: "${domain},${vpn.peers.home2.address}") (unique domains)
-        ++ mapAttrsToList (
+        mapAttrsToList (
           name: peer:
           let
             hostname =
@@ -48,8 +43,6 @@ in
         ++ [
           "pc.desktop,${vpn.peers.desktop.address}"
           "vps.home,${vpn.peers.${vpn.hub}.address}"
-          "rss.vps.home,${vpn.peers.${vpn.hub}.address}"
-          "books.vps.home,${vpn.peers.${vpn.hub}.address}"
         ];
     };
   };

@@ -8,7 +8,7 @@ in
   widget = [ ./transfer.luau ];
   postRun = ''
     substituteInPlace "$out/transfer.luau" \
-    --replace-fail @CURL@ "${getExe pkgs.curl} --cacert ${../../../../certs/rootCA.pem}" \
+    --replace-fail @CURL@ "${getExe pkgs.curl}" \
     --replace-fail @XDG_OPEN@ "${getExe' pkgs.xdg-utils "xdg-open"}"
   '';
 }

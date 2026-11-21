@@ -10,6 +10,7 @@ let
   inherit (lib) getExe;
   vpn = import "${inputs.self.outPath}/sops/wireguard";
   address = vpn.peers.${vpn.hub}.address;
+  nya = config.meow.dns.domain;
 in
 {
   config = {
@@ -20,8 +21,8 @@ in
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
-          domain = "dash.vps.home";
-          root_url = "https://dash.vps.home/";
+          domain = "dash.${nya}";
+          root_url = "https://dash.${nya}/";
         };
         security = {
           secret_key = "$__file{${config.services.grafana.dataDir}/secret-key}";
@@ -69,8 +70,7 @@ in
       fi
     '';
 
-    services.dnsmasq.settings.host-record = [ "dash.vps.home,${address}" ];
-    services.nginx.virtualHosts."dash.vps.home" = {
+    services.nginx.virtualHosts."dash.${nya}" = {
       onlySSL = true;
       listen = [
         {
@@ -79,8 +79,6 @@ in
           ssl = true;
         }
       ];
-      sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
-      sslCertificateKey = config.sops.secrets.localKey.path;
       locations."/" = {
         proxyPass = "http://127.0.0.1:3000";
         proxyWebsockets = true;

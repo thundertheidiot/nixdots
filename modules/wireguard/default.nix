@@ -144,7 +144,7 @@ in
           if [ -n "$(${pkgs.iproute2}/bin/ip -4 route show match ${lanResolver}/32 scope link)" ]; then
             resolver=${lanResolver}
           fi
-          for zone in home server local desktop; do
+          for zone in home server local desktop ${config.meow.dns.domain}; do
             printf 'server=/%s/%s\n' "$zone" "$resolver"
           done > /run/wg-dns/servers.new
           if cmp -s /run/wg-dns/servers.new /run/wg-dns/servers; then

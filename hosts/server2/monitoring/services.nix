@@ -6,6 +6,7 @@
   ...
 }:
 let
+  nya = config.meow.dns.domain;
   vpn = import "${inputs.self.outPath}/sops/wireguard";
   address = vpn.peers.home2.address;
   exporterRole = "prometheus-postgres-exporter";
@@ -25,7 +26,7 @@ in
   };
 
   services.forgejo.settings.metrics.ENABLED = true;
-  services.nginx.virtualHosts."git.home".locations."= /metrics" = {
+  services.nginx.virtualHosts."git.${nya}".locations."= /metrics" = {
     return = "404";
   };
   services.nginx.virtualHosts."forgejo-metrics" = {

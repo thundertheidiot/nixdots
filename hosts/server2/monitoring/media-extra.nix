@@ -12,6 +12,7 @@ let
     mkMerge
     nameValuePair
     ;
+  nya = config.meow.dns.domain;
   namespace = config.vpnNamespaces.airvpn;
   vpn = import "${inputs.self.outPath}/sops/wireguard";
   address = vpn.peers.home2.address;
@@ -192,7 +193,7 @@ in
             };
           }
         // {
-          "soulseek.home".locations."~* ^/metrics".return = "404";
+          "soulseek.${nya}".locations."~* ^/metrics".return = "404";
         };
       # the yaml credential overrides service settings, but has no metrics section
       systemd.services.slskd.environment = {

@@ -7,15 +7,17 @@
 }:
 let
   inherit (lib) getExe getExe';
+  nya = config.meow.dns.domain;
   vpn = import "${inputs.self.outPath}/sops/wireguard";
 
   port = 5066;
   dataDir = "${config.meow.impermanence.persist}/bookorbit";
   booksDir = "${dataDir}/books";
   bookorbit = pkgs.bookorbit;
+  url = "https://books.${nya}";
 in
 {
-  services.nginx.virtualHosts."books.vps.home" = {
+  services.nginx.virtualHosts."books.${nya}" = {
     onlySSL = true;
     listen = [
       {
@@ -24,8 +26,6 @@ in
         ssl = true;
       }
     ];
-    sslCertificate = (import "${inputs.self.outPath}/certs")."local.crt";
-    sslCertificateKey = config.sops.secrets.localKey.path;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString port}";
       recommendedProxySettings = true;
@@ -82,8 +82,8 @@ in
       LIBRARY_BROWSE_ROOT = booksDir;
       HOST = "127.0.0.1";
       PORT = toString port;
-      APP_URL = "https://books.vps.home";
-      CLIENT_URL = "https://books.vps.home";
+      APP_URL = url;
+      CLIENT_URL = url;
       TRUST_PROXY = "true";
       HOME = "/run/bookorbit";
     };

@@ -4,17 +4,11 @@
   ...
 }:
 let
-  certs = import ../../certs;
+  nya = config.meow.dns.domain;
 in
 {
-  server.domains = [
-    "metube.home"
-  ];
-
-  services.nginx.virtualHosts."metube.home" = {
+  services.nginx.virtualHosts."metube.${nya}" = {
     forceSSL = true;
-    sslCertificate = certs."local.crt";
-    sslCertificateKey = config.sops.secrets.localKey.path;
     locations = {
       "/" = {
         proxyPass = "http://127.0.0.1:8081";

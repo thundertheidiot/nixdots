@@ -12,7 +12,7 @@ let
     genAttrs
     getExe
     getExe'
-    mapAttrs
+    mapAttrs'
     mkForce
     mkIf
     mkMerge
@@ -33,14 +33,14 @@ let
     "flaresolverr"
   ];
   namespaceAddress = config.vpnNamespaces.airvpn.namespaceAddress;
-  certs = import "${inputs.self.outPath}/certs";
+  nya = config.meow.dns.domain;
   hosts = {
-    "torrent.home" = 8080;
-    "soulseek.home" = 5030;
-    "radarr.home" = 7878;
-    "sonarr.home" = 8989;
-    "prowlarr.home" = 9696;
-    "bazarr.home" = 6767;
+    torrent = 8080;
+    soulseek = 5030;
+    radarr = 7878;
+    sonarr = 8989;
+    prowlarr = 9696;
+    bazarr = 6767;
   };
   stateRule = user: path: {
     ${path}.d = {
@@ -86,16 +86,16 @@ in
       # This gate owns UI access; never apply it to public Jellyfin/Navidrome.
       services.nginx.virtualHosts =
         genAttrs
-          [
-            "torrent.home"
-            "soulseek.home"
-            "radarr.home"
-            "sonarr.home"
-            "prowlarr.home"
-            "bazarr.home"
-            "metube.home"
-            "soulbeet.home"
-          ]
+          (map (name: "${name}.${nya}") [
+            "torrent"
+            "soulseek"
+            "radarr"
+            "sonarr"
+            "prowlarr"
+            "bazarr"
+            "metube"
+            "soulbeet"
+          ])
           (_: {
             extraConfig = ''
               allow 192.168.101.0/24;
@@ -287,21 +287,21 @@ in
         );
       };
 
-      server.domains = builtins.attrNames hosts;
-      services.nginx.virtualHosts = mapAttrs (_: port: {
-        forceSSL = true;
-        sslCertificate = certs."local.crt";
-        sslCertificateKey = config.sops.secrets.localKey.path;
-        locations."/" = {
-          proxyPass = "http://${namespaceAddress}:${toString port}";
-          recommendedProxySettings = true;
-          proxyWebsockets = true;
-          extraConfig = lib.optionalString (port == 5030) ''
-            proxy_request_buffering off;
-            client_max_body_size 0;
-          '';
-        };
-      }) hosts;
+      services.nginx.virtualHosts = mapAttrs' (
+        name: port:
+        nameValuePair "${name}.${nya}" {
+          forceSSL = true;
+          locations."/" = {
+            proxyPass = "http://${namespaceAddress}:${toString port}";
+            recommendedProxySettings = true;
+            proxyWebsockets = true;
+            extraConfig = lib.optionalString (port == 5030) ''
+              proxy_request_buffering off;
+              client_max_body_size 0;
+            '';
+          };
+        }
+      ) hosts;
     }
     {
       nixflix = genAttrs arrNames (

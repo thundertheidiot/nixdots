@@ -14,7 +14,7 @@ let
 in
 {
   options.mHome.desktop.common.media.navidromeSync = {
-    url = mkOpt str "https://navidrome.home" { };
+    url = mkOpt str "https://navidrome.nya.meowcloud.net" { };
     username = mkOpt str "thunder" { };
     passwordFile = mkOpt (nullOr str) null {
       description = "File containing the navidrome password. Setting this enables playlist syncing.";

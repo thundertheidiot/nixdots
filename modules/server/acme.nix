@@ -9,6 +9,7 @@ let
   inherit (lib.types) listOf str;
   inherit (lib)
     mkIf
+    mkMerge
     length
     unique
     listToAttrs
@@ -20,41 +21,45 @@ in
 {
   options.meow.server.certificates = mkOpt (listOf str) [ ] { };
 
-  config = mkIf (length cfg.certificates > 0) {
-    security.acme = {
-      acceptTerms = true;
-      defaults = {
-        email = "thundertheidiot@proton.me";
-        group = "acme";
-      };
-
-      # staging environment
-      # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
-    };
-
-    users.users."${config.services.nginx.user}".extraGroups = [ "acme" ];
-
-    security.acme.certs = listToAttrs (
-      map (name: {
-        inherit name;
-        value = {
+  config = mkMerge [
+    (mkIf (length cfg.certificates > 0 || config.meow.dns.enable) {
+      security.acme = {
+        acceptTerms = true;
+        defaults = {
+          email = "thundertheidiot@proton.me";
           group = "acme";
         };
-      }) (unique cfg.certificates)
-    );
 
-    services.nginx.virtualHosts = listToAttrs (
-      map (name: {
-        inherit name;
-        value = {
-          forceSSL = mkDefault true;
-          enableACME = mkDefault true;
-        };
-      }) (unique cfg.certificates)
-    );
+        # staging environment
+        # server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+      };
 
-    meow.impermanence.directories = [
-      { path = "/var/lib/acme"; permissions = "0755"; user = "acme"; group = "acme"; }
-    ];
-  };
+      users.users."${config.services.nginx.user}".extraGroups = [ "acme" ];
+
+      meow.impermanence.directories = [
+        { path = "/var/lib/acme"; permissions = "0755"; user = "acme"; group = "acme"; }
+      ];
+    })
+
+    (mkIf (length cfg.certificates > 0) {
+      security.acme.certs = listToAttrs (
+        map (name: {
+          inherit name;
+          value = {
+            group = "acme";
+          };
+        }) (unique cfg.certificates)
+      );
+
+      services.nginx.virtualHosts = listToAttrs (
+        map (name: {
+          inherit name;
+          value = {
+            forceSSL = mkDefault true;
+            enableACME = mkDefault true;
+          };
+        }) (unique cfg.certificates)
+      );
+    })
+  ];
 }
