@@ -13,7 +13,6 @@ in
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
-    # ./authentik.nix
     # ./meowdzbot.nix
     ./disko.nix
     ./dns.nix
@@ -59,6 +58,7 @@ in
       gpu = "none";
 
       comin.enable = true;
+      kanidm.enable = true;
 
       dns = {
         enable = true;
@@ -87,10 +87,7 @@ in
           "vw.meowcloud.net" = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
         };
 
-        jellyfinDomains = [
-          "jellyfin.kotiboksi.xyz"
-          "jellyfin.meowcloud.net"
-        ];
+        jellyfinDomains = import ./jellyfin-domains.nix;
 
         matrix.enable = true;
         matrix.domain = "meowcloud.net";

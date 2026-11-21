@@ -23,6 +23,8 @@ in
       4243 # comin exporter
       4533
       8096
+      8443 # kanidm, proxied by the vps
+      8444 # kanidm replication
       8428 # victoriametrics remote write and queries from the VPS
       9100 # node exporter scraped by the VPS
       9113 # nginx exporter

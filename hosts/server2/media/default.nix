@@ -53,6 +53,7 @@ in
 {
   imports = [
     inputs.nixflix.nixosModules.default
+    ./host-config.nix
     ./settings.nix
   ];
 
@@ -107,6 +108,16 @@ in
           });
     }
     {
+      # nixflix keeps whatever AllowedHosts the arr already has, the old *.home names 400 now
+      systemd.services = genAttrs arrNames (name: {
+        preStart = ''
+          ${getExe pkgs.gnused} -i \
+            's#<AllowedHosts>.*</AllowedHosts>#<AllowedHosts>${name}.${nya},localhost,127.0.0.1,${namespaceAddress}</AllowedHosts>#' \
+            ${stateDir}/${name}/config.xml || true
+        '';
+      });
+    }
+    {
       nixflix = {
         enable = true;
         inherit stateDir mediaDir;
@@ -148,7 +159,14 @@ in
           };
         };
         flaresolverr.enable = true;
+
+        # arrs live in the namespace, so jellyfin is reached through the host side of the veth
+        notif.jellyfin.host = config.vpnNamespaces.airvpn.bridgeAddress;
       };
+
+      networking.firewall.interfaces."veth-airvpn".allowedTCPPorts = [
+        config.nixflix.jellyfin.network.internalHttpPort
+      ];
 
       # No direct/LAN egress exception: every new outgoing connection uses WG.
       # nginx connects directly to the namespace; no broad host-port DNAT needed.
@@ -175,7 +193,12 @@ in
             ${ip} netns exec airvpn ${tool} -P OUTPUT DROP
           '';
         in
-        firewall ipTables config.vpnNamespaces.airvpn.bridgeAddress
+        ''
+          ${ip} netns exec airvpn ${ipTables} -I OUTPUT 1 -o veth-airvpn \
+            -d ${config.vpnNamespaces.airvpn.bridgeAddress} -p tcp \
+            --dport ${toString config.nixflix.jellyfin.network.internalHttpPort} -j ACCEPT
+        ''
+        + firewall ipTables config.vpnNamespaces.airvpn.bridgeAddress
         + optionalString config.networking.enableIPv6 (
           firewall ip6Tables config.vpnNamespaces.airvpn.bridgeAddressIPv6
           # OUTPUT DROP also blocks neighbour discovery needed for host UI replies.

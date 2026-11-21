@@ -21,11 +21,6 @@
         format = "yaml";
         key = "oauth_client_secret";
       };
-
-      authentik_env = {
-        sopsFile = ./authentik.env;
-        format = "dotenv";
-      };
     };
   };
 }

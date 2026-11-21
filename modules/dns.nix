@@ -27,6 +27,7 @@ let
     jellyfin = "server2";
     metube = "server2";
     navidrome = "server2";
+    oauth2 = "server2";
     prowlarr = "server2";
     radarr = "server2";
     sonarr = "server2";

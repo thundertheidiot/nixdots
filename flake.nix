@@ -79,7 +79,6 @@
       url = "github:kiriwalawren/nixflix/8402435b337f5f94e971f4b585d92d8a81eedceb";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    authentik-nix.url = "github:nix-community/authentik-nix";
     nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/main";
     sodexobot = {
       url = "github:thundertheidiot/sodexobot";

@@ -9,6 +9,7 @@
   ./gpu.nix
   ./home.nix
   ./impermanence.nix
+  ./kanidm
   ./keyboard
   ./monitor.nix
   ./old-tv

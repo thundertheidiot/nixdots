@@ -26,9 +26,11 @@ in
     ./home-assistant
     ./homepage.nix
     ./jellyfin.nix
+    ./kanidm.nix
     ./metube.nix
     ./monitoring
     ./navidrome.nix
+    ./oauth2-proxy.nix
     ./secrets
     ./syncthing.nix
     # ./urlwatch.nix

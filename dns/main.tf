@@ -51,3 +51,33 @@ resource "porkbun_dns_record" "nya_aaaa" {
   type      = "AAAA"
   content   = local.vps6
 }
+
+# kanidm on the vps, also stops the wildcard from catching *.idm, which breaks dns-01 for the kanidm certs
+resource "porkbun_dns_record" "idm_a" {
+  domain    = local.domain
+  subdomain = "idm"
+  type      = "A"
+  content   = local.vps4
+}
+
+resource "porkbun_dns_record" "idm_aaaa" {
+  domain    = local.domain
+  subdomain = "idm"
+  type      = "AAAA"
+  content   = local.vps6
+}
+
+# home kanidm, proxied by the vps, lan and wireguard clients get server2 from the internal dns
+resource "porkbun_dns_record" "home_idm_a" {
+  domain    = local.domain
+  subdomain = "home.idm"
+  type      = "A"
+  content   = local.vps4
+}
+
+resource "porkbun_dns_record" "home_idm_aaaa" {
+  domain    = local.domain
+  subdomain = "home.idm"
+  type      = "AAAA"
+  content   = local.vps6
+}

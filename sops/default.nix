@@ -58,6 +58,30 @@ in
         format = "binary";
         owner = config.meow.user;
       };
+
+      # kanidm reads these for provisioning, the apps get them through credentials or root
+      meow.sops.secrets."kanidm_forgejo" = {
+        sopsFile = ./kanidm.yaml;
+        key = "forgejo";
+        owner = "kanidm";
+      };
+
+      meow.sops.secrets."kanidm_jellyfin" = {
+        sopsFile = ./kanidm.yaml;
+        key = "jellyfin";
+        owner = "kanidm";
+      };
+
+      meow.sops.secrets."kanidm_oauth2_proxy" = {
+        sopsFile = ./kanidm.yaml;
+        key = "oauth2-proxy";
+        owner = "kanidm";
+      };
+
+      meow.sops.secrets."oauth2_proxy_cookie" = {
+        sopsFile = ./kanidm.yaml;
+        key = "oauth2-proxy-cookie";
+      };
     }
     {
       sops.secrets = filterAttrs (

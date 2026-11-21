@@ -35,7 +35,6 @@ in
           inputs.sops-nix.nixosModules.default
           inputs.comin.nixosModules.comin
           inputs.disko.nixosModules.default
-          inputs.authentik-nix.nixosModules.default
           inputs.catppuccin.nixosModules.default
           inputs.emacs.nixosModules.default
           inputs.nixpkgs-multiverse.nixosModules.default

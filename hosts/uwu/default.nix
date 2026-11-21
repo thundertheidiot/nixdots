@@ -18,7 +18,6 @@ in
   imports = [
     # local self signed certificates
     (import ../../certs).module
-    ./authentik.nix
     ./camera.nix
     ./disko.nix
     ./dns.nix

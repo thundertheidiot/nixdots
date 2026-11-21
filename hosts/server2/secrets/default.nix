@@ -25,6 +25,18 @@
         sopsFile = ./home-assistant.yaml;
         format = "yaml";
       };
+
+      jellyfin_api_key = {
+        sopsFile = ./jellyfin.yaml;
+        format = "yaml";
+        key = "api-key";
+      };
+
+      jellyfin_admin_password = {
+        sopsFile = ./jellyfin.yaml;
+        format = "yaml";
+        key = "admin-password";
+      };
     };
   };
 }

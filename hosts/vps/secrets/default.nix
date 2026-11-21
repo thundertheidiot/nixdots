@@ -42,11 +42,6 @@
         format = "dotenv";
       };
 
-      authentik_env = {
-        sopsFile = ./authentik.env;
-        format = "dotenv";
-      };
-
       vaultwarden_env = {
         sopsFile = ./vaultwarden.env;
         format = "dotenv";
