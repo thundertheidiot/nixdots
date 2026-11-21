@@ -200,12 +200,6 @@ in
               };
             }
             {
-              "Redlib" = {
-                icon = "redlib.svg";
-                href = "https://reddit.${nya}";
-              };
-            }
-            {
               "Home Assistant" = {
                 icon = "home-assistant.svg";
                 href = "https://homeassistant.${nya}";

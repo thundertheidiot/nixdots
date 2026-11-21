@@ -28,7 +28,6 @@ in
     ./metube.nix
     ./monitoring
     ./navidrome.nix
-    ./redlib.nix
     ./secrets
     ./syncthing.nix
     # ./urlwatch.nix

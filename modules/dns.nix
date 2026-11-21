@@ -29,7 +29,6 @@ let
     navidrome = "server2";
     prowlarr = "server2";
     radarr = "server2";
-    reddit = "server2";
     sonarr = "server2";
     soulbeet = "server2";
     soulseek = "server2";

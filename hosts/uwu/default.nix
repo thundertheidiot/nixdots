@@ -27,7 +27,6 @@ in
     ./home-assistant
     ./homepage.nix
     ./jellyfin.nix
-    ./redlib.nix
     ./secrets
     ./wireguard.nix
   ];
