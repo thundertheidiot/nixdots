@@ -63,6 +63,8 @@ in
           code-challenge-method = "S256";
           whitelist-domain = node.oauth2.cookieDomain;
           skip-provider-button = true;
+          # kanidm leaves out email for persons without one
+          oidc-email-claim = "preferred_username";
         };
 
         nginx = {
