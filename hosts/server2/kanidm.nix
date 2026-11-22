@@ -11,6 +11,15 @@ _: {
       mailAddresses = [ "thundertheidiot@proton.me" ];
     };
 
+    persons.pikkukorppu = {
+      displayName = "pikkukorppu";
+    };
+
     groups.admins.members = [ "thunder" ];
+    groups.users.members = [
+      "pikkukorppu"
+      "thunder"
+    ];
+    groups.unprivileged = { };
   };
 }

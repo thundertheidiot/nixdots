@@ -15,6 +15,8 @@ let
     ;
   jellyfin = config.meow.dns.names.jellyfin;
   idm = infra.kanidm.nodes.server2.hostname;
+  # group claims are spns on the kanidm domain, not the node hostname
+  inherit (infra.kanidm) domain;
   dataDir = "/var/lib/jellyfin";
 in
 {
@@ -86,6 +88,30 @@ in
       systemd.tmpfiles.settings."10-jellyfin".${dataDir}.d.mode = mkForce "0750";
     }
     {
+      # on top of nixflix's sandbox, media stays read only
+      systemd.services.jellyfin.serviceConfig = {
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        ReadWritePaths = [
+          dataDir
+          "-/run/jellyfin"
+        ];
+        InaccessiblePaths = [
+          config.meow.impermanence.persist
+          "-/run/secrets"
+          "-/run/secrets.d"
+        ];
+        # hardware acceleration is off, no gpu needed
+        PrivateDevices = mkForce true;
+        SupplementaryGroups = mkForce [ ];
+        ProtectClock = true;
+        ProtectProc = "invisible";
+        CapabilityBoundingSet = "";
+        AmbientCapabilities = "";
+        UMask = "0027";
+      };
+    }
+    {
       meow.sops.enableSecrets = [ "kanidm_jellyfin" ];
 
       services.kanidm.provision.systems.oauth2.jellyfin = {
@@ -97,9 +123,8 @@ in
         originLanding = "https://${jellyfin}/";
         basicSecretFile = config.sops.secrets.kanidm_jellyfin.path;
         preferShortUsername = true;
-        scopeMaps.admins = [
+        scopeMaps.users = [
           "openid"
-          "email"
           "profile"
           "groups"
         ];
@@ -124,12 +149,11 @@ in
           OidSecret._secret = config.sops.secrets.kanidm_jellyfin.path;
           DefaultUsernameClaim = "preferred_username";
           SchemeOverride = "https";
-          # kanidm decides who gets in, jellyfin permissions stay as they are
           EnableAuthorization = false;
           RoleClaim = "groups";
-          OidScopes = [ ];
-          AdminRoles = [ ];
-          Roles = [ ];
+          OidScopes = [ "groups" ];
+          AdminRoles = [ "admins@${domain}" ];
+          Roles = [ "users@${domain}" ];
           EnabledFolders = [ ];
           FolderRoleMapping = [ ];
           LiveTvRoles = [ ];

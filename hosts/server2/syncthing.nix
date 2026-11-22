@@ -27,6 +27,9 @@ in
       };
     };
 
+    users.users.${config.services.syncthing.user}.extraGroups = [ "media" ];
+    systemd.services.syncthing.serviceConfig.UMask = "0002";
+
     services.syncthing = {
       enable = true;
       openDefaultPorts = true;

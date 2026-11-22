@@ -14,7 +14,7 @@ let
       beetsPkgs = mv.at (mv.revOf "beets" "2.11.0");
     in
     beetsPkgs.python3.withPackages (p: [ p.beets ]);
-  soulbeet = pkgs.callPackage ../../pkgs/soulbeet.nix { };
+  soulbeet = pkgs.mpkgs.soulbeet;
 in
 {
   services.nginx.virtualHosts.${names.navidrome} = {
@@ -35,9 +35,11 @@ in
     owner = config.services.navidrome.user;
   };
 
+  users.users.${config.services.navidrome.user}.extraGroups = [ "media" ];
   systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [ "/mnt/storage/media" ];
   systemd.services.navidrome.environment.TMPDIR = "${config.meow.impermanence.persist}/navidrome/tmp";
   systemd.tmpfiles.rules = [
+    "d /mnt/storage/media/my_music 2775 root media -"
     "d ${config.meow.impermanence.persist}/navidrome/tmp 0700 navidrome navidrome -"
   ];
 
@@ -112,7 +114,7 @@ in
     serviceConfig = {
       User = "soulbeet";
       Group = "soulbeet";
-      UMask = "0022";
+      UMask = "0002";
       NoNewPrivileges = true;
       CapabilityBoundingSet = "";
       PrivateTmp = true;
@@ -142,6 +144,8 @@ in
       WorkingDirectory = "${soulbeet}";
       ExecStart = getExe soulbeet;
       Restart = "on-failure";
+      # the ui hands beets the host path, so it must be writable besides the /music bind
+      ReadWritePaths = [ "/mnt/storage/media/my_music" ];
       BindPaths = [
         "/nix/persist/media-stack/soulbeet:/data"
         "/mnt/storage/media/my_music:/music"
