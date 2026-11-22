@@ -3,15 +3,20 @@
   lib,
   mlib,
   pkgs,
-  inputs,
+  infra,
   ...
 }:
 let
   inherit (mlib) mkEnOpt;
   inherit (lib)
+    attrNames
     attrValues
+    filterAttrs
     filter
     fileContents
+    findFirst
+    mapAttrs
+    mapAttrsToList
     getExe
     getExe'
     listToAttrs
@@ -23,27 +28,18 @@ let
   inherit (builtins) pathExists;
 
   cfg = config.meow.kanidm;
-  vpn = import "${inputs.self.outPath}/sops/wireguard";
-
-  domain = "idm.meowcloud.net";
-  port = 8443;
-  replPort = 8444;
+  inherit (infra.kanidm) domain port;
+  replPort = infra.kanidm.replicationPort;
 
   # certs/<node> = `kanidm-repl-cert` on that node, a missing file leaves the partner out
-  nodes = {
-    vps = {
-      hostname = domain;
-      address = vpn.peers.${vpn.hub}.address;
-      partner = "server2";
-    };
-    server2 = {
-      hostname = "home.${domain}";
-      address = vpn.peers.home2.address;
-      partner = "vps";
-      # public traffic comes in through the vps nginx
-      via = "vps";
-    };
-  };
+  nodes = mapAttrs (
+    name: node:
+    node
+    // {
+      address = infra.hosts.${name}.wg;
+      partner = findFirst (other: other != name) null (attrNames infra.kanidm.nodes);
+    }
+  ) infra.kanidm.nodes;
   node = nodes.${config.networking.hostName};
   partner = nodes.${node.partner};
   repl = n: "repl://${n.address}:${toString replPort}";
@@ -143,7 +139,9 @@ in
     );
 
     # lan and wireguard clients skip the vps for the home node
-    services.dnsmasq.settings.host-record = [ "${nodes.server2.hostname},${config.meow.dns.server2}" ];
+    services.dnsmasq.settings.host-record = mapAttrsToList (
+      name: n: "${n.hostname},${config.meow.dns.addresses.${name}}"
+    ) (filterAttrs (_: n: n ? via) nodes);
 
     meow.impermanence.directories = [
       {

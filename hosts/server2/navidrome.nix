@@ -1,12 +1,13 @@
 {
   config,
+  infra,
   lib,
   pkgs,
   ...
 }:
 let
-  inherit (lib) getExe;
-  nya = config.meow.dns.domain;
+  inherit (lib) getExe head;
+  inherit (config.meow.dns) names;
   beetsPython =
     let
       mv = config.multiverse.instance;
@@ -16,7 +17,7 @@ let
   soulbeet = pkgs.callPackage ../../pkgs/soulbeet.nix { };
 in
 {
-  services.nginx.virtualHosts."navidrome.${nya}" = {
+  services.nginx.virtualHosts.${names.navidrome} = {
     forceSSL = true;
     locations = {
       "/" = {
@@ -48,7 +49,7 @@ in
       Address = "0.0.0.0";
       MusicFolder = "/mnt/storage/media/music";
       DataFolder = "${config.meow.impermanence.persist}/navidrome";
-      BaseUrl = "https://navidrome.meowcloud.net";
+      BaseUrl = "https://${head infra.services.navidrome.public}";
 
       Agents = "deezer,lastfm,listenbrainz";
 
@@ -61,7 +62,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."soulbeet.${nya}" = {
+  services.nginx.virtualHosts.${names.soulbeet} = {
     forceSSL = true;
     locations = {
       "/" = {

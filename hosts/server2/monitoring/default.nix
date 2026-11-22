@@ -1,7 +1,7 @@
-{ config, inputs, ... }:
+{ config, infra, ... }:
 let
-  vpn = import "${inputs.self.outPath}/sops/wireguard";
-  address = vpn.peers.home2.address;
+  address = infra.hosts.server2.wg;
+  ports = infra.monitoring.exporters.server2;
 in
 {
   imports = [
@@ -15,14 +15,14 @@ in
     services.prometheus.exporters.node = {
       enable = true;
       listenAddress = address;
-      port = 9100;
+      port = ports.node;
       enabledCollectors = [ "systemd" ];
       openFirewall = false;
     };
 
     services.victoriametrics = {
       enable = true;
-      listenAddress = "${address}:8428";
+      listenAddress = "${address}:${toString infra.monitoring.storage.port}";
       retentionPeriod = "1y";
     };
 

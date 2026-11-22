@@ -1,9 +1,6 @@
 {
-  config = {
-    meow.wireguard = {
-      enable = true;
-      peer = "desktop";
-      dns.enable = true;
-    };
+  meow.wireguard = {
+    enable = true;
+    dns.enable = true;
   };
 }

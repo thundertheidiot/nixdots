@@ -1,5 +1,6 @@
 {
   config,
+  infra,
   lib,
   mlib,
   ...
@@ -7,56 +8,71 @@
 let
   inherit (mlib) mkEnOpt mkOpt;
   inherit (lib)
+    attrNames
+    concatMapStrings
     filterAttrs
+    findFirst
+    mapAttrs
     mapAttrs'
     mapAttrsToList
     mkIf
     nameValuePair
+    optionalAttrs
     ;
-  inherit (lib.types) str;
+  inherit (lib.types) attrsOf str;
 
   cfg = config.meow.dns;
   inherit (cfg) domain;
+  name = config.networking.hostName;
 
-  # service name -> host serving it
-  records = {
-    bazarr = "server2";
-    git = "server2";
-    homeassistant = "server2";
-    homepage = "server2";
-    jellyfin = "server2";
-    metube = "server2";
-    navidrome = "server2";
-    oauth2 = "server2";
-    prowlarr = "server2";
-    radarr = "server2";
-    sonarr = "server2";
-    soulbeet = "server2";
-    soulseek = "server2";
-    syncthing = "server2";
-    torrent = "server2";
+  # the network this host's dns clients sit on, wg reaches everything
+  view = findFirst (net: infra.dns.resolvers.${net} == name) "wg" (attrNames infra.dns.resolvers);
+  hosts = filterAttrs (_: host: host ? ${view} || host ? wg) infra.hosts;
+  internal = filterAttrs (_: service: service ? internal) infra.services;
 
-    books = "server2";
-    dash = "vps";
-    rss = "vps";
-  };
+  allow =
+    access:
+    concatMapStrings (net: "allow ${net};\n") (
+      {
+        lan = [ infra.networks.lan ];
+        private = [
+          infra.networks.lan
+          infra.networks.wg.cidr
+        ];
+        wg = [ infra.networks.wg.cidr ];
+      }
+      .${access}
+      ++ [
+        "127.0.0.1"
+        "::1"
+      ]
+    )
+    + "deny all;\n";
 in
 {
   options.meow.dns = {
     enable = mkEnOpt "internal dns records and wildcard certificate";
-    domain = mkOpt str "nya.meowcloud.net" { };
-    server2 = mkOpt str "" { description = "server2 address as seen by this host's dns clients"; };
-    vps = mkOpt str "" { description = "vps address as seen by this host's dns clients"; };
+    domain = mkOpt str infra.dns.internal { };
+    addresses = mkOpt (attrsOf str) (mapAttrs (_: host: host.${view} or host.wg) hosts) {
+      description = "host addresses as seen by this host's dns clients";
+    };
+    names = mkOpt (attrsOf str) (mapAttrs (_: service: "${service.internal}.${domain}") internal) {
+      description = "internal name of each service";
+    };
   };
 
   config = mkIf cfg.enable {
     services.dnsmasq.settings = {
       local = [ "/${domain}/" ];
-      host-record = mapAttrsToList (name: host: "${name}.${domain},${cfg.${host}}") records;
+      host-record =
+        mapAttrsToList (service: { host, ... }: "${cfg.names.${service}},${cfg.addresses.${host}}") internal
+        ++ mapAttrsToList (
+          host: address: "${host}.${infra.dns.devices}.${domain},${address}"
+        ) cfg.addresses;
     };
 
     sops.secrets.porkbun = {
-      sopsFile = ../sops/porkbun.env;
+      sopsFile = infra.secrets.porkbun;
       format = "dotenv";
     };
 
@@ -70,7 +86,14 @@ in
     };
 
     services.nginx.virtualHosts = mapAttrs' (
-      name: _: nameValuePair "${name}.${domain}" { useACMEHost = domain; }
-    ) (filterAttrs (_: host: host == config.networking.hostName) records);
+      service:
+      {
+        access ? null,
+        ...
+      }:
+      nameValuePair cfg.names.${service} (
+        { useACMEHost = domain; } // optionalAttrs (access != null) { extraConfig = allow access; }
+      )
+    ) (filterAttrs (_: service: service.host == name) internal);
   };
 }

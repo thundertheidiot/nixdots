@@ -4,19 +4,12 @@
   ...
 }:
 let
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
 in
 {
   config = {
-    services.nginx.virtualHosts."homeassistant.${nya}" = {
+    services.nginx.virtualHosts.${names.homeassistant} = {
       forceSSL = true;
-      extraConfig = ''
-        allow 192.168.101.0/24;
-        allow 10.100.0.0/24;
-        allow 127.0.0.1;
-        allow ::1;
-        deny all;
-      '';
       locations."/" = {
         proxyPass = "http://127.0.0.1:8123";
         recommendedProxySettings = true;

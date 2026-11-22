@@ -1,88 +1,17 @@
-{
-  server,
-  config,
-  mlib,
-  lib,
-  ...
-}:
+{ infra, ... }:
 let
-  inherit (mlib) mkOpt;
-  inherit (lib.types) listOf str;
-  inherit (lib) listToAttrs;
-
-  addr = "http://${server.homeServer2}:8096";
+  jellyfin = infra.services.jellyfin;
 in
 {
-  options = {
-    meow.server.jellyfinDomains = mkOpt (listOf str) [ ] { };
-  };
-
-  config = {
-    meow.server.certificates = config.meow.server.jellyfinDomains;
-
-    meow.server.gatus = [
-      {
-        name = "Jellyfin";
-        group = "home";
-        url = "http://${server.homeServer2}:8096";
-        interval = "30s";
-        conditions = [
-          "[STATUS] == 200"
-        ];
-      }
-    ];
-
-    services.nginx.virtualHosts = listToAttrs (
-      map (name: {
-        inherit name;
-        value = {
-          locations = {
-            "= /metrics".return = "404";
-            "/" = {
-              proxyPass = addr;
-              recommendedProxySettings = false;
-              extraConfig = ''
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_set_header X-Forwarded-Protocol $scheme;
-                proxy_set_header X-Forwarded-Host $http_host;
-
-                # Disable buffering when the nginx proxy gets very resource heavy upon streaming
-                proxy_buffering off;
-              '';
-            };
-
-            "/socket" = {
-              proxyPass = addr;
-              recommendedProxySettings = false;
-              extraConfig = ''
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection "upgrade";
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_set_header X-Forwarded-Protocol $scheme;
-                proxy_set_header X-Forwarded-Host $http_host;
-              '';
-            };
-          };
-
-          extraConfig = ''
-            client_max_body_size 20M;
-            add_header X-Frame-Options "SAMEORIGIN";
-            add_header X-XSS-Protection "0"; # Do NOT enable. This is obsolete/dangerous ????
-            add_header X-Content-Type-Options "nosniff";
-
-            add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), battery=(), bluetooth=(), camera=(), clipboard-read=(), display-capture=(), document-domain=(), encrypted-media=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=(), serial=(), sync-xhr=(), usb=(), xr-spatial-tracking=()" always;
-
-            add_header Content-Security-Policy "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
-          '';
-        };
-      }) config.meow.server.jellyfinDomains
-    );
-  };
+  meow.server.gatus = [
+    {
+      name = "Jellyfin";
+      group = "home";
+      url = "http://${infra.hosts.${jellyfin.host}.wg}:${toString jellyfin.port}";
+      interval = "30s";
+      conditions = [
+        "[STATUS] == 200"
+      ];
+    }
+  ];
 }

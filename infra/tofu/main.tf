@@ -7,7 +7,7 @@ terraform {
   }
 }
 
-# PORKBUN_API_KEY and PORKBUN_SECRET_API_KEY come from sops/porkbun.env
+# PORKBUN_API_KEY and PORKBUN_SECRET_API_KEY come from infra/porkbun.env
 provider "porkbun" {}
 
 locals {

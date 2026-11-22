@@ -3,20 +3,9 @@
   config,
   lib,
   mlib,
-  inputs,
   ...
 }:
-let
-  inherit (mlib) mkOpt;
-  inherit (lib.types) str;
-  vpn = import ../../sops/wireguard;
-in
 {
-  options = {
-    # here for easier changing in case of router change etc.
-    server.addr = mkOpt str "192.168.101.111" { };
-  };
-
   imports = [
     ./bookorbit.nix
     ./disko.nix
@@ -81,11 +70,7 @@ in
       ssh.key = false; # there is no user
       ssh.rootKey = true;
 
-      dns = {
-        enable = true;
-        server2 = config.server.addr;
-        vps = vpn.peers.${vpn.hub}.address;
-      };
+      dns.enable = true;
     };
 
     boot.initrd.availableKernelModules = [

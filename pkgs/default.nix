@@ -10,7 +10,7 @@ with pkgs;
   photocraft = callPackage ./photocraft.nix { };
   kodi = callPackage ./kodi { };
   wireguard-keys = callPackage ./wireguard-keys.nix { };
-  dns = callPackage ./dns.nix { };
+  tofu = callPackage ./tofu.nix { };
   metube = callPackage ./metube.nix { };
   soulbeet = callPackage ./soulbeet.nix { };
   ghidra-mcp = callPackage ./ghidra-mcp.nix { };

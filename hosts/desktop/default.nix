@@ -9,7 +9,6 @@
   imports = [
     ./vr
     ./games.nix
-    ./secrets
     ./wireguard.nix
     # ./firedragon.nix
     inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -102,20 +101,6 @@
         config.sops.secrets."navidrome_password".path;
     }
   ];
-
-  services.rathole = {
-    enable = true;
-    role = "client";
-    credentialsFile = config.sops.secrets."rathole_secrets".path;
-    settings = {
-      client = {
-        remote_addr = "meowcloud.net:2333";
-        transport.type = "noise";
-
-        services.minecraft.local_addr = "127.0.0.1:25565";
-      };
-    };
-  };
 
   meow = {
     fullSetup = true;

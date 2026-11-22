@@ -9,14 +9,14 @@ creation_rules:
       - age:
           - *desk
           - *framework
-  - path_regex: sops/porkbun\.env$
+  - path_regex: infra/porkbun\.env$
     key_groups:
       - age:
           - *desk
           - *framework
           - *server
           - *vps
-  - path_regex: sops/kanidm\.yaml$
+  - path_regex: infra/kanidm\.yaml$
     key_groups:
       - age:
           - *desk
@@ -49,31 +49,31 @@ creation_rules:
     key_groups:
       - age:
           - *desk
-  - path_regex: sops/wireguard/private/vps$
+  - path_regex: infra/wireguard/private/vps$
     key_groups:
       - age:
           - *desk
           - *vps
           - *framework
-  - path_regex: sops/wireguard/private/home2?$
+  - path_regex: infra/wireguard/private/(server2|uwu)$
     key_groups:
       - age:
           - *desk
           - *server
           - *framework
-  - path_regex: sops/wireguard/psk/home2?$
+  - path_regex: infra/wireguard/psk/(server2|uwu)$
     key_groups:
       - age:
           - *desk
           - *vps
           - *server
           - *framework
-  - path_regex: sops/wireguard/private/(framework|desktop|phone)$
+  - path_regex: infra/wireguard/private/(framework|desktop|phone)$
     key_groups:
       - age:
           - *desk
           - *framework
-  - path_regex: sops/wireguard/psk/(framework|desktop|phone)$
+  - path_regex: infra/wireguard/psk/(framework|desktop|phone)$
     key_groups:
       - age:
           - *desk

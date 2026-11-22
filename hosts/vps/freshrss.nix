@@ -1,11 +1,11 @@
 {
   config,
+  infra,
   lib,
-  inputs,
   ...
 }:
 let
-  nya = config.meow.dns.domain;
+  rss = config.meow.dns.names.freshrss;
 in
 {
   config = {
@@ -53,11 +53,11 @@ in
 
     sops.secrets.freshrss_db_password.owner = "freshrss";
 
-    services.nginx.virtualHosts."rss.${nya}" = {
+    services.nginx.virtualHosts.${rss} = {
       onlySSL = true;
       listen = [
         {
-          addr = (import "${inputs.self.outPath}/sops/wireguard").peers.vps.address;
+          addr = infra.hosts.vps.wg;
           port = 443;
           ssl = true;
         }
@@ -66,8 +66,8 @@ in
 
     services.freshrss = {
       enable = true;
-      baseUrl = "https://rss.${nya}";
-      virtualHost = "rss.${nya}";
+      baseUrl = "https://${rss}";
+      virtualHost = rss;
 
       passwordFile = config.sops.secrets.freshrss_db_password.path;
 

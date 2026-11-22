@@ -1,7 +1,7 @@
 result
 .direnv
 .pre-config-config.yaml
-sops/wireguard/.keys.lock
-sops/wireguard/.keys-*/
+infra/wireguard/.keys.lock
+infra/wireguard/.keys-*/
 certs/.local-certs.*/
 *.plain

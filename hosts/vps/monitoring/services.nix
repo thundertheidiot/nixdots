@@ -1,7 +1,13 @@
-{ config, lib, ... }:
+{
+  config,
+  infra,
+  lib,
+  ...
+}:
 let
-  inherit (lib) mkAfter;
+  inherit (lib) genAttrs mkAfter;
   inherit (builtins) toFile;
+  hidden = names: genAttrs names (_: { locations."= /metrics".return = "404"; });
 in
 {
   config = {
@@ -10,7 +16,7 @@ in
     services.prometheus.exporters.dnsmasq = {
       enable = true;
       listenAddress = "127.0.0.1";
-      dnsmasqListenAddress = "10.100.0.1:53";
+      dnsmasqListenAddress = "${infra.hosts.vps.wg}:53";
       leasesPath = toFile "dnsmasq-empty-leases" "";
     };
 
@@ -21,7 +27,7 @@ in
     '';
 
     services.nginx.statusPage = true;
-    services.nginx.virtualHosts."navidrome.meowcloud.net".locations."= /metrics".return = "404";
+    services.nginx.virtualHosts = hidden (infra.services.navidrome.public ++ infra.services.gatus.public);
 
     services.prometheus.exporters.nginx = {
       enable = true;
@@ -87,7 +93,6 @@ in
       metrics = true;
       web.address = "127.0.0.1";
     };
-    services.nginx.virtualHosts."meowcloud.net".locations."= /metrics".return = "404";
 
     services.prosody.settings = {
       modules_enabled = [

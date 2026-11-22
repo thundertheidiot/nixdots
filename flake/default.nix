@@ -11,6 +11,7 @@
   ];
 
   flake.modules = { };
+  flake.infra = import ../infra;
 
   systems = [
     "x86_64-linux"

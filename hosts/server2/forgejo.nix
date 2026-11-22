@@ -1,15 +1,16 @@
 {
   config,
+  infra,
   lib,
   pkgs,
   ...
 }:
 let
   inherit (lib) getExe getExe' mkAfter;
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
 in
 {
-  services.nginx.virtualHosts."git.${nya}" = {
+  services.nginx.virtualHosts.${names.forgejo} = {
     forceSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString config.services.forgejo.settings.server.HTTP_PORT}";
@@ -60,7 +61,7 @@ in
       user = "forgejo";
     };
     settings.server = {
-      ROOT_URL = "https://git.${nya}/";
+      ROOT_URL = "https://${names.forgejo}/";
       HTTP_ADDR = "127.0.0.1";
       HTTP_PORT = 3001;
     };
@@ -71,8 +72,8 @@ in
 
   services.kanidm.provision.systems.oauth2.forgejo = {
     displayName = "Forgejo";
-    originUrl = "https://git.${nya}/user/oauth2/kanidm/callback";
-    originLanding = "https://git.${nya}/";
+    originUrl = "https://${names.forgejo}/user/oauth2/kanidm/callback";
+    originLanding = "https://${names.forgejo}/";
     basicSecretFile = config.sops.secrets.kanidm_forgejo.path;
     preferShortUsername = true;
     # forgejo doesn't do pkce as a client
@@ -94,7 +95,7 @@ in
         --provider openidConnect
         --key forgejo
         --secret "$(< "$CREDENTIALS_DIRECTORY/kanidm")"
-        --auto-discover-url https://home.idm.meowcloud.net/oauth2/openid/forgejo/.well-known/openid-configuration
+        --auto-discover-url https://${infra.kanidm.nodes.server2.hostname}/oauth2/openid/forgejo/.well-known/openid-configuration
         --scopes openid --scopes email --scopes profile
       )
       id=$(forgejo admin auth list | ${getExe pkgs.gawk} '$2 == "kanidm" { print $1 }')

@@ -1,14 +1,11 @@
 {
-  config,
+  infra,
   lib,
-  mlib,
   modulesPath,
-  server,
   ...
 }:
 let
   inherit (lib) mkForce;
-  vpn = import ../../sops/wireguard;
 in
 {
   imports = [
@@ -22,7 +19,6 @@ in
     ./kissasome.nix
     ./monitoring
     ./nya.nix
-    ./rathole.nix
     ./secrets
     ./sodexobot.nix
     ./static.nix
@@ -32,11 +28,6 @@ in
   ];
 
   config = {
-    _module.args = {
-      server.homeServer = "10.100.0.2";
-      server.homeServer2 = "10.100.0.3";
-    };
-
     networking.hostName = "vps";
 
     system.stateVersion = "25.05";
@@ -60,11 +51,7 @@ in
       comin.enable = true;
       kanidm.enable = true;
 
-      dns = {
-        enable = true;
-        server2 = vpn.peers.home2.address;
-        vps = vpn.peers.${vpn.hub}.address;
-      };
+      dns.enable = true;
 
       server = {
         publicSSH = true;
@@ -82,12 +69,6 @@ in
           "saatana.xyz"
         ];
         mainDomain = "kotiboksi.xyz";
-        reverseProxy = {
-          "navidrome.meowcloud.net" = "http://${server.homeServer2}:4533";
-          "vw.meowcloud.net" = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
-        };
-
-        jellyfinDomains = import ./jellyfin-domains.nix;
 
         matrix.enable = true;
         matrix.domain = "meowcloud.net";
@@ -122,8 +103,8 @@ in
       matchConfig.Name = "enp1s0";
       networkConfig.DHCP = "no";
       address = [
-        "95.216.151.56/32"
-        "2a01:4f9:c010:9973::1/64"
+        "${infra.hosts.vps.public.v4}/32"
+        "${infra.hosts.vps.public.v6}/64"
       ];
       routes = [
         {

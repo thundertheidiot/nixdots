@@ -4,10 +4,10 @@
   ...
 }:
 let
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
 in
 {
-  services.nginx.virtualHosts."metube.${nya}" = {
+  services.nginx.virtualHosts.${names.metube} = {
     forceSSL = true;
     locations = {
       "/" = {

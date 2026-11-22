@@ -1,5 +1,6 @@
 {
   config,
+  infra,
   lib,
   mlib,
   ...
@@ -36,11 +37,6 @@ in
         format = "binary";
       };
 
-      meow.sops.secrets."desk_rathole" = {
-        sopsFile = ./desk/rathole.toml;
-        format = "binary";
-      };
-
       meow.sops.secrets."listenbrainz_token" = {
         sopsFile = ./shared/listenbrainz;
         format = "binary";
@@ -61,25 +57,25 @@ in
 
       # kanidm reads these for provisioning, the apps get them through credentials or root
       meow.sops.secrets."kanidm_forgejo" = {
-        sopsFile = ./kanidm.yaml;
+        sopsFile = infra.secrets.kanidm;
         key = "forgejo";
         owner = "kanidm";
       };
 
       meow.sops.secrets."kanidm_jellyfin" = {
-        sopsFile = ./kanidm.yaml;
+        sopsFile = infra.secrets.kanidm;
         key = "jellyfin";
         owner = "kanidm";
       };
 
       meow.sops.secrets."kanidm_oauth2_proxy" = {
-        sopsFile = ./kanidm.yaml;
+        sopsFile = infra.secrets.kanidm;
         key = "oauth2-proxy";
         owner = "kanidm";
       };
 
       meow.sops.secrets."oauth2_proxy_cookie" = {
-        sopsFile = ./kanidm.yaml;
+        sopsFile = infra.secrets.kanidm;
         key = "oauth2-proxy-cookie";
       };
     }

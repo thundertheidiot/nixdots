@@ -1,8 +1,13 @@
-{ config, lib, ... }:
+{
+  config,
+  infra,
+  lib,
+  ...
+}:
 let
-  inherit (lib) mapAttrs' nameValuePair replaceStrings;
+  inherit (lib) head mapAttrs' nameValuePair replaceStrings;
 
-  domain = "static.meowcloud.net";
+  domain = head infra.services.static.public;
   root = "/nix/persist/static";
 
   # subdir -> sops encrypted htpasswd file
@@ -14,8 +19,6 @@ let
   secretName = dir: "static_htpasswd_${replaceStrings [ "/" ] [ "_" ] dir}";
 in
 {
-  meow.server.certificates = [ domain ];
-
   systemd.tmpfiles.rules = [ "d ${root} 0755 root root -" ];
 
   sops.secrets = mapAttrs' (

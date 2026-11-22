@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  infra,
   inputs,
   ...
 }:
@@ -33,10 +34,11 @@ let
     "flaresolverr"
   ];
   namespaceAddress = config.vpnNamespaces.airvpn.namespaceAddress;
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
+  # proxied into the vpn namespace
   hosts = {
-    torrent = 8080;
-    soulseek = 5030;
+    qbittorrent = 8080;
+    slskd = 5030;
     radarr = 7878;
     sonarr = 8989;
     prowlarr = 9696;
@@ -84,35 +86,11 @@ in
 
   config = mkMerge [
     {
-      # This gate owns UI access; never apply it to public Jellyfin/Navidrome.
-      services.nginx.virtualHosts =
-        genAttrs
-          (map (name: "${name}.${nya}") [
-            "torrent"
-            "soulseek"
-            "radarr"
-            "sonarr"
-            "prowlarr"
-            "bazarr"
-            "metube"
-            "soulbeet"
-          ])
-          (_: {
-            extraConfig = ''
-              allow 192.168.101.0/24;
-              allow 10.100.0.0/24;
-              allow 127.0.0.1;
-              allow ::1;
-              deny all;
-            '';
-          });
-    }
-    {
       # nixflix keeps whatever AllowedHosts the arr already has, the old *.home names 400 now
       systemd.services = genAttrs arrNames (name: {
         preStart = ''
           ${getExe pkgs.gnused} -i \
-            's#<AllowedHosts>.*</AllowedHosts>#<AllowedHosts>${name}.${nya},localhost,127.0.0.1,${namespaceAddress}</AllowedHosts>#' \
+            's#<AllowedHosts>.*</AllowedHosts>#<AllowedHosts>${names.${name}},localhost,127.0.0.1,${namespaceAddress}</AllowedHosts>#' \
             ${stateDir}/${name}/config.xml || true
         '';
       });
@@ -131,7 +109,7 @@ in
           enable = true;
           namespace = "airvpn";
           wgConfFile = config.sops.secrets.media-stack-wireguard.path;
-          accessibleFrom = [ "192.168.101.0/24" ];
+          accessibleFrom = [ infra.networks.lan ];
           openVPNPorts = [
             {
               port = 3865;
@@ -239,8 +217,8 @@ in
           AuthSubnetWhitelistEnabled = true;
           AuthSubnetWhitelist = concatStringsSep ", " [
             "${config.vpnNamespaces.airvpn.bridgeAddress}/32"
-            "192.168.101.0/24"
-            "10.100.0.0/24"
+            infra.networks.lan
+            infra.networks.wg.cidr
           ];
         };
       };
@@ -312,7 +290,7 @@ in
 
       services.nginx.virtualHosts = mapAttrs' (
         name: port:
-        nameValuePair "${name}.${nya}" {
+        nameValuePair names.${name} {
           forceSSL = true;
           locations."/" = {
             proxyPass = "http://${namespaceAddress}:${toString port}";

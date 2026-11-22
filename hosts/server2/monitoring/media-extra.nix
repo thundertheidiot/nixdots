@@ -1,6 +1,6 @@
 {
   config,
-  inputs,
+  infra,
   lib,
   pkgs,
   ...
@@ -12,27 +12,17 @@ let
     mkMerge
     nameValuePair
     ;
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
   namespace = config.vpnNamespaces.airvpn;
-  vpn = import "${inputs.self.outPath}/sops/wireguard";
-  address = vpn.peers.home2.address;
+  address = infra.hosts.server2.wg;
+  ports = infra.monitoring.exporters.server2;
   arrPorts = {
-    radarr = 9708;
-    sonarr = 9709;
-    prowlarr = 9710;
+    inherit (ports) radarr sonarr prowlarr;
   };
 in
 {
   config = mkMerge [
     {
-      meow.wireguard.tcpPorts = [
-        9708
-        9709
-        9710
-        9711
-        9712
-        9713
-      ];
       services.prometheus.exporters = mapAttrs' (
         name: port:
         nameValuePair "exportarr-${name}" {
@@ -73,7 +63,7 @@ in
       services.prometheus.exporters.exportarr-bazarr = {
         enable = true;
         listenAddress = address;
-        port = 9711;
+        port = ports.bazarr;
         openFirewall = false;
         url = "http://${namespace.namespaceAddress}:${toString config.services.bazarr.settings.general.port}";
         environment = {
@@ -133,7 +123,7 @@ in
           QBITTORRENT_BASE_URL = "http://${namespace.namespaceAddress}:8080";
           QBITTORRENT_COOKIE_NAME = "QBT_SID_8080";
           EXPORTER_HOST = address;
-          EXPORTER_PORT = "9712";
+          EXPORTER_PORT = toString ports.qbittorrent;
           ENABLE_TRACKER = "false";
           ENABLE_HIGH_CARDINALITY = "false";
           ENABLE_INCREASED_CARDINALITY = "false";
@@ -188,12 +178,12 @@ in
           )
           {
             slskd = {
-              port = 9713;
+              port = ports.slskd;
               upstream = 5030;
             };
           }
         // {
-          "soulseek.${nya}".locations."~* ^/metrics".return = "404";
+          ${names.slskd}.locations."~* ^/metrics".return = "404";
         };
       # the yaml credential overrides service settings, but has no metrics section
       systemd.services.slskd.environment = {

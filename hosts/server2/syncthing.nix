@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
 in
 {
   config = {
@@ -13,7 +13,7 @@ in
       }
     ];
 
-    services.nginx.virtualHosts."syncthing.${nya}" = {
+    services.nginx.virtualHosts.${names.syncthing} = {
       root = "/fake";
       forceSSL = true;
       locations = {
@@ -21,11 +21,6 @@ in
           proxyPass = "http://127.0.0.1:8384";
           recommendedProxySettings = false;
           extraConfig = ''
-            # Keep the admin GUI available only on the home network until authentication is provisioned.
-            allow 127.0.0.1;
-            allow ::1;
-            allow 192.168.101.0/24;
-            deny all;
             proxy_set_header Host $proxy_host;
           '';
         };
@@ -35,7 +30,6 @@ in
     services.syncthing = {
       enable = true;
       openDefaultPorts = true;
-      # The CLI bind takes precedence over a potentially unsafe persisted GUI address.
       guiAddress = "127.0.0.1:8384";
 
       overrideDevices = false;

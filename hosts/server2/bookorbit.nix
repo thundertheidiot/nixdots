@@ -6,16 +6,16 @@
 }:
 let
   inherit (lib) getExe getExe';
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
 
   port = 5066;
   dataDir = "${config.meow.impermanence.persist}/bookorbit";
   booksDir = "${dataDir}/books";
   bookorbit = pkgs.bookorbit;
-  url = "https://books.${nya}";
+  url = "https://${names.bookorbit}";
 in
 {
-  services.nginx.virtualHosts."books.${nya}" = {
+  services.nginx.virtualHosts.${names.bookorbit} = {
     forceSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString port}";

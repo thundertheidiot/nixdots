@@ -27,11 +27,6 @@
         format = "binary";
       };
 
-      rathole_secrets = {
-        sopsFile = ./rathole.toml;
-        format = "binary";
-      };
-
       mautrix_whatsapp_env = {
         sopsFile = ./mautrix_whatsapp.env;
         format = "dotenv";

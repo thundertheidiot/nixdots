@@ -20,6 +20,7 @@ in
     ./acme.nix
     ./coturn.nix
     ./forgejo.nix
+    ./jellyfin-proxy.nix
     ./matrix
     ./mumble.nix
     ./prosody

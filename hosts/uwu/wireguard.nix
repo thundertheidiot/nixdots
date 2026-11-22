@@ -1,9 +1,5 @@
 {
-  meow.wireguard = {
-    enable = true;
-    peer = "home";
-    tcpPorts = [ 2284 ];
-  };
+  meow.wireguard.enable = true;
 
   # Docker owns 2283; a dedicated native listener keeps outer FORWARD default-deny.
   services.nginx.virtualHosts.immich-transport = {

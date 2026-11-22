@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Manage WireGuard hub-and-spoke keys; plaintext secrets stay in memory and pipes."""
+"""Manage WireGuard hub-and-spoke keys; plaintext secrets stay in memory and pipes.
+
+Peers are defined in infra/default.nix, add one there and run keygen."""
 
 import argparse
 import base64
@@ -51,10 +53,10 @@ def read_json(path):
         raise Error(f"Invalid JSON: {path}") from None
 
 
-def inventory(root):
-    network = read_json(root / "peers.json")
-    if not isinstance(network, dict) or set(network) != {"hub", "endpoint", "port", "dns", "peers"}:
-        raise Error("Inventory must contain exactly hub, endpoint, port, dns and peers")
+def inventory(path):
+    network = read_json(path)
+    if not isinstance(network, dict) or set(network) != {"hub", "endpoint", "port", "mtu", "dns", "peers"}:
+        raise Error("Inventory must contain exactly hub, endpoint, port, mtu, dns and peers")
     peers = network["peers"]
     if not isinstance(peers, dict) or not peers:
         raise Error("Inventory must contain peers")
@@ -70,6 +72,8 @@ def inventory(root):
         ipaddress.IPv4Address(host)
         if type(network["port"]) is not int or not 1 <= network["port"] <= 65535:
             raise ValueError
+        if type(network["mtu"]) is not int:
+            raise ValueError
         if int(port) != network["port"] or len(set(addresses)) != len(addresses):
             raise ValueError
     except (TypeError, ValueError, AttributeError):
@@ -80,7 +84,7 @@ def inventory(root):
 def public_keys(directory, network):
     public = read_json(directory / "public-keys.json")
     if not isinstance(public, dict) or set(public) != set(network["peers"]):
-        raise Error("Public manifest must contain exactly the inventory peers")
+        raise Error("Public manifest must contain exactly the inventory peers; run keygen for new peers")
     for value in public.values():
         if not isinstance(value, str) or key(value.encode("utf-8")) != value:
             raise Error("Invalid public manifest key")
@@ -184,6 +188,32 @@ def generate(directory, network, name=None):
     commit(directory, secrets, public)
 
 
+def keygen(directory, network):
+    peers = network["peers"]
+    path = directory / "public-keys.json"
+    public = read_json(path) if path.exists() else {}
+    if not isinstance(public, dict):
+        raise Error("Invalid public manifest")
+    for value in public.values():
+        if not isinstance(value, str) or key(value.encode("utf-8")) != value:
+            raise Error("Invalid public manifest key")
+    # peers dropped from the inventory leave the manifest, their encrypted files stay
+    public = {peer: value for peer, value in public.items() if peer in peers}
+    missing = [peer for peer in peers if peer not in public]
+    if not missing:
+        raise Error("Every inventory peer already has keys")
+    if network["hub"] in missing:
+        raise Error("The hub has no keys; use regenerate")
+    secrets = {}
+    for peer in missing:
+        private = key(run(["wg", "genkey"]))
+        public[peer] = pubkey(private)
+        secrets[Path("private") / peer] = private
+        secrets[Path("psk") / peer] = key(run(["wg", "genpsk"]))
+    commit(directory, secrets, public)
+    return missing
+
+
 def client_config(directory, network, name):
     hub = network["hub"]
     if name == hub:
@@ -196,7 +226,7 @@ def client_config(directory, network, name):
     peers = network["peers"]
     lines = ["[Interface]", f"Address = {peers[name]}/32", f"DNS = {peers[network['dns']]}"]
     allowed_ips = [f"{address}/32" for peer, address in peers.items() if peer != name]
-    lines += [f"PrivateKey = {private}", "MTU = 1420", "", "[Peer]",
+    lines += [f"PrivateKey = {private}", f"MTU = {network['mtu']}", "", "[Peer]",
               f"PublicKey = {public[hub]}", f"PresharedKey = {psk}",
               f"AllowedIPs = {', '.join(allowed_ips)}", f"Endpoint = {network['endpoint']}",
               "PersistentKeepalive = 25"]
@@ -206,10 +236,12 @@ def client_config(directory, network, name):
 def main():
     os.umask(0o077)
     parser = argparse.ArgumentParser(description=__doc__)
-    default = Path("sops/wireguard") if Path("sops/wireguard").is_dir() else Path.cwd()
-    parser.add_argument("--directory", type=Path, default=default, help="inventory and key directory")
+    default = Path("infra/wireguard") if Path("infra/wireguard").is_dir() else Path.cwd()
+    parser.add_argument("--directory", type=Path, default=default, help="key directory")
+    parser.add_argument("--inventory", type=Path, required=True, help="peer inventory json, generated from infra")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("list", help="list inventory peers without decrypting secrets")
+    commands.add_parser("keygen", help="generate keys for inventory peers that have none")
     regeneration = commands.add_parser("regenerate", help="generate all inventory keys")
     regeneration.add_argument("--force", action="store_true", help="allow replacing existing outputs")
     rotation = commands.add_parser("rotate", help="rotate a peer's private key and associated PSKs")
@@ -219,7 +251,7 @@ def main():
     config.add_argument("--qr", action="store_true", help="render config as a terminal QR code instead")
     args = parser.parse_args()
     root = args.directory.resolve()
-    network = inventory(root)
+    network = inventory(args.inventory)
     if args.command == "list":
         for peer in network["peers"]:
             print(peer)
@@ -239,6 +271,8 @@ def main():
                 raise Error("Outputs already exist; use --force to replace them")
             generate(directory, network)
             print("regenerated all peers")
+        elif args.command == "keygen":
+            print("generated " + ", ".join(keygen(directory, network)))
         elif args.command == "rotate":
             generate(directory, network, args.name)
             print(f"rotated {args.name}")

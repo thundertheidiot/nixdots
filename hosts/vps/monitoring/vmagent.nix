@@ -1,4 +1,19 @@
-{ server, ... }: {
+{ infra, ... }:
+let
+  inherit (infra.monitoring) exporters storage;
+  server2 = infra.hosts.server2.wg;
+  ports = exporters.server2;
+  at = port: "${server2}:${toString port}";
+  media = [
+    "radarr"
+    "sonarr"
+    "prowlarr"
+    "bazarr"
+    "qbittorrent"
+    "slskd"
+  ];
+in
+{
   config = {
     services.vmagent = {
       enable = true;
@@ -7,7 +22,7 @@
       extraArgs = [
         "-httpListenAddr=127.0.0.1:8429"
         "-remoteWrite.url=http://127.0.0.1:9090/api/v1/write"
-        "-remoteWrite.url=http://${server.homeServer2}:8428/api/v1/write"
+        "-remoteWrite.url=http://${infra.hosts.${storage.host}.wg}:${toString storage.port}/api/v1/write"
         "-remoteWrite.tmpDataPath=/var/lib/vmagent/remote-write"
         # 500 MiB per destination (1000 MiB total) + metadata/headroom
         "-remoteWrite.maxDiskUsagePerURL=524288000"
@@ -26,7 +41,7 @@
                 labels.host = "vps";
               }
               {
-                targets = [ "${server.homeServer2}:9100" ];
+                targets = [ (at ports.node) ];
                 labels.host = "server2";
               }
             ];
@@ -39,7 +54,7 @@
                 labels.host = "vps";
               }
               {
-                targets = [ "${server.homeServer2}:4243" ];
+                targets = [ (at ports.comin) ];
                 labels.host = "server2";
               }
             ];
@@ -52,7 +67,7 @@
                 labels.host = "vps";
               }
               {
-                targets = [ "${server.homeServer2}:9113" ];
+                targets = [ (at ports.nginx) ];
                 labels.host = "server2";
               }
             ];
@@ -65,7 +80,7 @@
                 labels.host = "vps";
               }
               {
-                targets = [ "${server.homeServer2}:9187" ];
+                targets = [ (at ports.postgres) ];
                 labels.host = "server2";
               }
             ];
@@ -78,54 +93,26 @@
                 labels.host = "vps";
               }
               {
-                targets = [ "${server.homeServer2}:9153" ];
+                targets = [ (at ports.dnsmasq) ];
                 labels.host = "server2";
               }
             ];
           }
           {
             job_name = "media";
-            static_configs =
-              map
-                (target: {
-                  targets = [ "${server.homeServer2}:${toString target.port}" ];
-                  labels = {
-                    host = "server2";
-                    service = target.name;
-                  };
-                })
-                [
-                  {
-                    name = "radarr";
-                    port = 9708;
-                  }
-                  {
-                    name = "sonarr";
-                    port = 9709;
-                  }
-                  {
-                    name = "prowlarr";
-                    port = 9710;
-                  }
-                  {
-                    name = "bazarr";
-                    port = 9711;
-                  }
-                  {
-                    name = "qbittorrent";
-                    port = 9712;
-                  }
-                  {
-                    name = "slskd";
-                    port = 9713;
-                  }
-                  ];
+            static_configs = map (service: {
+              targets = [ (at ports.${service}) ];
+              labels = {
+                host = "server2";
+                inherit service;
+              };
+            }) media;
           }
           {
             job_name = "jellyfin";
             static_configs = [
               {
-                targets = [ "${server.homeServer2}:8096" ];
+                targets = [ (at ports.jellyfin) ];
                 labels.host = "server2";
               }
             ];
@@ -134,7 +121,7 @@
             job_name = "navidrome";
             static_configs = [
               {
-                targets = [ "${server.homeServer2}:4533" ];
+                targets = [ (at ports.navidrome) ];
                 labels.host = "server2";
               }
             ];
@@ -143,7 +130,7 @@
             job_name = "forgejo";
             static_configs = [
               {
-                targets = [ "${server.homeServer2}:9114" ];
+                targets = [ (at ports.forgejo) ];
                 labels.host = "server2";
               }
             ];

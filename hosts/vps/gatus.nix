@@ -1,5 +1,6 @@
 {
   config,
+  infra,
   lib,
   mlib,
   ...
@@ -14,10 +15,6 @@ in
   };
 
   config = {
-    meow.server.reverseProxy = {
-      "meowcloud.net" = "http://127.0.0.1:${toString config.services.gatus.settings.web.port}";
-    };
-
     meow.impermanence.directories = [
       { path = "/var/lib/private/gatus"; permissions = "0700"; }
     ];
@@ -25,7 +22,7 @@ in
     services.gatus = {
       enable = true;
       settings = {
-        web.port = 8081;
+        web.port = infra.services.gatus.port;
 
         storage = {
           type = "sqlite";

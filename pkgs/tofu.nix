@@ -1,6 +1,6 @@
 { pkgs, ... }:
 pkgs.writeShellApplication {
-  name = "dns";
+  name = "tofu";
   passthru.autoUpdate.skip = "Local script; dependencies follow flake.lock.";
   runtimeInputs = with pkgs; [
     git
@@ -11,8 +11,8 @@ pkgs.writeShellApplication {
     root=$(git rev-parse --show-toplevel)
     set -a
     # shellcheck disable=SC1090
-    source <(sops decrypt "$root/sops/porkbun.env")
+    source <(sops decrypt "$root/infra/porkbun.env")
     set +a
-    exec tofu -chdir="$root/dns" "$@"
+    exec tofu -chdir="$root/infra/tofu" "$@"
   '';
 }

@@ -63,5 +63,5 @@ wg *args:
   nix run .#wireguard-keys -- "$@"
 
 [positional-arguments]
-dns *args:
-  nix run .#dns -- "$@"
+tofu *args:
+  nix run .#tofu -- "$@"

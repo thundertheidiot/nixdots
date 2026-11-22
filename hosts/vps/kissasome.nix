@@ -1,11 +1,12 @@
 {
   config,
+  infra,
   pkgs,
   ...
 }:
 let
   dataDir = "/nix/persist/kissasome";
-  port = 23817;
+  inherit (infra.services.kissasome) port;
 in
 {
   users.users.kissasome = {
@@ -26,8 +27,6 @@ in
       mode = "0750";
     };
   };
-
-  meow.server.reverseProxy."kissasome.meowcloud.net" = "http://127.0.0.1:${toString port}";
 
   systemd.services.kissasome = {
     description = "kissasome";

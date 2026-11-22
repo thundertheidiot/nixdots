@@ -1,12 +1,10 @@
 {
   config,
-  inputs,
   pkgs,
   ...
 }:
 let
   nya = config.meow.dns.domain;
-  vpn = import "${inputs.self.outPath}/sops/wireguard";
 in
 {
   services.nginx.virtualHosts.${nya} = {
@@ -22,5 +20,5 @@ in
   };
 
   # the zone is local on the vpn, point the bare name back here
-  services.dnsmasq.settings.host-record = [ "${nya},${vpn.peers.${vpn.hub}.address}" ];
+  services.dnsmasq.settings.host-record = [ "${nya},${config.meow.dns.addresses.vps}" ];
 }

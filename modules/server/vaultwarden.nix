@@ -1,30 +1,29 @@
 {
   config,
+  infra,
   mlib,
   lib,
-  pkgs,
   ...
 }:
 let
   inherit (mlib) mkEnOpt;
-  inherit (lib) mkIf filterAttrs mapAttrs;
+  inherit (lib) head mkIf filterAttrs mapAttrs;
 
   cfg = config.meow.server;
-  url = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+  inherit (infra.services) vaultwarden;
+  url = "http://127.0.0.1:${toString vaultwarden.port}";
 in
 {
   options.meow.server.vaultwarden = mkEnOpt "Vaultwarden";
 
   config = mkIf cfg.vaultwarden {
-    meow.server.reverseProxy."vw.${cfg.mainDomain}" = url;
-
     # admin panel only over wireguard, on every vhost proxying vaultwarden
     services.nginx.virtualHosts = mapAttrs (_: _: {
       locations."/admin" = {
         proxyPass = url;
         recommendedProxySettings = true;
         extraConfig = ''
-          allow 10.100.0.0/24;
+          allow ${infra.networks.wg.cidr};
           deny all;
         '';
       };
@@ -51,10 +50,10 @@ in
       backupDir = "/var/backup/vaultwarden";
 
       config = {
-        DOMAIN = "https://vw.${cfg.mainDomain}";
+        DOMAIN = "https://${head vaultwarden.public}";
 
         ROCKET_ADDRESS = "127.0.0.1";
-        ROCKET_PORT = 8222;
+        ROCKET_PORT = vaultwarden.port;
 
         SIGNUPS_ALLOWED = false;
 

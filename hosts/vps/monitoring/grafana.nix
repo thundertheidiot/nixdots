@@ -1,16 +1,14 @@
 {
   config,
-  inputs,
+  infra,
   lib,
   pkgs,
-  server,
   ...
 }:
 let
   inherit (lib) getExe;
-  vpn = import "${inputs.self.outPath}/sops/wireguard";
-  address = vpn.peers.${vpn.hub}.address;
-  nya = config.meow.dns.domain;
+  inherit (infra.monitoring) storage;
+  dash = config.meow.dns.names.grafana;
 in
 {
   config = {
@@ -21,8 +19,8 @@ in
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
-          domain = "dash.${nya}";
-          root_url = "https://dash.${nya}/";
+          domain = dash;
+          root_url = "https://${dash}/";
         };
         security = {
           secret_key = "$__file{${config.services.grafana.dataDir}/secret-key}";
@@ -57,7 +55,7 @@ in
             uid = "server2-victoriametrics";
             type = "prometheus";
             access = "proxy";
-            url = "http://${server.homeServer2}:8428";
+            url = "http://${infra.hosts.${storage.host}.wg}:${toString storage.port}";
           }
         ];
       };
@@ -70,11 +68,11 @@ in
       fi
     '';
 
-    services.nginx.virtualHosts."dash.${nya}" = {
+    services.nginx.virtualHosts.${dash} = {
       onlySSL = true;
       listen = [
         {
-          addr = address;
+          addr = infra.hosts.vps.wg;
           port = 443;
           ssl = true;
         }

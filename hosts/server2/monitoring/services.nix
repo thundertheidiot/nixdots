@@ -1,14 +1,14 @@
 {
   config,
-  inputs,
+  infra,
   lib,
   pkgs,
   ...
 }:
 let
-  nya = config.meow.dns.domain;
-  vpn = import "${inputs.self.outPath}/sops/wireguard";
-  address = vpn.peers.home2.address;
+  inherit (config.meow.dns) names;
+  address = infra.hosts.server2.wg;
+  ports = infra.monitoring.exporters.server2;
   exporterRole = "prometheus-postgres-exporter";
   psql = lib.getExe' config.services.postgresql.package "psql";
   grantPgMonitor = pkgs.writeShellScript "grant-postgres-exporter-monitor" ''
@@ -19,21 +19,24 @@ let
   '';
 in
 {
-  services.comin.exporter.listen_address = address;
+  services.comin.exporter = {
+    listen_address = address;
+    port = ports.comin;
+  };
   systemd.services.comin = {
     wants = [ "wg-quick-wg0.service" ];
     after = [ "wg-quick-wg0.service" ];
   };
 
   services.forgejo.settings.metrics.ENABLED = true;
-  services.nginx.virtualHosts."git.${nya}".locations."= /metrics" = {
+  services.nginx.virtualHosts.${names.forgejo}.locations."= /metrics" = {
     return = "404";
   };
   services.nginx.virtualHosts."forgejo-metrics" = {
     listen = [
       {
         addr = address;
-        port = 9114;
+        port = ports.forgejo;
         ssl = false;
       }
     ];
@@ -58,7 +61,7 @@ in
   services.prometheus.exporters.postgres = {
     enable = true;
     listenAddress = address;
-    port = 9187;
+    port = ports.postgres;
     user = exporterRole;
     group = exporterRole;
     dataSourceName = "user=${exporterRole} dbname=postgres host=/run/postgresql sslmode=disable";
@@ -92,6 +95,7 @@ in
   services.prometheus.exporters.dnsmasq = {
     enable = true;
     listenAddress = address;
+    port = ports.dnsmasq;
     dnsmasqListenAddress = "127.0.0.1:53";
     leasesPath = builtins.toFile "dnsmasq-empty-leases" "";
   };
@@ -104,7 +108,7 @@ in
   services.prometheus.exporters.nginx = {
     enable = true;
     listenAddress = address;
-    port = 9113;
+    port = ports.nginx;
     scrapeUri = "http://127.0.0.1/nginx_status";
     openFirewall = false;
   };

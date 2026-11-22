@@ -4,12 +4,12 @@
 }:
 let
   vpnAddress = config.vpnNamespaces.airvpn.namespaceAddress;
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
 in
 {
   config = {
     services.nginx.virtualHosts = {
-      "homepage.${nya}" = {
+      ${names.homepage} = {
         forceSSL = true;
         locations = {
           "/" = {
@@ -73,7 +73,7 @@ in
             {
               "Jellyfin" = {
                 icon = "jellyfin.svg";
-                href = "https://jellyfin.${nya}";
+                href = "https://${names.jellyfin}";
                 widget = {
                   type = "jellyfin";
                   url = "http://127.0.0.1:8096";
@@ -87,19 +87,19 @@ in
             {
               "Navidrome" = {
                 icon = "navidrome.svg";
-                href = "https://navidrome.${nya}";
+                href = "https://${names.navidrome}";
               };
             }
             {
               "FreshRSS" = {
                 icon = "freshrss.svg";
-                href = "https://rss.${nya}";
+                href = "https://${names.freshrss}";
               };
             }
             {
               "BookOrbit" = {
                 icon = "mdi-book-open-page-variant";
-                href = "https://books.${nya}";
+                href = "https://${names.bookorbit}";
               };
             }
           ];
@@ -109,7 +109,7 @@ in
             {
               "Radarr" = {
                 icon = "radarr.svg";
-                href = "https://radarr.${nya}";
+                href = "https://${names.radarr}";
                 widget = {
                   type = "radarr";
                   url = "http://${vpnAddress}:7878";
@@ -121,7 +121,7 @@ in
             {
               "Sonarr" = {
                 icon = "sonarr.svg";
-                href = "https://sonarr.${nya}";
+                href = "https://${names.sonarr}";
                 widget = {
                   type = "sonarr";
                   url = "http://${vpnAddress}:8989";
@@ -133,7 +133,7 @@ in
             {
               "Bazarr" = {
                 icon = "bazarr.svg";
-                href = "https://bazarr.${nya}";
+                href = "https://${names.bazarr}";
                 widget = {
                   type = "bazarr";
                   url = "http://${vpnAddress}:6767";
@@ -145,13 +145,13 @@ in
             {
               "MeTube" = {
                 icon = "metube.svg";
-                href = "https://metube.${nya}";
+                href = "https://${names.metube}";
               };
             }
             {
               "Soulbeet" = {
                 icon = "mdi-music-box-multiple";
-                href = "https://soulbeet.${nya}";
+                href = "https://${names.soulbeet}";
               };
             }
           ];
@@ -161,7 +161,7 @@ in
             {
               "qBittorrent" = {
                 icon = "qbittorrent.svg";
-                href = "https://torrent.${nya}";
+                href = "https://${names.qbittorrent}";
                 widget = {
                   type = "qbittorrent";
                   url = "http://${vpnAddress}:8080";
@@ -173,7 +173,7 @@ in
             {
               "Prowlarr" = {
                 icon = "prowlarr.svg";
-                href = "https://prowlarr.${nya}";
+                href = "https://${names.prowlarr}";
                 widget = {
                   type = "prowlarr";
                   url = "http://${vpnAddress}:9696";
@@ -186,7 +186,7 @@ in
             {
               "Soulseek" = {
                 icon = "slskd.svg";
-                href = "https://soulseek.${nya}";
+                href = "https://${names.slskd}";
               };
             }
           ];
@@ -196,26 +196,26 @@ in
             {
               "Forgejo" = {
                 icon = "forgejo.svg";
-                href = "https://git.${nya}";
+                href = "https://${names.forgejo}";
               };
             }
             {
               "Home Assistant" = {
                 icon = "home-assistant.svg";
-                href = "https://homeassistant.${nya}";
+                href = "https://${names.homeassistant}";
               };
             }
             {
               "Syncthing" = {
                 icon = "syncthing.svg";
-                href = "https://syncthing.${nya}";
+                href = "https://${names.syncthing}";
                 description = "lan only";
               };
             }
             {
               "Grafana" = {
                 icon = "grafana.svg";
-                href = "https://dash.${nya}";
+                href = "https://${names.grafana}";
               };
             }
             {

@@ -1,8 +1,11 @@
 {
-  config,
+  infra,
   pkgs,
   ...
 }:
+let
+  inherit (infra.services) website;
+in
 {
   meow.impermanence.directories = [
     {
@@ -22,15 +25,7 @@
   # Migrate existing root-owned database files, not just the persistence directory.
   systemd.tmpfiles.rules = [ "Z /var/lib/kotiboksi - kotiboksi kotiboksi - -" ];
 
-  meow.server.reverseProxy = {
-    "${config.meow.server.mainDomain}" = "http://127.0.0.1:3005";
-    "thunder.meowcloud.net" = "http://127.0.0.1:3005";
-  };
-
-  meow.server.radio.domains = [
-    config.meow.server.mainDomain
-    "thunder.meowcloud.net"
-  ];
+  meow.server.radio.domains = website.public;
 
   systemd.services."leptos-kotiboksi" = {
     enable = true;
@@ -38,7 +33,7 @@
 
     environment = {
       DATABASE_URL = "/var/lib/kotiboksi/guestbook.db";
-      LEPTOS_SITE_ADDR = "127.0.0.1:3005";
+      LEPTOS_SITE_ADDR = "127.0.0.1:${toString website.port}";
     };
 
     serviceConfig = {

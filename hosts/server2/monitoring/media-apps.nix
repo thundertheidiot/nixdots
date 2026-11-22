@@ -1,10 +1,10 @@
 { config, ... }:
 let
-  nya = config.meow.dns.domain;
+  inherit (config.meow.dns) names;
 in
 {
   config = {
     services.navidrome.settings.Prometheus.Enabled = true;
-    services.nginx.virtualHosts."navidrome.${nya}".locations."= /metrics".return = "404";
+    services.nginx.virtualHosts.${names.navidrome}.locations."= /metrics".return = "404";
   };
 }

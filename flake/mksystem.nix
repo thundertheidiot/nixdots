@@ -28,6 +28,7 @@ in
       {
         specialArgs = {
           inherit inputs mlib;
+          inherit (inputs.self) infra;
         };
         modules = modules ++ [
           "${root}/sops"
