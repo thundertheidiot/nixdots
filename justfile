@@ -62,9 +62,6 @@ _rebuild command host:
 wg *args:
   nix run .#wireguard-keys -- "$@"
 
-certs:
-  nix run .#local-certs
-
 [positional-arguments]
 dns *args:
   nix run .#dns -- "$@"

@@ -16,8 +16,6 @@ in
   };
 
   imports = [
-    # local self signed certificates
-    (import ../../certs).module
     ./camera.nix
     ./disko.nix
     ./dns.nix

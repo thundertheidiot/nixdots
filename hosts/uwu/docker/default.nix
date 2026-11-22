@@ -1,11 +1,6 @@
-{
-  config,
-  inputs,
-  ...
-}:
+{ ... }:
 let
   inherit (builtins) mapAttrs;
-  certs = import "${inputs.self.outPath}/certs";
 in
 {
   imports = [
@@ -35,10 +30,6 @@ in
       (_: port: {
         root = "/fake";
 
-        addSSL = true;
-        sslCertificate = certs."local.crt";
-        sslCertificateKey = config.sops.secrets.localKey.path;
-
         locations = {
           "/" = {
             proxyPass = "http://127.0.0.1:${toString port}";
@@ -61,9 +52,6 @@ in
       }
     // {
       "immich.home" = {
-        addSSL = true;
-        sslCertificate = certs."local.crt";
-        sslCertificateKey = config.sops.secrets.localKey.path;
 
         locations."/" = {
           proxyPass = "http://127.0.0.1:2283";
@@ -83,9 +71,6 @@ in
       };
 
       "soulseek.home" = {
-        addSSL = true;
-        sslCertificate = certs."local.crt";
-        sslCertificateKey = config.sops.secrets.localKey.path;
 
         locations."/" = {
           proxyPass = "http://127.0.0.1:5030";
@@ -100,9 +85,6 @@ in
       };
 
       "firefox.home" = {
-        addSSL = true;
-        sslCertificate = certs."local.crt";
-        sslCertificateKey = config.sops.secrets.localKey.path;
 
         root = "/fake";
         locations."/" = {

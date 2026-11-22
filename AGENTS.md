@@ -26,3 +26,11 @@ Remember to use the helper functions in `flake/lib`. Especially the option ones 
 The top `let in` block shouldn't get too big, it should just be an import and shared section, don't be afraid to create more let in blocks further down, things used only once should be placed in a block right before they're used for simplicity.
 
 For readability, large modules with many sections should be split up into readable chunks with lib.mkMerge, each chunk being a self contained unit of code.
+
+# Infra
+
+The host `uwu` is not in use right now, don't worry about it's configuration too much, there's a bunch of old options there. It's fine if it can't evaluate.
+
+These conditions should dictate any planning and changes on the server infrastructure:
+1. Everything on server2 must remain accessible without access to the internet or VPS.
+2. Everything on the vps must remain accessible without access to server2.
