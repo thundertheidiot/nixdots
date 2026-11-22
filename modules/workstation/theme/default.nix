@@ -20,7 +20,7 @@ in
       "catppuccin"
       "madoromi"
     ]) "madoromi" { description = "desktop palette family"; };
-    variant = mkOpt str (if theme.family == "madoromi" then "fuyu-yoru" else "mocha") {
+    variant = mkOpt str (if theme.family == "madoromi" then "haru-yoru" else "mocha") {
       example = "haru-hiru";
       description = "palette variant within the selected family";
     };

@@ -2,7 +2,7 @@
 let
   inherit (builtins)
     elemAt
-    fromTOML
+    floor
     genList
     listToAttrs
     substring
@@ -24,6 +24,48 @@ in
     g = (fromTOML "value = 0x${substring 3 2 color}").value;
     b = (fromTOML "value = 0x${substring 5 2 color}").value;
   };
+
+  # whole-number hue, saturation and lightness percentages
+  hexToHsl =
+    color:
+    let
+      channel = offset: (fromTOML "value = 0x${substring offset 2 color}").value / 255.0;
+      r = channel 1;
+      g = channel 3;
+      b = channel 5;
+      max =
+        if r > g && r > b then
+          r
+        else if g > b then
+          g
+        else
+          b;
+      min =
+        if r < g && r < b then
+          r
+        else if g < b then
+          g
+        else
+          b;
+      d = max - min;
+      l = (max + min) / 2;
+      s = if d == 0 then 0 else d / (1 - (if l > 0.5 then 2 * l - 1 else 1 - 2 * l));
+      hue =
+        if d == 0 then
+          0
+        else if max == r then
+          60 * (g - b) / d
+        else if max == g then
+          60 * ((b - r) / d + 2)
+        else
+          60 * ((r - g) / d + 4);
+      round = x: floor (x + 0.5);
+    in
+    {
+      h = round (if hue < 0 then hue + 360 else hue);
+      s = round (s * 100);
+      l = round (l * 100);
+    };
 
   mkThemePalette =
     {

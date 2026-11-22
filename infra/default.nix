@@ -158,6 +158,11 @@ let
         public = [ "meowcloud.net" ];
         port = 8081;
       };
+      glance = {
+        host = "vps";
+        internal = "glance";
+        access = "wg";
+      };
       grafana = {
         host = "vps";
         internal = "dash";

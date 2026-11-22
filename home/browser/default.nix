@@ -3,6 +3,7 @@
   mlib,
   lib,
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -45,12 +46,24 @@ in
         };
       };
 
+      glance = "https://${osConfig.meow.dns.names.glance}";
+
       policies = {
         ExtensionSettings = mapAttrs (_: v: {
           installation_mode = "force_installed";
           install_url = v;
           private_browsing = true;
         }) defaultExtensions;
+
+        # new tab override reads its settings from managed storage
+        "3rdparty".Extensions."newtaboverride@agenedia.com" = {
+          type = "custom_url";
+          url = glance;
+          # focus the page so glance's search box takes typing
+          focus_website = true;
+        };
+
+        Homepage.URL = glance;
       };
 
       search = {

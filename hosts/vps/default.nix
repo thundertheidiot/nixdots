@@ -15,6 +15,7 @@ in
     ./dns.nix
     ./freshrss.nix
     ./gatus.nix
+    ./glance.nix
     ./jellyfin.nix
     ./kissasome.nix
     ./monitoring

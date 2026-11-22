@@ -110,11 +110,13 @@ in
           namespace = "airvpn";
           wgConfFile = config.sops.secrets.media-stack-wireguard.path;
           accessibleFrom = [ infra.networks.lan ];
-          openVPNPorts = [
-            {
-              port = 3865;
-              protocol = "both";
-            }
+          allowedTCPPorts = [
+            3865
+            33493
+          ];
+          allowedUDPPorts = [
+            3865
+            33493
           ];
         };
         torrentClients.qbittorrent = {

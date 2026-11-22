@@ -76,7 +76,7 @@
 
     # server
     nixflix = {
-      url = "github:kiriwalawren/nixflix/8402435b337f5f94e971f4b585d92d8a81eedceb";
+      url = "github:kiriwalawren/nixflix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/main";
