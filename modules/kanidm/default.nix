@@ -61,6 +61,8 @@ in
 {
   options.meow.kanidm.enable = mkEnOpt "kanidm identity management";
 
+  imports = [ ./oauth2-proxy.nix ];
+
   config = mkIf cfg.enable {
     services.kanidm = {
       package = pkgs.kanidmWithSecretProvisioning_1_12;
@@ -107,7 +109,7 @@ in
     ];
 
     security.acme.certs.${node.hostname} = {
-      extraDomainNames = map (n: n.hostname) proxied;
+      extraDomainNames = [ node.oauth2.domain ] ++ map (n: n.hostname) proxied;
       dnsProvider = "porkbun";
       # the local dnsmasq shadows home.idm
       dnsResolver = "1.1.1.1:53";
@@ -140,7 +142,7 @@ in
 
     # lan and wireguard clients skip the vps for the home node
     services.dnsmasq.settings.host-record = mapAttrsToList (
-      name: n: "${n.hostname},${config.meow.dns.addresses.${name}}"
+      name: n: "${n.hostname},${n.oauth2.domain},${config.meow.dns.addresses.${name}}"
     ) (filterAttrs (_: n: n ? via) nodes);
 
     meow.impermanence.directories = [

@@ -303,6 +303,8 @@ in
           };
         }
       ) hosts;
+
+      meow.kanidm.protect.${names.sonarr} = [ "admins" ];
     }
     {
       nixflix = genAttrs arrNames (

@@ -17,140 +17,158 @@ let
   soulbeet = pkgs.mpkgs.soulbeet;
 in
 {
-  services.nginx.virtualHosts.${names.navidrome} = {
-    forceSSL = true;
-    locations = {
-      "/" = {
-        proxyPass = "http://127.0.0.1:${toString config.services.navidrome.settings.Port}";
-        recommendedProxySettings = true;
-        extraConfig = ''
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "Upgrade";
-        '';
+  config = {
+    sops.secrets.navidrome_env = {
+      owner = config.services.navidrome.user;
+    };
+
+    users.users.${config.services.navidrome.user}.extraGroups = [ "media" ];
+    systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [ "/mnt/storage/media" ];
+    systemd.services.navidrome.environment.TMPDIR = "${config.meow.impermanence.persist}/navidrome/tmp";
+    systemd.tmpfiles.rules = [
+      "d /mnt/storage/media/my_music 2775 root media -"
+      "d ${config.meow.impermanence.persist}/navidrome/tmp 0700 navidrome navidrome -"
+    ];
+
+    services.navidrome = {
+      enable = true;
+      openFirewall = false;
+      environmentFile = config.sops.secrets.navidrome_env.path;
+      settings = {
+        Address = "0.0.0.0";
+        MusicFolder = "/mnt/storage/media/music";
+        DataFolder = "${config.meow.impermanence.persist}/navidrome";
+        BaseUrl = "https://${head infra.services.navidrome.public}";
+
+        # kanidm auth, local and vps
+        ExtAuth.TrustedSources = "127.0.0.1/32,${infra.hosts.${infra.dns.edge}.wg}/32";
+
+        Agents = "deezer,lastfm,listenbrainz";
+
+        LastFM.Enabled = true;
+        Deezer.Enabled = true;
+        ListenBrainz.Enabled = true;
+
+        # needed by navidrome-mpd-sync, applies to newly registered players
+        Subsonic.DefaultReportRealPath = true;
       };
     };
-  };
 
-  sops.secrets.navidrome_env = {
-    owner = config.services.navidrome.user;
-  };
+    # kanidm login picks the navidrome user, subsonic clients keep their own auth
+    meow.kanidm.protect.${names.navidrome} = [ "users" ];
+    services.nginx.virtualHosts.${names.navidrome} =
+      let
+        target = "http://127.0.0.1:${toString config.services.navidrome.settings.Port}";
+      in
+      {
+        forceSSL = true;
+        locations."/" = {
+          proxyPass = target;
+          recommendedProxySettings = true;
+          proxyWebsockets = true;
+          extraConfig = ''
+            auth_request_set $username $upstream_http_x_auth_request_preferred_username;
+            proxy_set_header Remote-User $username;
+          '';
+        };
+        locations."/rest/" = {
+          proxyPass = target;
+          recommendedProxySettings = true;
+          extraConfig = ''
+            auth_request off;
+            proxy_set_header Remote-User "";
+          '';
+        };
+      };
 
-  users.users.${config.services.navidrome.user}.extraGroups = [ "media" ];
-  systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [ "/mnt/storage/media" ];
-  systemd.services.navidrome.environment.TMPDIR = "${config.meow.impermanence.persist}/navidrome/tmp";
-  systemd.tmpfiles.rules = [
-    "d /mnt/storage/media/my_music 2775 root media -"
-    "d ${config.meow.impermanence.persist}/navidrome/tmp 0700 navidrome navidrome -"
-  ];
-
-  services.navidrome = {
-    enable = true;
-    openFirewall = false;
-    environmentFile = config.sops.secrets.navidrome_env.path;
-    settings = {
-      Address = "0.0.0.0";
-      MusicFolder = "/mnt/storage/media/music";
-      DataFolder = "${config.meow.impermanence.persist}/navidrome";
-      BaseUrl = "https://${head infra.services.navidrome.public}";
-
-      Agents = "deezer,lastfm,listenbrainz";
-
-      LastFM.Enabled = true;
-      Deezer.Enabled = true;
-      ListenBrainz.Enabled = true;
-
-      # needed by navidrome-mpd-sync, applies to newly registered players
-      Subsonic.DefaultReportRealPath = true;
-    };
-  };
-
-  services.nginx.virtualHosts.${names.soulbeet} = {
-    forceSSL = true;
-    locations = {
-      "/" = {
-        proxyPass = "http://127.0.0.1:9765";
-        recommendedProxySettings = true;
-        proxyWebsockets = true;
-        extraConfig = ''
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "Upgrade";
-          proxy_read_timeout 3600s;
-          proxy_send_timeout 3600s;
-        '';
+    services.nginx.virtualHosts.${names.soulbeet} = {
+      forceSSL = true;
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:9765";
+          recommendedProxySettings = true;
+          proxyWebsockets = true;
+          extraConfig = ''
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            proxy_read_timeout 3600s;
+            proxy_send_timeout 3600s;
+          '';
+        };
       };
     };
-  };
 
-  users.groups.soulbeet = { };
-  users.users.soulbeet = {
-    isSystemUser = true;
-    group = "soulbeet";
-    extraGroups = [ "media" ];
-  };
-
-  systemd.services.soulbeet = {
-    description = "Soulbeet";
-    wantedBy = [ "multi-user.target" ];
-    after = [
-      "network-online.target"
-    ];
-    wants = [ "network-online.target" ];
-    unitConfig.RequiresMountsFor = [
-      "/nix/persist/media-stack/soulbeet"
-      "/mnt/storage"
-    ];
-    path = [ beetsPython ];
-    environment = {
-      DATABASE_URL = "sqlite:/data/soulbeet.db";
-      DOWNLOAD_PATH = "/downloads";
-      NAVIDROME_URL = "http://127.0.0.1:${toString config.services.navidrome.settings.Port}";
-      BEETS_ALBUM_MODE = "true";
-      BEETS_PYTHON = getExe beetsPython;
-      BEETS_CONFIG = "${soulbeet}/beets_config.yaml";
-      HOME = "/tmp";
-      IP = "127.0.0.1";
-      PORT = "9765";
+    users.groups.soulbeet = { };
+    users.users.soulbeet = {
+      isSystemUser = true;
+      group = "soulbeet";
+      extraGroups = [ "media" ];
     };
-    serviceConfig = {
-      User = "soulbeet";
-      Group = "soulbeet";
-      UMask = "0002";
-      NoNewPrivileges = true;
-      CapabilityBoundingSet = "";
-      PrivateTmp = true;
-      PrivateDevices = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ProtectKernelTunables = true;
-      ProtectKernelModules = true;
-      ProtectKernelLogs = true;
-      ProtectControlGroups = true;
-      RestrictSUIDSGID = true;
-      RestrictRealtime = true;
-      LockPersonality = true;
-      RestrictAddressFamilies = [
-        "AF_UNIX"
-        "AF_INET"
-        "AF_INET6"
+
+    systemd.services.soulbeet = {
+      description = "Soulbeet";
+      wantedBy = [ "multi-user.target" ];
+      after = [
+        "network-online.target"
       ];
-      InaccessiblePaths = [
-        "/nix/persist"
-        "/var/lib"
-        "/run/secrets"
-        "-/run/secrets.d"
-        "-/run/media-stack"
+      wants = [ "network-online.target" ];
+      unitConfig.RequiresMountsFor = [
+        "/nix/persist/media-stack/soulbeet"
+        "/mnt/storage"
       ];
-      EnvironmentFile = config.sops.secrets.soulbeet_env.path;
-      WorkingDirectory = "${soulbeet}";
-      ExecStart = getExe soulbeet;
-      Restart = "on-failure";
-      # the ui hands beets the host path, so it must be writable besides the /music bind
-      ReadWritePaths = [ "/mnt/storage/media/my_music" ];
-      BindPaths = [
-        "/nix/persist/media-stack/soulbeet:/data"
-        "/mnt/storage/media/my_music:/music"
-        "/mnt/storage/media/downloads/soulseek:/downloads"
-      ];
+      path = [ beetsPython ];
+      environment = {
+        DATABASE_URL = "sqlite:/data/soulbeet.db";
+        DOWNLOAD_PATH = "/downloads";
+        NAVIDROME_URL = "http://127.0.0.1:${toString config.services.navidrome.settings.Port}";
+        BEETS_ALBUM_MODE = "true";
+        BEETS_PYTHON = getExe beetsPython;
+        BEETS_CONFIG = "${soulbeet}/beets_config.yaml";
+        HOME = "/tmp";
+        IP = "127.0.0.1";
+        PORT = "9765";
+      };
+      serviceConfig = {
+        User = "soulbeet";
+        Group = "soulbeet";
+        UMask = "0002";
+        NoNewPrivileges = true;
+        CapabilityBoundingSet = "";
+        PrivateTmp = true;
+        PrivateDevices = true;
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        ProtectKernelTunables = true;
+        ProtectKernelModules = true;
+        ProtectKernelLogs = true;
+        ProtectControlGroups = true;
+        RestrictSUIDSGID = true;
+        RestrictRealtime = true;
+        LockPersonality = true;
+        RestrictAddressFamilies = [
+          "AF_UNIX"
+          "AF_INET"
+          "AF_INET6"
+        ];
+        InaccessiblePaths = [
+          "/nix/persist"
+          "/var/lib"
+          "/run/secrets"
+          "-/run/secrets.d"
+          "-/run/media-stack"
+        ];
+        EnvironmentFile = config.sops.secrets.soulbeet_env.path;
+        WorkingDirectory = "${soulbeet}";
+        ExecStart = getExe soulbeet;
+        Restart = "on-failure";
+        # the ui hands beets the host path, so it must be writable besides the /music bind
+        ReadWritePaths = [ "/mnt/storage/media/my_music" ];
+        BindPaths = [
+          "/nix/persist/media-stack/soulbeet:/data"
+          "/mnt/storage/media/my_music:/music"
+          "/mnt/storage/media/downloads/soulseek:/downloads"
+        ];
+      };
     };
   };
 }

@@ -81,3 +81,18 @@ resource "porkbun_dns_record" "home_idm_aaaa" {
   type      = "AAAA"
   content   = local.vps6
 }
+
+# oauth2-proxy on the vps, also stops the wildcard from catching _acme-challenge.oauth, which breaks dns-01 for the kanidm cert
+resource "porkbun_dns_record" "oauth_a" {
+  domain    = local.domain
+  subdomain = "oauth"
+  type      = "A"
+  content   = local.vps4
+}
+
+resource "porkbun_dns_record" "oauth_aaaa" {
+  domain    = local.domain
+  subdomain = "oauth"
+  type      = "AAAA"
+  content   = local.vps6
+}

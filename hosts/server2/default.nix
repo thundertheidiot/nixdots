@@ -19,7 +19,6 @@
     ./metube.nix
     ./monitoring
     ./navidrome.nix
-    ./oauth2-proxy.nix
     ./secrets
     ./syncthing.nix
     # ./urlwatch.nix

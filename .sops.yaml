@@ -22,6 +22,7 @@ creation_rules:
           - *desk
           - *framework
           - *server
+          - *vps
   - path_regex: sops/shared/[^/]+$
     key_groups:
       - age:

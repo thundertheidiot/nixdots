@@ -112,10 +112,6 @@ let
         public = [ "navidrome.meowcloud.net" ];
         port = 4533;
       };
-      oauth2-proxy = {
-        host = "server2";
-        internal = "oauth2";
-      };
       prowlarr = {
         host = "server2";
         internal = "prowlarr";
@@ -198,11 +194,22 @@ let
       domain = "idm.meowcloud.net";
       port = 8443;
       replicationPort = 8444;
+      # every node runs an oauth2-proxy against itself, its cookie covers what it can protect
       nodes = {
-        vps.hostname = "idm.meowcloud.net";
-        # public traffic comes in through the vps nginx
+        vps = {
+          hostname = "idm.meowcloud.net";
+          oauth2 = {
+            domain = "oauth.meowcloud.net";
+            cookieDomain = ".meowcloud.net";
+          };
+        };
+        # public traffic comes in through the vps nginx, the oauth2-proxy stays internal
         server2 = {
           hostname = "home.idm.meowcloud.net";
+          oauth2 = {
+            domain = "oauth.${infra.dns.internal}";
+            cookieDomain = ".${infra.dns.internal}";
+          };
           via = "vps";
         };
       };

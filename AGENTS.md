@@ -27,6 +27,8 @@ The top `let in` block shouldn't get too big, it should just be an import and sh
 
 For readability, large modules with many sections should be split up into readable chunks with lib.mkMerge, each chunk being a self contained unit of code.
 
+Each module **must** have a `config` block at the top level. If the module imports nothing, put `{...}:` at the top instead of a `_:`. The order of the module content should be options, imports, config.
+
 # Infra
 
 The host `uwu` is not in use right now, don't worry about it's configuration too much, there's a bunch of old options there. It's fine if it can't evaluate.

@@ -18,6 +18,7 @@ in
     ./jellyfin.nix
     ./kissasome.nix
     ./monitoring
+    ./navidrome.nix
     ./nya.nix
     ./secrets
     ./sodexobot.nix
