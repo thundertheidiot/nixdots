@@ -6,7 +6,12 @@
   ...
 }:
 let
-  inherit (lib) getExe head;
+  inherit (lib)
+    getExe
+    head
+    concatStringsSep
+    mapAttrsToList
+    ;
   inherit (config.meow.dns) names;
   beetsPython =
     let
@@ -15,6 +20,7 @@ let
     in
     beetsPkgs.python3.withPackages (p: [ p.beets ]);
   soulbeet = pkgs.mpkgs.soulbeet;
+  themeName = "Madoromi Haru Yoru";
 in
 {
   config = {
@@ -32,6 +38,43 @@ in
 
     services.navidrome = {
       enable = true;
+      package =
+        let
+          inherit (import ../../modules/workstation/theme/palettes/madoromi.nix { variant = "haru-yoru"; })
+            roles
+            ;
+          # catppuccin mocha hexes used by the upstream theme files
+          swaps = {
+            "#1e1e2e" = roles.background;
+            "#181825" = roles.panel;
+            "#313244" = roles.surface;
+            "#45475a" = roles.border;
+            "#9399b2" = roles.subtle;
+            "#a6adc8" = roles.muted;
+            "#cdd6f4" = roles.foreground;
+            "#cba6f7" = roles.accent;
+            "#89b4fa" = roles.info;
+            "#f38ba8" = roles.error;
+          };
+          sedArgs = concatStringsSep " " (mapAttrsToList (from: to: "-e 's/${from}/${to}/gI'") swaps);
+        in
+        pkgs.navidrome.override {
+          navidrome-unwrapped = pkgs.navidrome-unwrapped.overrideAttrs (old: {
+            postPatch = old.postPatch + ''
+              cd ui/src/themes
+              sed ${sedArgs} \
+                -e "s|catppuccinMocha.css.js|madoromi.css.js|" \
+                -e "s|themeName: 'Catppuccin Mocha'|themeName: '${themeName}'|" \
+                catppuccinMocha.js > madoromi.js
+              sed ${sedArgs} catppuccinMocha.css.js > madoromi.css.js
+              substituteInPlace index.js --replace-fail "export default {" \
+                "import MadoromiTheme from './madoromi'
+              export default {
+                MadoromiTheme,"
+              cd -
+            '';
+          });
+        };
       openFirewall = false;
       environmentFile = config.sops.secrets.navidrome_env.path;
       settings = {
@@ -39,6 +82,7 @@ in
         MusicFolder = "/mnt/storage/media/music";
         DataFolder = "${config.meow.impermanence.persist}/navidrome";
         BaseUrl = "https://${head infra.services.navidrome.public}";
+        DefaultTheme = themeName;
 
         # kanidm auth, local and vps
         ExtAuth.TrustedSources = "127.0.0.1/32,${infra.hosts.${infra.dns.edge}.wg}/32";

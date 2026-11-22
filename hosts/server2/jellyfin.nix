@@ -44,6 +44,9 @@ in
           };
         };
 
+        # nixflix binds loopback only, vps proxy and arr bridge need wg0/airvpn-br
+        network.localNetworkAddresses = [ ];
+
         encoding = {
           hardwareAccelerationType = "none";
           hardwareDecodingCodecs = [
