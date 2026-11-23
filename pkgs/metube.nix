@@ -29,12 +29,12 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "metube";
-  version = "2026.11.14";
+  version = "2026.11.22";
   src = fetchFromGitHub {
     owner = "alexta69";
     repo = "metube";
     tag = finalAttrs.version;
-    hash = "sha256-s0tG2oNX9tM5JeSVJzQQ2bQIAkKHKFh32E/GgDtAZj0=";
+    hash = "sha256-I1F8p+eadO/R2alL2eACFqJCbkpbQZQFiIFztb3gF3g=";
   };
   passthru.autoUpdate.script = writeShellApplication {
     name = "update-metube";

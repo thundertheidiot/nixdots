@@ -54,11 +54,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1795303398,
-        "narHash": "sha256-fzCbjz1L4a0GfNs+4sgxMZt4FmIZIfGs2UroSinHP5E=",
+        "lastModified": 1795436651,
+        "narHash": "sha256-TyZ3dbBS77hfQwkO0pYmWoKQxsgyZIZzlwdLtyKlq4A=",
         "ref": "refs/heads/main",
-        "rev": "52028ec98bedfa9148faa0ec0c1b22314bba4ffd",
-        "revCount": 3374,
+        "rev": "303840f71658a259458e590dde49c05261473556",
+        "revCount": 3394,
         "type": "git",
         "url": "https://tangled.org/okami.mom/albedo"
       },
@@ -1794,15 +1794,16 @@
     "tg": {
       "flake": false,
       "locked": {
-        "lastModified": 1793301292,
-        "narHash": "sha256-/CEkvZpDnfS4K/yjBX0w0P/l1Gr2a2WAkU50ttcNs5c=",
-        "ref": "refs/heads/master",
-        "rev": "1d013b170ade55fcfda8ed73535b67b0c7eff441",
-        "revCount": 182,
+        "lastModified": 1794757549,
+        "narHash": "sha256-QrNwRdvfpVeG1Y3Scr9ZxwWCvdyLayyUMYCNWV6a+V4=",
+        "ref": "refs/tags/v0.10.0",
+        "rev": "9e37dcfee7baf146cfbdc99ca19c29a3aa1e9936",
+        "revCount": 208,
         "type": "git",
         "url": "https://tangled.org/aly.codes/tg"
       },
       "original": {
+        "ref": "refs/tags/v0.10.0",
         "type": "git",
         "url": "https://tangled.org/aly.codes/tg"
       }
