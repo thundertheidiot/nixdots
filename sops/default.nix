@@ -16,6 +16,11 @@ let
   inherit (lib) mkMerge;
   inherit (lib.attrsets) filterAttrs;
   inherit (lib.lists) elem;
+
+  kanidmSecret = key: owner: {
+    sopsFile = infra.secrets.kanidm;
+    inherit key owner;
+  };
 in
 {
   options = {
@@ -56,28 +61,10 @@ in
       };
 
       # kanidm reads these for provisioning, the apps get them through credentials or root
-      meow.sops.secrets."kanidm_forgejo" = {
-        sopsFile = infra.secrets.kanidm;
-        key = "forgejo";
-        owner = "kanidm";
-      };
-
-      meow.sops.secrets."kanidm_jellyfin" = {
-        sopsFile = infra.secrets.kanidm;
-        key = "jellyfin";
-        owner = "kanidm";
-      };
-
-      meow.sops.secrets."kanidm_oauth2_proxy" = {
-        sopsFile = infra.secrets.kanidm;
-        key = "oauth2-proxy";
-        owner = "kanidm";
-      };
-
-      meow.sops.secrets."oauth2_proxy_cookie" = {
-        sopsFile = infra.secrets.kanidm;
-        key = "oauth2-proxy-cookie";
-      };
+      meow.sops.secrets."kanidm_forgejo" = kanidmSecret "forgejo" "kanidm";
+      meow.sops.secrets."kanidm_jellyfin" = kanidmSecret "jellyfin" "kanidm";
+      meow.sops.secrets."kanidm_oauth2_proxy" = kanidmSecret "oauth2-proxy" "kanidm";
+      meow.sops.secrets."oauth2_proxy_cookie" = kanidmSecret "oauth2-proxy-cookie" "root";
     }
     {
       sops.secrets = filterAttrs (

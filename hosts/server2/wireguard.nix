@@ -1,3 +1,6 @@
+{ ... }:
 {
-  meow.wireguard.enable = true;
+  config = {
+    meow.wireguard.enable = true;
+  };
 }

@@ -3,5 +3,4 @@ result
 .pre-config-config.yaml
 infra/wireguard/.keys.lock
 infra/wireguard/.keys-*/
-certs/.local-certs.*/
 *.plain

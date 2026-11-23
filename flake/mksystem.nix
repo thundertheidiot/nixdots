@@ -29,6 +29,8 @@ in
         specialArgs = {
           inherit inputs mlib;
           inherit (inputs.self) infra;
+          # lazy, only infra.serviceHosts get read
+          nodes = inputs.self.nixosConfigurations;
         };
         modules = modules ++ [
           "${root}/sops"

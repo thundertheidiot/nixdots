@@ -7,90 +7,93 @@ let
   inherit (config.meow.dns) names;
 in
 {
-  services.nginx.virtualHosts.${names.metube} = {
-    forceSSL = true;
-    locations = {
-      "/" = {
-        proxyPass = "http://127.0.0.1:8081";
-        recommendedProxySettings = true;
-        extraConfig = ''
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "Upgrade";
-        '';
+  config = {
+    meow.server.services.metube = { };
+
+    services.nginx.virtualHosts.${names.metube} = {
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:8081";
+          recommendedProxySettings = true;
+          extraConfig = ''
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+          '';
+        };
       };
     };
-  };
 
-  users.groups.metube = {
-    gid = 1000;
-  };
-  users.users.metube = {
-    uid = 1000;
-    group = "metube";
-    isSystemUser = true;
-  };
+    users.groups.metube = {
+      gid = 1000;
+    };
+    users.users.metube = {
+      uid = 1000;
+      group = "metube";
+      isSystemUser = true;
+    };
 
-  systemd.services.metube = {
-    description = "MeTube downloader";
-    wantedBy = [ "multi-user.target" ];
-    after = [
-      "network-online.target"
-    ];
-    wants = [ "network-online.target" ];
-    unitConfig.RequiresMountsFor = [ "/mnt/storage" ];
-    environment = {
-      DOWNLOAD_DIR = "/downloads";
-      AUDIO_DOWNLOAD_DIR = "/audio_downloads";
+    systemd.services.metube = {
+      description = "MeTube downloader";
+      wantedBy = [ "multi-user.target" ];
+      after = [
+        "network-online.target"
+      ];
+      wants = [ "network-online.target" ];
+      unitConfig.RequiresMountsFor = [ "/mnt/storage" ];
+      environment = {
+        DOWNLOAD_DIR = "/downloads";
+        AUDIO_DOWNLOAD_DIR = "/audio_downloads";
 
-      OUTPUT_TEMPLATE = "%(uploader)s/%(title)s.%(ext)s";
-      OUTPUT_TEMPLATE_CHAPTER = "%(uploader)s/%(title)s - %(section_number)s %(section_title)s.%(ext)s";
+        OUTPUT_TEMPLATE = "%(uploader)s/%(title)s.%(ext)s";
+        OUTPUT_TEMPLATE_CHAPTER = "%(uploader)s/%(title)s - %(section_number)s %(section_title)s.%(ext)s";
 
-      CORS_ALLOWED_ORIGINS = "*";
+        CORS_ALLOWED_ORIGINS = "*";
 
-      # applied globally to every download
-      YTDL_OPTIONS = builtins.toJSON {
-        addmetadata = true;
-        postprocessors = [
-          {
-            key = "EmbedThumbnail";
-          }
-          {
-            key = "FFmpegMetadata";
-            add_metadata = true;
-          }
-        ];
-      };
-
-      # picked per-download in the UI (Advanced Options), so only audio gets split
-      YTDL_OPTIONS_PRESETS = builtins.toJSON {
-        "Split chapters" = {
+        # applied globally to every download
+        YTDL_OPTIONS = builtins.toJSON {
+          addmetadata = true;
           postprocessors = [
             {
-              key = "FFmpegSplitChapters";
-              force_keyframes = false;
+              key = "EmbedThumbnail";
+            }
+            {
+              key = "FFmpegMetadata";
+              add_metadata = true;
             }
           ];
         };
-      };
 
-      UID = "1000";
-      GID = "1000";
-      STATE_DIR = "/downloads/.metube";
-      HOST = "127.0.0.1";
-      HOME = "/run/metube";
-    };
-    serviceConfig = {
-      BindPaths = [
-        "/mnt/storage/media/youtube/videos:/downloads"
-        "/mnt/storage/media/my_music/youtube:/audio_downloads"
-      ];
-      ExecStart = "${pkgs.callPackage ../../pkgs/metube.nix { }}/bin/metube";
-      User = "metube";
-      Group = "metube";
-      UMask = "0022";
-      RuntimeDirectory = "metube";
-      Restart = "on-failure";
-      NoNewPrivileges = true;
+        # picked per-download in the UI (Advanced Options), so only audio gets split
+        YTDL_OPTIONS_PRESETS = builtins.toJSON {
+          "Split chapters" = {
+            postprocessors = [
+              {
+                key = "FFmpegSplitChapters";
+                force_keyframes = false;
+              }
+            ];
+          };
+        };
+
+        UID = "1000";
+        GID = "1000";
+        STATE_DIR = "/downloads/.metube";
+        HOST = "127.0.0.1";
+        HOME = "/run/metube";
+      };
+      serviceConfig = {
+        BindPaths = [
+          "/mnt/storage/media/youtube/videos:/downloads"
+          "/mnt/storage/media/my_music/youtube:/audio_downloads"
+        ];
+        ExecStart = "${pkgs.callPackage ../../pkgs/metube.nix { }}/bin/metube";
+        User = "metube";
+        Group = "metube";
+        UMask = "0022";
+        RuntimeDirectory = "metube";
+        Restart = "on-failure";
+        NoNewPrivileges = true;
+      };
     };
   };
 }

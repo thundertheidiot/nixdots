@@ -1,13 +1,17 @@
 {
   config,
-  infra,
   lib,
   ...
 }:
 let
-  inherit (lib) head mapAttrs' nameValuePair replaceStrings;
+  inherit (lib)
+    head
+    mapAttrs'
+    nameValuePair
+    replaceStrings
+    ;
 
-  domain = head infra.services.static.public;
+  domain = head config.meow.server.services.static.expose;
   root = "/nix/persist/static";
 
   # subdir -> sops encrypted htpasswd file
@@ -19,27 +23,35 @@ let
   secretName = dir: "static_htpasswd_${replaceStrings [ "/" ] [ "_" ] dir}";
 in
 {
-  systemd.tmpfiles.rules = [ "d ${root} 0755 root root -" ];
+  config = {
+    meow.server.services.static = {
+      internal = null;
+      expose = [ "static.meowcloud.net" ];
+    };
 
-  sops.secrets = mapAttrs' (
-    dir: sopsFile:
-    nameValuePair (secretName dir) {
-      inherit sopsFile;
-      format = "binary";
-      owner = config.services.nginx.user;
-    }
-  ) protected;
+    systemd.tmpfiles.rules = [ "d ${root} 0755 root root -" ];
 
-  services.nginx.virtualHosts.${domain} = {
-    inherit root;
-    locations = mapAttrs' (
-      dir: _:
-      nameValuePair "^~ /${dir}/" {
-        basicAuthFile = config.sops.secrets.${secretName dir}.path;
+    sops.secrets = mapAttrs' (
+      dir: sopsFile:
+      nameValuePair (secretName dir) {
+        inherit sopsFile;
+        format = "binary";
+        owner = config.services.nginx.user;
       }
-    ) protected
-    // {
-      "~ ^/([^/]+/)?\\.".extraConfig = "deny all;";
+    ) protected;
+
+    services.nginx.virtualHosts.${domain} = {
+      inherit root;
+      locations =
+        mapAttrs' (
+          dir: _:
+          nameValuePair "^~ /${dir}/" {
+            basicAuthFile = config.sops.secrets.${secretName dir}.path;
+          }
+        ) protected
+        // {
+          "~ ^/([^/]+/)?\\.".extraConfig = "deny all;";
+        };
     };
   };
 }

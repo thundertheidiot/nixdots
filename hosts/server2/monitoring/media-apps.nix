@@ -1,10 +1,7 @@
 { config, ... }:
-let
-  inherit (config.meow.dns) names;
-in
 {
   config = {
     services.navidrome.settings.Prometheus.Enabled = true;
-    services.nginx.virtualHosts.${names.navidrome}.locations."= /metrics".return = "404";
+    meow.server.monitoring.exporters.navidrome.port = config.meow.server.services.navidrome.port;
   };
 }

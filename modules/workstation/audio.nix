@@ -16,7 +16,10 @@ in
 
   config = mkIf cfg {
     meow.impermanence.directories = [
-      { path = "/var/lib/bluetooth"; permissions = "0700"; }
+      {
+        path = "/var/lib/bluetooth";
+        permissions = "0700";
+      }
     ];
 
     hardware.bluetooth = {

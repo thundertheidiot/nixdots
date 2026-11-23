@@ -1,14 +1,19 @@
 {
   config,
-  infra,
   lib,
   ...
 }:
 let
+  inherit (lib) mkOverride;
   rss = config.meow.dns.names.freshrss;
 in
 {
   config = {
+    meow.server.services.freshrss = {
+      internal = "rss";
+      access = "wg";
+    };
+
     meow.impermanence.directories = [
       {
         path = "/var/lib/freshrss";
@@ -28,7 +33,7 @@ in
       enable = true;
       ensureDatabases = [ config.services.freshrss.database.name ];
 
-      authentication = lib.mkOverride 10 ''
+      authentication = mkOverride 10 ''
         #type database  DBuser  auth-method
         local all postgres peer
         local sameuser all peer
@@ -52,17 +57,6 @@ in
     };
 
     sops.secrets.freshrss_db_password.owner = "freshrss";
-
-    services.nginx.virtualHosts.${rss} = {
-      onlySSL = true;
-      listen = [
-        {
-          addr = infra.hosts.vps.wg;
-          port = 443;
-          ssl = true;
-        }
-      ];
-    };
 
     services.freshrss = {
       enable = true;

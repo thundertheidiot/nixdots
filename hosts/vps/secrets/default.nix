@@ -17,6 +17,11 @@
       #   format = "binary";
       # };
 
+      glance_env = {
+        sopsFile = ./glance.env;
+        format = "dotenv";
+      };
+
       freshrss_db_password = {
         sopsFile = ./freshrss;
         format = "binary";

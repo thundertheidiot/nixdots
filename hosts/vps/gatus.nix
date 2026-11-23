@@ -1,6 +1,5 @@
 {
   config,
-  infra,
   lib,
   mlib,
   ...
@@ -15,14 +14,23 @@ in
   };
 
   config = {
+    meow.server.services.gatus = {
+      internal = null;
+      port = 8081;
+      expose = [ "meowcloud.net" ];
+    };
+
     meow.impermanence.directories = [
-      { path = "/var/lib/private/gatus"; permissions = "0700"; }
+      {
+        path = "/var/lib/private/gatus";
+        permissions = "0700";
+      }
     ];
 
     services.gatus = {
       enable = true;
       settings = {
-        web.port = infra.services.gatus.port;
+        web.port = config.meow.server.services.gatus.port;
 
         storage = {
           type = "sqlite";

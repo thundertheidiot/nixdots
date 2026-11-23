@@ -10,24 +10,46 @@ terraform {
 # PORKBUN_API_KEY and PORKBUN_SECRET_API_KEY come from infra/porkbun.env
 provider "porkbun" {}
 
+# set from infra by the tofu wrapper
+variable "vps_v4" {
+  type = string
+}
+
+variable "vps_v6" {
+  type = string
+}
+
 locals {
   domain = "meowcloud.net"
-  vps4   = "95.216.151.56"
-  vps6   = "2a01:4f9:c010:9973::1"
+  # explicit records keep the wildcard from catching their _acme-challenge names
+  # nya is the internal zone, home.idm is the proxied home kanidm
+  names = {
+    apex     = ""
+    nya      = "nya"
+    idm      = "idm"
+    home_idm = "home.idm"
+    oauth    = "oauth"
+  }
+  addresses = {
+    a    = var.vps_v4
+    aaaa = var.vps_v6
+  }
+  records = {
+    for pair in setproduct(keys(local.names), keys(local.addresses)) :
+    "${pair[0]}_${pair[1]}" => {
+      subdomain = local.names[pair[0]]
+      type      = upper(pair[1])
+      content   = local.addresses[pair[1]]
+    }
+  }
 }
 
-resource "porkbun_dns_record" "apex_a" {
+resource "porkbun_dns_record" "vps" {
+  for_each  = local.records
   domain    = local.domain
-  subdomain = ""
-  type      = "A"
-  content   = local.vps4
-}
-
-resource "porkbun_dns_record" "apex_aaaa" {
-  domain    = local.domain
-  subdomain = ""
-  type      = "AAAA"
-  content   = local.vps6
+  subdomain = each.value.subdomain
+  type      = each.value.type
+  content   = each.value.content
 }
 
 resource "porkbun_dns_record" "wildcard" {
@@ -35,64 +57,4 @@ resource "porkbun_dns_record" "wildcard" {
   subdomain = "*"
   type      = "CNAME"
   content   = local.domain
-}
-
-# landing page, also stops the wildcard from catching *.nya, which breaks dns-01 for the internal cert
-resource "porkbun_dns_record" "nya_a" {
-  domain    = local.domain
-  subdomain = "nya"
-  type      = "A"
-  content   = local.vps4
-}
-
-resource "porkbun_dns_record" "nya_aaaa" {
-  domain    = local.domain
-  subdomain = "nya"
-  type      = "AAAA"
-  content   = local.vps6
-}
-
-# kanidm on the vps, also stops the wildcard from catching *.idm, which breaks dns-01 for the kanidm certs
-resource "porkbun_dns_record" "idm_a" {
-  domain    = local.domain
-  subdomain = "idm"
-  type      = "A"
-  content   = local.vps4
-}
-
-resource "porkbun_dns_record" "idm_aaaa" {
-  domain    = local.domain
-  subdomain = "idm"
-  type      = "AAAA"
-  content   = local.vps6
-}
-
-# home kanidm, proxied by the vps, lan and wireguard clients get server2 from the internal dns
-resource "porkbun_dns_record" "home_idm_a" {
-  domain    = local.domain
-  subdomain = "home.idm"
-  type      = "A"
-  content   = local.vps4
-}
-
-resource "porkbun_dns_record" "home_idm_aaaa" {
-  domain    = local.domain
-  subdomain = "home.idm"
-  type      = "AAAA"
-  content   = local.vps6
-}
-
-# oauth2-proxy on the vps, also stops the wildcard from catching _acme-challenge.oauth, which breaks dns-01 for the kanidm cert
-resource "porkbun_dns_record" "oauth_a" {
-  domain    = local.domain
-  subdomain = "oauth"
-  type      = "A"
-  content   = local.vps4
-}
-
-resource "porkbun_dns_record" "oauth_aaaa" {
-  domain    = local.domain
-  subdomain = "oauth"
-  type      = "AAAA"
-  content   = local.vps6
 }

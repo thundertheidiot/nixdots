@@ -7,27 +7,35 @@
 }:
 let
   inherit (mlib) mkEnOpt;
-  inherit (lib) head mkIf filterAttrs mapAttrs;
+  inherit (lib) genAttrs head mkIf;
 
   cfg = config.meow.server;
-  inherit (infra.services) vaultwarden;
-  url = "http://127.0.0.1:${toString vaultwarden.port}";
+  inherit (cfg.services) vaultwarden;
 in
 {
   options.meow.server.vaultwarden = mkEnOpt "Vaultwarden";
 
   config = mkIf cfg.vaultwarden {
-    # admin panel only over wireguard, on every vhost proxying vaultwarden
-    services.nginx.virtualHosts = mapAttrs (_: _: {
+    meow.server.services.vaultwarden = {
+      internal = null;
+      port = 8222;
+      expose = [
+        "vw.kotiboksi.xyz"
+        "vw.meowcloud.net"
+      ];
+    };
+
+    # admin panel only over wireguard
+    services.nginx.virtualHosts = genAttrs vaultwarden.expose (_: {
       locations."/admin" = {
-        proxyPass = url;
+        proxyPass = "http://127.0.0.1:${toString vaultwarden.port}";
         recommendedProxySettings = true;
         extraConfig = ''
           allow ${infra.networks.wg.cidr};
           deny all;
         '';
       };
-    }) (filterAttrs (_: target: target == url) cfg.reverseProxy);
+    });
 
     meow.impermanence.directories = [
       {
@@ -50,7 +58,7 @@ in
       backupDir = "/var/backup/vaultwarden";
 
       config = {
-        DOMAIN = "https://${head vaultwarden.public}";
+        DOMAIN = "https://${head vaultwarden.expose}";
 
         ROCKET_ADDRESS = "127.0.0.1";
         ROCKET_PORT = vaultwarden.port;

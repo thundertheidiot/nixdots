@@ -1,5 +1,6 @@
 {
   config,
+  infra,
   lib,
   mlib,
   ...
@@ -8,21 +9,25 @@ let
   inherit (mlib) mkOpt;
   inherit (lib.types) listOf str;
   inherit (lib)
+    genAttrs
+    mkDefault
     mkIf
     mkMerge
-    length
     unique
-    listToAttrs
-    mkDefault
     ;
 
   cfg = config.meow.server;
 in
 {
-  options.meow.server.certificates = mkOpt (listOf str) [ ] { };
+  options.meow.server = {
+    certificates = mkOpt (listOf str) [ ] { };
+    dnsCertificates = mkOpt (listOf str) [ ] {
+      description = "certificates validated through porkbun dns, for names that http can't reach";
+    };
+  };
 
   config = mkMerge [
-    (mkIf (length cfg.certificates > 0 || config.meow.dns.enable) {
+    (mkIf (cfg.certificates != [ ] || cfg.dnsCertificates != [ ]) {
       security.acme = {
         acceptTerms = true;
         defaults = {
@@ -37,29 +42,38 @@ in
       users.users."${config.services.nginx.user}".extraGroups = [ "acme" ];
 
       meow.impermanence.directories = [
-        { path = "/var/lib/acme"; permissions = "0755"; user = "acme"; group = "acme"; }
+        {
+          path = "/var/lib/acme";
+          permissions = "0755";
+          user = "acme";
+          group = "acme";
+        }
       ];
     })
 
-    (mkIf (length cfg.certificates > 0) {
-      security.acme.certs = listToAttrs (
-        map (name: {
-          inherit name;
-          value = {
-            group = "acme";
-          };
-        }) (unique cfg.certificates)
-      );
+    (mkIf (cfg.certificates != [ ]) {
+      security.acme.certs = genAttrs (unique cfg.certificates) (_: {
+        group = "acme";
+      });
 
-      services.nginx.virtualHosts = listToAttrs (
-        map (name: {
-          inherit name;
-          value = {
-            forceSSL = mkDefault true;
-            enableACME = mkDefault true;
-          };
-        }) (unique cfg.certificates)
-      );
+      services.nginx.virtualHosts = genAttrs (unique cfg.certificates) (_: {
+        forceSSL = mkDefault true;
+        enableACME = mkDefault true;
+      });
+    })
+
+    (mkIf (cfg.dnsCertificates != [ ]) {
+      sops.secrets.porkbun = {
+        sopsFile = infra.secrets.porkbun;
+        format = "dotenv";
+      };
+
+      security.acme.certs = genAttrs cfg.dnsCertificates (_: {
+        dnsProvider = "porkbun";
+        # the local dnsmasq shadows internal names
+        dnsResolver = "1.1.1.1:53";
+        environmentFile = config.sops.secrets.porkbun.path;
+      });
     })
   ];
 }

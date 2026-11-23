@@ -1,17 +1,19 @@
-{ infra, ... }:
+{ config, infra, ... }:
 let
-  jellyfin = infra.services.jellyfin;
+  inherit (config.meow.server.cluster.services) jellyfin;
 in
 {
-  meow.server.gatus = [
-    {
-      name = "Jellyfin";
-      group = "home";
-      url = "http://${infra.hosts.${jellyfin.host}.wg}:${toString jellyfin.port}";
-      interval = "30s";
-      conditions = [
-        "[STATUS] == 200"
-      ];
-    }
-  ];
+  config = {
+    meow.server.gatus = [
+      {
+        name = "Jellyfin";
+        group = "home";
+        url = "http://${infra.hosts.${jellyfin.host}.wg}:${toString jellyfin.port}";
+        interval = "30s";
+        conditions = [
+          "[STATUS] == 200"
+        ];
+      }
+    ];
+  };
 }

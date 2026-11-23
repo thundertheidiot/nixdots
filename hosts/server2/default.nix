@@ -2,7 +2,6 @@
   pkgs,
   config,
   lib,
-  mlib,
   ...
 }:
 {
@@ -20,6 +19,7 @@
     ./monitoring
     ./navidrome.nix
     ./secrets
+    ./soulbeet.nix
     ./syncthing.nix
     # ./urlwatch.nix
     ./wireguard.nix

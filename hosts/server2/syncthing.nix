@@ -4,6 +4,8 @@ let
 in
 {
   config = {
+    meow.server.services.syncthing = { };
+
     meow.impermanence.directories = [
       {
         path = config.services.syncthing.dataDir;
@@ -15,7 +17,6 @@ in
 
     services.nginx.virtualHosts.${names.syncthing} = {
       root = "/fake";
-      forceSSL = true;
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8384";

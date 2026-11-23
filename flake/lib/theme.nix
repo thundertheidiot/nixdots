@@ -1,12 +1,21 @@
-{ ... }:
+{ lib, ... }:
 let
   inherit (builtins)
     elemAt
     floor
+    fromTOML
     genList
     listToAttrs
     substring
     ;
+  inherit (lib) max min;
+
+  hexToRgb = color: {
+    r = (fromTOML "value = 0x${substring 1 2 color}").value;
+    g = (fromTOML "value = 0x${substring 3 2 color}").value;
+    b = (fromTOML "value = 0x${substring 5 2 color}").value;
+  };
+
   ansiNames = [
     "black"
     "red"
@@ -19,43 +28,27 @@ let
   ];
 in
 {
-  hexToRgb = color: {
-    r = (fromTOML "value = 0x${substring 1 2 color}").value;
-    g = (fromTOML "value = 0x${substring 3 2 color}").value;
-    b = (fromTOML "value = 0x${substring 5 2 color}").value;
-  };
+  inherit hexToRgb;
 
   # whole-number hue, saturation and lightness percentages
   hexToHsl =
     color:
     let
-      channel = offset: (fromTOML "value = 0x${substring offset 2 color}").value / 255.0;
-      r = channel 1;
-      g = channel 3;
-      b = channel 5;
-      max =
-        if r > g && r > b then
-          r
-        else if g > b then
-          g
-        else
-          b;
-      min =
-        if r < g && r < b then
-          r
-        else if g < b then
-          g
-        else
-          b;
-      d = max - min;
-      l = (max + min) / 2;
+      rgb = hexToRgb color;
+      r = rgb.r / 255.0;
+      g = rgb.g / 255.0;
+      b = rgb.b / 255.0;
+      hi = max r (max g b);
+      lo = min r (min g b);
+      d = hi - lo;
+      l = (hi + lo) / 2;
       s = if d == 0 then 0 else d / (1 - (if l > 0.5 then 2 * l - 1 else 1 - 2 * l));
       hue =
         if d == 0 then
           0
-        else if max == r then
+        else if hi == r then
           60 * (g - b) / d
-        else if max == g then
+        else if hi == g then
           60 * ((b - r) / d + 2)
         else
           60 * ((r - g) / d + 4);

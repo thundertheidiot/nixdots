@@ -1,16 +1,20 @@
 {
   config,
+  infra,
+  lib,
   ...
 }:
 let
+  inherit (lib) head;
   vpnAddress = config.vpnNamespaces.airvpn.namespaceAddress;
   inherit (config.meow.dns) names;
 in
 {
   config = {
+    meow.server.services.homepage = { };
+
     services.nginx.virtualHosts = {
       ${names.homepage} = {
-        forceSSL = true;
         locations = {
           "/" = {
             proxyPass = "http://127.0.0.1:8082";
@@ -209,7 +213,6 @@ in
               "Syncthing" = {
                 icon = "syncthing.svg";
                 href = "https://${names.syncthing}";
-                description = "lan only";
               };
             }
             {
@@ -221,7 +224,7 @@ in
             {
               "Vaultwarden" = {
                 icon = "vaultwarden.svg";
-                href = "https://vw.meowcloud.net";
+                href = "https://${head config.meow.server.cluster.services.vaultwarden.expose}";
               };
             }
           ];

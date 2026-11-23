@@ -16,12 +16,11 @@ let
   inherit (mlib) mkOpt;
   inherit (lib.types) attrsOf listOf str;
 
+  cfg = config.meow.kanidm;
   name = config.networking.hostName;
   inherit (infra.kanidm) nodes;
   node = nodes.${name};
   client = host: "oauth2-proxy-${host}";
-
-  cfg = config.meow.kanidm;
 in
 {
   options.meow.kanidm.protect = mkOpt (attrsOf (listOf str)) { } {

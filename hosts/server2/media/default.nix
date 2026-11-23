@@ -19,6 +19,7 @@ let
     mkMerge
     mkOverride
     nameValuePair
+    optionalString
     ;
   stateDir = "/nix/persist/media-stack";
   mediaDir = "/mnt/storage/media";
@@ -35,8 +36,8 @@ let
   ];
   namespaceAddress = config.vpnNamespaces.airvpn.namespaceAddress;
   inherit (config.meow.dns) names;
-  # proxied into the vpn namespace
-  hosts = {
+  # web uis proxied into the vpn namespace
+  uiPorts = {
     qbittorrent = 8080;
     slskd = 5030;
     radarr = 7878;
@@ -55,7 +56,6 @@ in
 {
   imports = [
     inputs.nixflix.nixosModules.default
-    ./host-config.nix
     ./settings.nix
   ];
 
@@ -86,16 +86,16 @@ in
 
   config = mkMerge [
     {
-      # nixflix keeps whatever AllowedHosts the arr already has, the old *.home names 400 now
-      systemd.services = genAttrs arrNames (name: {
-        preStart = ''
-          ${getExe pkgs.gnused} -i \
-            's#<AllowedHosts>.*</AllowedHosts>#<AllowedHosts>${names.${name}},localhost,127.0.0.1,${namespaceAddress}</AllowedHosts>#' \
-            ${stateDir}/${name}/config.xml || true
-        '';
-      });
-    }
-    {
+      # ui vhosts are set up below, into the vpn namespace
+      meow.server.services = {
+        bazarr = { };
+        prowlarr = { };
+        qbittorrent.internal = "torrent";
+        radarr = { };
+        slskd.internal = "soulseek";
+        sonarr.protect = [ "admins" ];
+      };
+
       nixflix = {
         enable = true;
         inherit stateDir mediaDir;
@@ -105,20 +105,22 @@ in
         caddy.enable = false;
         postgres.enable = false;
         recyclarr.enable = false;
-        vpn = {
-          enable = true;
-          namespace = "airvpn";
-          wgConfFile = config.sops.secrets.media-stack-wireguard.path;
-          accessibleFrom = [ infra.networks.lan ];
-          allowedTCPPorts = [
-            3865
-            33493
-          ];
-          allowedUDPPorts = [
-            3865
-            33493
-          ];
-        };
+        vpn =
+          let
+            # airvpn port forwards
+            forwarded = [
+              3865
+              33493
+            ];
+          in
+          {
+            enable = true;
+            namespace = "airvpn";
+            wgConfFile = config.sops.secrets.media-stack-wireguard.path;
+            accessibleFrom = [ infra.networks.lan ];
+            allowedTCPPorts = forwarded;
+            allowedUDPPorts = forwarded;
+          };
         torrentClients.qbittorrent = {
           enable = true;
           vpn.enable = true;
@@ -156,8 +158,12 @@ in
       };
       systemd.services.airvpn.postStart =
         let
-          inherit (lib) concatMapStringsSep optionalString;
-          ports = lib.unique (builtins.attrValues hosts);
+          inherit (lib)
+            attrValues
+            concatMapStringsSep
+            unique
+            ;
+          ports = unique (attrValues uiPorts);
 
           ip = getExe' pkgs.iproute2 "ip";
           ipTables = getExe pkgs.iptables;
@@ -293,20 +299,17 @@ in
       services.nginx.virtualHosts = mapAttrs' (
         name: port:
         nameValuePair names.${name} {
-          forceSSL = true;
           locations."/" = {
             proxyPass = "http://${namespaceAddress}:${toString port}";
             recommendedProxySettings = true;
             proxyWebsockets = true;
-            extraConfig = lib.optionalString (port == 5030) ''
+            extraConfig = optionalString (name == "slskd") ''
               proxy_request_buffering off;
               client_max_body_size 0;
             '';
           };
         }
-      ) hosts;
-
-      meow.kanidm.protect.${names.sonarr} = [ "admins" ];
+      ) uiPorts;
     }
     {
       nixflix = genAttrs arrNames (

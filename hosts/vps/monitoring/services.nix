@@ -5,12 +5,21 @@
   ...
 }:
 let
-  inherit (lib) genAttrs mkAfter;
+  inherit (lib) getExe' mkAfter mkOverride;
   inherit (builtins) toFile;
-  hidden = names: genAttrs names (_: { locations."= /metrics".return = "404"; });
 in
 {
   config = {
+    meow.server.monitoring.exporters = {
+      comin.port = config.services.comin.exporter.port;
+      dnsmasq.port = config.services.prometheus.exporters.dnsmasq.port;
+      nginx.port = config.services.prometheus.exporters.nginx.port;
+      postgres.port = config.services.prometheus.exporters.postgres.port;
+      coturn.port = 9641;
+      gatus.port = config.meow.server.services.gatus.port;
+      prosody.port = 5280;
+    };
+
     services.comin.exporter.listen_address = "127.0.0.1";
 
     services.prometheus.exporters.dnsmasq = {
@@ -23,11 +32,10 @@ in
     services.coturn.extraConfig = mkAfter ''
       prometheus
       prometheus-address=127.0.0.1
-      prometheus-port=9641
+      prometheus-port=${toString config.meow.server.monitoring.exporters.coturn.port}
     '';
 
     services.nginx.statusPage = true;
-    services.nginx.virtualHosts = hidden (infra.services.navidrome.public ++ infra.services.gatus.public);
 
     services.prometheus.exporters.nginx = {
       enable = true;
@@ -58,7 +66,7 @@ in
           ensureClauses.login = true;
         }
       ];
-      authentication = lib.mkOverride 10 ''
+      authentication = mkOverride 10 ''
         local all postgres_exporter peer
       '';
     };
@@ -71,7 +79,7 @@ in
         User = "postgres";
       };
       script = ''
-        ${lib.getExe' config.services.postgresql.package "psql"} -v ON_ERROR_STOP=1 -d postgres <<'SQL'
+        ${getExe' config.services.postgresql.package "psql"} -v ON_ERROR_STOP=1 -d postgres <<'SQL'
         SELECT 'CREATE USER postgres_exporter' WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'postgres_exporter') \gexec
         GRANT pg_monitor TO postgres_exporter;
         SQL

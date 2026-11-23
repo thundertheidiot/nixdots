@@ -1,16 +1,20 @@
+{ lib }:
 let
   inherit (builtins)
     all
     attrNames
     attrValues
-    concatMap
     filter
     fromJSON
     hasAttr
-    length
-    listToAttrs
     mapAttrs
     readFile
+    ;
+  inherit (lib)
+    allUnique
+    assertMsg
+    optionalAttrs
+    recursiveUpdate
     ;
 
   infra = {
@@ -66,134 +70,11 @@ let
       edge = "vps";
     };
 
-    services = {
-      bazarr = {
-        host = "server2";
-        internal = "bazarr";
-        access = "private";
-      };
-      bookorbit = {
-        host = "server2";
-        internal = "books";
-        access = "private";
-      };
-      forgejo = {
-        host = "server2";
-        internal = "git";
-        access = "private";
-      };
-      homeassistant = {
-        host = "server2";
-        internal = "homeassistant";
-        access = "private";
-      };
-      homepage = {
-        host = "server2";
-        internal = "homepage";
-        access = "private";
-      };
-      jellyfin = {
-        host = "server2";
-        internal = "jellyfin";
-        public = [
-          "jellyfin.kotiboksi.xyz"
-          "jellyfin.meowcloud.net"
-        ];
-        port = 8096;
-      };
-      metube = {
-        host = "server2";
-        internal = "metube";
-        access = "private";
-      };
-      navidrome = {
-        host = "server2";
-        internal = "navidrome";
-        public = [ "navidrome.meowcloud.net" ];
-        port = 4533;
-      };
-      prowlarr = {
-        host = "server2";
-        internal = "prowlarr";
-        access = "private";
-      };
-      qbittorrent = {
-        host = "server2";
-        internal = "torrent";
-        access = "private";
-      };
-      radarr = {
-        host = "server2";
-        internal = "radarr";
-        access = "private";
-      };
-      slskd = {
-        host = "server2";
-        internal = "soulseek";
-        access = "private";
-      };
-      sonarr = {
-        host = "server2";
-        internal = "sonarr";
-        access = "private";
-      };
-      soulbeet = {
-        host = "server2";
-        internal = "soulbeet";
-        access = "private";
-      };
-      syncthing = {
-        host = "server2";
-        internal = "syncthing";
-        access = "private";
-      };
-
-      freshrss = {
-        host = "vps";
-        internal = "rss";
-        access = "wg";
-      };
-      gatus = {
-        host = "vps";
-        public = [ "meowcloud.net" ];
-        port = 8081;
-      };
-      glance = {
-        host = "vps";
-        internal = "glance";
-        access = "wg";
-      };
-      grafana = {
-        host = "vps";
-        internal = "dash";
-        access = "wg";
-      };
-      kissasome = {
-        host = "vps";
-        public = [ "kissasome.meowcloud.net" ];
-        port = 23817;
-      };
-      static = {
-        host = "vps";
-        public = [ "static.meowcloud.net" ];
-      };
-      vaultwarden = {
-        host = "vps";
-        public = [
-          "vw.kotiboksi.xyz"
-          "vw.meowcloud.net"
-        ];
-        port = 8222;
-      };
-      website = {
-        host = "vps";
-        public = [
-          "kotiboksi.xyz"
-          "thunder.meowcloud.net"
-        ];
-        port = 3005;
-      };
-    };
+    # hosts declaring meow.server.services, read by each other
+    serviceHosts = [
+      "server2"
+      "vps"
+    ];
 
     kanidm = {
       domain = "idm.meowcloud.net";
@@ -202,7 +83,7 @@ let
       # every node runs an oauth2-proxy against itself, its cookie covers what it can protect
       nodes = {
         vps = {
-          hostname = "idm.meowcloud.net";
+          hostname = infra.kanidm.domain;
           oauth2 = {
             domain = "oauth.meowcloud.net";
             cookieDomain = ".meowcloud.net";
@@ -219,54 +100,16 @@ let
         };
       };
     };
-
-    # the collector scrapes exporters on other hosts over wg
-    monitoring = {
-      collector = "vps";
-      storage = {
-        host = "server2";
-        port = 8428;
-      };
-      # scraped over wg, these ports open to the hub
-      exporters.server2 = {
-        node = 9100;
-        comin = 4243;
-        nginx = 9113;
-        forgejo = 9114;
-        jellyfin = 8096;
-        navidrome = 4533;
-        dnsmasq = 9153;
-        postgres = 9187;
-        radarr = 9708;
-        sonarr = 9709;
-        prowlarr = 9710;
-        bazarr = 9711;
-        qbittorrent = 9712;
-        slskd = 9713;
-      };
-    };
   };
 
   inherit (infra)
     hosts
-    services
     dns
     networks
     ;
 
-  unique =
-    list:
-    length list == length (
-      attrNames (
-        listToAttrs (
-          map (name: {
-            inherit name;
-            value = null;
-          }) list
-        )
-      )
-    );
   isHost = name: hasAttr name hosts;
+  peers = filter (name: hosts.${name} ? wg) (attrNames hosts);
 
   # keys managed by wireguard-keys, sops files under ./wireguard
   publicKeys = fromJSON (readFile ./wireguard/public-keys.json);
@@ -277,25 +120,22 @@ let
     # leaves only, the hub holds every leaf's
     presharedKey = ./wireguard/psk + "/${name}";
   };
-  peers = filter (name: hosts.${name} ? wg) (attrNames hosts);
-  internal = filter (s: s ? internal) (attrValues services);
 in
-assert unique (map (name: hosts.${name}.wg) peers);
-assert hosts.${networks.wg.hub} ? public;
-assert all (s: isHost s.host) (attrValues services);
-assert unique (map (s: s.internal) internal);
-assert unique (concatMap (s: s.public or [ ]) (attrValues services));
-# if public exists, wg must exist
-assert all (s: s ? public -> hosts.${s.host} ? wg) (attrValues services);
-# if access exists internal domain mapping must exist
-assert all (s: s ? access -> s ? internal) (attrValues services);
-assert isHost dns.edge && all isHost (attrValues dns.resolvers);
-assert all (net: hosts.${dns.resolvers.${net}} ? ${net}) (attrNames dns.resolvers);
-assert all (name: isHost name && hosts.${name} ? wg) (attrNames infra.kanidm.nodes);
-assert all isHost (attrNames infra.monitoring.exporters);
-infra
-// {
+assert assertMsg (allUnique (map (name: hosts.${name}.wg) peers)) "wg addresses must be unique";
+assert assertMsg (hosts.${networks.wg.hub} ? public) "the wg hub needs a public address";
+assert assertMsg (all isHost infra.serviceHosts) "service hosts must be known hosts";
+assert assertMsg (
+  isHost dns.edge && all isHost (attrValues dns.resolvers)
+) "dns edge and resolvers must be known hosts";
+assert assertMsg (all (net: hosts.${dns.resolvers.${net}} ? ${net}) (
+  attrNames dns.resolvers
+)) "a resolver must sit on the network it serves";
+assert assertMsg (all (name: isHost name && hosts.${name} ? wg) (
+  attrNames infra.kanidm.nodes
+)) "kanidm nodes must be wg hosts";
+recursiveUpdate infra {
   hosts = mapAttrs (
-    name: host: host // (if host ? wg then { wireguard = wireguard name; } else { })
+    name: host: host // optionalAttrs (host ? wg) { wireguard = wireguard name; }
   ) hosts;
+  networks.wg.endpoint = "${hosts.${networks.wg.hub}.public.v4}:${toString networks.wg.port}";
 }

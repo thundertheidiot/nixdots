@@ -1,6 +1,6 @@
 local curl = "@CURL@"
 local xdgOpen = "@XDG_OPEN@"
-local url = "https://torrent.nya.meowcloud.net"
+local url = "@URL@"
 local api = url .. "/api/v2/"
 local modeColors = { normal = "#80C080", alternative = "#E07070" }
 local updating = false

@@ -8,8 +8,9 @@ let
 in
 {
   config = {
+    meow.server.services.homeassistant = { };
+
     services.nginx.virtualHosts.${names.homeassistant} = {
-      forceSSL = true;
       locations."/" = {
         proxyPass = "http://127.0.0.1:8123";
         recommendedProxySettings = true;

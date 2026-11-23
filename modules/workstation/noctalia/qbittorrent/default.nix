@@ -1,4 +1,8 @@
-{ lib, pkgs }:
+{
+  lib,
+  pkgs,
+  url,
+}:
 let
   inherit (lib) getExe getExe';
 in
@@ -9,6 +13,7 @@ in
   postRun = ''
     substituteInPlace "$out/transfer.luau" \
     --replace-fail @CURL@ "${getExe pkgs.curl}" \
-    --replace-fail @XDG_OPEN@ "${getExe' pkgs.xdg-utils "xdg-open"}"
+    --replace-fail @XDG_OPEN@ "${getExe' pkgs.xdg-utils "xdg-open"}" \
+    --replace-fail @URL@ "${url}"
   '';
 }

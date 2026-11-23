@@ -1,88 +1,95 @@
 {
   config,
-  infra,
   pkgs,
   ...
 }:
 let
   dataDir = "/nix/persist/kissasome";
-  inherit (infra.services.kissasome) port;
+  inherit (config.meow.server.services.kissasome) port;
 in
 {
-  users.users.kissasome = {
-    isSystemUser = true;
-    group = "kissasome";
-  };
-  users.groups.kissasome = { };
+  config = {
+    meow.server.services.kissasome = {
+      internal = null;
+      port = 23817;
+      expose = [ "kissasome.meowcloud.net" ];
+    };
 
-  systemd.tmpfiles.settings."10-kissasome" = {
-    ${dataDir}.d = {
-      user = "kissasome";
+    users.users.kissasome = {
+      isSystemUser = true;
       group = "kissasome";
-      mode = "0750";
     };
-    "${dataDir}/images".d = {
-      user = "kissasome";
-      group = "kissasome";
-      mode = "0750";
-    };
-  };
+    users.groups.kissasome = { };
 
-  systemd.services.kissasome = {
-    description = "kissasome";
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-    wantedBy = [ "multi-user.target" ];
-
-    environment = {
-      DATABASE_URL = "sqlite://${dataDir}/db.sqlite?mode=rwc";
-      IMAGE_PATH = "${dataDir}/images";
-      PORT = toString port;
+    systemd.tmpfiles.settings."10-kissasome" = {
+      ${dataDir}.d = {
+        user = "kissasome";
+        group = "kissasome";
+        mode = "0750";
+      };
+      "${dataDir}/images".d = {
+        user = "kissasome";
+        group = "kissasome";
+        mode = "0750";
+      };
     };
 
-    serviceConfig = {
-      ExecStart = "${pkgs.kissasome}/bin/kissasome";
-      EnvironmentFile = config.sops.secrets.kissasome_env.path;
-      WorkingDirectory = dataDir;
-      User = "kissasome";
-      Group = "kissasome";
-      Restart = "on-failure";
+    systemd.services.kissasome = {
+      description = "kissasome";
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      wantedBy = [ "multi-user.target" ];
 
-      ReadWritePaths = [ dataDir ];
-      UMask = "0077";
+      environment = {
+        DATABASE_URL = "sqlite://${dataDir}/db.sqlite?mode=rwc";
+        IMAGE_PATH = "${dataDir}/images";
+        PORT = toString port;
+      };
 
-      NoNewPrivileges = true;
-      CapabilityBoundingSet = "";
-      AmbientCapabilities = "";
-      PrivateTmp = true;
-      PrivateDevices = true;
-      PrivateUsers = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ProtectProc = "invisible";
-      ProcSubset = "pid";
-      ProtectKernelTunables = true;
-      ProtectKernelModules = true;
-      ProtectKernelLogs = true;
-      ProtectControlGroups = true;
-      ProtectClock = true;
-      ProtectHostname = true;
-      RestrictNamespaces = true;
-      RestrictRealtime = true;
-      RestrictSUIDSGID = true;
-      RestrictAddressFamilies = [
-        "AF_INET"
-        "AF_INET6"
-        "AF_UNIX"
-      ];
-      LockPersonality = true;
-      MemoryDenyWriteExecute = true;
-      SystemCallArchitectures = "native";
-      SystemCallFilter = [
-        "@system-service"
-        "~@privileged"
-        "~@resources"
-      ];
+      serviceConfig = {
+        ExecStart = "${pkgs.kissasome}/bin/kissasome";
+        EnvironmentFile = config.sops.secrets.kissasome_env.path;
+        WorkingDirectory = dataDir;
+        User = "kissasome";
+        Group = "kissasome";
+        Restart = "on-failure";
+
+        ReadWritePaths = [ dataDir ];
+        UMask = "0077";
+
+        NoNewPrivileges = true;
+        CapabilityBoundingSet = "";
+        AmbientCapabilities = "";
+        PrivateTmp = true;
+        PrivateDevices = true;
+        PrivateUsers = true;
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        ProtectProc = "invisible";
+        ProcSubset = "pid";
+        ProtectKernelTunables = true;
+        ProtectKernelModules = true;
+        ProtectKernelLogs = true;
+        ProtectControlGroups = true;
+        ProtectClock = true;
+        ProtectHostname = true;
+        RestrictNamespaces = true;
+        RestrictRealtime = true;
+        RestrictSUIDSGID = true;
+        RestrictAddressFamilies = [
+          "AF_INET"
+          "AF_INET6"
+          "AF_UNIX"
+        ];
+        LockPersonality = true;
+        MemoryDenyWriteExecute = true;
+        SystemCallArchitectures = "native";
+        SystemCallFilter = [
+          "@system-service"
+          "~@privileged"
+          "~@resources"
+        ];
+      };
     };
   };
 }

@@ -13,7 +13,7 @@ let
     mkMerge
     mkOverride
     ;
-  jellyfin = config.meow.dns.names.jellyfin;
+  internalName = config.meow.dns.names.jellyfin;
   idm = infra.kanidm.nodes.server2.hostname;
   # group claims are spns on the kanidm domain, not the node hostname
   inherit (infra.kanidm) domain;
@@ -21,6 +21,64 @@ let
 in
 {
   config = mkMerge [
+    {
+      meow.server.services.jellyfin = {
+        port = 8096;
+        expose = [
+          "jellyfin.meowcloud.net"
+          "jellyfin.kotiboksi.xyz"
+        ];
+        # jellyfin's recommended reverse proxy setup
+        proxy =
+          target:
+          let
+            headers = ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Protocol $scheme;
+              proxy_set_header X-Forwarded-Host $http_host;
+            '';
+          in
+          {
+            locations = {
+              "/" = {
+                proxyPass = target;
+                recommendedProxySettings = false;
+                # buffering gets heavy while streaming
+                extraConfig = headers + ''
+                  proxy_buffering off;
+                '';
+              };
+
+              "/socket" = {
+                proxyPass = target;
+                recommendedProxySettings = false;
+                extraConfig = headers + ''
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+                '';
+              };
+
+              "~* ^/metrics(/|$)".return = "404";
+            };
+
+            # x-xss-protection is obsolete, enabling it is harmful
+            extraConfig = ''
+              client_max_body_size 20M;
+              add_header X-Frame-Options "SAMEORIGIN";
+              add_header X-XSS-Protection "0";
+              add_header X-Content-Type-Options "nosniff";
+
+              add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), battery=(), bluetooth=(), camera=(), clipboard-read=(), display-capture=(), document-domain=(), encrypted-media=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=(), serial=(), sync-xhr=(), usb=(), xr-spatial-tracking=()" always;
+
+              add_header Content-Security-Policy "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';";
+            '';
+          };
+      };
+    }
     {
       # paths, ids and settings of the pre-nixflix install
       nixflix.jellyfin = {
@@ -122,8 +180,8 @@ in
         originUrl = concatMap (domain: [
           "https://${domain}/sso/OID/redirect/kanidm"
           "https://${domain}/sso/OID/r/kanidm"
-        ]) ([ jellyfin ] ++ infra.services.jellyfin.public);
-        originLanding = "https://${jellyfin}/";
+        ]) ([ internalName ] ++ config.meow.server.services.jellyfin.expose);
+        originLanding = "https://${internalName}/";
         basicSecretFile = config.sops.secrets.kanidm_jellyfin.path;
         preferShortUsername = true;
         scopeMaps.users = [

@@ -1,6 +1,9 @@
+{ ... }:
 {
-  meow.wireguard = {
-    enable = true;
-    dns.enable = true;
+  config = {
+    meow.wireguard = {
+      enable = true;
+      dns.enable = true;
+    };
   };
 }

@@ -9,14 +9,7 @@ creation_rules:
       - age:
           - *desk
           - *framework
-  - path_regex: infra/porkbun\.env$
-    key_groups:
-      - age:
-          - *desk
-          - *framework
-          - *server
-          - *vps
-  - path_regex: infra/kanidm\.yaml$
+  - path_regex: infra/(porkbun\.env|kanidm\.yaml)$
     key_groups:
       - age:
           - *desk

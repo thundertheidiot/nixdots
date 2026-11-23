@@ -20,13 +20,14 @@ in
     ./acme.nix
     ./coturn.nix
     ./forgejo.nix
-    ./jellyfin-proxy.nix
     ./matrix
     ./mumble.nix
     ./prosody
     ./radio.nix
+    ./services.nix
     ./ssh.nix
     ./vaultwarden.nix
+    ./vhosts
     ./webserver.nix
   ];
 

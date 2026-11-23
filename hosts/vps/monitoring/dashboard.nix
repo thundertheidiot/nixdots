@@ -581,8 +581,12 @@ in
           ))
           (at 0 215 24 5 (
             stat 414 "Comin deployments in range" "short" [
-              (query "A" ''count by (host) (count_over_time(comin_deployment_info{status="done"}[$__range]))'' "{{host}} · succeeded")
-              (query "B" ''count by (host) (count_over_time(comin_deployment_info{status="failed"}[$__range]))'' "{{host}} · failed")
+              (query "A" ''count by (host) (count_over_time(comin_deployment_info{status="done"}[$__range]))''
+                "{{host}} · succeeded"
+              )
+              (query "B" ''count by (host) (count_over_time(comin_deployment_info{status="failed"}[$__range]))''
+                "{{host}} · failed"
+              )
             ]
           ))
 

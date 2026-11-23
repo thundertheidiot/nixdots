@@ -1,6 +1,5 @@
 {
   config,
-  infra,
   lib,
   mlib,
   ...
@@ -10,7 +9,6 @@ let
     concatStrings
     hasPrefix
     head
-    last
     mapAttrs
     optionalString
     removePrefix
@@ -18,27 +16,15 @@ let
   inherit (mlib) hexToHsl;
 
   inherit (config.meow.dns) names;
-  glance = names.glance;
+  inherit (config.meow.server.cluster) services;
   port = 8090;
 in
 {
   config = {
-    services.nginx.virtualHosts.${glance} = {
-      onlySSL = true;
-      listen = [
-        {
-          addr = infra.hosts.vps.wg;
-          port = 443;
-          ssl = true;
-        }
-      ];
-      locations."/".proxyPass = "http://127.0.0.1:${toString port}";
-    };
+    meow.server.services.glance.access = "wg";
 
-    sops.secrets.glance_env = {
-      sopsFile = ./secrets/glance.env;
-      format = "dotenv";
-    };
+    services.nginx.virtualHosts.${names.glance}.locations."/".proxyPass =
+      "http://127.0.0.1:${toString port}";
 
     services.glance = {
       enable = true;
@@ -52,7 +38,12 @@ in
         theme =
           let
             inherit (config.meow.workstation.theme.palette) dark roles;
-            hsl = color: with hexToHsl color; "${toString h} ${toString s} ${toString l}";
+            hsl =
+              color:
+              let
+                components = hexToHsl color;
+              in
+              "${toString components.h} ${toString components.s} ${toString components.l}";
           in
           {
             light = !dark;
@@ -102,21 +93,24 @@ in
 
                     # internal address first, public one as a secondary link when both exist
                     link =
-                      service: title: icon:
+                      serviceName: title: icon:
                       let
-                        s = infra.services.${service};
-                        a =
+                        service = services.${serviceName};
+                        anchor =
                           url: class: text:
                           ''<a href="${url}" class="${class}" target="_blank" rel="noreferrer">${text}</a>'';
-                        # newest public domain is listed last
-                        primary = if s ? internal then "https://${names.${service}}" else "https://${last s.public}";
+                        primary =
+                          if service.internal != null then
+                            "https://${names.${serviceName}}"
+                          else
+                            "https://${head service.expose}";
                       in
                       ''
                         <li><div class="flex items-center gap-10">
                           <div class="bookmarks-icon-container"><img class="bookmarks-icon${optionalString (hasPrefix "mdi:" icon) " flat-icon"}" src="${iconUrl icon}" alt="" loading="lazy"></div>
-                          ${a primary "bookmarks-link color-highlight size-h4" title}
-                          ${optionalString (s ? internal && s ? public) (
-                            a "https://${last s.public}" "bookmarks-link-no-arrow color-subdue size-h6" "public"
+                          ${anchor primary "bookmarks-link color-highlight size-h4" title}
+                          ${optionalString (service.internal != null && service.expose != [ ]) (
+                            anchor "https://${head service.expose}" "bookmarks-link-no-arrow color-subdue size-h6" "public"
                           )}
                         </div></li>
                       '';
@@ -183,9 +177,9 @@ in
                     # latest gatus result per endpoint
                     type = "custom-api";
                     title = "Status";
-                    title-url = "https://${head infra.services.gatus.public}";
+                    title-url = "https://${head services.gatus.expose}";
                     cache = "1m";
-                    url = "http://127.0.0.1:${toString infra.services.gatus.port}/api/v1/endpoints/statuses?pageSize=1";
+                    url = "http://127.0.0.1:${toString services.gatus.port}/api/v1/endpoints/statuses?pageSize=1";
                     template = ''
                       <ul class="list list-gap-10">
                       {{ range .JSON.Array "" }}

@@ -1,4 +1,5 @@
-{ inputs, ... }: {
+{ inputs, lib, ... }:
+{
   imports = [
     inputs.flake-parts.flakeModules.modules
     inputs.actions.flakeModules.default
@@ -11,7 +12,7 @@
   ];
 
   flake.modules = { };
-  flake.infra = import ../infra;
+  flake.infra = import ../infra { inherit lib; };
 
   systems = [
     "x86_64-linux"

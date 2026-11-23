@@ -8,20 +8,38 @@
 let
   inherit (lib)
     getExe
+    mapAttrs
     mapAttrs'
     mkMerge
     nameValuePair
     ;
-  inherit (config.meow.dns) names;
   namespace = config.vpnNamespaces.airvpn;
   address = infra.hosts.server2.wg;
-  ports = infra.monitoring.exporters.server2;
+  ports = mapAttrs (_: exporter: exporter.port) config.meow.server.monitoring.exporters;
   arrPorts = {
     inherit (ports) radarr sonarr prowlarr;
   };
 in
 {
   config = mkMerge [
+    {
+      # one media job, told apart by the service label
+      meow.server.monitoring.exporters =
+        mapAttrs
+          (service: port: {
+            inherit port;
+            job = "media";
+            labels = { inherit service; };
+          })
+          {
+            radarr = 9708;
+            sonarr = 9709;
+            prowlarr = 9710;
+            bazarr = 9711;
+            qbittorrent = 9712;
+            slskd = 9713;
+          };
+    }
     {
       services.prometheus.exporters = mapAttrs' (
         name: port:
@@ -181,10 +199,7 @@ in
               port = ports.slskd;
               upstream = 5030;
             };
-          }
-        // {
-          ${names.slskd}.locations."~* ^/metrics".return = "404";
-        };
+          };
       # the yaml credential overrides service settings, but has no metrics section
       systemd.services.slskd.environment = {
         SLSKD_METRICS = "true";

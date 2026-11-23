@@ -53,7 +53,8 @@ in
         environment = {
           KANIDM_URL = config.services.kanidm.provision.instanceUrl;
           KANIDM_ACCEPT_INVALID_CERTS = "true";
-          KANIDM_TOKEN_CACHE_PATH = "/run/kanidm-account-policy/tokens";
+          # the cli creates ~/.cache for its tokens no matter what, the kanidm home is /var/empty
+          HOME = "/run/kanidm-account-policy";
         };
         script = ''
           KANIDM_PASSWORD=$(${kanidmd} scripting recover-account -c /etc/kanidm/server.toml idm_admin \

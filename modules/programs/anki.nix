@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) getExe getExe' mkIf mkMerge;
+  inherit (lib)
+    getExe
+    getExe'
+    mkIf
+    mkMerge
+    ;
 
   cfg = config.meow.program.anki;
 

@@ -7,11 +7,9 @@ import argparse
 import base64
 import binascii
 import fcntl
-import ipaddress
 import json
 import os
 from pathlib import Path
-import re
 import shutil
 import signal
 import subprocess
@@ -53,41 +51,19 @@ def read_json(path):
         raise Error(f"Invalid JSON: {path}") from None
 
 
-def inventory(path):
-    network = read_json(path)
-    if not isinstance(network, dict) or set(network) != {"hub", "endpoint", "port", "mtu", "dns", "peers"}:
-        raise Error("Inventory must contain exactly hub, endpoint, port, mtu, dns and peers")
-    peers = network["peers"]
-    if not isinstance(peers, dict) or not peers:
-        raise Error("Inventory must contain peers")
-    if any(not re.fullmatch(r"[a-zA-Z0-9_-]+", peer) for peer in peers):
-        raise Error("Invalid peer name in inventory")
-    if any(not isinstance(network[field], str) or network[field] not in peers for field in ("hub", "dns")):
-        raise Error("Hub and DNS must name inventory peers")
-    try:
-        if any(not isinstance(address, str) for address in peers.values()):
-            raise ValueError
-        addresses = [str(ipaddress.IPv4Address(address)) for address in peers.values()]
-        host, port = network["endpoint"].rsplit(":", 1)
-        ipaddress.IPv4Address(host)
-        if type(network["port"]) is not int or not 1 <= network["port"] <= 65535:
-            raise ValueError
-        if type(network["mtu"]) is not int:
-            raise ValueError
-        if int(port) != network["port"] or len(set(addresses)) != len(addresses):
-            raise ValueError
-    except (TypeError, ValueError, AttributeError):
-        raise Error("Invalid addresses, endpoint or port in inventory") from None
-    return network
-
-
-def public_keys(directory, network):
-    public = read_json(directory / "public-keys.json")
-    if not isinstance(public, dict) or set(public) != set(network["peers"]):
-        raise Error("Public manifest must contain exactly the inventory peers; run keygen for new peers")
+def check_manifest(public):
+    if not isinstance(public, dict):
+        raise Error("Invalid public manifest")
     for value in public.values():
         if not isinstance(value, str) or key(value.encode("utf-8")) != value:
             raise Error("Invalid public manifest key")
+    return public
+
+
+def public_keys(directory, network):
+    public = check_manifest(read_json(directory / "public-keys.json"))
+    if set(public) != set(network["peers"]):
+        raise Error("Public manifest must contain exactly the inventory peers; run keygen for new peers")
     return public
 
 
@@ -191,12 +167,7 @@ def generate(directory, network, name=None):
 def keygen(directory, network):
     peers = network["peers"]
     path = directory / "public-keys.json"
-    public = read_json(path) if path.exists() else {}
-    if not isinstance(public, dict):
-        raise Error("Invalid public manifest")
-    for value in public.values():
-        if not isinstance(value, str) or key(value.encode("utf-8")) != value:
-            raise Error("Invalid public manifest key")
+    public = check_manifest(read_json(path) if path.exists() else {})
     # peers dropped from the inventory leave the manifest, their encrypted files stay
     public = {peer: value for peer, value in public.items() if peer in peers}
     missing = [peer for peer in peers if peer not in public]
@@ -236,8 +207,7 @@ def client_config(directory, network, name):
 def main():
     os.umask(0o077)
     parser = argparse.ArgumentParser(description=__doc__)
-    default = Path("infra/wireguard") if Path("infra/wireguard").is_dir() else Path.cwd()
-    parser.add_argument("--directory", type=Path, default=default, help="key directory")
+    parser.add_argument("--directory", type=Path, required=True, help="key directory")
     parser.add_argument("--inventory", type=Path, required=True, help="peer inventory json, generated from infra")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("list", help="list inventory peers without decrypting secrets")
@@ -251,7 +221,7 @@ def main():
     config.add_argument("--qr", action="store_true", help="render config as a terminal QR code instead")
     args = parser.parse_args()
     root = args.directory.resolve()
-    network = inventory(args.inventory)
+    network = read_json(args.inventory)
     if args.command == "list":
         for peer in network["peers"]:
             print(peer)

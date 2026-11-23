@@ -1,66 +1,81 @@
 {
-  infra,
+  config,
   pkgs,
   ...
 }:
 let
-  inherit (infra.services) website;
+  inherit (config.meow.server.services) website;
 in
 {
-  meow.impermanence.directories = [
-    {
-      path = "/var/lib/kotiboksi";
-      user = "kotiboksi";
+  config = {
+    meow.server.services.website = {
+      internal = null;
+      port = 3005;
+      expose = [
+        "kotiboksi.xyz"
+        "thunder.meowcloud.net"
+      ];
+    };
+
+    meow.impermanence.directories = [
+      {
+        path = "/var/lib/kotiboksi";
+        user = "kotiboksi";
+        group = "kotiboksi";
+        permissions = "0700";
+      }
+    ];
+
+    users.users.kotiboksi = {
+      isSystemUser = true;
       group = "kotiboksi";
-      permissions = "0700";
-    }
-  ];
-
-  users.users.kotiboksi = {
-    isSystemUser = true;
-    group = "kotiboksi";
-  };
-  users.groups.kotiboksi = { };
-
-  # Migrate existing root-owned database files, not just the persistence directory.
-  systemd.tmpfiles.rules = [ "Z /var/lib/kotiboksi - kotiboksi kotiboksi - -" ];
-
-  meow.server.radio.domains = website.public;
-
-  systemd.services."leptos-kotiboksi" = {
-    enable = true;
-    description = "Leptos Website";
-
-    environment = {
-      DATABASE_URL = "/var/lib/kotiboksi/guestbook.db";
-      LEPTOS_SITE_ADDR = "127.0.0.1:${toString website.port}";
     };
+    users.groups.kotiboksi = { };
 
-    serviceConfig = {
-      Type = "simple";
-      User = "kotiboksi";
-      Group = "kotiboksi";
-      ExecStart = "${pkgs.leptos-kotiboksi}/bin/kotiboksi";
-      WorkingDirectory = "/var/lib/kotiboksi";
-      StateDirectory = "kotiboksi";
-      StateDirectoryMode = "0700";
-      UMask = "0077";
-      NoNewPrivileges = true;
-      CapabilityBoundingSet = "";
-      PrivateTmp = true;
-      PrivateDevices = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ProtectKernelTunables = true;
-      ProtectKernelModules = true;
-      ProtectKernelLogs = true;
-      ProtectControlGroups = true;
-      RestrictSUIDSGID = true;
-      RestrictNamespaces = true;
-      RestrictRealtime = true;
-      LockPersonality = true;
-      RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" "AF_INET6" ];
+    # Migrate existing root-owned database files, not just the persistence directory.
+    systemd.tmpfiles.rules = [ "Z /var/lib/kotiboksi - kotiboksi kotiboksi - -" ];
+
+    meow.server.radio.domains = website.expose;
+
+    systemd.services."leptos-kotiboksi" = {
+      enable = true;
+      description = "Leptos Website";
+
+      environment = {
+        DATABASE_URL = "/var/lib/kotiboksi/guestbook.db";
+        LEPTOS_SITE_ADDR = "127.0.0.1:${toString website.port}";
+      };
+
+      serviceConfig = {
+        Type = "simple";
+        User = "kotiboksi";
+        Group = "kotiboksi";
+        ExecStart = "${pkgs.leptos-kotiboksi}/bin/kotiboksi";
+        WorkingDirectory = "/var/lib/kotiboksi";
+        StateDirectory = "kotiboksi";
+        StateDirectoryMode = "0700";
+        UMask = "0077";
+        NoNewPrivileges = true;
+        CapabilityBoundingSet = "";
+        PrivateTmp = true;
+        PrivateDevices = true;
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        ProtectKernelTunables = true;
+        ProtectKernelModules = true;
+        ProtectKernelLogs = true;
+        ProtectControlGroups = true;
+        RestrictSUIDSGID = true;
+        RestrictNamespaces = true;
+        RestrictRealtime = true;
+        LockPersonality = true;
+        RestrictAddressFamilies = [
+          "AF_UNIX"
+          "AF_INET"
+          "AF_INET6"
+        ];
+      };
+      wantedBy = [ "multi-user.target" ];
     };
-    wantedBy = [ "multi-user.target" ];
   };
 }

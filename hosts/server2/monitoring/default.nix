@@ -1,7 +1,7 @@
 { config, infra, ... }:
 let
   address = infra.hosts.server2.wg;
-  ports = infra.monitoring.exporters.server2;
+  inherit (config.meow.server) monitoring;
 in
 {
   imports = [
@@ -12,17 +12,22 @@ in
   ];
 
   config = {
+    meow.server.monitoring = {
+      exporters.node.port = 9100;
+      storage = 8428;
+    };
+
     services.prometheus.exporters.node = {
       enable = true;
       listenAddress = address;
-      port = ports.node;
+      port = monitoring.exporters.node.port;
       enabledCollectors = [ "systemd" ];
       openFirewall = false;
     };
 
     services.victoriametrics = {
       enable = true;
-      listenAddress = "${address}:${toString infra.monitoring.storage.port}";
+      listenAddress = "${address}:${toString monitoring.storage}";
       retentionPeriod = "1y";
     };
 

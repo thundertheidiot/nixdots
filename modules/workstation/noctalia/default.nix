@@ -52,7 +52,9 @@ let
       {
         inherit (panel) file;
         inherit path;
-        manifest = removeAttrs panel [ "file" ] // { entry = path; };
+        manifest = removeAttrs panel [ "file" ] // {
+          entry = path;
+        };
       }
     ) widget.panel;
 
@@ -130,7 +132,10 @@ in
   config = mkIf (work && cfg) (mkMerge [
     {
       meow.noctalia.widgets.claude-usage = import ./claude-usage { inherit lib pkgs; };
-      meow.noctalia.widgets.qbittorrent = import ./qbittorrent { inherit lib pkgs; };
+      meow.noctalia.widgets.qbittorrent = import ./qbittorrent {
+        inherit lib pkgs;
+        url = "https://${config.meow.dns.names.qbittorrent}";
+      };
 
       programs.noctalia = {
         enable = true;

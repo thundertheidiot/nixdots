@@ -1,5 +1,8 @@
-{ ... }: {
+{ config, ... }:
+{
   config = {
+    meow.server.monitoring.exporters.node.port = config.services.prometheus.exporters.node.port;
+
     services.prometheus = {
       enable = true;
       listenAddress = "127.0.0.1";

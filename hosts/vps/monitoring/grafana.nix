@@ -7,11 +7,15 @@
 }:
 let
   inherit (lib) getExe;
-  inherit (infra.monitoring) storage;
+  inherit (config.meow.server.cluster) storage;
   dash = config.meow.dns.names.grafana;
 in
 {
   config = {
+    meow.server.services.grafana = {
+      internal = "dash";
+      access = "wg";
+    };
 
     services.grafana = {
       enable = true;
@@ -69,14 +73,6 @@ in
     '';
 
     services.nginx.virtualHosts.${dash} = {
-      onlySSL = true;
-      listen = [
-        {
-          addr = infra.hosts.vps.wg;
-          port = 443;
-          ssl = true;
-        }
-      ];
       locations."/" = {
         proxyPass = "http://127.0.0.1:3000";
         proxyWebsockets = true;
