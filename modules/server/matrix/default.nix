@@ -4,6 +4,7 @@
   mlib,
   pkgs,
   infra,
+  inputs,
   ...
 }:
 let
@@ -15,6 +16,8 @@ let
     listToAttrs
     head
     mkForce
+    importJSON
+    removeAttrs
     getExe
     getExe'
     ;
@@ -318,20 +321,21 @@ in
     # web interface
     {
       services.nginx.virtualHosts."matrix.${cfg.domain}" = {
-        root = pkgs.sable;
+        root = pkgs.sable.override {
+          # upstream defaults keep push, embeds and gifs working
+          conf = removeAttrs (importJSON "${inputs.sable}/static/config.json") [ "$schema" ] // {
+            homeserverList = [ cfg.domain ];
+            defaultHomeserver = 0;
+            allowCustomHomeservers = true;
+            featuredCommunities.servers = [
+              cfg.domain
+              "matrix.org"
+            ];
+          };
+        };
 
-        locations."/".extraConfig = ''
-          rewrite ^/config.json$ /config.json break;
-          rewrite ^/manifest.json$ /manifest.json break;
-
-          rewrite ^/sw.js$ /sw.js break;
-          rewrite ^/pdf.worker.min.js$ /pdf.worker.min.js break;
-
-          rewrite ^/public/(.*)$ /public/$1 break;
-          rewrite ^/assets/(.*)$ /assets/$1 break;
-
-          rewrite ^(.+)$ /index.html break;
-        '';
+        # spa fallback from adapter-static
+        locations."/".tryFiles = "$uri $uri/ /404.html";
       };
     }
   ]);

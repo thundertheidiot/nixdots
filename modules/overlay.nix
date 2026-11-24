@@ -37,6 +37,17 @@
           flaresolverr
           ;
 
+        sable = inputs.sable.packages.${final.stdenv.hostPlatform.system}.sable;
+        sable-desktop =
+          inputs.sable.packages.${final.stdenv.hostPlatform.system}.sable-desktop.overrideAttrs
+            (old: {
+              # upstream packaging misses these native deps
+              buildInputs = old.buildInputs ++ [
+                final.openssl
+                final.sqlcipher
+              ];
+            });
+
         sodexobot = inputs.sodexobot.packages.${final.stdenv.hostPlatform.system}.default;
         leptos-kotiboksi = inputs.leptos-kotiboksi.packages.${final.stdenv.hostPlatform.system}.default;
         meowdzbot = inputs.meowdzbot.packages.${final.stdenv.hostPlatform.system}.default;

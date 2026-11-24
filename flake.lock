@@ -1630,6 +1630,7 @@
         "nur": "nur",
         "review-artifact": "review-artifact",
         "rust-overlay": "rust-overlay_3",
+        "sable": "sable",
         "sodexobot": "sodexobot",
         "sops-nix": "sops-nix"
       }
@@ -1721,6 +1722,26 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
+      }
+    },
+    "sable": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795552993,
+        "narHash": "sha256-RBNfATznVt41DW3oSu+n0D4zJoM1XtDgP5px4Pp5SW0=",
+        "ref": "refs/heads/main",
+        "rev": "00bf4bfb7511aead7edff0caaa73e7d7759862d6",
+        "revCount": 8797,
+        "type": "git",
+        "url": "https://git.sable.moe/SableClient/sable-next"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.sable.moe/SableClient/sable-next"
       }
     },
     "sodexobot": {

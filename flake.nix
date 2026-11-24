@@ -48,6 +48,9 @@
 
     nixwine.url = "git+https://codeberg.org/thundertheidiot/nix-wine";
 
+    sable.url = "git+https://git.sable.moe/SableClient/sable-next";
+    sable.inputs.nixpkgs.follows = "nixpkgs";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     home-manager = {

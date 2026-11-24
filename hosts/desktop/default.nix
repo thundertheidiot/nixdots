@@ -250,7 +250,7 @@
     opencode
 
     mpkgs.helium
-    mpkgs.sable-desktop
+    sable-desktop
     mpkgs.photocraft
 
     wineWow64Packages.staging
