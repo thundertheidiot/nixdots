@@ -1,11 +1,17 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib) mkOverride;
   rss = config.meow.dns.names.freshrss;
+
+  # intl only adds idn feed urls and drags in its own icu
+  php = pkgs.php.withExtensions (
+    { enabled, ... }: builtins.filter (e: e.extensionName != "intl") enabled
+  );
 in
 {
   config = {
@@ -58,8 +64,11 @@ in
 
     sops.secrets.freshrss_db_password.owner = "freshrss";
 
+    services.phpfpm.pools.freshrss.phpPackage = php;
+
     services.freshrss = {
       enable = true;
+      package = pkgs.freshrss.override { inherit php; };
       baseUrl = "https://${rss}";
       virtualHost = rss;
 

@@ -27,7 +27,7 @@ in
         (pkgs.writeShellApplication {
           name = "nixdots-behind";
           runtimeInputs = [
-            pkgs.git
+            pkgs.gitMinimal
             pkgs.openssh
           ];
           text = ''
@@ -67,6 +67,9 @@ in
 
       services.comin = {
         enable = true;
+        package = inputs.comin.packages.${pkgs.stdenv.hostPlatform.system}.comin.override {
+          git = pkgs.gitMinimal;
+        };
         remotes = [
           {
             name = "origin";

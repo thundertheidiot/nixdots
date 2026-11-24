@@ -88,6 +88,7 @@
     };
     leptos-kotiboksi = {
       url = "github:thundertheidiot/leptos-kotiboksi";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     meowdzbot = {
       url = "github:thundertheidiot/meowdzbot";

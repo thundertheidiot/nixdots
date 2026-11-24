@@ -27,7 +27,7 @@ in
     i18n.defaultLocale = "en_US.UTF-8";
 
     environment.systemPackages = with pkgs; [
-      git
+      (if config.meow.workstation.enable then git else gitMinimal)
       wget
       curl
 
@@ -38,7 +38,7 @@ in
       which
 
       btop
-      neovim
+      (if config.meow.workstation.enable then neovim else vim)
     ];
 
     systemd.settings.Manager = {

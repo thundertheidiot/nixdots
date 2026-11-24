@@ -96,8 +96,13 @@ in
       MaxFileSec = "7day";
     };
 
-    documentation.doc.enable = false;
-    documentation.info.enable = false;
+    documentation.enable = false;
+    documentation.man.enable = false;
+    programs.command-not-found.enable = false;
+
+    system.disableInstallerTools = true;
+    # nixdots-behind asks for the running revision
+    system.tools.nixos-version.enable = true;
 
     # mailserver.stateVersion = 3;
 

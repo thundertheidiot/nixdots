@@ -48,10 +48,13 @@
                   ];
                   mountpoint = "/nix/persist";
                 };
+                # compression is filesystem wide, the first subvolume mounted decides it
                 "/tmp" = {
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/tmp";
                 };
                 "/var/tmp" = {
+                  mountOptions = [ "compress=zstd" ];
                   mountpoint = "/var/tmp";
                 };
                 "/storage" = {
