@@ -16,6 +16,7 @@ let
     head
     mkForce
     getExe
+    getExe'
     ;
 
   cfg = config.meow.server.matrix;
@@ -125,6 +126,9 @@ in
 
                   proxy_read_timeout 300s;
                   proxy_send_timeout 300s;
+
+                  # federation and sync spam
+                  access_log off;
                 '';
               };
             })
@@ -134,6 +138,26 @@ in
               "/.well-known/matrix"
             ]
         );
+      };
+    }
+    # rocksdb archives wals it never reads, on btrfs each one pins its whole fallocated extent
+    {
+      systemd.services.continuwuity-wal-archive-clean = {
+        description = "Remove archived continuwuity WAL files";
+        serviceConfig.Type = "oneshot";
+        script = ''
+          dir=/var/lib/private/continuwuity/archive
+          [ -d "$dir" ] || exit 0
+          ${getExe' pkgs.findutils "find"} "$dir" -maxdepth 1 -type f -name '*.log' -mmin +10 -delete
+        '';
+      };
+
+      systemd.timers.continuwuity-wal-archive-clean = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnBootSec = "5min";
+          OnUnitActiveSec = "10min";
+        };
       };
     }
     # kanidm sso, legacy password login goes away with this

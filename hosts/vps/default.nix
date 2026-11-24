@@ -96,6 +96,9 @@ in
       MaxFileSec = "7day";
     };
 
+    documentation.doc.enable = false;
+    documentation.info.enable = false;
+
     # mailserver.stateVersion = 3;
 
     networking.useNetworkd = true;

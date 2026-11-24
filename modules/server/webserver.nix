@@ -33,5 +33,10 @@ in
         };
       }) cfg.reverseProxy;
     };
+
+    services.logrotate.settings.nginx = {
+      rotate = 4;
+      delaycompress = false;
+    };
   };
 }

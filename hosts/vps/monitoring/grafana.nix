@@ -19,6 +19,8 @@ in
 
     services.grafana = {
       enable = true;
+      # otherwise grafana downloads every decoupled core plugin, ~600M
+      declarativePlugins = [ pkgs.grafanaPlugins.prometheus ];
       settings = {
         server = {
           http_addr = "127.0.0.1";
