@@ -69,6 +69,16 @@
 
   virtualisation.docker.enable = true;
 
+  swapDevices = [
+    {
+      device = "/mnt/storage/swapfile";
+      size = 16 * 1024;
+      options = [ "discard" ];
+    }
+  ];
+
+  boot.kernel.sysctl."vm.swappiness" = 10;
+
   home-manager.sharedModules = [
     {
       home.stateVersion = "26.05";
