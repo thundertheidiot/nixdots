@@ -63,6 +63,7 @@ in
       # kanidm reads these for provisioning, the apps get them through credentials or root
       meow.sops.secrets."kanidm_forgejo" = kanidmSecret "forgejo" "kanidm";
       meow.sops.secrets."kanidm_jellyfin" = kanidmSecret "jellyfin" "kanidm";
+      meow.sops.secrets."kanidm_continuwuity" = kanidmSecret "continuwuity" "kanidm";
       meow.sops.secrets."kanidm_oauth2_proxy" = kanidmSecret "oauth2-proxy" "kanidm";
       meow.sops.secrets."oauth2_proxy_cookie" = kanidmSecret "oauth2-proxy-cookie" "root";
     }

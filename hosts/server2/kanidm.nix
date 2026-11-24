@@ -24,12 +24,33 @@ in
         displayName = "pikkukorppu";
       };
 
+      persons.delta = {
+        displayName = "delta";
+      };
+
       groups.admins.members = [ "thunder" ];
       groups.users.members = [
         "pikkukorppu"
         "thunder"
+        "delta"
       ];
       groups.unprivileged = { };
+    };
+
+    # continuwuity runs on the vps, its side is in the matrix module
+    meow.sops.enableSecrets = [ "kanidm_continuwuity" ];
+    services.kanidm.provision.systems.oauth2.continuwuity = {
+      displayName = "Matrix";
+      originUrl = "https://meowcloud.net/_continuwuity/oidc/complete";
+      originLanding = "https://matrix.meowcloud.net/";
+      basicSecretFile = config.sops.secrets.kanidm_continuwuity.path;
+      # the spn isn't a valid localpart
+      preferShortUsername = true;
+      scopeMaps.users = [
+        "openid"
+        "profile"
+        "email"
+      ];
     };
 
     # account policy isn't provisionable and migrations can't touch the builtin idm_all_persons

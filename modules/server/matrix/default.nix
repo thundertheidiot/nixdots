@@ -3,6 +3,7 @@
   lib,
   mlib,
   pkgs,
+  infra,
   ...
 }:
 let
@@ -135,6 +136,35 @@ in
         );
       };
     }
+    # kanidm sso, legacy password login goes away with this
+    (
+      let
+        idm = infra.kanidm.domain;
+        secret = "kanidm_continuwuity";
+      in
+      {
+        meow.sops.enableSecrets = [ secret ];
+        sops.secrets.${secret}.restartUnits = [ "continuwuity.service" ];
+
+        # the secret belongs to kanidm
+        systemd.services.continuwuity.serviceConfig.LoadCredential = [
+          "kanidm:${config.sops.secrets.${secret}.path}"
+        ];
+
+        services.matrix-continuwuity.settings.global.oauth.oidc = {
+          discovery_url = "https://${idm}/oauth2/openid/continuwuity";
+          client_id = "continuwuity";
+          client_secret_file = "/run/credentials/continuwuity.service/kanidm";
+          additional_scopes = [
+            "profile"
+            "email"
+          ];
+          provider_name = "Kanidm";
+          provider_icon = "https://${idm}/pkg/img/logo-square.svg";
+          profile_key_map.displayname = "name";
+        };
+      }
+    )
     # livekit (matrixrtc and element call)
     {
       # only the media ports, signalling goes through nginx
@@ -212,9 +242,10 @@ in
         "~ ^/livekit/(sfu/get|get_token|healthz)" = {
           priority = 400;
           proxyPass = "http://[::1]:${toString config.services.lk-jwt-service.port}";
+          # sets Host, a second one makes livekit/go reply 400
+          recommendedProxySettings = true;
           extraConfig = ''
             rewrite ^/livekit/(.*)$ /$1 break;
-            proxy_set_header Host $host;
           '';
         };
 
@@ -222,13 +253,13 @@ in
           priority = 401;
           proxyPass = "http://[::1]:${toString config.services.livekit.settings.port}/";
           proxyWebsockets = true;
+          recommendedProxySettings = true;
           extraConfig = ''
             proxy_send_timeout 300;
             proxy_read_timeout 300;
             proxy_buffering off;
 
             proxy_set_header Accept-Encoding gzip;
-            proxy_set_header Host $host;
           '';
         };
       };
