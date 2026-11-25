@@ -50,7 +50,16 @@ in
     })
     (lib.mkIf (cfg.enable && cfg.emulation) {
       environment.systemPackages = with pkgs; [
-        retroarch-full
+        (retroarch.withCores (
+          cores: with cores; [
+            mupen64plus
+            parallel-n64
+            snes9x
+            bsnes
+            swanstation
+            twenty-fortyeight
+          ]
+        ))
         protontricks
       ];
     })

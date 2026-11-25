@@ -63,7 +63,7 @@ in
     };
 
     programs.command-not-found.enable = true;
-    programs.command-not-found.dbPath = mkForce "${pkgs.path}/programs.sqlite";
+    programs.command-not-found.dbPath = mkForce "${inputs.nixpkgs}/programs.sqlite";
 
     environment.systemPackages = with pkgs; [
       pulsemixer

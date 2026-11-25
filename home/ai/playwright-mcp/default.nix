@@ -10,7 +10,15 @@ let
   inherit (mlib) mkEnOptTrue;
 
   cfg = config.mHome.ai.playwright-mcp.enable;
-  playwrightMcp = pkgs.playwright-mcp;
+  # copy playwright out of playwright-test, its wrapper pins every bundled browser
+  playwrightMcp = pkgs.playwright-mcp.overrideAttrs {
+    postInstall = ''
+      pkg_dir="$out/lib/node_modules/@playwright/mcp"
+      rm -rf "$pkg_dir/node_modules/playwright" "$pkg_dir/node_modules/playwright-core"
+      cp -r ${pkgs.playwright-test}/lib/node_modules/{playwright,playwright-core} "$pkg_dir/node_modules/"
+      wrapProgram $out/bin/playwright-mcp --set-default PLAYWRIGHT_MCP_BROWSER chromium
+    '';
+  };
   helium = pkgs.mpkgs.helium;
 
   # the playwright mcp bridge extension installed by modules/programs/helium.nix

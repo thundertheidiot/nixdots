@@ -23,6 +23,8 @@ let
     })).override
       {
         onnxruntime = pkgs.pkgsi686Linux.hello;
+        # drags in v4l-utils with a 32-bit qt6
+        librealsense = null;
       };
 in
 {

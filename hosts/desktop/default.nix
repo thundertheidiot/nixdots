@@ -30,9 +30,6 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
-  # temporary
-  programs.nh.clean.enable = lib.mkForce false;
-
   boot.supportedFilesystems = [
     "ntfs"
     "e2fs"
@@ -73,6 +70,7 @@
       home.stateVersion = "26.11";
       mHome.browser.firefox.enable = true;
       mHome.lang.latex = true;
+      mHome.lang.haskell = false;
       meowEmacs.enable = true;
       meowEmacs.package = "emacs-pwayl";
 
@@ -132,6 +130,8 @@
     shell.enable = true;
 
     school.enable = true;
+    school.packetTracer = false;
+    school.lmath = false;
 
     gpu = "amd";
 
@@ -272,7 +272,7 @@
     qmk
     android-tools
 
-    orca-slicer
+    # orca-slicer
 
     # electrum-ltc
 
@@ -294,7 +294,6 @@
   boot.kernel.sysctl."vm.swappiness" = 50;
 
   networking.firewall.allowedTCPPorts = [
-    3002 # might be orca slicer, i forgot
     8188 # comfyui
   ];
 

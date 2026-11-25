@@ -25,7 +25,6 @@
         };
 
         inherit (final.unstable)
-          element-desktop
           libreoffice
           qmk
           avr-gcc
@@ -65,6 +64,9 @@
             });
 
         mpkgs = (import "${inputs.self.outPath}/pkgs") { pkgs = final; };
+
+        # no browser source, cef alone is ~440 MiB
+        obs-studio = prev.obs-studio.override { browserSupport = false; };
 
         # functionality fixes
         tmc-cli = prev.tmc-cli.overrideAttrs (old: {

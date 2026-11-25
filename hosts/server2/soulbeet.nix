@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  infra,
   ...
 }:
 let
@@ -10,6 +11,9 @@ let
 
   dataDir = "${config.meow.impermanence.persist}/media-stack/soulbeet";
   port = 9765;
+  url = "https://${config.meow.dns.names.soulbeet}";
+  # the local kanidm, so sso keeps working without the vps
+  issuer = "https://${infra.kanidm.nodes.server2.hostname}/oauth2/openid/soulbeet";
 in
 {
   config = {
@@ -23,6 +27,20 @@ in
         proxy_read_timeout 3600s;
         proxy_send_timeout 3600s;
       '';
+    };
+
+    # public client, soulbeet always does pkce
+    services.kanidm.provision.systems.oauth2.soulbeet = {
+      displayName = "Soulbeet";
+      originUrl = "${url}/api/auth/oidc/callback";
+      originLanding = "${url}/";
+      public = true;
+      preferShortUsername = true;
+      # only admins get a token
+      scopeMaps.admins = [
+        "openid"
+        "profile"
+      ];
     };
 
     users.groups.soulbeet = { };
@@ -61,6 +79,14 @@ in
           HOME = "/tmp";
           IP = "127.0.0.1";
           PORT = toString port;
+          PUBLIC_URL = url;
+          OIDC_ISSUER_URL = issuer;
+          OIDC_CLIENT_ID = "soulbeet";
+          OIDC_PROVIDER_NAME = "Kanidm";
+          OIDC_SCOPES = "openid profile";
+          # no accounts from sso, the admin links theirs in settings
+          OIDC_AUTO_REGISTER = "false";
+          OIDC_LINK_BY_USERNAME = "false";
         };
         serviceConfig = {
           User = "soulbeet";

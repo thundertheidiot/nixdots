@@ -78,26 +78,20 @@ in
               rustup
             ])
             (mkIf cfg.haskell [
-              (haskellPackages.ghcWithPackages (pkgs: [ ]))
+              haskellPackages.ghc
               haskell-language-server
             ])
             (mkIf cfg.lua [
               lua-language-server
             ])
             (mkIf cfg.latex [
-              texliveFull
+              texliveMedium
             ])
             (mkIf cfg.c_cxx [
               clang-tools
             ])
             (mkIf cfg.c_sharp [
-              (
-                with dotnetCorePackages;
-                (combinePackages [
-                  sdk_10_0
-                  sdk_8_0
-                ])
-              )
+              dotnetCorePackages.sdk_8_0
               omnisharp-roslyn # lsp
               csharpier
             ])

@@ -15,20 +15,24 @@ in
 
   config =
     let
-      inherit (lib) listToAttrs mkIf mkMerge;
+      inherit (lib)
+        listToAttrs
+        mkIf
+        mkMerge
+        mkDefault
+        ;
       enAll =
         list:
         listToAttrs (
           map (i: {
             name = i;
-            value = true;
+            value = mkDefault true;
           }) list
         );
     in
     mkMerge [
       (mkIf config.meow.fullSetup {
         meow.program = enAll [
-          "element"
           "signal"
           "gajim"
           # "mumble"

@@ -24,7 +24,6 @@ in
         gimp = mkEnOpt "Gimp";
 
         # im
-        element = mkEnOpt "Element";
         signal = mkEnOpt "Signal";
         gajim = mkEnOpt "Gajim";
         mumble = mkEnOpt "Mumble";
@@ -56,7 +55,6 @@ in
         let
         in
         [
-          (mkIf cfg.element element-desktop)
           (mkIf cfg.signal signal-desktop)
           (mkIf cfg.gajim gajim)
           (mkIf cfg.mumble mumble)
