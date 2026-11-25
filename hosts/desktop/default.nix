@@ -157,6 +157,7 @@
           match at-startup=true app-id="discord"
           match at-startup=true app-id="signal"
           match at-startup=true app-id=r#"^org\.gajim\.Gajim$"#
+          match at-startup=true app-id=r#"moe.sable.client"#
 
           open-on-workspace "chat"
           open-maximized true
