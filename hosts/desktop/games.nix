@@ -37,6 +37,28 @@ in
       command = ''"$HOME/Games/the-joy-of-creation-story-mode/The Joy of Creation Story Mode/TJoC_SM.exe"'';
     })
     (winelib.protonApp {
+      name = "aw2";
+      proton = winepkgs.protonGE."11-5-x86_64";
+      wrapper = winelib.wrappers.gamescope {
+        extraArgs = [
+          "-W"
+          "2560"
+          "-H"
+          "1440"
+          "-w"
+          "2560"
+          "-h"
+          "1440"
+          "-r"
+          "144"
+          "-f"
+          "--force-composition"
+          "--force-grab-cursor"
+        ];
+      };
+      command = ''"/mnt/1tb_nvme/games/Alan Wake 2/AlanWake2.exe"'';
+    })
+    (winelib.protonApp {
       name = "playrooms";
       proton = winepkgs.protonGE."11-5-x86_64";
       extraSetup = ''

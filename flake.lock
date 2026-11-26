@@ -803,10 +803,10 @@
       },
       "locked": {
         "lastModified": 1795109914,
-        "narHash": "sha256-PSJG76DkpYMiCItkiVKlRf+CXAV+joxJ7p8KNbDCgQY=",
+        "narHash": "sha256-z1x6Ji19kZRZZsdNrcn9/ed7fZkBM0O09iLudwKSHCI=",
         "owner": "thundertheidiot",
         "repo": "kissasome",
-        "rev": "5fedfe1bf5e9b8d057716048bd8fa20877707e1f",
+        "rev": "ae4f4b383b5a4ad031719fe05b382ba57600c3bb",
         "type": "github"
       },
       "original": {

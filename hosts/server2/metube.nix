@@ -18,6 +18,13 @@ in
           extraConfig = ''
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "Upgrade";
+
+            # aiohttp caps headers at 8190 bytes, the domain wide oauth2-proxy cookie blows past it
+            set $metube_cookie "";
+            if ($cookie_metube_theme) {
+              set $metube_cookie "metube_theme=$cookie_metube_theme";
+            }
+            proxy_set_header Cookie $metube_cookie;
           '';
         };
       };
