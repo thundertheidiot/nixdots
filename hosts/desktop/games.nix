@@ -56,6 +56,9 @@ in
           "--force-grab-cursor"
         ];
       };
+      extraSetup = ''
+        cd "/mnt/1tb_nvme/games/Alan Wake 2"
+      '';
       command = ''"/mnt/1tb_nvme/games/Alan Wake 2/AlanWake2.exe"'';
     })
     (winelib.protonApp {
