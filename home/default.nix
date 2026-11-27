@@ -5,6 +5,7 @@
     ./base.nix
     ./browser
     ./cleanup.nix
+    ./git.nix
     ./languages
     ./media.nix
     ./navidrome-sync.nix

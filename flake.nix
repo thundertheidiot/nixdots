@@ -46,7 +46,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixwine.url = "git+https://codeberg.org/thundertheidiot/nix-wine";
+    nixwine.url = "git+https://tangled.org/evil.nix.ee/nix-wine";
 
     sable.url = "git+https://git.sable.moe/SableClient/sable-next";
     sable.inputs.nixpkgs.follows = "nixpkgs";

@@ -1051,11 +1051,11 @@
     },
     "nixpkgs-multiverse_2": {
       "locked": {
-        "lastModified": 1787412736,
-        "narHash": "sha256-vSs5woE0/auj0xvnemqV6zddnQH8pQXQNRgHfUeXczM=",
+        "lastModified": 1795624153,
+        "narHash": "sha256-lLXuXL4Us1X26gOSCV5S4dKT7KXsbzEVrNv0VNFrrIE=",
         "owner": "fzakaria",
         "repo": "nixpkgs-multiverse",
-        "rev": "6bc89dc21a4e37647ed613469354fc61225bf3a8",
+        "rev": "aef007415062953fe09eb989570186c3f9c2d8b5",
         "type": "github"
       },
       "original": {
@@ -1197,18 +1197,15 @@
     },
     "nixpkgs_15": {
       "locked": {
-        "lastModified": 1787135253,
-        "narHash": "sha256-RD2kNWCG+Bjo6h+JVjWVNntZs2GtRoeY2xHjts/FNkA=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "ffb3c9b700e759be2ef13237c9d8f953b32a1e46",
-        "type": "github"
+        "lastModified": 1795371335,
+        "narHash": "sha256-3Xq+XlDu5l+UJ0cc+Jigs84+tz7Qu92NgXVHgJwC52M=",
+        "rev": "619c39f6eac5d1ed6b8f073a9414baf7034b2356",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1126808.619c39f6eac5/nixexprs.tar.zst"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst"
       }
     },
     "nixpkgs_16": {
@@ -1422,17 +1419,17 @@
         "nixpkgs-multiverse": "nixpkgs-multiverse_2"
       },
       "locked": {
-        "lastModified": 1792530115,
-        "narHash": "sha256-PKYd2MqNTz79NmFiljG6RJ3MxC1MfFisobh218QyIJY=",
+        "lastModified": 1795807488,
+        "narHash": "sha256-Ljdj/Nl2kUx+FfsJ5JPCQ4+a9/CdWRvAGC7Jb0ZpXyU=",
         "ref": "refs/heads/main",
-        "rev": "748afcb95e39f6985f00e4e37c9bacb64bbececd",
-        "revCount": 48,
+        "rev": "d884d102dda66ef01a314c6b8bc1297045e0326d",
+        "revCount": 54,
         "type": "git",
-        "url": "https://codeberg.org/thundertheidiot/nix-wine"
+        "url": "https://tangled.org/evil.nix.ee/nix-wine"
       },
       "original": {
         "type": "git",
-        "url": "https://codeberg.org/thundertheidiot/nix-wine"
+        "url": "https://tangled.org/evil.nix.ee/nix-wine"
       }
     },
     "noctalia": {
